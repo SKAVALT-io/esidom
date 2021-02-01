@@ -53,7 +53,7 @@
         fetch(`http://localhost:3000/entity/state/${LAMP.entity_id}`, {
             headers,
             method: 'PUT',
-            body: body,
+            body,
         })
             .then((x) => x.text())
             .then(console.log)
