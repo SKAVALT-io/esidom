@@ -4,20 +4,20 @@
   "description": "Esidom server",
   "main": "src/index.ts",
   "scripts": {
-    "test": "jest --coverage",
-    "tsc": "tsc",
-    "start": "node dist/index.js"
+    "testServer": "cd server && jest --coverage",
+    "buildServer": "cd server && tsc",
+    "startServer": "cd server && node dist/index.js"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/SKAVALT-io/esidom_server.git"
+    "url": "git+https://github.com/SKAVALT-io/esidom.git"
   },
   "author": "skavalt.io",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/SKAVALT-io/esidom_server/issues"
+    "url": "https://github.com/SKAVALT-io/esidom/issues"
   },
-  "homepage": "https://github.com/SKAVALT-io/esidom_server#readme",
+  "homepage": "https://github.com/SKAVALT-io/esidom#readme",
   "devDependencies": {
     "@types/jest": "^26.0.20",
     "@types/node": "^14.14.22",
