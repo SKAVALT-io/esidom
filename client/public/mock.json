@@ -1,0 +1,578 @@
+[
+    {
+        "entity_id": "binary_sensor.updater",
+        "state": "on",
+        "attributes": {
+            "release_notes": "https://www.home-assistant.io/latest-release-notes/",
+            "newest_version": "2020.12.1",
+            "friendly_name": "Updater"
+        },
+        "last_changed": "2020-12-17T14:08:56.025478+00:00",
+        "last_updated": "2020-12-17T14:08:56.025478+00:00",
+        "context": {
+            "id": "198dfd2ecaa491083bc8d8e2bd8fd23f",
+            "parent_id": null,
+            "user_id": null
+        }
+    },
+    {
+        "entity_id": "binary_sensor.enocean_binary_sensor",
+        "state": "off",
+        "attributes": {
+            "friendly_name": "EnOcean binary sensor"
+        },
+        "last_changed": "2020-12-17T14:08:54.092925+00:00",
+        "last_updated": "2020-12-17T14:08:54.092925+00:00",
+        "context": {
+            "id": "c825361e7ea0ab2943a256ee169fd81e",
+            "parent_id": null,
+            "user_id": null
+        }
+    },
+    {
+        "entity_id": "switch.switchbot_2",
+        "state": "off",
+        "attributes": {
+            "last_run_success": null,
+            "friendly_name": "Switchbot",
+            "assumed_state": true
+        },
+        "last_changed": "2020-12-17T14:08:54.345183+00:00",
+        "last_updated": "2020-12-17T14:08:54.345183+00:00",
+        "context": {
+            "id": "8cc57c8a1aa52ac116932757ef7a7ba0",
+            "parent_id": null,
+            "user_id": null
+        }
+    },
+    {
+        "entity_id": "sensor.windowhandle_living_room_window_handle",
+        "state": "unknown",
+        "attributes": {
+            "friendly_name": "WindowHandle Living Room Window Handle",
+            "icon": "mdi:window"
+        },
+        "last_changed": "2020-12-17T14:08:54.421048+00:00",
+        "last_updated": "2020-12-17T14:08:54.421048+00:00",
+        "context": {
+            "id": "8ac16b10ab3310d232229bb6f1e443d6",
+            "parent_id": null,
+            "user_id": null
+        }
+    },
+    {
+        "entity_id": "binary_sensor.rpi_power_status",
+        "state": "off",
+        "attributes": {
+            "friendly_name": "RPi Power status",
+            "icon": "mdi:raspberry-pi",
+            "device_class": "problem"
+        },
+        "last_changed": "2020-12-17T14:08:54.451500+00:00",
+        "last_updated": "2020-12-17T14:08:54.451500+00:00",
+        "context": {
+            "id": "09d8d0f189eeb3848749cbfe0d82ba70",
+            "parent_id": null,
+            "user_id": null
+        }
+    },
+    {
+        "entity_id": "light.0x7cb03eaa0a03e828",
+        "state": "on",
+        "attributes": {
+            "effect_list": [
+                "blink",
+                "breathe",
+                "okay",
+                "channel_change",
+                "finish_effect",
+                "stop_effect"
+            ],
+            "brightness": 23,
+            "linkquality": 110,
+            "state": "ON",
+            "update": {
+                "state": "available"
+            },
+            "update_available": true,
+            "friendly_name": "0x7cb03eaa0a03e828",
+            "supported_features": 45
+        },
+        "last_changed": "2020-12-17T14:09:40.148957+00:00",
+        "last_updated": "2020-12-17T14:09:40.148957+00:00",
+        "context": {
+            "id": "29a23755fd4524ce1c7c27f6274dd383",
+            "parent_id": null,
+            "user_id": null
+        }
+    },
+    {
+        "entity_id": "sensor.0x7cb03eaa0a03e828_linkquality",
+        "state": "110",
+        "attributes": {
+            "brightness": 23,
+            "linkquality": 110,
+            "state": "ON",
+            "update": {
+                "state": "available"
+            },
+            "update_available": true,
+            "unit_of_measurement": "lqi",
+            "friendly_name": "0x7cb03eaa0a03e828_linkquality",
+            "icon": "mdi:signal"
+        },
+        "last_changed": "2020-12-17T14:09:40.153443+00:00",
+        "last_updated": "2020-12-17T14:09:40.153443+00:00",
+        "context": {
+            "id": "dc634b671c104e69238695d484dfed99",
+            "parent_id": null,
+            "user_id": null
+        }
+    },
+    {
+        "entity_id": "sensor.0x7cb03eaa0a03e828_update_state",
+        "state": "available",
+        "attributes": {
+            "brightness": 23,
+            "linkquality": 110,
+            "state": "ON",
+            "update": {
+                "state": "available"
+            },
+            "update_available": true,
+            "friendly_name": "0x7cb03eaa0a03e828_update_state",
+            "icon": "mdi:update"
+        },
+        "last_changed": "2020-12-17T14:09:40.154982+00:00",
+        "last_updated": "2020-12-17T14:09:40.154982+00:00",
+        "context": {
+            "id": "a67b268d6df8eb8ee53f58637f44fa94",
+            "parent_id": null,
+            "user_id": null
+        }
+    },
+    {
+        "entity_id": "binary_sensor.0x7cb03eaa0a03e828_update_available",
+        "state": "on",
+        "attributes": {
+            "brightness": 23,
+            "linkquality": 110,
+            "state": "ON",
+            "update": {
+                "state": "available"
+            },
+            "update_available": true,
+            "friendly_name": "0x7cb03eaa0a03e828_update_available"
+        },
+        "last_changed": "2020-12-17T14:09:40.157132+00:00",
+        "last_updated": "2020-12-17T14:09:40.157132+00:00",
+        "context": {
+            "id": "ee7194e06d8b81d2b340a7197ef63e13",
+            "parent_id": null,
+            "user_id": null
+        }
+    },
+    {
+        "entity_id": "zwave.aeon_labs_zw090_z_stick_gen5_eu",
+        "state": "unavailable",
+        "attributes": {
+            "restored": true,
+            "supported_features": 0,
+            "friendly_name": "AEON Labs ZW090 Z-Stick Gen5 EU"
+        },
+        "last_changed": "2020-12-17T14:09:07.024451+00:00",
+        "last_updated": "2020-12-17T14:09:07.024451+00:00",
+        "context": {
+            "id": "1ad8181311711be6178758b9b2b1b7b0",
+            "parent_id": null,
+            "user_id": null
+        }
+    },
+    {
+        "entity_id": "zwave.fibaro_system_fgms001_zw5_motion_sensor",
+        "state": "unavailable",
+        "attributes": {
+            "restored": true,
+            "supported_features": 0,
+            "friendly_name": "FIBARO System FGMS001-ZW5 Motion Sensor"
+        },
+        "last_changed": "2020-12-17T14:09:07.024688+00:00",
+        "last_updated": "2020-12-17T14:09:07.024688+00:00",
+        "context": {
+            "id": "875aa9b52cc0b97a15b7fbbe83beb770",
+            "parent_id": null,
+            "user_id": null
+        }
+    },
+    {
+        "entity_id": "sensor.fibaro_system_fgms001_zw5_motion_sensor_temperature",
+        "state": "unavailable",
+        "attributes": {
+            "restored": true,
+            "supported_features": 0,
+            "unit_of_measurement": "°C",
+            "friendly_name": "FIBARO System FGMS001-ZW5 Motion Sensor Temperature"
+        },
+        "last_changed": "2020-12-17T14:09:07.024845+00:00",
+        "last_updated": "2020-12-17T14:09:07.024845+00:00",
+        "context": {
+            "id": "1c6e66796797066c8ae65da9c0ab3653",
+            "parent_id": null,
+            "user_id": null
+        }
+    },
+    {
+        "entity_id": "sensor.fibaro_system_fgms001_zw5_motion_sensor_luminance",
+        "state": "unavailable",
+        "attributes": {
+            "restored": true,
+            "supported_features": 0,
+            "unit_of_measurement": "lux",
+            "friendly_name": "FIBARO System FGMS001-ZW5 Motion Sensor Luminance"
+        },
+        "last_changed": "2020-12-17T14:09:07.024994+00:00",
+        "last_updated": "2020-12-17T14:09:07.024994+00:00",
+        "context": {
+            "id": "22b304c1a79c92564c9e779891974f5b",
+            "parent_id": null,
+            "user_id": null
+        }
+    },
+    {
+        "entity_id": "sensor.fibaro_system_fgms001_zw5_motion_sensor_seismic_intensity",
+        "state": "unavailable",
+        "attributes": {
+            "restored": true,
+            "supported_features": 0,
+            "unit_of_measurement": "",
+            "friendly_name": "FIBARO System FGMS001-ZW5 Motion Sensor Seismic Intensity"
+        },
+        "last_changed": "2020-12-17T14:09:07.025141+00:00",
+        "last_updated": "2020-12-17T14:09:07.025141+00:00",
+        "context": {
+            "id": "5a55de837ffb5b2dbb7a11ef6e97c033",
+            "parent_id": null,
+            "user_id": null
+        }
+    },
+    {
+        "entity_id": "sensor.fibaro_system_fgms001_zw5_motion_sensor_acceleration_x_axis",
+        "state": "unavailable",
+        "attributes": {
+            "restored": true,
+            "supported_features": 0,
+            "unit_of_measurement": "",
+            "friendly_name": "FIBARO System FGMS001-ZW5 Motion Sensor Acceleration X-axis"
+        },
+        "last_changed": "2020-12-17T14:09:07.025293+00:00",
+        "last_updated": "2020-12-17T14:09:07.025293+00:00",
+        "context": {
+            "id": "2b93720f189ec7d17b32e6c4a4d65456",
+            "parent_id": null,
+            "user_id": null
+        }
+    },
+    {
+        "entity_id": "sensor.fibaro_system_fgms001_zw5_motion_sensor_acceleration_y_axis",
+        "state": "unavailable",
+        "attributes": {
+            "restored": true,
+            "supported_features": 0,
+            "unit_of_measurement": "",
+            "friendly_name": "FIBARO System FGMS001-ZW5 Motion Sensor Acceleration Y-axis"
+        },
+        "last_changed": "2020-12-17T14:09:07.025445+00:00",
+        "last_updated": "2020-12-17T14:09:07.025445+00:00",
+        "context": {
+            "id": "4c7e2c2f8f49c2e23d4e26aeb6b105a8",
+            "parent_id": null,
+            "user_id": null
+        }
+    },
+    {
+        "entity_id": "sensor.fibaro_system_fgms001_zw5_motion_sensor_acceleration_z_axis",
+        "state": "unavailable",
+        "attributes": {
+            "restored": true,
+            "supported_features": 0,
+            "unit_of_measurement": "",
+            "friendly_name": "FIBARO System FGMS001-ZW5 Motion Sensor Acceleration Z-axis"
+        },
+        "last_changed": "2020-12-17T14:09:07.025597+00:00",
+        "last_updated": "2020-12-17T14:09:07.025597+00:00",
+        "context": {
+            "id": "2dddfd64b0cd1bc7c1953131fd9cb32b",
+            "parent_id": null,
+            "user_id": null
+        }
+    },
+    {
+        "entity_id": "sensor.fibaro_system_fgms001_zw5_motion_sensor_sourcenodeid",
+        "state": "unavailable",
+        "attributes": {
+            "restored": true,
+            "supported_features": 0,
+            "unit_of_measurement": "",
+            "friendly_name": "FIBARO System FGMS001-ZW5 Motion Sensor SourceNodeId"
+        },
+        "last_changed": "2020-12-17T14:09:07.025746+00:00",
+        "last_updated": "2020-12-17T14:09:07.025746+00:00",
+        "context": {
+            "id": "433351d9713bf2c761fe90bf32f5788a",
+            "parent_id": null,
+            "user_id": null
+        }
+    },
+    {
+        "entity_id": "sensor.fibaro_system_fgms001_zw5_motion_sensor_burglar",
+        "state": "unavailable",
+        "attributes": {
+            "restored": true,
+            "supported_features": 0,
+            "unit_of_measurement": "",
+            "friendly_name": "FIBARO System FGMS001-ZW5 Motion Sensor Burglar"
+        },
+        "last_changed": "2020-12-17T14:09:07.025893+00:00",
+        "last_updated": "2020-12-17T14:09:07.025893+00:00",
+        "context": {
+            "id": "3842119cb7d677dbc69c4fc20d559d63",
+            "parent_id": null,
+            "user_id": null
+        }
+    },
+    {
+        "entity_id": "sensor.fibaro_system_fgms001_zw5_motion_sensor_general",
+        "state": "unavailable",
+        "attributes": {
+            "restored": true,
+            "supported_features": 0,
+            "unit_of_measurement": "",
+            "friendly_name": "FIBARO System FGMS001-ZW5 Motion Sensor General"
+        },
+        "last_changed": "2020-12-17T14:09:07.026038+00:00",
+        "last_updated": "2020-12-17T14:09:07.026038+00:00",
+        "context": {
+            "id": "3975893b70aafbb3fe209d875846f090",
+            "parent_id": null,
+            "user_id": null
+        }
+    },
+    {
+        "entity_id": "binary_sensor.fibaro_system_fgms001_zw5_motion_sensor_sensor",
+        "state": "unavailable",
+        "attributes": {
+            "restored": true,
+            "supported_features": 0,
+            "friendly_name": "FIBARO System FGMS001-ZW5 Motion Sensor Sensor"
+        },
+        "last_changed": "2020-12-17T14:09:07.026183+00:00",
+        "last_updated": "2020-12-17T14:09:07.026183+00:00",
+        "context": {
+            "id": "1c06cf26fd651649ea8a7c8a4c5295d8",
+            "parent_id": null,
+            "user_id": null
+        }
+    },
+    {
+        "entity_id": "sensor.fibaro_system_fgms001_zw5_motion_sensor_battery_level",
+        "state": "unavailable",
+        "attributes": {
+            "restored": true,
+            "supported_features": 0,
+            "device_class": "battery",
+            "unit_of_measurement": "%",
+            "friendly_name": "FIBARO System FGMS001-ZW5 Motion Sensor Battery Level"
+        },
+        "last_changed": "2020-12-17T14:09:07.026330+00:00",
+        "last_updated": "2020-12-17T14:09:07.026330+00:00",
+        "context": {
+            "id": "a00be4e588898292be38647205046073",
+            "parent_id": null,
+            "user_id": null
+        }
+    },
+    {
+        "entity_id": "sensor.fibaro_system_fgms001_zw5_motion_sensor_alarm_type",
+        "state": "unavailable",
+        "attributes": {
+            "restored": true,
+            "supported_features": 0,
+            "unit_of_measurement": "",
+            "friendly_name": "FIBARO System FGMS001-ZW5 Motion Sensor Alarm Type"
+        },
+        "last_changed": "2020-12-17T14:09:07.026478+00:00",
+        "last_updated": "2020-12-17T14:09:07.026478+00:00",
+        "context": {
+            "id": "8d72d52d75d4478de424c7d6a9236eff",
+            "parent_id": null,
+            "user_id": null
+        }
+    },
+    {
+        "entity_id": "sensor.fibaro_system_fgms001_zw5_motion_sensor_alarm_level",
+        "state": "unavailable",
+        "attributes": {
+            "restored": true,
+            "supported_features": 0,
+            "unit_of_measurement": "",
+            "friendly_name": "FIBARO System FGMS001-ZW5 Motion Sensor Alarm Level"
+        },
+        "last_changed": "2020-12-17T14:09:07.026626+00:00",
+        "last_updated": "2020-12-17T14:09:07.026626+00:00",
+        "context": {
+            "id": "30a6bb1255c81497eecb9f6c8f7b0f93",
+            "parent_id": null,
+            "user_id": null
+        }
+    },
+    {
+        "entity_id": "sensor.everspring_ad147_plug_in_dimmer_module_sourcenodeid",
+        "state": "unavailable",
+        "attributes": {
+            "restored": true,
+            "supported_features": 0,
+            "unit_of_measurement": "",
+            "friendly_name": "Everspring AD147 Plug-in Dimmer Module SourceNodeId"
+        },
+        "last_changed": "2020-12-17T14:09:07.026777+00:00",
+        "last_updated": "2020-12-17T14:09:07.026777+00:00",
+        "context": {
+            "id": "5c9f04606a8e33b4bcfa65bf291e3772",
+            "parent_id": null,
+            "user_id": null
+        }
+    },
+    {
+        "entity_id": "sensor.everspring_ad147_plug_in_dimmer_module_power_management",
+        "state": "unavailable",
+        "attributes": {
+            "restored": true,
+            "supported_features": 0,
+            "unit_of_measurement": "",
+            "friendly_name": "Everspring AD147 Plug-in Dimmer Module Power Management"
+        },
+        "last_changed": "2020-12-17T14:09:07.026951+00:00",
+        "last_updated": "2020-12-17T14:09:07.026951+00:00",
+        "context": {
+            "id": "311a1f178f0b9bea20c9ae7b3ff80f20",
+            "parent_id": null,
+            "user_id": null
+        }
+    },
+    {
+        "entity_id": "zwave.everspring_ad147_plug_in_dimmer_module",
+        "state": "unavailable",
+        "attributes": {
+            "restored": true,
+            "supported_features": 0,
+            "friendly_name": "Everspring AD147 Plug-in Dimmer Module"
+        },
+        "last_changed": "2020-12-17T14:09:07.027104+00:00",
+        "last_updated": "2020-12-17T14:09:07.027104+00:00",
+        "context": {
+            "id": "bb0bb6db870b761c83e7a374eb81dc50",
+            "parent_id": null,
+            "user_id": null
+        }
+    },
+    {
+        "entity_id": "light.everspring_ad147_plug_in_dimmer_module_level",
+        "state": "unavailable",
+        "attributes": {
+            "restored": true,
+            "supported_features": 1,
+            "friendly_name": "Everspring AD147 Plug-in Dimmer Module Level"
+        },
+        "last_changed": "2020-12-17T14:09:07.027252+00:00",
+        "last_updated": "2020-12-17T14:09:07.027252+00:00",
+        "context": {
+            "id": "a46b561f53feeecbf76204914ee02bc4",
+            "parent_id": null,
+            "user_id": null
+        }
+    },
+    {
+        "entity_id": "sensor.everspring_ad147_plug_in_dimmer_module_alarm_type",
+        "state": "unavailable",
+        "attributes": {
+            "restored": true,
+            "supported_features": 0,
+            "unit_of_measurement": "",
+            "friendly_name": "Everspring AD147 Plug-in Dimmer Module Alarm Type"
+        },
+        "last_changed": "2020-12-17T14:09:07.027406+00:00",
+        "last_updated": "2020-12-17T14:09:07.027406+00:00",
+        "context": {
+            "id": "0581811a2ab0d38d766f970d0a086045",
+            "parent_id": null,
+            "user_id": null
+        }
+    },
+    {
+        "entity_id": "sensor.everspring_ad147_plug_in_dimmer_module_alarm_level",
+        "state": "unavailable",
+        "attributes": {
+            "restored": true,
+            "supported_features": 0,
+            "unit_of_measurement": "",
+            "friendly_name": "Everspring AD147 Plug-in Dimmer Module Alarm Level"
+        },
+        "last_changed": "2020-12-17T14:09:07.027552+00:00",
+        "last_updated": "2020-12-17T14:09:07.027552+00:00",
+        "context": {
+            "id": "3a071d76123f0da040a50cb13b9ab6de",
+            "parent_id": null,
+            "user_id": null
+        }
+    },
+    {
+        "entity_id": "zwave.zipato_bulb_2",
+        "state": "unavailable",
+        "attributes": {
+            "restored": true,
+            "supported_features": 0,
+            "friendly_name": "Zipato Bulb 2"
+        },
+        "last_changed": "2020-12-17T14:09:07.027708+00:00",
+        "last_updated": "2020-12-17T14:09:07.027708+00:00",
+        "context": {
+            "id": "d658b4f8c35e9e2328e8b3becb752a30",
+            "parent_id": null,
+            "user_id": null
+        }
+    },
+    {
+        "entity_id": "light.zipato_bulb_2_level",
+        "state": "unavailable",
+        "attributes": {
+            "restored": true,
+            "min_mireds": 153,
+            "max_mireds": 500,
+            "supported_features": 51,
+            "friendly_name": "Zipato Bulb 2 Level"
+        },
+        "last_changed": "2020-12-17T14:09:07.027857+00:00",
+        "last_updated": "2020-12-17T14:09:07.027857+00:00",
+        "context": {
+            "id": "e6df2ad67818de0d804c00a9aec829a5",
+            "parent_id": null,
+            "user_id": null
+        }
+    },
+    {
+        "entity_id": "switch.switchbot",
+        "state": "unavailable",
+        "attributes": {
+            "restored": true,
+            "supported_features": 0,
+            "friendly_name": "Switchbot"
+        },
+        "last_changed": "2020-12-17T14:09:07.028010+00:00",
+        "last_updated": "2020-12-17T14:09:07.028010+00:00",
+        "context": {
+            "id": "e74e6505e4d148efb98bf9ef25172242",
+            "parent_id": null,
+            "user_id": null
+        }
+    }
+]
