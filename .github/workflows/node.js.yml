@@ -4,10 +4,9 @@
 name: Node.js CI
 
 on:
-  push:
-    branches: [ feature/test_ci ]
+
   pull_request:
-    branches: [ main ]
+    branches: [ develop ]
 
 jobs:
   build:
