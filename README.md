@@ -1,5 +1,9 @@
 # esidom
 
+### Install dependencies
+
+`npm install`
+
 ## Client
 
 _TODO_
