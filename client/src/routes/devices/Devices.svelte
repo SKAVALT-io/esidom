@@ -1,6 +1,6 @@
 <script lang="ts">
-    import Lamp from '../components/Lamp.svelte';
-    import Sensor from '../components/Sensor.svelte';
+    import Lamp from '../../components/devices/Lamp.svelte';
+    import Sensor from '../../components/devices/Sensor.svelte';
 </script>
 
 <div>
