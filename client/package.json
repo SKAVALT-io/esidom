@@ -5,11 +5,11 @@
     "main": "src/index.ts",
     "scripts": {
         "start": "snowpack dev",
-        "build": "cd client &&  snowpack build",
-        "ts-check": "cd client && svelte-check",
-        "test": "cd client &&  jest --coverage",
-        "tsc": "cd client &&  tsc",
-        "lint": "cd client && eslint --ext .ts,.svelte src"
+        "build": "snowpack build",
+        "ts-check": "svelte-check",
+        "test": "jest --coverage",
+        "tsc": "tsc",
+        "lint": "eslint --ext .ts,.svelte src"
     },
     "repository": {
         "type": "git",

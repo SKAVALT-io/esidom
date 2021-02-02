@@ -38,14 +38,17 @@
     function switchLamp() {
         const body = JSON.stringify(
             isOn
-                ? { domain: 'light', service: 'turn_off' }
+                ? {
+                    domain: 'light',
+                    service: 'turn_off',
+                }
                 : {
-                      domain: 'light',
-                      service: 'turn_on',
-                      service_data: {
-                          brightness_pct: 25,
-                      },
-                  }
+                    domain: 'light',
+                    service: 'turn_on',
+                    service_data: {
+                        brightness_pct: 25,
+                    },
+                },
         );
         const headers = new Headers();
         headers.set('Content-Type', 'application/json');
@@ -83,12 +86,7 @@
     <div class="container_item flex rounded-xl w-max min-w-full md:min-w-0">
         <div class="background_img_item flex rounded-xl  rounded-r-none ">
             <div class="flex-none w-20 relative mt-2">
-                <img
-                    class="object-contain md:object-scale-down"
-                    src={srcLamp}
-                    alt=""
-                    on:click={switchLamp}
-                />
+                <img class="object-contain md:object-scale-down" src={srcLamp} alt="" on:click={switchLamp} />
             </div>
         </div>
         <form class="flex-auto p-6">
@@ -102,7 +100,7 @@
             </div>
             <div class="w-full flex-none text-xs font-medium text-white mt-1">
                 {#if isOn}
-                    <input type="range" bind:value={br} on:change={change} />
+                <input type="range" bind:value={br} on:change={change} />
                 {/if}
                 ({br})
             </div>

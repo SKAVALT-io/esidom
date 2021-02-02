@@ -20,6 +20,7 @@ if (import.meta.hot) {
 
 // Type override for HMR so TS doesn't complain
 declare global {
+    // eslint-disable-next-line no-unused-vars
     interface ImportMeta {
         hot: {
             accept: Function;
