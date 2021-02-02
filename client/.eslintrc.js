@@ -37,7 +37,7 @@ module.exports = {
         indent: ['error', 4],
         'no-console': 'off',
         'no-plusplus': 'off',
-        ParseError: 'off',
+        'import/extensions': 0,
     },
     overrides: [
         {
