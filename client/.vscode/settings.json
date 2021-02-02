@@ -23,4 +23,6 @@
     // the values you've explicitly set, above.
     "editor.detectIndentation": false,
     "files.eol": "\n",
+    "emmet.showExpandedAbbreviation": "always",
+    "emmet.includeLanguages": { "svelte": "html" }
 }
