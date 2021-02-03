@@ -1,6 +1,6 @@
-interface Entity {
+export interface Entity {
     id: string;
-    entity_id: string;
+    entityId: string;
     name: string;
     type: string;
     model: string;

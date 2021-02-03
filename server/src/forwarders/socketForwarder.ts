@@ -30,13 +30,12 @@ class SocketForwarder {
         this.socket.on('open', () => {
             console.log('connected to websocket');
         })
-        .on('close', () => {
-            console.log('connection to websocket closed');
-        })
-        .on('message', (wsData: WebSocket.Data) => {
-            const data = JSON.parse(wsData.toString()) as HaSocket;
-            
-            switch (data.type) {
+            .on('close', () => {
+                console.log('connection to websocket closed');
+            })
+            .on('message', (wsData: WebSocket.Data) => {
+                const data = JSON.parse(wsData.toString()) as HaSocket;
+                switch (data.type) {
                 case 'auth_required':
                     this.socket?.send(
                         JSON.stringify({ type: 'auth', access_token: token})
@@ -52,21 +51,21 @@ class SocketForwarder {
                     this.handleSocketResult(data);
                     break;
                 default: break;
-            }
-        });
+                }
+            });
     }
 
-    handleSocketResult(data: HaSocket): void {                
-        const id = data.id;
-        console.log('received result for ws ' + data.id);
+    handleSocketResult(data: HaSocket): void {
+        const { id } = data;
+        console.log(`received result for ws ${data.id}`);
         console.log(data.result);
         (this.socketsMap.get(id) || console.log)(data.result);
         this.socketsMap.delete(id);
     }
 
-    handleSocketEvent(data: HaSocket): void {      
-        const id = data.id;
-        console.log('received event for ws : ' + id);
+    handleSocketEvent(data: HaSocket): void {
+        const { id } = data;
+        console.log(`received event for ws : ${id}`);
         if (data.event.event_type === 'device_registry_updated') {
             console.log(data.event.data);
             if (data.event.data.action === 'create') {
@@ -76,19 +75,19 @@ class SocketForwarder {
             }
             if (data.event.data.action === 'remove') {
                 // io.emit('device_removed', data.event.data);
-            }
-            else {
+            } else {
                 console.log(`Unknown event ${data.event.event_type}`);
             }
         }
     }
 
     async getSocketResponse(req: HaSocket): Promise<any> {
-        const id = req.id;
-        return await new Promise((res, rej) => {
+        const { id } = req;
+        const result = await new Promise((res, rej) => {
             this.socketsMap.set(id, res);
             this.socket?.send(JSON.stringify(req));
         });
+        return result;
     }
     
     async forward(body: any): Promise<any> {

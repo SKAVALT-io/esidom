@@ -1,4 +1,4 @@
-interface Automation {
+export interface Automation {
     id: string;
     name: string;
     description?: string;

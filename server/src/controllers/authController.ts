@@ -2,7 +2,7 @@ import axios from 'axios';
 import FormData from 'form-data';
 import { Request, Response } from 'express';
 import { App } from '../app';
-import config from '../config/config';
+import { config } from '../config/config';
 import { socketForwarder } from '../forwarders/socketForwarder';
 
 @App.rest('/auth')
