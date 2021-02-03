@@ -6,6 +6,9 @@ name: Node.js CI
 on:
   pull_request:
     branches: [ develop ]
+  # for testing
+  push:
+    branches: [ feature/add-linter-to-ci ]
 
 jobs:
   build:
