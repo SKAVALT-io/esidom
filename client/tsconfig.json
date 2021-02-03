@@ -9,8 +9,8 @@
         "node_modules/*",
     ],
     "compilerOptions": {
-        "module": "es6",
-        "target": "es6",
+        "module": "es2020",
+        "target": "es2020",
         "moduleResolution": "node",
         "jsx": "preserve",
         "baseUrl": "./",

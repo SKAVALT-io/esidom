@@ -33,6 +33,7 @@ jobs:
       with:
           eslint-config-path: "./.eslintrc"
           custom-directory: "./"
+          repo-token: ${{secrets.GITHUB_TOKEN}}
 
   buildClient:
     runs-on: ubuntu-latest
@@ -56,3 +57,4 @@ jobs:
       with:
           eslint-config-path: "./.eslintrc.js"
           custom-directory: "./"
+          repo-token: ${{secrets.GITHUB_TOKEN}}
