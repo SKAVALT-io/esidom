@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { deviceService } from '../services/deviceService';
+import deviceService from '../services/deviceService';
 import { App } from '../app';
 
 @App.rest('/device')

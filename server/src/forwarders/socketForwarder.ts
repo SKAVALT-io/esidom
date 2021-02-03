@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
-import { config } from "../config/config";
 import WebSocket from 'ws';
+import config from '../config/config';
 // const io = new socketIo.Server(http, {
 //     cors: {
 //         origin: '*',
@@ -16,11 +16,13 @@ type HaSocket = {
 
 class SocketForwarder {
     socketsMap: Map<number, (body: any) => void>;
+
     socket: WebSocket | null;
+
     uid: number;
 
     constructor() {
-        this.socketsMap = new Map<number, (a: any) => void>();
+        this.socketsMap = new Map();
         this.socket = null;
         this.uid = 2;
     }
@@ -38,7 +40,7 @@ class SocketForwarder {
                 switch (data.type) {
                 case 'auth_required':
                     this.socket?.send(
-                        JSON.stringify({ type: 'auth', access_token: token})
+                        JSON.stringify({ type: 'auth', access_token: token }),
                     );
                     break;
                 case 'auth_ok':
@@ -89,13 +91,12 @@ class SocketForwarder {
         });
         return result;
     }
-    
+
     async forward(body: any): Promise<any> {
         const data: HaSocket = { id: this.uid++, ...body };
         const res: any = await this.getSocketResponse(data);
         return res;
     }
 }
-
 
 export const socketForwarder = new SocketForwarder();

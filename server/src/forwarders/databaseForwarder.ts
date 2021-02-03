@@ -6,4 +6,4 @@ class DatabaseForwarder {
     }
 }
 
-export const databaseForwarder = new DatabaseForwarder();
+export default new DatabaseForwarder();
