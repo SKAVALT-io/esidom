@@ -17,4 +17,5 @@ App.http.listen(port, () => {
     console.log('App is listening on port 3000 !');
 });
 
-const controllers = [deviceController, authController];
+// Tkt
+[deviceController, authController].forEach(() => {});

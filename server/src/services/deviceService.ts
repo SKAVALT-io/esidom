@@ -5,7 +5,7 @@ import socketForwarder from '../forwarders/socketForwarder';
 class DeviceService {
 
     async getDevices(): Promise<Device[]> {
-        const states = await socketForwarder.forward({ type: 'get_states' });
+        const states = await socketForwarder.forward<any>({ type: 'config/device_registry/list' });
         return states.filter((x: any) => ['person', 'sun', 'zone', 'weather', 'device_tracker', 'automation']
             .indexOf(x.entity_id.split('.')[0]) === -1);
     }

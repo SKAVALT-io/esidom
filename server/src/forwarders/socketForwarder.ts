@@ -1,4 +1,3 @@
-import { Request, Response } from 'express';
 import WebSocket from 'ws';
 import config from '../config/config';
 // const io = new socketIo.Server(http, {
@@ -93,7 +92,7 @@ class SocketForwarder {
         return result;
     }
 
-    async forward(body: any): Promise<any> {
+    async forward<T>(body: any): Promise<T> {
         const data: HaSocket = { id: this.uid++, ...body };
         const res: any = await this.getSocketResponse(data);
         return res;

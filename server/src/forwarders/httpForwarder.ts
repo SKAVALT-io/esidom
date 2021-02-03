@@ -1,14 +1,13 @@
-import { Request, Response } from 'express';
 import axios from 'axios';
 
 class HttpForwarder {
 
     get<T>(url: string): Promise<T> {
-        return new Promise((res, rej) => {});
+        return axios.get(url);
     }
 
-    post<T>(): Promise<T> {
-        return new Promise((res, rej) => {});
+    post<T>(url: string, data: any): Promise<T> {
+        return axios.post(url, data);
     }
 
 }
