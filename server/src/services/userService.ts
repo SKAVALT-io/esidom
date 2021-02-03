@@ -5,7 +5,7 @@ import { User } from '../types/user';
 class UserService {
 
     async getUsers(): Promise<User[]> {
-        return new Promise((res, res) => {});
+        return new Promise((res, rej) => {});
     }
 
 }

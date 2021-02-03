@@ -5,7 +5,7 @@ import { Entity } from '../types/entity';
 class EntityService {
 
     async getEntities(): Promise<Entity[]> {
-        return new Promise((res, res) => {});
+        return new Promise((res, rej) => {});
     }
 
 }

@@ -9,8 +9,8 @@
         "node_modules/*",
     ],
     "compilerOptions": {
-        "module": "esnext",
-        "target": "esnext",
+        "module": "es6",
+        "target": "es6",
         "moduleResolution": "node",
         "jsx": "preserve",
         "baseUrl": "./",
