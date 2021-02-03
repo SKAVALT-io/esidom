@@ -1,5 +1,5 @@
 import httpForwarder from '../forwarders/httpForwarder';
-import { socketForwarder } from '../forwarders/socketForwarder';
+import socketForwarder from '../forwarders/socketForwarder';
 import { Room } from '../types/room';
 
 class RoomService {

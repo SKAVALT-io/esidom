@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import entityService from '../services/entityService';
-import { App } from '../app';
+import App from '../app';
 
 @App.rest('/entity')
 class EntityController {
@@ -12,4 +12,4 @@ class EntityController {
     }
 }
 
-export default EntityController;
+export default new EntityController();

@@ -1,10 +1,8 @@
 import { Request, Response } from 'express';
-import { config } from 'dotenv';
 import App from './app';
 import deviceController from './controllers/deviceController';
 import authController from './controllers/authController';
 
-// config();
 require('dotenv').config();
 
 const port: number = 3000;

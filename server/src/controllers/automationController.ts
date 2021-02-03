@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import automationService from '../services/automationService';
-import { App } from '../app';
+import App from '../app';
 
 @App.rest('/automation')
 class AutomationController {
@@ -12,4 +12,4 @@ class AutomationController {
     }
 }
 
-export default AutomationController;
+export default new AutomationController();

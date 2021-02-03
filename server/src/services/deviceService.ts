@@ -1,6 +1,6 @@
 import { Device } from '../types/device';
 import httpForwarder from '../forwarders/httpForwarder';
-import { socketForwarder } from '../forwarders/socketForwarder';
+import socketForwarder from '../forwarders/socketForwarder';
 
 class DeviceService {
     async getDevices(): Promise<Device[]> { // TODO : DeviceType[]

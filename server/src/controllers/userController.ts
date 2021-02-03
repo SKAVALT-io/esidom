@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import userService from '../services/userService';
-import { App } from '../app';
+import App from '../app';
 
 @App.rest('/user')
 class UserController {
@@ -12,4 +12,4 @@ class UserController {
     }
 }
 
-export default UserController;
+export default new UserController();

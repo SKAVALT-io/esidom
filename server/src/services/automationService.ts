@@ -1,5 +1,5 @@
 import httpForwarder from '../forwarders/httpForwarder';
-import { socketForwarder } from '../forwarders/socketForwarder';
+import socketForwarder from '../forwarders/socketForwarder';
 import { Automation } from '../types/automation';
 
 class AutomationService {

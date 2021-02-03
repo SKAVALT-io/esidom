@@ -99,4 +99,4 @@ class SocketForwarder {
     }
 }
 
-export const socketForwarder = new SocketForwarder();
+export default new SocketForwarder();

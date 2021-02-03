@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import groupService from '../services/groupService';
-import { App } from '../app';
+import App from '../app';
 
 @App.rest('/group')
 class GroupController {
@@ -12,4 +12,4 @@ class GroupController {
     }
 }
 
-export default GroupController;
+export default new GroupController();
