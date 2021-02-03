@@ -12,47 +12,47 @@ on:
 
 jobs:
   buildServer:
-
     runs-on: ubuntu-latest
-
+    defaults:
+      run:
+        working-directory: ./server
     strategy:
       matrix:
         node-version: [12.x]
-
     steps:
     - uses: actions/checkout@v2
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version }}
-    - run: cd server && npm ci
+    - run: npm ci
     - run: npm run build --if-present
     - run: npm test
     - name: Run ESLint
       uses: ninosaurus/eslint-check@v5
       with:
-          eslint-config-path: "./server/.eslintrc"
-          custom-directory: "./server"
+          eslint-config-path: "./.eslintrc"
+          custom-directory: "./"
 
   buildClient:
-
     runs-on: ubuntu-latest
-
+    defaults:
+      run:
+        working-directory: ./client
     strategy:
       matrix:
         node-version: [12.x]
-
     steps:
     - uses: actions/checkout@v2
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version }}
-    - run: cd client && npm ci
+    - run: npm ci
     - run: npm run build --if-present
     - run: npm test
     - name: Run ESLint
       uses: ninosaurus/eslint-check@v5
       with:
-          eslint-config-path: ".client/.eslintrc.js"
-          custom-directory: "./client"
+          eslint-config-path: "./.eslintrc.js"
+          custom-directory: "./"
