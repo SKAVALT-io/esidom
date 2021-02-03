@@ -11,14 +11,13 @@ on:
     branches: [ feature/add-linter-to-ci ]
 
 jobs:
-  build:
+  buildServer:
 
     runs-on: ubuntu-latest
 
     strategy:
       matrix:
         node-version: [12.x]
-        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
     steps:
     - uses: actions/checkout@v2
@@ -26,16 +25,34 @@ jobs:
       uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version }}
-    - run: npm ci
+    - run: cd server && npm ci
     - run: npm run build --if-present
     - run: npm test
-    - name: Run ESLint for Server
+    - name: Run ESLint
       uses: ninosaurus/eslint-check@v5
       with:
           eslint-config-path: "./server/.eslintrc"
-          custom-directory: "./"
-    - name: Run ESLint for Client
+          custom-directory: "./server"
+
+  buildClient:
+
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [12.x]
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v1
+      with:
+        node-version: ${{ matrix.node-version }}
+    - run: cd client && npm ci
+    - run: npm run build --if-present
+    - run: npm test
+    - name: Run ESLint
       uses: ninosaurus/eslint-check@v5
       with:
-          eslint-config-path: "./client/.eslintrc"
-          custom-directory: "./"
+          eslint-config-path: ".client/.eslintrc.js"
+          custom-directory: "./client"
