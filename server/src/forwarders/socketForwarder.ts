@@ -15,6 +15,7 @@ type HaSocket = {
 }
 
 class SocketForwarder {
+
     socketsMap: Map<number, (body: any) => void>;
 
     socket: WebSocket | null;
@@ -97,6 +98,7 @@ class SocketForwarder {
         const res: any = await this.getSocketResponse(data);
         return res;
     }
+
 }
 
 export default new SocketForwarder();

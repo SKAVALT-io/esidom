@@ -5,6 +5,7 @@ import socketForwarder from '../forwarders/socketForwarder';
 import config from '../config/config';
 
 class AuthService {
+
     async doAuth(req: Request, res: Response) {
         const baseUrl = req.params.baseUrl || `http://${config.baseUrl}`;
         const username = req.params.username || config.username;
@@ -44,6 +45,7 @@ class AuthService {
         const accessToken: string = res.data.access_token;
         return accessToken;
     }
+
 }
 
 export default new AuthService();

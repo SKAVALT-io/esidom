@@ -2,6 +2,7 @@ import express from 'express';
 import { createServer } from 'http';
 
 export default class App {
+
     static app = express();
 
     static http = createServer(App.app);
