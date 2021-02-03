@@ -1,6 +1,6 @@
 <script lang="ts">
+    import getStaff from '../../utils/skavalt';
     import TailwindExample from '../../components/default/TailwindExample.svelte';
-    import getStaff from '../squalala';
 
     const names = getStaff().join(', ');
 </script>
