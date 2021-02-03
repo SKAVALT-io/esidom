@@ -3,6 +3,7 @@ import socketForwarder from '../forwarders/socketForwarder';
 import { Automation } from '../types/automation';
 
 class AutomationService {
+
     async getAutomations(): Promise<Automation[]> {
         return new Promise((res, res) => {});
     }
@@ -10,6 +11,7 @@ class AutomationService {
     getAutomationById(id: number) {
         httpForwarder.get<number>(`/device/${id}`);
     }
+
 }
 
 export default new AutomationService();
