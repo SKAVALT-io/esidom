@@ -1,7 +1,7 @@
 import axios from 'axios';
 import FormData from 'form-data';
 import { Request, Response } from 'express';
-import { App } from '../app';
+import App from '../app';
 import config from '../config/config';
 import { socketForwarder } from '../forwarders/socketForwarder';
 
@@ -15,6 +15,7 @@ class AuthController {
         console.log(this, baseUrl, username, password);
         const accessToken = await AuthController.auth(baseUrl, username, password);
         socketForwarder.initSocket(accessToken);
+        res.status(200).send();
     }
 
     static async auth(baseUrl: string, username: string, password: string): Promise<string> {
@@ -48,4 +49,4 @@ class AuthController {
     }
 }
 
-export default AuthController;
+export default new AuthController();

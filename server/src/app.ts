@@ -1,14 +1,15 @@
 import express from 'express';
-import { createServer } from "http";
+import { createServer } from 'http';
 
-export class App {
+export default class App {
     static app = express();
+
     static http = createServer(App.app);
 
     static init() {
         App.app.use(express.json());
-        App.app.use(express.urlencoded({extended: true}));
-        App.app.use(function (req, res, next) {
+        App.app.use(express.urlencoded({ extended: true }));
+        App.app.use((req, res, next) => {
             // Website you wish to allow to connect
             res.setHeader('Access-Control-Allow-Origin', '*');
             // Request methods you wish to allow
@@ -22,15 +23,16 @@ export class App {
 
     private static restPathMap = new Map<string, Array<(name: string) => void>>();
 
-    static rest: (name: string) => ClassDecorator = name => (target: Function) => {
-        App.restPathMap.get(target.name)?.forEach(element => {
+    static rest: (name: string) => ClassDecorator = (name) => (target: Function) => {
+        App.restPathMap.get(target.name)?.forEach((element) => {
             element(name);
         });
     }
 
-    static get = (path: string) => (targetClass: Object, name: string, descriptor: PropertyDescriptor) => {
+    static get: (path: string) => MethodDecorator =
+    (path: string) => (targetClass: Object,
+        name: string | symbol, descriptor: PropertyDescriptor) => {
         const className = targetClass.constructor.name;
-
         const arr = App.restPathMap.get(className) ?? [];
         arr.push((base: string) => {
             console.log(`GET: ${base + path}`);

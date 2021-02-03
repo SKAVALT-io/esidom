@@ -1,5 +1,5 @@
 export default {
-    baseUrl: process.env.baseUrl,
-    username: process.env.username,
-    password: process.env.password,
+    baseUrl: process.env.baseUrl ?? '',
+    username: process.env.user ?? '',
+    password: process.env.password ?? '',
 };

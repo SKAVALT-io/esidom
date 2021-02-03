@@ -4,7 +4,7 @@
   "description": "Esidom server",
   "main": "dist/src/index.js",
   "scripts": {
-    "start": "nodemon src/index.ts",
+    "start": "nodemon -r dotenv/config src/index.ts",
     "test": "jest --coverage",
     "build": "tsc --project ./",
     "lint": "eslint . --ext .ts"

@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import deviceService from '../services/deviceService';
-import { App } from '../app';
+import App from '../app';
 
 @App.rest('/device')
 class DeviceController {
@@ -12,4 +12,4 @@ class DeviceController {
     }
 }
 
-export default DeviceController;
+export default new DeviceController();
