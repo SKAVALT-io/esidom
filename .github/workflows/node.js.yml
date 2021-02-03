@@ -27,13 +27,8 @@ jobs:
         node-version: ${{ matrix.node-version }}
     - run: npm ci
     - run: npm run build --if-present
+    - run: npm run lint
     # - run: npm test
-    - name: Run ESLint
-      uses: ninosaurus/eslint-check@v5
-      with:
-          eslint-config-path: "./.eslintrc"
-          custom-directory: "./"
-          repo-token: ${{secrets.GITHUB_TOKEN}}
 
   buildClient:
     runs-on: ubuntu-latest
@@ -51,10 +46,5 @@ jobs:
         node-version: ${{ matrix.node-version }}
     - run: npm ci
     - run: npm run build --if-present
+    - run: npm run lint
     # - run: npm test
-    - name: Run ESLint
-      uses: ninosaurus/eslint-check@v5
-      with:
-          eslint-config-path: "./.eslintrc.js"
-          custom-directory: "./"
-          repo-token: ${{secrets.GITHUB_TOKEN}}
