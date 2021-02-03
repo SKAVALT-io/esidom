@@ -1,5 +1,5 @@
 <script lang="ts">
-    import TailwindExample from '../components/TailwindExample.svelte';
+    import TailwindExample from '../../components/default/TailwindExample.svelte';
 </script>
 
 Welcome to SKAVALT :)

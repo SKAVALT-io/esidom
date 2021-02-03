@@ -1,9 +1,9 @@
 <script lang="ts">
     import Router from 'svelte-spa-router';
-    import Navbar from './components/Navbar.svelte';
+    import Navbar from './components/others/Navbar.svelte';
 
-    import Devices from './routes/Devices.svelte';
-    import Home from './routes/Home.svelte';
+    import Devices from './routes/devices/Devices.svelte';
+    import Home from './routes/default/Home.svelte';
 
     const routes = {
         '/devices/': Devices,
