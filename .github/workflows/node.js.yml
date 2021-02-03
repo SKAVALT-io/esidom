@@ -26,3 +26,13 @@ jobs:
     - run: npm ci
     - run: npm run build --if-present
     - run: npm test
+    - name: Run ESLint for Server
+      uses: ninosaurus/eslint-check@v5
+      with:
+          eslint-config-path: "./server/.eslintrc"
+          custom-directory: "./"
+    - name: Run ESLint for Client
+      uses: ninosaurus/eslint-check@v5
+      with:
+          eslint-config-path: "./client/.eslintrc"
+          custom-directory: "./"
