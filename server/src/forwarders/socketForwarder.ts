@@ -1,3 +1,5 @@
+import socketIo from 'socket.io';
+import App from '../app';
 import WebSocket from 'ws';
 import config from '../config/config';
 // const io = new socketIo.Server(http, {
@@ -15,16 +17,24 @@ type HaSocket = {
 
 class SocketForwarder {
 
-    socketsMap: Map<number, (body: any) => void>;
+    // eslint-disable-next-line no-unused-vars
+    private socketsMap: Map<number, (body: any) => void>;
 
-    socket: WebSocket | null;
+    private socket: WebSocket | null;
 
-    uid: number;
+    private uid: number;
+
+    private io: socketIo.Server;
 
     constructor() {
         this.socketsMap = new Map();
         this.socket = null;
         this.uid = 2;
+        this.io = new socketIo.Server(App.http, {
+            cors: {
+                origin: '*',
+            },
+        });
     }
 
     initSocket(token: string): void {
@@ -73,10 +83,10 @@ class SocketForwarder {
             if (data.event.data.action === 'create') {
                 (this.socketsMap.get(id) || console.log)(data.event.data);
                 this.socketsMap.delete(id);
-                // io.emit('device_created', data.event.data);
+                this.io.emit('device_created', data.event.data);
             }
             if (data.event.data.action === 'remove') {
-                // io.emit('device_removed', data.event.data);
+                this.io.emit('device_removed', data.event.data);
             } else {
                 console.log(`Unknown event ${data.event.event_type}`);
             }
