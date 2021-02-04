@@ -1,7 +1,7 @@
-import axios from 'axios';
 import FormData from 'form-data';
 import { Request, Response } from 'express';
 import socketForwarder from '../forwarders/socketForwarder';
+import httpForwarder from '../forwarders/httpForwarder';
 import config from '../config/config';
 
 class AuthService {
@@ -17,15 +17,15 @@ class AuthService {
     }
 
     static async auth(baseUrl: string, username: string, password: string): Promise<string> {
-        let res: any = await axios.post(`${baseUrl}/auth/login_flow`, {
+        let res: any = await httpForwarder.post('/auth/login_flow', {
             client_id: `${baseUrl}/`,
             handler: ['homeassistant', null],
             redirect_uri: `${baseUrl}/?auth_callback=1`,
         });
         const flowId = res.data.flow_id;
         console.log(flowId);
-        res = await axios.post(
-            `${baseUrl}/auth/login_flow/${flowId}`,
+        res = await httpForwarder.post(
+            `/auth/login_flow/${flowId}`,
             {
                 username,
                 password,
@@ -37,8 +37,8 @@ class AuthService {
         bodyFormData.append('code', resultData);
         bodyFormData.append('client_id', `${baseUrl}/`);
         bodyFormData.append('grant_type', 'authorization_code');
-        res = await axios.post(
-            `${baseUrl}/auth/token`,
+        res = await httpForwarder.post(
+            '/auth/token',
             bodyFormData,
             { headers: { ...bodyFormData.getHeaders() } },
         );
