@@ -13,6 +13,7 @@ class AuthService {
         console.log(this, baseUrl, username, password);
         const accessToken = await AuthService.auth(baseUrl, username, password);
         socketForwarder.initSocket(accessToken);
+        httpForwarder.setToken(accessToken);
         res.status(200).send();
     }
 
