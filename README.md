@@ -1,8 +1,6 @@
 # esidom
 
-### Install dependencies
 
-`npm install`
 
 ## Client
 
@@ -10,14 +8,18 @@ _TODO_
 
 ## Server
 
+### Install dependencies
+
+`npm install`
+
 ### Building
 
-`npm run buildServer`
+`npm run build`
 
 ### Testing
 
-`npm run testServer`
+`npm run test`
 
 ### Lauching
 
-`npm run startServer`
+`npm run start`

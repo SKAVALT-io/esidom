@@ -21,6 +21,8 @@
         "indent": ["error", 4],
         "no-console": "off",
         "no-plusplus": "off",
-        "import/extensions": "off"
+        "import/extensions": "off",
+        "class-methods-use-this": "off",
+        "padded-blocks": ["error", {"classes": "always"}]
     }
-  }
+}
