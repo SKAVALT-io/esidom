@@ -10,14 +10,13 @@ class DeviceService {
             .forward<HaDevice[]>({ type: 'config/device_registry/list' });
         const entityRegistry: HaEntity[] = await socketForwarder
             .forward<HaEntity[]>({ type: 'config/entity_registry/list' });
-        const devices: Device[] = [];
         const states: any[] = await socketForwarder
             .forward<any[]>({ type: 'get_states' });
 
-        deviceRegistry.forEach((entry: HaDevice) => {
+        return deviceRegistry.map((entry: HaDevice) => {
             const { id, name, model } = entry;
             const device: Device = {
-                id, name, model, entities: [],
+                id, name, model, entities: [], automations: [],
             };
             const deviceEntities: Entity[] = entityRegistry
                 .filter((e: HaEntity) => e.device_id === device.id)
@@ -33,13 +32,13 @@ class DeviceService {
                     return entity;
                 });
             device.entities = { ...deviceEntities };
-            devices.push(device);
+            return device;
         });
-        return devices;
     }
 
-    getDeviceById(id: number) {
-        httpForwarder.get<number>(`/device/${id}`);
+    async getDeviceById(id: string) {
+        const devices: Device[] = await this.getDevices();
+        return devices.find((d: Device) => d.id === id);
     }
 
 }
