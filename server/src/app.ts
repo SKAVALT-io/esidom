@@ -24,12 +24,14 @@ export default class App {
 
     private static restPathMap = new Map<string, Array<(name: string) => void>>();
 
+    // Create rest annotation
     static rest: (name: string) => ClassDecorator = (name) => (target: Function) => {
         App.restPathMap.get(target.name)?.forEach((element) => {
             element(name);
         });
     }
 
+    // Create get annotation
     static get: (path: string) => MethodDecorator =
     (path: string) => (targetClass: Object,
         name: string | symbol, descriptor: PropertyDescriptor) => {
@@ -45,36 +47,68 @@ export default class App {
         return descriptor;
     }
 
-    // static post = (path: string) => (targetClass: Function, name: string, descriptor: PropertyDescriptor) => {
-    //     const base = App.restPathMap.get(targetClass);
-    //     console.log(`POST: ${base + path}`);
-    //     App.app.post(base + path, (req, res) => {
-    //         descriptor.value(req, res);
-    //     });
-    // }
+    // Create post annotation
+    static post: (path: string) => MethodDecorator =
+    (path: string) => (targetClass: Object,
+        name: string | symbol, descriptor: PropertyDescriptor) => {
+        const className = targetClass.constructor.name;
+        const arr = App.restPathMap.get(className) ?? [];
+        arr.push((base: string) => {
+            console.log(`POST: ${base + path}`);
+            App.app.post(base + path, (req, res) => {
+                descriptor.value(req, res);
+            });
+        });
+        App.restPathMap.set(className, arr);
+        return descriptor;
+    }
 
-    // static put = (path: string) => (targetClass: Function, name: string, descriptor: PropertyDescriptor) => {
-    //     const base = App.restPathMap.get(targetClass);
-    //     console.log(`PUT: ${base + path}`);
-    //     App.app.put(base + path, (req, res) => {
-    //         descriptor.value(req, res);
-    //     });
-    // }
+    // Create put annotation
+    static put: (path: string) => MethodDecorator =
+    (path: string) => (targetClass: Object,
+        name: string | symbol, descriptor: PropertyDescriptor) => {
+        const className = targetClass.constructor.name;
+        const arr = App.restPathMap.get(className) ?? [];
+        arr.push((base: string) => {
+            console.log(`PUT: ${base + path}`);
+            App.app.put(base + path, (req, res) => {
+                descriptor.value(req, res);
+            });
+        });
+        App.restPathMap.set(className, arr);
+        return descriptor;
+    }
 
-    // static delete = (path: string) => (targetClass: Function, name: string, descriptor: PropertyDescriptor) => {
-    //     const base = App.restPathMap.get(targetClass);
-    //     console.log(`DELETE: ${base + path}`);
-    //     App.app.delete(base + path, (req, res) => {
-    //         descriptor.value(req, res);
-    //     });
-    // }
+    // Create patch annotation
+    static patch: (path: string) => MethodDecorator =
+    (path: string) => (targetClass: Object,
+        name: string | symbol, descriptor: PropertyDescriptor) => {
+        const className = targetClass.constructor.name;
+        const arr = App.restPathMap.get(className) ?? [];
+        arr.push((base: string) => {
+            console.log(`PATCH: ${base + path}`);
+            App.app.patch(base + path, (req, res) => {
+                descriptor.value(req, res);
+            });
+        });
+        App.restPathMap.set(className, arr);
+        return descriptor;
+    }
 
-    // static patch = (path: string) => (targetClass: Function, name: string, descriptor: PropertyDescriptor) => {
-    //     const base = App.restPathMap.get(targetClass);
-    //     console.log(`PATCH: ${base + path}`);
-    //     App.app.patch(base + path, (req, res) => {
-    //         descriptor.value(req, res);
-    //     });
-    // }
+    // Create delete annotation
+    static delete: (path: string) => MethodDecorator =
+    (path: string) => (targetClass: Object,
+        name: string | symbol, descriptor: PropertyDescriptor) => {
+        const className = targetClass.constructor.name;
+        const arr = App.restPathMap.get(className) ?? [];
+        arr.push((base: string) => {
+            console.log(`DELETE: ${base + path}`);
+            App.app.delete(base + path, (req, res) => {
+                descriptor.value(req, res);
+            });
+        });
+        App.restPathMap.set(className, arr);
+        return descriptor;
+    }
 
 }
