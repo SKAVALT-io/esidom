@@ -5,7 +5,7 @@ import { Room } from '../types/room';
 class RoomService {
 
     async getRooms(): Promise<Room[]> {
-        return new Promise((res, res) => {});
+        return new Promise((res, rej) => {});
     }
 
 }
