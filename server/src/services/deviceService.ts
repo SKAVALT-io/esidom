@@ -31,7 +31,7 @@ class DeviceService {
                     };
                     return entity;
                 });
-            device.entities = { ...deviceEntities };
+            device.entities = deviceEntities;
             return device;
         });
     }

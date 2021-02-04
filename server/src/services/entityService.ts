@@ -13,6 +13,11 @@ class EntityService {
             .flat();
     }
 
+    async getEntityById(id: string) {
+        const entities = await this.getEntities();
+        return entities.find((e: Entity) => e.id === id);
+    }
+
 }
 
 export default new EntityService();
