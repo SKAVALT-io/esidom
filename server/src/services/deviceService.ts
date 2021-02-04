@@ -1,13 +1,41 @@
-import { Device } from '../types/device';
 import httpForwarder from '../forwarders/httpForwarder';
 import socketForwarder from '../forwarders/socketForwarder';
+import { Device, HaDevice } from '../types/device';
+import { Entity, HaEntity } from '../types/entity';
 
 class DeviceService {
 
     async getDevices(): Promise<Device[]> {
-        const states = await socketForwarder.forward<any>({ type: 'config/device_registry/list' });
-        return states.filter((x: any) => ['person', 'sun', 'zone', 'weather', 'device_tracker', 'automation']
-            .indexOf(x.entity_id.split('.')[0]) === -1);
+        const deviceRegistry: HaDevice[] = await socketForwarder
+            .forward<HaDevice[]>({ type: 'config/device_registry/list' });
+        const entityRegistry: HaEntity[] = await socketForwarder
+            .forward<HaEntity[]>({ type: 'config/entity_registry/list' });
+        const devices: Device[] = [];
+        const states: any[] = await socketForwarder
+            .forward<any[]>({ type: 'get_states' });
+
+        deviceRegistry.forEach((entry: HaDevice) => {
+            const { id, name, model } = entry;
+            const device: Device = {
+                id, name, model, entities: [],
+            };
+            const deviceEntities: Entity[] = entityRegistry
+                .filter((e: HaEntity) => e.device_id === device.id)
+                .map((e: HaEntity) => {
+                    const entity: Entity = {
+                        id: e.config_entry_id,
+                        entityId: e.entity_id,
+                        name: e.name,
+                        type: e.entity_id.split('.')[0],
+                        model: device.model,
+                        data: states.filter((s: any) => s.entity_id === e.entity_id),
+                    };
+                    return entity;
+                });
+            device.entities = { ...deviceEntities };
+            devices.push(device);
+        });
+        return devices;
     }
 
     getDeviceById(id: number) {

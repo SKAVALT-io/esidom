@@ -59,8 +59,8 @@ class SocketForwarder {
 
     handleSocketResult(data: HaSocket): void {
         const { id } = data;
-        console.log(`received result for ws ${data.id}`);
-        console.log(data.result);
+        // console.log(`received result for ws ${id}`);
+        // console.log(data.result);
         (this.socketsMap.get(id) || console.log)(data.result);
         this.socketsMap.delete(id);
     }
