@@ -1,4 +1,5 @@
 /* eslint-disable camelcase */
+import { Automation } from './automation';
 import { Entity } from './entity';
 
 export interface Device {
@@ -6,6 +7,7 @@ export interface Device {
     name: string;
     model: string;
     entities: Array<Entity>;
+    automations: Array<Automation>;
 }
 
 export interface HaDevice {
