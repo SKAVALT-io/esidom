@@ -9,7 +9,6 @@ class EntityController {
     async getEntities(req: Request, res: Response): Promise<void> {
         const result = await entityService.getEntities();
         res.status(200).send(result);
-        console.log(this);
     }
 
 }
