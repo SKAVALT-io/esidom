@@ -41,6 +41,32 @@ class DeviceService {
         return devices.find((d: Device) => d.id === id);
     }
 
+    async pairdevice(protocol: string): Promise<boolean> {
+
+        switch (protocol) {
+        case 'ZWave': {
+            await httpForwarder.post<any>('/api/services/zwave/add_node', null);
+            return true;
+        }
+        case 'ZigBee': {
+            await socketForwarder.forward<any>({
+                type: 'call_service',
+                domain: 'mqtt',
+                service: 'publish',
+                service_data: {
+                    topic: 'zigbee2mqtt/bridge/request/permit_join',
+                    payload_template: '"{"value": true}"',
+                },
+            });
+            return true;
+        }
+        default: {
+            return false;
+        }
+        }
+
+    }
+
 }
 
 export default new DeviceService();

@@ -25,6 +25,12 @@ class DeviceController {
         }
     }
 
+    @App.post('')
+    async postDevice(req: Request, res: Response) {
+        await deviceService.pairdevice(req.body.protocol);
+        res.status(200).send();
+    }
+
 }
 
 export default new DeviceController();
