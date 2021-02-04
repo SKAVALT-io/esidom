@@ -23,9 +23,23 @@ class EntityController {
             const result: Entity | undefined = await entityService.getEntityById(id);
             const code: number = result ? 200 : 404;
             const data: Entity | any = result || { message: 'No entity with such id' };
-            res.status(code).send(data); // TODO: define error handling
-        } catch (err) {
+            res.status(code).send(data);
+        } catch (err) { // TODO: define error handling
             res.status(404).send({ message: err });
+        }
+    }
+
+    @App.put('/:id')
+    async updateEntityState(req: Request, res: Response): Promise<void> {
+        try {
+            const { id } = req.params;
+            const { service, serviceData } = req.body;
+            console.log(`${id} ${service} ${serviceData}`);
+            const result: Entity | undefined = await entityService
+                .updateEntityState(id, service, serviceData);
+            res.status(200).send(result);
+        } catch (err) {
+            res.status(404).send(err);
         }
     }
 

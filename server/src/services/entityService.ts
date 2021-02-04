@@ -18,6 +18,20 @@ class EntityService {
         return entities.find((e: Entity) => e.id === id);
     }
 
+    async updateEntityState(id: string, service: string, serviceData: any) {
+        const entity: Entity | undefined = await this.getEntityById(id);
+        if (entity === undefined) {
+            return entity;
+        }
+        const res = socketForwarder.forward<any>({
+            type: 'call_service',
+            domain: service.split('.')[0],
+            service: service.split('.')[1],
+            service_data: serviceData,
+        });
+        return res;
+    }
+
 }
 
 export default new EntityService();
