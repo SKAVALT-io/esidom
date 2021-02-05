@@ -1,37 +1,27 @@
 import httpForwarder from '../forwarders/httpForwarder';
 import socketForwarder from '../forwarders/socketForwarder';
-import { Device, HaDevice } from '../types/device';
-import { Entity, HaEntity } from '../types/entity';
+import { Device } from '../types/device';
+import { HaDevice, HaEntity, HaStateResponse } from '../types/haTypes';
+import entityService from './entityService';
 
 class DeviceService {
 
     async getDevices(): Promise<Device[]> {
-        const deviceRegistry: HaDevice[] = await socketForwarder
-            .forward<HaDevice[]>({ type: 'config/device_registry/list' });
-        const entityRegistry: HaEntity[] = await socketForwarder
-            .forward<HaEntity[]>({ type: 'config/entity_registry/list' });
-        const states: any[] = await socketForwarder
-            .forward<any[]>({ type: 'get_states' });
-
-        return deviceRegistry.map((entry: HaDevice) => {
-            const { id, name, model } = entry;
+        const devices: HaDevice[] = await socketForwarder.forward({ type: 'config/device_registry/list' });
+        const entities: HaEntity[] = await socketForwarder.forward({ type: 'config/entity_registry/list' });
+        const states: HaStateResponse[] = await socketForwarder.forward({ type: 'get_states' });
+        return devices.map((d: HaDevice) => {
             const device: Device = {
-                id, name, model, entities: [], automations: [],
+                id: d.id,
+                name: d.name,
+                model: d.model,
+                entities: entityService.filterEntitiesByDevice(d.id, entities, states),
+                automations: [],
+                nameByUser: d.name_by_user ?? '',
+                disabledBy: d.disabled_by ?? '',
+                areaId: d.area_id ?? '',
             };
-            const deviceEntities: Entity[] = entityRegistry
-                .filter((e: HaEntity) => e.device_id === device.id)
-                .map((e: HaEntity) => {
-                    const entity: Entity = {
-                        id: e.config_entry_id,
-                        entityId: e.entity_id,
-                        name: e.name,
-                        type: e.entity_id.split('.')[0],
-                        model: device.model,
-                        data: states.filter((s: any) => s.entity_id === e.entity_id),
-                    };
-                    return entity;
-                });
-            device.entities = deviceEntities;
+            // TODO: device.automations = populate automations
             return device;
         });
     }
@@ -41,15 +31,15 @@ class DeviceService {
         return devices.find((d: Device) => d.id === id);
     }
 
-    async pairdevice(protocol: string): Promise<boolean> {
+    async pairdevice(protocol: string): Promise<any> {
 
         switch (protocol.toLowerCase()) {
         case 'zwave': {
-            await httpForwarder.post<any>('/api/services/zwave/add_node', null);
-            return true;
+            const res = httpForwarder.post<any>('/api/services/zwave/add_node', null);
+            return res;
         }
         case 'zigbee': {
-            await socketForwarder.forward<any>({
+            const res = await socketForwarder.forward({
                 type: 'call_service',
                 domain: 'mqtt',
                 service: 'publish',
@@ -58,13 +48,12 @@ class DeviceService {
                     payload_template: '"{"value": true}"',
                 },
             });
-            return true;
+            return res;
         }
         default: {
-            return false;
+            return undefined;
         }
         }
-
     }
 
 }

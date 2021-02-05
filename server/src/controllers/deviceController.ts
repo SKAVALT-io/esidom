@@ -29,9 +29,9 @@ class DeviceController {
     async postDevice(req: Request, res: Response) {
         const result: boolean = await deviceService.pairdevice(req.body.protocol);
         if (result) {
-            res.status(200).send();
+            res.status(200).send(result);
         } else {
-            res.status(404).send();
+            res.status(404).send({ message: 'Failed to pair device' });
         }
     }
 
