@@ -8,12 +8,20 @@ type HaSocket = {
     id: number,
     result?: any,
     event?: any,
+    success?: boolean;
+    error?: {
+        code: string;
+        message: string;
+    }
 }
 
 class SocketForwarder {
 
     // eslint-disable-next-line no-unused-vars
     private socketsMap: Map<number, (body: any) => void>;
+
+    // eslint-disable-next-line no-unused-vars
+    private errorsMap: Map<number, (body: any) => void>;
 
     private socket: WebSocket | null;
 
@@ -23,6 +31,7 @@ class SocketForwarder {
 
     constructor() {
         this.socketsMap = new Map();
+        this.errorsMap = new Map();
         this.socket = null;
         this.uid = 2;
         this.io = new socketIo.Server(App.http, {
@@ -75,14 +84,26 @@ class SocketForwarder {
             event_type: 'device_registry_updated',
             id: this.uid++,
         });
+
+        this.forward({
+            type: 'subscribe_events',
+            event_type: 'entity_registry_updated',
+            id: this.uid++,
+        });
     }
 
     handleSocketResult(data: HaSocket): void {
         const { id } = data;
         console.log(`received result for ws ${id}`);
-        console.log(data.result);
-        (this.socketsMap.get(id) || console.log)(data.result);
+        if (data.success === true) {
+            console.log(data.result);
+            (this.socketsMap.get(id) || console.log)(data.result);
+        } else if (data.success === false) {
+            console.log(`${data.error?.code} ${data.error?.message}`);
+            (this.errorsMap.get(id) || console.log)(data.error);
+        }
         this.socketsMap.delete(id);
+        this.errorsMap.delete(id);
     }
 
     handleSocketEvent(data: HaSocket): void {
@@ -105,7 +126,7 @@ class SocketForwarder {
             }
         }
         if (data?.event?.event_type === 'state_changed') {
-            console.log(`state changed : ${JSON.stringify(data.event.data)}`);
+            // console.log(`state changed : ${JSON.stringify(data.event.data)}`);
             this.io.emit('entity_updated', data?.event?.data);
         }
     }
@@ -114,6 +135,7 @@ class SocketForwarder {
         const { id } = req;
         const result = await new Promise((res, rej) => {
             this.socketsMap.set(id, res);
+            this.errorsMap.set(id, rej);
             this.socket?.send(JSON.stringify(req));
         });
         return result;
