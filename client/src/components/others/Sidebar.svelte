@@ -57,11 +57,11 @@
     .fa {
         position: relative;
         display: table-cell;
-        width: 55px;
+        width: 60px;
         height: 36px;
         text-align: center;
         top: 5px;
-        font-size: 28px;
+        font-size: 24px;
     }
 
     .main-menu:hover,
