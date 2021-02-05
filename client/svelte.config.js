@@ -6,6 +6,8 @@ module.exports = {
             script: 'ts',
             style: 'postcss',
         },
+        sass: true,
+        typescript: true,
         postcss: true,
     }),
 };

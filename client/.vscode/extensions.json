@@ -5,6 +5,7 @@
         "fivethree.vscode-svelte-snippets",
         "dbaeumer.vscode-eslint",
         "bradlc.vscode-tailwindcss",
-        "orta.vscode-jest"
+        "orta.vscode-jest",
+        "syler.sass-indented"
     ]
 }

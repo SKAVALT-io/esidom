@@ -5,20 +5,26 @@
     const names = getStaff().join(', ');
 </script>
 
-Welcome to SKAVALT :)
-<br /><br />
+<div id="test">
+    Welcome to SKAVALT :)
+    <br /><br />
 
-<div id="cool">
-    <TailwindExample />
+    <div id="cool" class="flex">
+        <TailwindExample />
+    </div>
+
+    <br /><br />
+
+    Made by
+    {names}
 </div>
-
-<br /><br />
-
-Made by
-{names}
 
 <style>
     #cool {
         margin: 0 20%;
+    }
+
+    #test {
+        margin-left: 4%;
     }
 </style>

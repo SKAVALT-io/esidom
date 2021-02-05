@@ -74,6 +74,12 @@ class SocketForwarder {
             type: 'subscribe_events',
             event_type: 'state_changed',
         });
+
+        this.forward<any>({
+            type: 'subscribe_events',
+            event_type: 'device_registry_updated',
+            id: this.uid++,
+        });
     }
 
     handleSocketResult(data: HaSocket): void {

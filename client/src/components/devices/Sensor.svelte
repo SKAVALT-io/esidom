@@ -22,27 +22,25 @@
     const { state } = sensor;
 </script>
 
-<template>
-    <div class="container_item flex rounded-xl w-max min-w-full md:min-w-0">
-        <div class="background_img_item flex rounded-xl  rounded-r-none ">
-            <div class="flex-none w-20 relative mt-2">
-                <img
-                    class="object-contain md:object-scale-down"
-                    src="/hot.svg"
-                    alt=""
-                />
-            </div>
+<div class="container_item flex rounded-xl w-max min-w-full md:min-w-0">
+    <div class="background_img_item flex rounded-xl  rounded-r-none ">
+        <div class="flex-none w-20 relative mt-2">
+            <img
+                class="object-contain md:object-scale-down"
+                src="/hot.svg"
+                alt=""
+            />
         </div>
-        <form class="flex-auto p-6">
-            <div class="flex flex-wrap">
-                <h2 class="flex-auto text-base font-semibold">{name}</h2>
-            </div>
-            <div class="w-full flex-none font-medium text-red-500 mt-1">
-                {state}
-            </div>
-        </form>
     </div>
-</template>
+    <form class="flex-auto p-6">
+        <div class="flex flex-wrap">
+            <h2 class="flex-auto text-base font-semibold">{name}</h2>
+        </div>
+        <div class="w-full flex-none font-medium text-red-500 mt-1">
+            {state}
+        </div>
+    </form>
+</div>
 
 <style>
     img {

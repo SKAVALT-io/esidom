@@ -9,6 +9,7 @@ module.exports = {
             },
         },
         'svelte3/preprocess': eslintSveltePreprocess(),
+        'svelte3/ignore-styles': () => true,
     },
     env: {
         browser: true,
