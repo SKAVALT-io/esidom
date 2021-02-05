@@ -3,7 +3,7 @@
     import Sensor from '../../components/devices/Sensor.svelte';
 </script>
 
-<div>
+<div id="test">
     <div class="grid grid-flow-col grid-rows-2 grid-cols-4 mt-4 ml-4">
         <div>
             <Lamp />
@@ -25,5 +25,9 @@
 <style>
     div {
         color: white;
+    }
+
+    #test {
+        margin-left: 4%;
     }
 </style>
