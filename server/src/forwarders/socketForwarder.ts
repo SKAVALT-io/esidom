@@ -39,9 +39,11 @@ class SocketForwarder {
 
     initSocket(token: string): void {
         this.socket = new WebSocket(`ws://${config.baseUrl}/api/websocket`);
-        this.socket.on('open', () => {
-            console.log('connected to websocket');
-        })
+        this.socket
+            .on('open', () => {
+                console.log('connected to websocket');
+                setTimeout(() => this.subscribeToEvents(), 1000);
+            })
             .on('close', () => {
                 console.log('connection to websocket closed');
             })
@@ -67,10 +69,17 @@ class SocketForwarder {
             });
     }
 
+    private subscribeToEvents() {
+        this.forward<any>({
+            type: 'subscribe_events',
+            event_type: 'state_changed',
+        });
+    }
+
     handleSocketResult(data: HaSocket): void {
         const { id } = data;
-        // console.log(`received result for ws ${id}`);
-        // console.log(data.result);
+        console.log(`received result for ws ${id}`);
+        console.log(data.result);
         (this.socketsMap.get(id) || console.log)(data.result);
         this.socketsMap.delete(id);
     }
@@ -80,16 +89,23 @@ class SocketForwarder {
         console.log(`received event for ws : ${id}`);
         if (data.event.event_type === 'device_registry_updated') {
             console.log(data.event.data);
-            if (data.event.data.action === 'create') {
+            switch (data?.event?.data?.action) {
+            case 'create':
                 (this.socketsMap.get(id) || console.log)(data.event.data);
                 this.socketsMap.delete(id);
                 this.io.emit('device_created', data.event.data);
-            }
-            if (data.event.data.action === 'remove') {
+                return;
+            case 'remove':
                 this.io.emit('device_removed', data.event.data);
-            } else {
+                return;
+            default:
                 console.log(`Unknown event ${data.event.event_type}`);
+                return;
             }
+        }
+        if (data?.event?.event_type === 'state_changed') {
+            console.log(`state changed : ${JSON.stringify(data.event.data)}`);
+            this.io.emit('entity_updated', data?.event?.data);
         }
     }
 
