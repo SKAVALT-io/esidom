@@ -1,12 +1,7 @@
 import socketIo from 'socket.io';
-import App from '../app';
 import WebSocket from 'ws';
+import App from '../app';
 import config from '../config/config';
-// const io = new socketIo.Server(http, {
-//     cors: {
-//         origin: '*',
-//     }
-// });
 
 type HaSocket = {
     type: string,
