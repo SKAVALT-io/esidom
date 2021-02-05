@@ -69,8 +69,7 @@ class EntityService {
             return entity;
         }
         const body = {
-            // type: 'config/entity_registry/update',
-            type: 'this type doesnt exists',
+            type: 'config/entity_registry/update',
             entity_id: entity.id,
             name: entity.name,
             disabled_by: (enable) ? null : 'user',
