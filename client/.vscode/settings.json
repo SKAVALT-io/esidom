@@ -24,5 +24,6 @@
     "editor.detectIndentation": false,
     "files.eol": "\n",
     "emmet.showExpandedAbbreviation": "always",
-    "emmet.includeLanguages": { "svelte": "html" }
+    "emmet.includeLanguages": { "svelte": "html" },
+    "typescript.preferences.importModuleSpecifier": "relative",
 }
