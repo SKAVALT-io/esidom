@@ -26,6 +26,8 @@ class EntityService {
         });
     }
 
+    // entities and states are provided to prevent multiple requests on HA
+    // when iterating over an array
     filterEntitiesByDevice(id: string,
         entities: HaEntity[], states: HaStateResponse[]): Entity[] {
         return entities
@@ -45,17 +47,12 @@ class EntityService {
             });
     }
 
-    async getEntityById(id: string) {
+    async getEntityById(id: string): Promise<Entity | undefined> {
         const entities = await this.getEntities();
         return entities.find((e: Entity) => e.id === id);
     }
 
     async updateEntityState(id: string, service: string, serviceData: any = {}) {
-        // const entity: Entity | undefined = await this.getEntityById(id);
-        // console.log(entity);
-        // if (entity === undefined) {
-        //     return entity;
-        // }
         const res = await socketForwarder.forward<any>({
             type: 'call_service',
             domain: service.split('.')[0],
@@ -64,6 +61,23 @@ class EntityService {
         });
         console.log(res);
         return res;
+    }
+
+    async toggleEntity(id: string, enable: boolean): Promise<HaEntity | undefined> {
+        const entity: Entity | undefined = await this.getEntityById(id);
+        if (entity === undefined) {
+            return entity;
+        }
+        const body = {
+            // type: 'config/entity_registry/update',
+            type: 'this type doesnt exists',
+            entity_id: entity.id,
+            name: entity.name,
+            disabled_by: (enable) ? null : 'user',
+        };
+        const result: HaEntity = await socketForwarder.forward(body);
+        console.log(result);
+        return result;
     }
 
 }
