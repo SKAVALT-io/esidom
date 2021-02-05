@@ -4,8 +4,7 @@
     import Devices from './routes/devices/Devices.svelte';
     import Home from './routes/default/Home.svelte';
 
-    import Sidebar from './components/others/Sidebar.svelte';
-    import Navbar2 from './components/others/Navbar2.svelte';
+    import Navbar from './components/others/Navbar.svelte';
 
     const routes = {
         '/devices/': Devices,
@@ -13,14 +12,11 @@
         // This is optional, but if present it must be the last
         '*': Home,
     };
-
-    let open = false;
 </script>
 
 <main>
-    <Navbar2 bind:sidebar={open} />
-    <!-- <Navbar /> -->
-    <Sidebar bind:open />
+    <Navbar />
+    <!-- <Sidebar bind:open /> -->
     <Router {routes} />
 </main>
 

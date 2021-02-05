@@ -1,110 +1,67 @@
-<div class="nav">
-    <input type="checkbox" id="nav-check" />
-    <div class="nav-header">
-        <div class="nav-title">ESIDOM</div>
-    </div>
-    <div class="nav-btn">
-        <label for="nav-check"> <span /> <span /> <span /> </label>
-    </div>
+<script lang="ts">
+    import Sidebar from './Sidebar.svelte';
 
-    <div class="nav-links">
-        <a href="/#/devices/">Devices</a>
-        <a href="/#/">Home</a>
+    let open = false;
+    const sideBarIsOpen = () => (open = !open);
+</script>
+
+<nav
+    class="top-navbar flex-wrap flex w-full items-center justify-between px-3.5 h-12 bg-gray-900 text-white border-b border-gray-100 z-10"
+>
+    <div class="hamburger flex items-center">
+        <button
+            class="hamburger-button mr-2"
+            class:open
+            on:click={sideBarIsOpen}
+        >
+            <svg
+                class="w-8 h-8"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+            >
+                <path d="M4 6h16M4 12h16M4 18h16" />
+            </svg>
+        </button>
+        <img src="logo-esidom.png" alt="ESIDOM" class="logo h-auto w-12" />
     </div>
-</div>
+    <div class="nav-links flex items-center space-x-4">
+        <a
+            href="/#/devices/"
+            class="lg:inline-flex lg:w-auto w-full py-2 rounded text-gray-400 items-center justify-center hover:bg-gray-900 hover:text-white"
+        >
+            <span> Devices </span>
+        </a>
+        <a
+            href="/#/"
+            class="lg:inline-flex lg:w-auto w-full py-2 rounded text-gray-400 items-center justify-center hover:bg-gray-900 hover:text-white"
+        >
+            <span>Home</span>
+        </a>
+        <a
+            href="/#/"
+            class="lg:inline-flex lg:w-auto w-full py-2 rounded text-gray-400 items-center justify-center hover:bg-gray-900 hover:text-white"
+        >
+            <svg
+                class="w-6 h-6"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+            >
+                <path
+                    d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                />
+            </svg>
+        </a>
+    </div>
+</nav>
+<Sidebar bind:open />
 
 <style>
-    * {
-        box-sizing: border-box;
-    }
-
-    .nav {
-        height: 50px;
-        width: 100%;
-        background-color: #4d4d4d;
-        position: relative;
-    }
-
-    .nav > .nav-header {
-        display: inline;
-    }
-
-    .nav > .nav-header > .nav-title {
-        display: inline-block;
-        font-size: 22px;
-        color: #fff;
-        padding: 10px 10px 10px 10px;
-    }
-
-    .nav > .nav-btn {
-        display: none;
-    }
-
-    .nav > .nav-links {
-        display: inline;
-        float: right;
-        font-size: 18px;
-    }
-
-    .nav > .nav-links > a {
-        display: inline-block;
-        padding: 13px 10px 13px 10px;
-        text-decoration: none;
-        color: #efefef;
-    }
-
-    .nav > .nav-links > a:hover {
-        background-color: rgba(0, 0, 0, 0.3);
-    }
-
-    .nav > #nav-check {
-        display: none;
-    }
-
-    @media (max-width: 600px) {
-        .nav > .nav-btn {
-            display: inline-block;
-            position: absolute;
-            right: 0px;
-            top: 0px;
-        }
-        .nav > .nav-btn > label {
-            display: inline-block;
-            width: 50px;
-            height: 50px;
-            padding: 13px;
-        }
-        .nav > .nav-btn > label:hover,
-        .nav #nav-check:checked ~ .nav-btn > label {
-            background-color: rgba(0, 0, 0, 0.3);
-        }
-        .nav > .nav-btn > label > span {
-            display: block;
-            width: 25px;
-            height: 10px;
-            border-top: 2px solid #eee;
-        }
-        .nav > .nav-links {
-            position: absolute;
-            display: block;
-            width: 100%;
-            background-color: #333;
-            height: 0px;
-            transition: all 0.3s ease-in;
-            overflow-y: hidden;
-            top: 50px;
-            left: 0px;
-        }
-        .nav > .nav-links > a {
-            display: block;
-            width: 100%;
-        }
-        .nav > #nav-check:not(:checked) ~ .nav-links {
-            height: 0px;
-        }
-        .nav > #nav-check:checked ~ .nav-links {
-            height: calc(100vh - 50px);
-            overflow-y: auto;
-        }
-    }
 </style>

@@ -1,79 +1,107 @@
 <script>
-    // eslint-disable-next-line import/no-mutable-exports
+    // eslint-disable-next-line import/prefer-default-export
     export let open = false;
-
-    $: if (open) {
-        document.body.style.setProperty('overflow', 'hidden');
-    } else {
-        document.body.style.removeProperty('overflow');
-    }
-
-    document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && open) open = false;
-    });
 </script>
 
-<aside
-    class="transform top-0 left-0 w-64 bg-gray-900 fixed h-full overflow-auto ease-in-out z-30"
+<link
+    rel="stylesheet"
+    type="text/css"
+    href="https://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css"
+/>
+
+<nav
+    class="main-menu flex flex-wrap transform fixed bg-gray-900 h-screen w-14 overflow-auto ease-out opacity-100 z-30"
     class:open
 >
-    <span class="flex w-full items-center p-4 border-b">
-        <h1>ESIDOM</h1>
-    </span>
-    <span
-        class="flex items-center p-4 hover:bg-indigo-500 hover:text-white "
-        on:click={() => {
-            open = false;
-        }}
-    ><span class="mr-2">
-            <svg
-                fill="none"
-                stroke="currentColor"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                viewBox="0 0 24 24"
-                class="w-6 h-6"
-            >
-                <path
-                    d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"
-                />
-            </svg>
-        </span>
-        <a href="/#/">Home</a>
-    </span>
-    <span
-        class="flex items-center p-4 hover:bg-indigo-500 hover:text-white "
-        on:click={() => {
-            open = false;
-        }}
-    ><span class="mr-2">
-            <svg
-                fill="none"
-                stroke="currentColor"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                viewBox="0 0 24 24"
-                class="w-6 h-6"
-            >
-                <path
-                    d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"
-                />
-            </svg>
-        </span>
-        <a href="/#/devices/">Devices</a>
-    </span>
-</aside>
+    <div>
+        <ul>
+            <li>
+                <a href="/#/">
+                    <i class="fa fa-home" />
+                    <span class="nav-text">Home</span>
+                </a>
+            </li>
+
+            <li>
+                <a href="/#/devices">
+                    <i class="fa fa-user fa-lg" />
+                    <span class="nav-text">Devices</span>
+                </a>
+            </li>
+
+            <li>
+                <a href="/#/todo">
+                    <i class="fa fa-envelope-o fa-lg" />
+                    <span class="nav-text">Contact</span>
+                </a>
+            </li>
+        </ul>
+    </div>
+</nav>
 
 <style>
-    aside {
-        left: -17%;
-        transition: left 0.3s ease-in-out;
+    @media (max-width: 640px) {
+        .main-menu {
+            display: -webkit-inline-box !important;
+            display: -ms-inline-flexbox !important;
+            display: inline-flex !important;
+        }
+    }
+    .main-menu,
+    .open {
+        -webkit-transition: width 0.2s linear;
+        transition: width 0.2s linear;
+        -webkit-transform: translateZ(0) scale(1, 1);
     }
 
+    .fa {
+        position: relative;
+        display: table-cell;
+        width: 55px;
+        height: 36px;
+        text-align: center;
+        top: 5px;
+        font-size: 28px;
+    }
+
+    .main-menu:hover,
     .open {
-        left: 0px;
-        transition: 100%;
+        width: 150px;
+        opacity: 1;
+    }
+
+    .main-menu ul {
+        margin: 10px 0;
+    }
+
+    .main-menu li > a {
+        position: relative;
+        width: 255px;
+        display: table;
+        border-collapse: collapse;
+        border-spacing: 0;
+        color: #ffffff;
+        font-size: 13px;
+    }
+
+    a:hover,
+    a:focus {
+        text-decoration: none;
+        border-left: 0px solid #f7f7f7;
+    }
+
+    nav ul,
+    nav li {
+        outline: 0;
+        margin: 0;
+        padding-bottom: 9px;
+        text-transform: uppercase;
+    }
+
+    .main-menu li:hover > a,
+    .no-touch .dashboard-page nav.dashboard-menu ul li:hover a,
+    .dashboard-page nav.dashboard-menu ul li.active a {
+        color: #fff;
+        background-color: #505050;
     }
 </style>
