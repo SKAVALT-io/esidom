@@ -17,38 +17,6 @@
 
     console.log(r);
     let LAMP: Truc;
-    // r > 0.5
-    //     ? null
-    //     : {
-    //           entity_id: 'light.0x7cb03eaa0a03e828',
-    //           state: 'on',
-    //           attributes: {
-    //               effect_list: [
-    //                   'blink',
-    //                   'breathe',
-    //                   'okay',
-    //                   'channel_change',
-    //                   'finish_effect',
-    //                   'stop_effect',
-    //               ],
-    //               brightness: 23,
-    //               linkquality: 110,
-    //               state: 'ON',
-    //               update: {
-    //                   state: 'available',
-    //               },
-    //               update_available: true,
-    //               friendly_name: '0x7cb03eaa0a03e828',
-    //               supported_features: 45,
-    //           },
-    //           last_changed: '2020-12-17T14:09:40.148957+00:00',
-    //           last_updated: '2020-12-17T14:09:40.148957+00:00',
-    //           context: {
-    //               id: '29a23755fd4524ce1c7c27f6274dd383',
-    //               parent_id: null,
-    //               user_id: null,
-    //           },
-    //       };
 
     function switchLamp() {
         const body = JSON.stringify(

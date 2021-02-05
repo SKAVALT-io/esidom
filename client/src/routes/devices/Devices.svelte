@@ -1,7 +1,22 @@
 <script lang="ts">
     import Device from '../../components/devices/Device.svelte';
-    import Lamp from '../../components/devices/Lamp.svelte';
+    import Door from '../../components/devices/Door.svelte';
+    import Lamp from '../../components/devices/LampRGB.svelte';
     import Sensor from '../../components/devices/Sensor.svelte';
+
+    async function pair() {
+        const protocol = prompt('Protocol');
+
+        const body = JSON.stringify({ protocol });
+        const headers = new Headers();
+        headers.set('Content-Type', 'application/json');
+        await fetch('http://localhost:3000/device', {
+            headers,
+            method: 'POST',
+            body,
+        }).then((x) => x.json());
+        alert('✔️');
+    }
 </script>
 
 <div>
@@ -13,7 +28,10 @@
         <div class="col-span-2">
             <Sensor />
         </div>
-        <div class="">
+        <div>
+            <Door />
+        </div>
+        <!-- <div class="">
             lol
             <Device />
         </div>
@@ -30,7 +48,7 @@
         </div>
         <div>
             <Device />
-        </div>
+        </div> -->
     </div>
 
     <!-- The + button to add device -->
@@ -38,6 +56,7 @@
         <button
             class="py-2 px-4 bg-blue-400  text-white text-xl font-semibold rounded-full shadow-md hover:bg-blue-500 focus:outline-none absolute"
             type="button"
+            on:click={pair}
         >
             +
         </button>
