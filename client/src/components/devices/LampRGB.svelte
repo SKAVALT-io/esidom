@@ -1,12 +1,13 @@
 <script lang="ts">
-    import { io } from 'socket.io-client';
-    import { onDestroy, onMount } from 'svelte';
-    import { HsvPicker } from 'svelte-color-picker';
+    import { io } from "socket.io-client";
+    import { onDestroy, onMount } from "svelte";
+    import { HsvPicker } from "svelte-color-picker";
 
     interface Truc {
         name: string;
-        entity_id: string;
+        id: string;
         state: string;
+        type: string;
         attributes: {
             rgb_color: number[];
             brightness: number;
@@ -22,21 +23,21 @@
         const body = JSON.stringify(
             isOn
                 ? {
-                      service: 'light.turn_off',
+                      service: "light.turn_off",
                   }
                 : {
-                      service: 'light.turn_on',
+                      service: "light.turn_on",
                       serviceData: {
                           brightness_pct: 25,
                       },
                   }
         );
         const headers = new Headers();
-        headers.set('Content-Type', 'application/json');
+        headers.set("Content-Type", "application/json");
 
-        fetch(`http://localhost:3000/entity/${LAMP.entity_id}`, {
+        fetch(`http://localhost:3000/entity/${LAMP.id}`, {
             headers,
-            method: 'PUT',
+            method: "PUT",
             body,
         })
             .then((x) => x.text())
@@ -47,32 +48,32 @@
 
     function change() {
         const body = JSON.stringify({
-            service: 'light.turn_on',
+            service: "light.turn_on",
             serviceData: {
                 brightness_pct: (brightness / 255) * 100,
             },
         });
         const headers = new Headers();
-        headers.set('Content-Type', 'application/json');
-        fetch(`http://localhost:3000/entity/${LAMP.entity_id}`, {
+        headers.set("Content-Type", "application/json");
+        fetch(`http://localhost:3000/entity/${LAMP.id}`, {
             headers,
-            method: 'PUT',
+            method: "PUT",
             body,
         });
     }
 
     let isOn: boolean;
-    $: isOn = state === 'on';
+    $: isOn = state === "on";
     let srcLamp: string;
-    $: srcLamp = isOn ? 'lampe-allumee.png' : 'lampe-eteinte.png';
+    $: srcLamp = isOn ? "lampe-allumee.png" : "lampe-eteinte.png";
     let state: string, brightness: number, rgb: number[];
 
     let socket: any;
     function haha(data: any) {
-        console.log('ws', data);
-        if (data.entity_id === LAMP.entity_id) {
+        console.log("ws", data);
+        if (data.entity_id === LAMP.id) {
             const new_state = data.new_state as Truc;
-            console.log('state', new_state);
+            console.log("state", new_state);
 
             state = new_state.state;
             rgb = new_state.attributes.rgb_color ?? [];
@@ -85,7 +86,7 @@
         const LAMP__ = await fetch(
             `http://localhost:3000/entity/light.zipato_bulb_2_level`
         ).then((x) => x.json());
-        LAMP = LAMP__.data[0] as Truc;
+        LAMP = LAMP__ as Truc;
         LAMP.name = LAMP__.name;
         console.log(LAMP);
 
@@ -93,13 +94,13 @@
         brightness = LAMP.attributes.brightness;
         rgb = LAMP.attributes.rgb_color ?? [];
 
-        socket = io('http://localhost:3000');
-        socket.on('entity_updated', haha);
+        socket = io("http://localhost:3000");
+        socket.on("entity_updated", haha);
     });
 
     onDestroy(() => {
-        console.log('oof je dead ça');
-        socket.off('entity_updated', haha);
+        console.log("oof je dead ça");
+        socket.off("entity_updated", haha);
     });
 
     function debounce(func: Function, timeout?: number) {
@@ -118,16 +119,16 @@
         const { r, g, b } = rgba.detail;
 
         const body = JSON.stringify({
-            service: 'light.turn_on',
+            service: "light.turn_on",
             serviceData: {
                 rgb_color: [r, g, b],
             },
         });
         const headers = new Headers();
-        headers.set('Content-Type', 'application/json');
-        fetch(`http://localhost:3000/entity/${LAMP.entity_id}`, {
+        headers.set("Content-Type", "application/json");
+        fetch(`http://localhost:3000/entity/${LAMP.id}`, {
             headers,
-            method: 'PUT',
+            method: "PUT",
             body,
         });
     });
