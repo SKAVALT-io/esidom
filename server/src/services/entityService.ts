@@ -15,20 +15,23 @@ class EntityService {
 
     async getEntityById(id: string) {
         const entities = await this.getEntities();
-        return entities.find((e: Entity) => e.id === id);
+        return entities.find((e: Entity) => e.entityId === id);
     }
 
-    async updateEntityState(id: string, service: string, serviceData: any) {
+    async updateEntityState(id: string, service: string, serviceData: any = {}) {
         const entity: Entity | undefined = await this.getEntityById(id);
+        console.log(entity);
         if (entity === undefined) {
             return entity;
         }
-        const res = socketForwarder.forward<any>({
+
+        const res = await socketForwarder.forward<any>({
             type: 'call_service',
             domain: service.split('.')[0],
             service: service.split('.')[1],
-            service_data: serviceData,
+            service_data: { entity_id: id, ...serviceData },
         });
+        console.log(res);
         return res;
     }
 
