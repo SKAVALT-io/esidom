@@ -19,7 +19,7 @@
     }
 </script>
 
-<div>
+<div id="test">
     <!-- Grid containing all devices -->
     <div class="devices grid grid-flow-row grid-cols-4 mt-4 ml-4 gap-4">
         <div>
@@ -73,5 +73,9 @@
 
     div {
         color: $color;
+    }
+
+    #test {
+        margin-left: 4%;
     }
 </style>
