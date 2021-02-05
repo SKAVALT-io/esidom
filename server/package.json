@@ -5,6 +5,7 @@
   "main": "dist/src/index.js",
   "scripts": {
     "start": "nodemon -r dotenv/config src/index.ts",
+    "startProd": "npm run build && node -r dotenv/config ./dist/index.js",
     "test": "jest --coverage",
     "build": "tsc --project ./",
     "lint": "eslint . --ext .ts"
