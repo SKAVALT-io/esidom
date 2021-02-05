@@ -43,12 +43,12 @@ class DeviceService {
 
     async pairdevice(protocol: string): Promise<boolean> {
 
-        switch (protocol) {
-        case 'ZWave': {
+        switch (protocol.toLowerCase()) {
+        case 'zwave': {
             await httpForwarder.post<any>('/api/services/zwave/add_node', null);
             return true;
         }
-        case 'ZigBee': {
+        case 'zigbee': {
             await socketForwarder.forward<any>({
                 type: 'call_service',
                 domain: 'mqtt',
