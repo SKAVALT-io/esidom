@@ -6,22 +6,11 @@ export interface Device {
     id: string;
     name: string;
     model: string;
-    entities: Array<Entity>;
-    automations: Array<Automation>;
+    entities: Entity[];
+    automations: Automation[];
+    nameByUser?: string;
+    disabledBy?: string;
+    areaId?: string;
 }
-
-export interface HaDevice {
-    id: string;
-    name: string;
-    connections: { connection_type: string, connection_identifier: string }[];
-    identifiers: (string[])[];
-    manufacturer: string;
-    model: string;
-    config_entries: string[];
-    sw_version: string;
-    via_device_id: string;
-    area_id: string;
-    entry_type: string | null; // only "service" or null
-    name_by_user: string;
-    disabled_by: string;
-}
+// get everything with { type: 'config/device_registry/list' }
+// except for entities and automations
