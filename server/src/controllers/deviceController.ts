@@ -7,8 +7,28 @@ class DeviceController {
 
     @App.get('')
     async getDevices(req: Request, res: Response): Promise<void> {
-        const result = await deviceService.getDevices();
-        res.status(200).send(result);
+        try {
+            const result = await deviceService.getDevices();
+            res.status(200).send(result);
+        } catch (err) {
+            res.status(404).send({ message: err });
+        }
+    }
+
+    @App.get('/:deviceId')
+    async getDevice(req: Request, res: Response): Promise<void> {
+        try {
+            const result = await deviceService.getDeviceById(req.params.deviceId);
+            res.status(200).send(result);
+        } catch (err) {
+            res.status(404).send({ message: err });
+        }
+    }
+
+    @App.post('')
+    async postDevice(req: Request, res: Response) {
+        await deviceService.pairdevice(req.body.protocol);
+        res.status(200).send();
     }
 
 }

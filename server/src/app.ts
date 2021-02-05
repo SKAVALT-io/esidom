@@ -3,6 +3,8 @@ import { createServer } from 'http';
 
 export default class App {
 
+    private static isInit = false;
+
     static app = express();
 
     static http = createServer(App.app);
@@ -26,6 +28,10 @@ export default class App {
 
     // Create rest annotation
     static rest: (name: string) => ClassDecorator = (name) => (target: Function) => {
+        if (!App.isInit) {
+            App.init();
+            App.isInit = true;
+        }
         App.restPathMap.get(target.name)?.forEach((element) => {
             element(name);
         });

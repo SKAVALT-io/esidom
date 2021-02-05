@@ -43,6 +43,10 @@ module.exports = {
         {
             files: ['*.svelte'],
             processor: 'svelte3/svelte3',
+            rules: {
+                'import/prefer-default-export': 0,
+                'import/no-mutable-exports': 0,
+            },
         },
     ],
 };

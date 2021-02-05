@@ -3,6 +3,7 @@ import { config } from 'dotenv';
 import App from './app';
 import deviceController from './controllers/deviceController';
 import authController from './controllers/authController';
+import entityController from './controllers/entityController';
 
 config(); // Dot env config
 
@@ -18,4 +19,4 @@ App.http.listen(port, () => {
 });
 
 // Tkt
-[deviceController, authController].forEach(() => {});
+[deviceController, authController, entityController].forEach(() => {});

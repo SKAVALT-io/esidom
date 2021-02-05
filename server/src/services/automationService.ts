@@ -5,7 +5,7 @@ import { Automation } from '../types/automation';
 class AutomationService {
 
     async getAutomations(): Promise<Automation[]> {
-        return new Promise((res, res) => {});
+        return new Promise((res, rej) => {});
     }
 
     getAutomationById(id: number) {
