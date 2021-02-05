@@ -14,7 +14,7 @@ class AuthService {
         const accessToken = await AuthService.auth(baseUrl, username, password);
         socketForwarder.initSocket(accessToken);
         httpForwarder.setToken(accessToken);
-        res.status(200).send();
+        res.status(200).send({ token: accessToken });
     }
 
     static async auth(baseUrl: string, username: string, password: string): Promise<string> {
