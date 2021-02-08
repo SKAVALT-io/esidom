@@ -2,14 +2,14 @@ FROM node:12.20.1-buster
 
 WORKDIR /usr/src/esidom/client
 COPY client/package*.json ./
-RUN npm install
+RUN npm ci
 # RUN npm ci --only=production
 COPY client/ ./
 
 WORKDIR /usr/src/esidom/server
 COPY server/package*.json ./
-RUN npm install
-# RUN npm ci --only=production
+RUN npm ci
+# --only=production
 COPY server/ ./
 
 WORKDIR /usr/src/esidom/
