@@ -56,11 +56,12 @@ jobs:
       - name: Copy repo via ssh
         uses: garygrossgarten/github-action-scp@release
         with:
-          local: server
+          local: .
           remote: esidom
           host: ${{ secrets.DEPLOY_HOST }}
           username: ${{ secrets.DEPLOY_USER }}
           password: ${{ secrets.DEPLOY_PASSWORD }}
+          dotfiles: true
       - name: Build and launch docker image
         uses: appleboy/ssh-action@master
         with:
