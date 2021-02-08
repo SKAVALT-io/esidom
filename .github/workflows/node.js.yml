@@ -28,11 +28,6 @@ jobs:
     - run: |
         npm ci
         npm run build --if-present
-    - name: Archive server artifact
-      uses: actions/upload-artifact@v2
-      with:
-        name: server-artifact
-        path: ./server/dist
     # - run: npm run lint
     # - run: npm test
 
@@ -57,48 +52,20 @@ jobs:
     # - run: npm run lint
     # - run: npm test
 
-
   deployApp:
     needs: [ buildClient, buildServer ]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: Download artifacts
-        uses: actions/download-artifact@v2
+      - name: Copy repo via ssh
+      - name: Build and launch docker image
+        uses: appleboy/ssh-action@master
         with:
-          name: server-artifact
-      - name: Copy via scp
-        uses: garygrossgarten/github-action-scp@release
-        with:
-          local: /home/runner/work/esidom/esidom/server-artifact
-          remote: esidom
           host: ${{ secrets.DEPLOY_HOST }}
           username: ${{ secrets.DEPLOY_USER }}
           password: ${{ secrets.DEPLOY_PASSWORD }}
-          dotfiles: true
-
-  # deployApp:
-  #   needs: [ buildClient, buildServer ]
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - uses: actions/checkout@v2
-  #     - name: Copy repo via ssh
-  #       uses: garygrossgarten/github-action-scp@release
-  #       with:
-  #         local: .
-  #         remote: esidom
-  #         host: ${{ secrets.DEPLOY_HOST }}
-  #         username: ${{ secrets.DEPLOY_USER }}
-  #         password: ${{ secrets.DEPLOY_PASSWORD }}
-  #         dotfiles: true
-  #     - name: Build and launch docker image
-  #       uses: appleboy/ssh-action@master
-  #       with:
-  #         host: ${{ secrets.DEPLOY_HOST }}
-  #         username: ${{ secrets.DEPLOY_USER }}
-  #         password: ${{ secrets.DEPLOY_PASSWORD }}
-  #         script: |
-  #           cd esidom
-  #           docker build -t esidom .
-  #           docker rm -f esidom
-  #           docker run -p 8080:8080 -p 3000:3000 -d --name esidom esidom
+          script: |
+            cd esidom
+            git pull
+            chmod u+x docker_run.sh
+            ./docker_run.sh "${{ secrets.HA_HOST }}" "${{ secrets.HA_USER }}" "${{ secrets.HA_PASSWORD }}"
