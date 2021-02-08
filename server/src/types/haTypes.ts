@@ -1,6 +1,5 @@
 /* eslint-disable camelcase */
 
-
 // Specifies the object structure returned by HA
 // when calling { type: 'config/device_registry/list' }
 export interface HaDevice {
@@ -43,4 +42,20 @@ export interface HaStateResponse {
         parent_id: string;
         user_id: string;
     };
+}
+
+// Specifies the object structure returned by HA
+// when calling { type: 'config/area_registry/list' }
+export interface HaRoom {
+    area_id: string;
+    name: string;
+}
+
+// Specifies the object structure returned by HA
+// when calling { type: "search/related", item_type: "area", item_id:"<area_id"}
+export interface HaRoomDetail {
+    automation: string[];
+    config_entry: string[];
+    device: string[];
+    entity: string[];
 }
