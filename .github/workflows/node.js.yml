@@ -32,7 +32,7 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         name: server-artifact
-        path: dist
+        path: .
     # - run: npm run lint
     # - run: npm test
 
