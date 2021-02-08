@@ -2,8 +2,9 @@
     import Sidebar from './Sidebar.svelte';
 
     let open = false;
-    // eslint-disable-next-line no-return-assign
-    const sideBarIsOpen = () => (open = !open);
+    const sideBarIsOpen = () => {
+        open = !open;
+    };
 </script>
 
 <nav
