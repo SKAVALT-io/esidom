@@ -4,6 +4,10 @@ import App from './app';
 import deviceController from './controllers/deviceController';
 import authController from './controllers/authController';
 import entityController from './controllers/entityController';
+import roomController from './controllers/roomController';
+import automationController from './controllers/automationController';
+import groupController from './controllers/groupController';
+import userController from './controllers/userController';
 
 config(); // Dot env config
 
@@ -18,5 +22,8 @@ App.http.listen(port, () => {
     console.log('App is listening on port 3000 !');
 });
 
-// Tkt
-[deviceController, authController, entityController].forEach(() => {});
+// Instanciat each controller
+[
+    deviceController, authController, entityController,
+    roomController, automationController, groupController, userController,
+].forEach(() => {});
