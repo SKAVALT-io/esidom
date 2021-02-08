@@ -73,4 +73,5 @@ jobs:
           script: |
             cd esidom
             docker build -t esidom .
+            docker rm -f esidom
             docker run -p 8080:8080 -p 3000:3000 -d --name esidom esidom
