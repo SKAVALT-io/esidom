@@ -70,7 +70,7 @@ jobs:
       - name: Copy via scp
         uses: garygrossgarten/github-action-scp@release
         with:
-          local: dist-artifact/server-artifact
+          local: server-artifact
           remote: esidom
           host: ${{ secrets.DEPLOY_HOST }}
           username: ${{ secrets.DEPLOY_USER }}
