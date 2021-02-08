@@ -14,6 +14,7 @@ COPY server/ ./
 
 WORKDIR /usr/src/esidom/
 COPY run_all.sh .
+RUN chmod u+x run_all.sh 
 
 EXPOSE 8080
 EXPOSE 3000
