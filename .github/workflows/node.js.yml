@@ -56,7 +56,7 @@ jobs:
       - name: Copy repo via ssh
         uses: garygrossgarten/github-action-scp@release
         with:
-          local: ./
+          local: server
           remote: esidom
           host: ${{ secrets.DEPLOY_HOST }}
           username: ${{ secrets.DEPLOY_USER }}
