@@ -67,7 +67,6 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: server-artifact
-          path: dist-artifact
       - name: Copy via scp
         uses: garygrossgarten/github-action-scp@release
         with:
