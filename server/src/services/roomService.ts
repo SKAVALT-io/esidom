@@ -41,6 +41,19 @@ class RoomService {
         return room;
     }
 
+    deleteRoom(areaId: string) {
+        return socketForwarder.forward({ type: 'config/area_registry/delete', area_id: areaId });
+    }
+
+    async getRoomById(areaId: string) {
+        const rooms: Room[] = await this.getRooms();
+        return rooms.find((r: Room) => r.roomId === areaId);
+    }
+
+    private async updateRoomDevice(deviceId: string, areaId: string): Promise<any> {
+        return socketForwarder.forward({ type: 'config/device_registry/update', device_id: deviceId, area_id: areaId });
+    }
+
 }
 
 export default new RoomService();
