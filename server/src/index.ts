@@ -22,7 +22,7 @@ App.http.listen(port, () => {
     console.log('App is listening on port 3000 !');
 });
 
-// Instanciat each controller
+// Instanciate each controller
 [
     deviceController, authController, entityController,
     roomController, automationController, groupController, userController,
