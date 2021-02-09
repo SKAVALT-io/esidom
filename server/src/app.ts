@@ -24,9 +24,11 @@ export default class App {
         });
     }
 
+    // eslint-disable-next-line no-unused-vars
     private static restPathMap = new Map<string, Array<(name: string) => void>>();
 
     // Create rest annotation
+    // eslint-disable-next-line no-unused-vars
     static rest: (name: string) => ClassDecorator = (name) => (target: Function) => {
         if (!App.isInit) {
             App.init();
@@ -38,6 +40,7 @@ export default class App {
     }
 
     // Create get annotation
+    // eslint-disable-next-line no-unused-vars
     static get: (path: string) => MethodDecorator =
     (path: string) => (targetClass: Object,
         name: string | symbol, descriptor: PropertyDescriptor) => {
@@ -54,6 +57,7 @@ export default class App {
     }
 
     // Create post annotation
+    // eslint-disable-next-line no-unused-vars
     static post: (path: string) => MethodDecorator =
     (path: string) => (targetClass: Object,
         name: string | symbol, descriptor: PropertyDescriptor) => {
@@ -70,6 +74,7 @@ export default class App {
     }
 
     // Create put annotation
+    // eslint-disable-next-line no-unused-vars
     static put: (path: string) => MethodDecorator =
     (path: string) => (targetClass: Object,
         name: string | symbol, descriptor: PropertyDescriptor) => {
@@ -86,6 +91,7 @@ export default class App {
     }
 
     // Create patch annotation
+    // eslint-disable-next-line no-unused-vars
     static patch: (path: string) => MethodDecorator =
     (path: string) => (targetClass: Object,
         name: string | symbol, descriptor: PropertyDescriptor) => {
@@ -102,6 +108,7 @@ export default class App {
     }
 
     // Create delete annotation
+    // eslint-disable-next-line no-unused-vars
     static delete: (path: string) => MethodDecorator =
     (path: string) => (targetClass: Object,
         name: string | symbol, descriptor: PropertyDescriptor) => {
