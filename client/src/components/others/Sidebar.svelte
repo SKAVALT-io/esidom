@@ -1,8 +1,15 @@
 <script>
-    // eslint-disable-next-line import/prefer-default-export
     export let open = false;
+
+    let currentPageSelected = '';
+    $: [, currentPageSelected] = window.location.hash.split('/');
+
+    const pageLinkClicked = () => {
+        open = false;
+    };
 </script>
 
+<!-- TODO Change this -->
 <link
     rel="stylesheet"
     type="text/css"
@@ -10,98 +17,99 @@
 />
 
 <nav
-    class="main-menu flex flex-wrap transform fixed bg-gray-900 h-screen w-14 overflow-auto ease-out opacity-100 z-30"
+    class="main-menu bg-gray-900 fixed w-16 h-screen z-30 transition overflow-hidden"
     class:open
 >
-    <div>
-        <ul>
-            <li>
-                <a href="/#/">
-                    <i class="fa fa-home" />
-                    <span class="nav-text">Home</span>
-                </a>
-            </li>
-
-            <li>
-                <a href="/#/devices">
-                    <i class="fa fa-user fa-lg" />
-                    <span class="nav-text">Devices</span>
-                </a>
-            </li>
-
-            <li>
-                <a href="/#/todo">
-                    <i class="fa fa-envelope-o fa-lg" />
-                    <span class="nav-text">Contact</span>
-                </a>
-            </li>
-        </ul>
+    <div class="navigation absolute -top-0 -left-0 w-full">
+        <a
+            href="/#/"
+            on:click={pageLinkClicked}
+            class:selected={currentPageSelected === 'home' || currentPageSelected === ''}
+        >
+            <span class="icon"><i class="fa fa-home" /></span>
+            <span class="title">Home</span>
+        </a>
+        <a
+            href="/#/devices"
+            on:click={pageLinkClicked}
+            class:selected={currentPageSelected === 'devices'}
+        >
+            <span class="icon"><i class="fa fa-user" /></span>
+            <span class="title">Devices</span>
+        </a>
+        <a
+            href="/#/"
+            on:click={pageLinkClicked}
+            class:selected={currentPageSelected === 'todo'}
+        >
+            <span class="icon"><i class="fa fa-envelope-o" /></span>
+            <span class="title">Todo</span>
+        </a>
     </div>
 </nav>
 
 <style>
-    @media (max-width: 640px) {
-        .main-menu {
-            display: -webkit-inline-box !important;
-            display: -ms-inline-flexbox !important;
-            display: inline-flex !important;
-        }
-    }
     .main-menu,
-    .open {
-        -webkit-transition: width 0.2s linear;
-        transition: width 0.2s linear;
-        -webkit-transform: translateZ(0) scale(1, 1);
-    }
-
-    .fa {
-        position: relative;
-        display: table-cell;
-        width: 60px;
-        height: 36px;
-        text-align: center;
-        top: 5px;
-        font-size: 24px;
+    .open:active {
+        transition: 0.3s;
     }
 
     .main-menu:hover,
     .open {
-        width: 150px;
-        opacity: 1;
+        width: 300px;
     }
 
-    .main-menu ul {
-        margin: 10px 0;
-    }
-
-    .main-menu li > a {
+    a {
         position: relative;
-        width: 255px;
-        display: table;
-        border-collapse: collapse;
-        border-spacing: 0;
-        color: #ffffff;
-        font-size: 13px;
-    }
-
-    a:hover,
-    a:focus {
+        display: flex;
+        width: 100%;
         text-decoration: none;
-        border-left: 0px solid #f7f7f7;
+        color: white;
     }
 
-    nav ul,
-    nav li {
-        outline: 0;
-        margin: 0;
-        padding-bottom: 9px;
+    .icon {
+        position: relative;
+        display: block;
+        min-width: 60px;
+        height: 60px;
+        line-height: 60px;
+        text-align: center;
+    }
+
+    .fa {
+        font-size: 24px;
+    }
+
+    .title {
+        position: relative;
+        display: block;
+        padding: 0 10px;
+        height: 60px;
+        line-height: 60px;
+        text-align: start;
+        white-space: nowrap;
         text-transform: uppercase;
     }
 
-    .main-menu li:hover > a,
-    .no-touch .dashboard-page nav.dashboard-menu ul li:hover a,
-    .dashboard-page nav.dashboard-menu ul li.active a {
-        color: #fff;
+    a:hover,
+    a.selected {
+        color: white;
         background-color: #505050;
+    }
+
+    /* Change this by tailwind components (media max-width doesn't exist in tailwind, find another way)*/
+    @media (max-width: 640px) {
+        .main-menu {
+            left: -70px;
+        }
+
+        .main-menu:hover {
+            width: 100%;
+        }
+
+        .open {
+            left: 0px;
+            width: 100%;
+        }
     }
 </style>
