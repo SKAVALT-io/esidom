@@ -1,12 +1,23 @@
-<script>
+<script lang="ts">
     export let open = false;
 
     let currentPageSelected = '';
-    $: [, currentPageSelected] = window.location.hash.split('/');
+    // $: currentPageSelected = (() => {
+    //     const b = window.location.hash.split('/');
+    //     console.log(b);
+    //     return b[1];
+    // })();
 
-    const pageLinkClicked = () => {
+    const pageLinkClicked = (currentPage: string) => {
+        currentPageSelected = currentPage;
         open = false;
     };
+
+    // onMount(() => {
+    //     window.onhashchange = () => {
+    //         [, currentPageSelected] = window.location.hash.split('/');
+    //     };
+    // });
 </script>
 
 <!-- TODO Change this -->
@@ -23,7 +34,9 @@
     <div class="navigation absolute -top-0 -left-0 w-full">
         <a
             href="/#/"
-            on:click={pageLinkClicked}
+            on:click={() => {
+                pageLinkClicked('home');
+            }}
             class:selected={currentPageSelected === 'home' || currentPageSelected === ''}
         >
             <span class="icon"><i class="fa fa-home" /></span>
@@ -31,7 +44,9 @@
         </a>
         <a
             href="/#/devices"
-            on:click={pageLinkClicked}
+            on:click={() => {
+                pageLinkClicked('devices');
+            }}
             class:selected={currentPageSelected === 'devices'}
         >
             <span class="icon"><i class="fa fa-user" /></span>
@@ -39,7 +54,9 @@
         </a>
         <a
             href="/#/"
-            on:click={pageLinkClicked}
+            on:click={() => {
+                pageLinkClicked('todo');
+            }}
             class:selected={currentPageSelected === 'todo'}
         >
             <span class="icon"><i class="fa fa-envelope-o" /></span>
