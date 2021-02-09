@@ -6,6 +6,7 @@
     "scripts": {
         "start": "snowpack dev",
         "build": "snowpack build",
+        "startProd": "http-server build -p 8080",
         "ts-check": "svelte-check",
         "test": "jest --coverage",
         "tsc": "tsc",
@@ -22,18 +23,19 @@
     },
     "homepage": "https://github.com/SKAVALT-io/esidom#readme",
     "dependencies": {
+        "http-server": "^0.12.3"
+    },
+    "devDependencies": { 
         "@typescript-eslint/typescript-estree": "^4.14.1",
-        "debug": "^4.3.1",
-        "eslint-svelte3-preprocess": "0.0.4",
         "node-sass": "^5.0.0",
         "snowpack": "^2.17.0",
         "socket.io": "^3.1.1",
         "socket.io-client": "^3.1.1",
         "svelte": "^3.24.0",
         "svelte-color-picker": "^1.0.7",
-        "svelte-spa-router": "^3.1.0"
-    },
-    "devDependencies": {
+        "svelte-spa-router": "^3.1.0",
+        "debug": "^4.3.1",
+        "eslint-svelte3-preprocess": "0.0.4",
         "@snowpack/app-scripts-svelte": "^1.9.2",
         "@snowpack/plugin-dotenv": "^2.0.4",
         "@snowpack/plugin-svelte": "^3.3.1",
