@@ -19,4 +19,4 @@ echo "password=${password}" >> ${filename}
 docker build -t ${image_name} .
 
 docker rm -f ${container_name}
-docker run -p 8080:8080 -p 3000:3000 -d --name ${container_name} ${image_name}
+docker run -p 8080:8080 -p 3000:3000 -d --restart unless-stopped --name ${container_name} ${image_name}
