@@ -70,6 +70,8 @@ module.exports = {
             ping: 'ping 1s cubic-bezier(0, 0, 0.2, 1) infinite',
             pulse: 'pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
             bounce: 'bounce 1s infinite',
+            jump: 'jump 1.5s ease-in-out infinite',
+            move: 'move 1.5s linear infinite',
         },
         backgroundColor: (theme) => theme('colors'),
         backgroundImage: {
@@ -130,6 +132,7 @@ module.exports = {
             lg: '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
             xl: '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)',
             '2xl': '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
+            '3xl': '0 40px 60px -20px rgba(0, 0, 0, 0.2)',
             inner: 'inset 0 2px 4px 0 rgba(0, 0, 0, 0.06)',
             none: 'none',
         },
@@ -408,6 +411,41 @@ module.exports = {
                 '50%': {
                     transform: 'none',
                     animationTimingFunction: 'cubic-bezier(0,0,0.2,1)',
+                },
+            },
+            jump: {
+                '0%': {
+                    transform: 'translate(0, 0)',
+                },
+                '10%': {
+                    transform: 'translate(10px, -10px)',
+                },
+                '20%': {
+                    transform: 'translate(20px, 10px)',
+                },
+                '30%': {
+                    transform: 'translate(30px, -50px)',
+                },
+                '70%': {
+                    transform: 'translate(-150px, -50px)',
+                },
+                '80%': {
+                    transform: 'translate(-140px, 10px)',
+                },
+                '90%': {
+                    transform: 'translate(-130px, -10px)',
+                },
+                '100%': {
+                    transform: 'translate(-120px, 0)',
+                },
+            },
+            move: {
+                '0%': {
+                    transform: 'translateX(0)',
+                },
+
+                '100%': {
+                    transform: 'translateX(30px)',
                 },
             },
         },
