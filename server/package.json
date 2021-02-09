@@ -6,7 +6,7 @@
   "scripts": {
     "start": "nodemon -r dotenv/config src/index.ts",
     "startProd": "node -r dotenv/config ./dist/index.js",
-    "test": "jest --coverage",
+    "test": "jest --coverage --detectOpenHandles",
     "build": "tsc --project ./",
     "lint": "eslint . --ext .ts"
   },
