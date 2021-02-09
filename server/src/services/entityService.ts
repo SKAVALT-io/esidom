@@ -79,6 +79,15 @@ class EntityService {
         return result;
     }
 
+    async getTypes(): Promise<String[]> {
+        const states: HaStateResponse[] = await socketForwarder
+            .forward({ type: 'get_states' });
+        const types: String[] = states
+            .map((s: HaStateResponse) => s.entity_id.split('.')[0])
+            .filter((val, i, array) => array.indexOf(val) === i);
+        return types;
+    }
+
 }
 
 export default new EntityService();

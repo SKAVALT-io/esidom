@@ -9,7 +9,22 @@ class EntityController {
     @App.get('')
     async getEntities(req: Request, res: Response): Promise<void> {
         try {
-            const result = await entityService.getEntities();
+            const { type } = req.query;
+            const entities: Entity[] = await entityService.getEntities();
+            const result = type === undefined
+                ? entities
+                : entities.filter((e: Entity) => e.type === type);
+            res.status(200).send(result);
+        } catch (err) {
+            res.status(404).send({ message: err });
+        }
+    }
+
+    @App.get('/types')
+    async getEntitiesType(req: Request, res: Response): Promise<void> {
+        try {
+            const result = await entityService.getTypes();
+            // TODO: filter unwanted types ? (like 'person' or 'automation' etc)
             res.status(200).send(result);
         } catch (err) {
             res.status(404).send({ message: err });
