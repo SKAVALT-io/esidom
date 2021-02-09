@@ -1,6 +1,7 @@
 <script lang="ts">
     import Router from 'svelte-spa-router';
 
+    import Blockly from './routes/automation/Blockly.svelte';
     import Devices from './routes/devices/Devices.svelte';
     import Home from './routes/default/Home.svelte';
 
@@ -13,6 +14,7 @@
         '/home/': Home,
         '/lamp/': Lamp,
         '/door': Door,
+        '/blockly': Blockly,
         // This is optional, but if present it must be the last
         '*': Home,
     };
