@@ -2,7 +2,9 @@ import { Request, Response } from 'express';
 
 class DatabaseForwarder {
 
-    forward(req: Request, res: Response): Promise<any> {
+    // eslint-disable-next-line no-unused-vars
+    forward(request: Request, response: Response): Promise<any> {
+        // eslint-disable-next-line no-unused-vars
         return new Promise((res, rej) => {});
     }
 

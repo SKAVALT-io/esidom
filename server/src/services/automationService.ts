@@ -1,11 +1,10 @@
 import httpForwarder from '../forwarders/httpForwarder';
-import socketForwarder from '../forwarders/socketForwarder';
 import { Automation } from '../types/automation';
 
 class AutomationService {
 
     async getAutomations(): Promise<Automation[]> {
-        return new Promise((res, rej) => {});
+        return new Promise(() => {});
     }
 
     getAutomationById(id: number) {
