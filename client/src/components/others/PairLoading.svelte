@@ -13,11 +13,10 @@
     </div>
 </div>
 
-<!-- #120639 -->
 <style>
     .container {
-        background-color: #5c47a1;
-        border-color: darkgoldenrod;
+        background-color: #120639;
+        border-color: white;
         border-width: 2px;
     }
 
