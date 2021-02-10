@@ -3,5 +3,5 @@ export interface Entity {
     name: string;
     type: string;
     state: string;
-    attributes: any[];
+    attributes: any;
 }
