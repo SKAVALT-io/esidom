@@ -16,8 +16,8 @@ class EntityService {
             const { attributes } = entityState ?? {};
             const state = entityState?.state ?? '';
             const entity: Entity = {
-                id: e.entity_id,
-                name: e.name,
+                id: e.entity_id ?? '',
+                name: e.name ?? '',
                 type: e.entity_id.split('.')[0],
                 attributes,
                 state,
@@ -59,11 +59,11 @@ class EntityService {
             service: service.split('.')[1],
             service_data: { entity_id: id, ...serviceData },
         });
-        console.log(res);
+        // console.log(res);
         return res;
     }
 
-    async toggleEntity(id: string, enable: boolean): Promise<HaEntity | undefined> {
+    async toggleEntity(id: string, enable: boolean): Promise<Entity | undefined> {
         const entity: Entity | undefined = await this.getEntityById(id);
         if (entity === undefined) {
             return entity;
@@ -74,9 +74,8 @@ class EntityService {
             name: entity.name,
             disabled_by: (enable) ? null : 'user',
         };
-        const result: HaEntity = await socketForwarder.forward(body);
-        console.log(result);
-        return result;
+        const haEnt: any = await socketForwarder.forward(body);
+        return this.getEntityById(haEnt?.entity_entry.entity_id);
     }
 
     async getTypes(): Promise<string[]> {
