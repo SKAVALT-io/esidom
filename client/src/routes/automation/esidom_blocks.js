@@ -2,6 +2,9 @@ import Blockly from 'blockly';
 
 console.log(Blockly.Blocks)
 
+/**
+ * Bloc ESIDOM
+ */
 Blockly.Blocks['automation'] = {
     init: function () {
         this.jsonInit(
@@ -47,6 +50,47 @@ Blockly.Blocks['automation'] = {
                     ]
                   }
                 ],
+                "colour": 255,
+                "tooltip": "",
+                "helpUrl": ""
+              }
+        );
+    }
+};
+
+/**
+ * Catégorie déclencheur
+ */
+Blockly.Blocks['binary_trigger'] = {
+    init: function () {
+        this.jsonInit(
+            {
+                "type": "block_type",
+                "message0": "Quand capteur binaire %1 passe à %2",
+                "args0": [
+                  {
+                    "type": "input_value",
+                    "name": "Service",
+                    "check": "Binary_sensor"
+                  },
+                  {
+                    "type": "field_dropdown",
+                    "name": "state",
+                    "options": [
+                      [
+                        "ON",
+                        "on"
+                      ],
+                      [
+                        "OFF",
+                        "off"
+                      ]
+                    ]
+                  }
+                ],
+                "inputsInline": true,
+                "previousStatement": "Trigger",
+                "nextStatement": "Trigger",
                 "colour": 255,
                 "tooltip": "",
                 "helpUrl": ""
@@ -129,6 +173,9 @@ Blockly.Blocks['action'] = {
     }
 };
 
+/**
+ * Catégorie condition
+ */
 Blockly.Blocks['time_condition'] = {
     init: function () {
         this.jsonInit(
@@ -283,143 +330,6 @@ Blockly.Blocks['sun_condition'] = {
     }
 };
 
-Blockly.Blocks['binary_trigger'] = {
-    init: function () {
-        this.jsonInit(
-            {
-                "type": "block_type",
-                "message0": "Quand capteur binaire %1 passe à %2",
-                "args0": [
-                  {
-                    "type": "input_value",
-                    "name": "Service",
-                    "check": "Binary_sensor"
-                  },
-                  {
-                    "type": "field_dropdown",
-                    "name": "state",
-                    "options": [
-                      [
-                        "ON",
-                        "on"
-                      ],
-                      [
-                        "OFF",
-                        "off"
-                      ]
-                    ]
-                  }
-                ],
-                "inputsInline": true,
-                "previousStatement": "Trigger",
-                "nextStatement": "Trigger",
-                "colour": 255,
-                "tooltip": "",
-                "helpUrl": ""
-              }
-        );
-    }
-};
-
-Blockly.Blocks['binary_condition'] = {
-    init: function () {
-        this.jsonInit(
-            {
-                "type": "block_type",
-                "message0": "Si capteur binaire %1 est %2",
-                "args0": [
-                  {
-                    "type": "input_value",
-                    "name": "Service",
-                    "check": "Binary_sensor"
-                  },
-                  {
-                    "type": "field_dropdown",
-                    "name": "state",
-                    "options": [
-                      [
-                        "ON",
-                        "on"
-                      ],
-                      [
-                        "OFF",
-                        "off"
-                      ]
-                    ]
-                  }
-                ],
-                "inputsInline": true,
-                "previousStatement": "Condition",
-                "nextStatement": "Condition",
-                "colour": 255,
-                "tooltip": "",
-                "helpUrl": ""
-              }
-        );
-    }
-};
-
-Blockly.Blocks['color_picker'] = {
-    init: function () {
-        this.jsonInit(
-            {
-                "type": "attribut_color",
-                "message0": "Couleur : %1",
-                "args0": [
-                  {
-                    "type": "field_colour",
-                    "name": "color",
-                    "colour": "#ff0000"
-                  }
-                ],
-                "output": null,
-                "colour": 230,
-                "tooltip": "",
-                "helpUrl": ""
-              }
-        );
-    }
-};
-
-Blockly.Blocks['color_rgb'] = {
-    init: function () {
-        this.jsonInit({
-            "type": "color_rgb",
-            "message0": "Couleur personnalisée : %1 rouge : %2 vert : %3 bleu %4",
-            "args0": [
-              {
-                "type": "input_dummy"
-              },
-              {
-                "type": "field_number",
-                "name": "red",
-                "value": 0,
-                "min": 0,
-                "max": 255
-              },
-              {
-                "type": "field_number",
-                "name": "green",
-                "value": 0,
-                "min": 0,
-                "max": 255
-              },
-              {
-                "type": "field_number",
-                "name": "blue",
-                "value": 0,
-                "min": 0,
-                "max": 255
-              }
-            ],
-            "output": null,
-            "colour": 75,
-            "tooltip": "Les valeurs doivent être comprise entre 0 et 255",
-            "helpUrl": ""
-          });
-    }
-};
-
 Blockly.Blocks['time_condition_hour'] = {
     init: function () {
         this.jsonInit({
@@ -553,33 +463,106 @@ Blockly.Blocks['time_condition_week'] = {
               }
         );
     }
-    // init: function () {
-    //     this.appendDummyInput()
-    //         .appendField(new Blockly.FieldCheckbox("TRUE"), "mon")
-    //         .appendField("lundi");
-    //     this.appendDummyInput()
-    //         .appendField(new Blockly.FieldCheckbox("TRUE"), "tue")
-    //         .appendField("mardi");
-    //     this.appendDummyInput()
-    //         .appendField(new Blockly.FieldCheckbox("TRUE"), "wed")
-    //         .appendField("mercredi");
-    //     this.appendDummyInput()
-    //         .appendField(new Blockly.FieldCheckbox("TRUE"), "thu")
-    //         .appendField("jeudi");
-    //     this.appendDummyInput()
-    //         .appendField(new Blockly.FieldCheckbox("TRUE"), "fri")
-    //         .appendField("vendredi");
-    //     this.appendDummyInput()
-    //         .appendField(new Blockly.FieldCheckbox("TRUE"), "sat")
-    //         .appendField("samedi");
-    //     this.appendDummyInput()
-    //         .appendField(new Blockly.FieldCheckbox("TRUE"), "sun")
-    //         .appendField("dimanche");
-    //     this.setInputsInline(false);
-    //     this.setPreviousStatement(true, "Condition");
-    //     this.setNextStatement(true, "Condition");
-    //     this.setColour(255);
-    //     this.setTooltip("Si laissé seul, la condition s'appliquera à n'importe quel moment de la journée");
-    //     this.setHelpUrl("");
-    // }
+};
+
+Blockly.Blocks['binary_condition'] = {
+    init: function () {
+        this.jsonInit(
+            {
+                "type": "block_type",
+                "message0": "Si capteur binaire %1 est %2",
+                "args0": [
+                  {
+                    "type": "input_value",
+                    "name": "Service",
+                    "check": "Binary_sensor"
+                  },
+                  {
+                    "type": "field_dropdown",
+                    "name": "state",
+                    "options": [
+                      [
+                        "ON",
+                        "on"
+                      ],
+                      [
+                        "OFF",
+                        "off"
+                      ]
+                    ]
+                  }
+                ],
+                "inputsInline": true,
+                "previousStatement": "Condition",
+                "nextStatement": "Condition",
+                "colour": 255,
+                "tooltip": "",
+                "helpUrl": ""
+              }
+        );
+    }
+};
+
+/**
+ * Catégorie couleur
+ */
+Blockly.Blocks['color_picker'] = {
+    init: function () {
+        this.jsonInit(
+            {
+                "type": "attribut_color",
+                "message0": "Couleur : %1",
+                "args0": [
+                  {
+                    "type": "field_colour",
+                    "name": "color",
+                    "colour": "#ff0000"
+                  }
+                ],
+                "output": null,
+                "colour": 230,
+                "tooltip": "",
+                "helpUrl": ""
+              }
+        );
+    }
+};
+
+Blockly.Blocks['color_rgb'] = {
+    init: function () {
+        this.jsonInit({
+            "type": "color_rgb",
+            "message0": "Couleur personnalisée : %1 rouge : %2 vert : %3 bleu %4",
+            "args0": [
+              {
+                "type": "input_dummy"
+              },
+              {
+                "type": "field_number",
+                "name": "red",
+                "value": 0,
+                "min": 0,
+                "max": 255
+              },
+              {
+                "type": "field_number",
+                "name": "green",
+                "value": 0,
+                "min": 0,
+                "max": 255
+              },
+              {
+                "type": "field_number",
+                "name": "blue",
+                "value": 0,
+                "min": 0,
+                "max": 255
+              }
+            ],
+            "output": null,
+            "colour": 75,
+            "tooltip": "Les valeurs doivent être comprise entre 0 et 255",
+            "helpUrl": ""
+          });
+    }
 };
