@@ -18,7 +18,7 @@ App.app.get('/', (req: Request, res: Response) => {
     res.status(200).send('Server up and running!');
 });
 
-const port: number = 3001;
+const port: number = 3000;
 App.http.listen(port, async () => {
     console.log(`App is listening on port ${port} !`);
 });
