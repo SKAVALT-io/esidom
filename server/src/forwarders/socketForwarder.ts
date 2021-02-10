@@ -96,7 +96,7 @@ class SocketForwarder {
         const { id } = data;
         console.log(`received result for ws ${id}`);
         if (data.success === true) {
-            console.log(data.result);
+            // console.log(data.result);
             (this.socketsMap.get(id) || console.log)(data.result);
         } else if (data.success === false) {
             console.log(`${data.error?.code} ${data.error?.message}`);
