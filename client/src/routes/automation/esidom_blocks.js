@@ -1,7 +1,5 @@
 import Blockly from 'blockly';
 
-console.log(Blockly.Blocks)
-
 /**
  * Bloc ESIDOM
  */
