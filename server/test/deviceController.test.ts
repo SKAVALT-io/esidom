@@ -1,4 +1,4 @@
-import axios, { AxiosError, AxiosResponse } from 'axios';
+import axios, { AxiosResponse } from 'axios';
 import { Device } from '../src/types/device';
 
 const mock: Device = expect.objectContaining({
@@ -42,6 +42,8 @@ describe('Device controller test', () => {
             const res = err.response;
             expect(res).toHaveProperty('status');
             expect(res.status).toBe(404);
+            expect(res).toHaveProperty('message');
+            expect(res.message).toBe('No device with such id');
         });
     });
 });
