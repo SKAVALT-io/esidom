@@ -28,7 +28,7 @@
 />
 
 <nav
-    class="main-menu bg-gray-900 absolute sm:relative w-full h-screen z-30 transition overflow-hidden"
+    class="main-menu bg-gray-900 absolute sm:relative w-full h-screen z-100 transition overflow-hidden"
     class:open
 >
     <div class="navigation absolute -top-0 -left-0 w-full">
