@@ -1,4 +1,4 @@
-import axios, { AxiosResponse } from 'axios';
+import axios, { AxiosError, AxiosResponse } from 'axios';
 import { Device } from '../src/types/device';
 
 const mock: Device = expect.objectContaining({
@@ -13,7 +13,7 @@ const mock: Device = expect.objectContaining({
 
 const HaWeatherDeviceId = '45eb8f705b20fa1df358c7d22d8ffaf8';
 
-const baseUrl: string = 'http://localhost:3001';
+const baseUrl: string = 'http://localhost:3000';
 
 describe('Device controller test', () => {
     test('it should get devices', async () => {
@@ -32,5 +32,16 @@ describe('Device controller test', () => {
         expect(res.status).toBe(200);
         expect(res.data).toBeDefined();
         expect(res.data).toMatchObject(mock);
+    });
+
+    test('it should return 404 when calling deviceById with unknown id', async () => {
+        await expect(async () => {
+            await axios.get(`${baseUrl}/device/notAndId`);
+        }).rejects.toThrow().catch((err) => {
+            expect(err).toHaveProperty('response');
+            const res = err.response;
+            expect(res).toHaveProperty('status');
+            expect(res.status).toBe(404);
+        });
     });
 });
