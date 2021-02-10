@@ -14,7 +14,9 @@ class EntityController {
             const result = type === undefined
                 ? entities
                 : entities.filter((e: Entity) => e.type === type);
-            res.status(200).send(result);
+            const code = result ? 200 : 404;
+            const data = result ?? { message: 'No entities yet' };
+            res.status(code).send(data);
         } catch (err) {
             res.status(404).send({ message: err });
         }
@@ -25,7 +27,9 @@ class EntityController {
         try {
             const result = await entityService.getTypes();
             // TODO: filter unwanted types ? (like 'person' or 'automation' etc)
-            res.status(200).send(result);
+            const code = result ? 200 : 404;
+            const data = result ?? { message: 'No entities yet' };
+            res.status(code).send(data);
         } catch (err) {
             res.status(404).send({ message: err });
         }
@@ -52,7 +56,9 @@ class EntityController {
             console.log(`${id} ${service} ${serviceData}`);
             const result: Entity | undefined = await entityService
                 .updateEntityState(id, service, serviceData);
-            res.status(200).send(result);
+            const code = result ? 200 : 404;
+            const data = result ?? { message: 'No entities with such id' };
+            res.status(code).send(data);
         } catch (err) {
             res.status(404).send(err);
         }
@@ -64,7 +70,9 @@ class EntityController {
             const { id } = req.params;
             const { enable } = req.body;
             const result = await entityService.toggleEntity(id, enable);
-            res.status(200).send(result);
+            const code = result ? 200 : 404;
+            const data = result ?? { message: 'No entity with such id' };
+            res.status(code).send(data);
         } catch (err) {
             res.status(404).send({ message: err });
         }
