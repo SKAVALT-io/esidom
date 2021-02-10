@@ -1,9 +1,36 @@
-import axios from 'axios';
+import axios, { AxiosResponse } from 'axios';
 import { Device } from '../src/types/device';
+
+const mock: Device = expect.objectContaining({
+    id: expect.any(String),
+    model: expect.any(String),
+    name: expect.any(String),
+    automations: expect.any(Array),
+    nameByUser: expect.any(String),
+    areaId: expect.any(String),
+    disabledBy: expect.any(String),
+} as Device);
+
+const HaWeatherDeviceId = '45eb8f705b20fa1df358c7d22d8ffaf8';
+
+const baseUrl: string = 'http://localhost:3001';
 
 describe('Device controller test', () => {
     test('it should get devices', async () => {
-        const devices: Device[] = await axios.get('http://localhost:3000/device');
-        expect(devices).toBeDefined();
+        const res: AxiosResponse<any> = await axios.get(`${baseUrl}/device`);
+        expect(res.status).toBe(200);
+        expect(res.data.length).toBeDefined();
+        const { data } = res;
+        data.forEach((e: any) => {
+            expect(e).toMatchObject(mock);
+        });
+    });
+
+    test('it should get a device by id', async () => {
+        const res: AxiosResponse<any> = await axios
+            .get(`${baseUrl}/device/${HaWeatherDeviceId}`);
+        expect(res.status).toBe(200);
+        expect(res.data).toBeDefined();
+        expect(res.data).toMatchObject(mock);
     });
 });
