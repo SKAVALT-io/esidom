@@ -2,10 +2,18 @@
 import { io } from 'socket.io-client';
 import config from '../config/config';
 
+// export interface EntityDataChanged<T> {
+//     entity_id: string;
+//     new_state: T;
+//     old_state: T;
+// }
+
 export interface EntityDataChanged<T> {
-    entity_id: string;
-    new_state: T;
-    old_state: T;
+    name: string;
+    id: string;
+    state: string;
+    type: string;
+    attributes: T;
 }
 
 class SocketManager {
@@ -16,10 +24,12 @@ class SocketManager {
         console.log('Connected to WS');
     }
 
-    registerListener<T>(name: string, id: string, func: (data: T) => void) {
+    registerListener<T>(name: string, id: string, func: (data: EntityDataChanged<T>) => void) {
         this.socket.on(name, (data: EntityDataChanged<T>) => {
-            if (data.entity_id === id) {
-                func(data.new_state);
+            // console.log(data);
+            // console.log(data.id, id);
+            if (data.id === id) {
+                func(data);
             }
         });
     }
