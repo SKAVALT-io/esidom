@@ -44,16 +44,16 @@ export async function changeBrightness(id: string, brightnessPct: number): Promi
 }
 
 export async function switchLamp(id: string, brightnessPct?: number): Promise<any> {
+    // If brightness is provided, then turn on, else, turn it off
     const body = JSON.stringify(
         brightnessPct
             ? {
-                service: 'light.turn_off',
-            }
-            : {
                 service: 'light.turn_on',
                 serviceData: {
                     brightness_pct: brightnessPct,
                 },
+            } : {
+                service: 'light.turn_off',
             },
     );
     const headers = new Headers();
