@@ -52,14 +52,14 @@
 <div id="test">
     <div id="blocklyDiv" style="height: 600px;" />
     <xml id="toolbox" style="display: none">
-        <category name="Logic" colour={Blockly.Msg.HUE_RED}>
+        <category name="Logic" colour={Blockly.Msg.HUE_LIGHT_BLUE}>
             <block type="controls_if" />
             <block type="logic_compare" />
             <block type="logic_operation" />
             <block type="logic_negate" />
             <block type="logic_boolean" />
         </category>
-        <category name="Declencheurs" colour={Blockly.Msg.HUE_ORANGE}>
+        <category name="Declencheurs" colour={Blockly.Msg.HUE_GREEN}>
             <block type="binary_trigger"></block>
             <block type="time"></block>
         </category>
@@ -69,13 +69,13 @@
             <block type="time_condition_week"></block>
             <block type="binary_condition"></block>
         </category>
-        <category name="Actions" colour={Blockly.Msg.HUE_GREEN}>
-            <category name="Services" colour={Blockly.Msg.HUE_GREEN}>
+        <category name="Actions" colour={Blockly.Msg.HUE_ORANGE}>
+            <category name="Services" colour={Blockly.Msg.HUE_ORANGE}>
                 <block type="action"></block>
                 <!-- <block type="services"></block> -->
             </category>
         </category>
-        <category name="Objets" colour={Blockly.Msg.HUE_DARK_BLUE}>
+        <category name="Objets" colour={Blockly.Msg.HUE_RED}>
             <!-- <block type="lamps"></block> -->
             <!-- <block type="binary_sensors"></block> -->
             <!-- <block type="objet_action"></block> -->

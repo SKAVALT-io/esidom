@@ -50,7 +50,7 @@ Blockly.Blocks['automation'] = {
                     ]
                   }
                 ],
-                "colour": 255,
+                "colour": Blockly.Msg.HUE_PURPLE,
                 "tooltip": "",
                 "helpUrl": ""
               }
@@ -91,7 +91,7 @@ Blockly.Blocks['binary_trigger'] = {
                 "inputsInline": true,
                 "previousStatement": "Trigger",
                 "nextStatement": "Trigger",
-                "colour": 255,
+                "colour": Blockly.Msg.HUE_GREEN,
                 "tooltip": "",
                 "helpUrl": ""
               }
@@ -137,7 +137,7 @@ Blockly.Blocks['time'] = {
                 "inputsInline": true,
                 "previousStatement": "Trigger",
                 "nextStatement": "Trigger",
-                "colour": 255,
+                "colour": Blockly.Msg.HUE_GREEN,
                 "tooltip": "",
                 "helpUrl": ""
               }
@@ -145,33 +145,6 @@ Blockly.Blocks['time'] = {
     }
 };
 
-Blockly.Blocks['action'] = {
-    init: function () {
-        this.jsonInit(
-            {
-                "type": "action",
-                "message0": "Faire :  %1 Sur :  %2",
-                "args0": [
-                  {
-                    "type": "input_value",
-                    "name": "Service",
-                    "check": "Service"
-                  },
-                  {
-                    "type": "input_value",
-                    "name": "Entity"
-                  }
-                ],
-                "inputsInline": true,
-                "previousStatement": "Action",
-                "nextStatement": "Action",
-                "colour": 255,
-                "tooltip": "",
-                "helpUrl": ""
-              }
-        );
-    }
-};
 
 /**
  * Catégorie condition
@@ -290,7 +263,7 @@ Blockly.Blocks['time_condition'] = {
                 "inputsInline": false,
                 "previousStatement": "Trigger",
                 "nextStatement": "Trigger",
-                "colour": 255,
+                "colour": Blockly.Msg.HUE_YELLOW,
                 "tooltip": "",
                 "helpUrl": ""
               }
@@ -320,9 +293,9 @@ Blockly.Blocks['sun_condition'] = {
                     ]
                   }
                 ],
-                "previousStatement": null,
-                "nextStatement": null,
-                "colour": 230,
+                "previousStatement": "Condition",
+                "nextStatement": "Condition",
+                "colour": Blockly.Msg.HUE_YELLOW,
                 "tooltip": "",
                 "helpUrl": ""
               }
@@ -386,7 +359,7 @@ Blockly.Blocks['time_condition_hour'] = {
             "inputsInline": false,
             "previousStatement": "Condition",
             "nextStatement": "Condition",
-            "colour": 255,
+            "colour": Blockly.Msg.HUE_YELLOW,
             "tooltip": "Si laissé seul, la condition s'appliquera tous les jours",
             "helpUrl": ""
           });
@@ -457,7 +430,7 @@ Blockly.Blocks['time_condition_week'] = {
                 "inputsInline": false,
                 "previousStatement": "Condition",
                 "nextStatement": "Condition",
-                "colour": 255,
+                "colour": Blockly.Msg.HUE_YELLOW,
                 "tooltip": "Si laissé seul, la condition s'appliquera à n'importe quel moment de la journée",
                 "helpUrl": ""
               }
@@ -495,7 +468,7 @@ Blockly.Blocks['binary_condition'] = {
                 "inputsInline": true,
                 "previousStatement": "Condition",
                 "nextStatement": "Condition",
-                "colour": 255,
+                "colour": Blockly.Msg.HUE_YELLOW,
                 "tooltip": "",
                 "helpUrl": ""
               }
@@ -504,7 +477,38 @@ Blockly.Blocks['binary_condition'] = {
 };
 
 /**
- * Catégorie couleur
+ * Catégorie Actions
+ */
+Blockly.Blocks['action'] = {
+    init: function () {
+        this.jsonInit(
+            {
+                "type": "action",
+                "message0": "Faire :  %1 Sur :  %2",
+                "args0": [
+                  {
+                    "type": "input_value",
+                    "name": "Service",
+                    "check": "Service"
+                  },
+                  {
+                    "type": "input_value",
+                    "name": "Entity"
+                  }
+                ],
+                "inputsInline": true,
+                "previousStatement": "Action",
+                "nextStatement": "Action",
+                "colour": Blockly.Msg.HUE_ORANGE,
+                "tooltip": "",
+                "helpUrl": ""
+              }
+        );
+    }
+};
+
+/**
+ * Catégorie Couleur
  */
 Blockly.Blocks['color_picker'] = {
     init: function () {
@@ -520,7 +524,7 @@ Blockly.Blocks['color_picker'] = {
                   }
                 ],
                 "output": null,
-                "colour": 230,
+                "colour": Blockly.Msg.HUE_MAUVE,
                 "tooltip": "",
                 "helpUrl": ""
               }
@@ -560,7 +564,7 @@ Blockly.Blocks['color_rgb'] = {
               }
             ],
             "output": null,
-            "colour": 75,
+            "colour": Blockly.Msg.HUE_MAUVE,
             "tooltip": "Les valeurs doivent être comprise entre 0 et 255",
             "helpUrl": ""
           });
