@@ -3,7 +3,7 @@ import Blockly from 'blockly';
 // Bloc automation
 Blockly.Msg.HUE_PURPLE = '260';
 
-// 
+//
 Blockly.Msg.HUE_DARK_BLUE = '230';
 
 //
