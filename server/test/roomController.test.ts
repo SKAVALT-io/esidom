@@ -11,7 +11,7 @@ const mock: Room = expect.objectContaining({
 const baseUrl: string = 'http://localhost:3000';
 
 describe('Create room controller test', () => {
-    test('Should can\'t create room with no name', async () => {
+    test('Should not create room with no name', async () => {
         await expect(async () => {
             await axios.post(`${baseUrl}/room`);
         }).rejects.toThrow().catch((err) => {
@@ -22,7 +22,7 @@ describe('Create room controller test', () => {
         });
     });
 
-    test('Should can\'t create room with empty name', async () => {
+    test('Should not create room with empty name', async () => {
         await expect(async () => {
             await axios.post(`${baseUrl}/room`, { name: '' });
         }).rejects.toThrow().catch((err) => {
@@ -33,7 +33,7 @@ describe('Create room controller test', () => {
         });
     });
 
-    test('Should create a room "Cuisine"', async () => {
+    test('Should create a room', async () => {
         const name = Math.random().toString(26).slice(2);
         const res: AxiosResponse<any> = await axios.post(`${baseUrl}/room`, { name });
         expect(res.status).toBe(200);
