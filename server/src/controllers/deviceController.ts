@@ -13,7 +13,7 @@ class DeviceController {
             const data = result ?? { message: 'No device yet :(' };
             res.status(code).send(data);
         } catch (err) {
-            res.status(404).send({ message: err });
+            res.status(404).send({ message: err.message });
         }
     }
 
@@ -25,7 +25,7 @@ class DeviceController {
             const data = result ?? { message: 'No device with such id' };
             res.status(code).send(data);
         } catch (err) {
-            res.status(404).send({ message: err });
+            res.status(404).send({ message: err.message });
         }
     }
 
