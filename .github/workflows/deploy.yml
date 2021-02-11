@@ -1,0 +1,24 @@
+name: Deploy to Rasp
+
+on:
+  pull_request:
+    branches: [ develop ]
+    types: [ closed ]
+
+jobs:
+  deployApp:
+    if: github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Build and launch docker image
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.DEPLOY_HOST }}
+          username: ${{ secrets.DEPLOY_USER }}
+          password: ${{ secrets.DEPLOY_PASSWORD }}
+          script: |
+            cd esidom
+            git pull
+            chmod u+x docker_run.sh
+            ./docker_run.sh "${{ secrets.HA_HOST }}" "${{ secrets.HA_USER }}" "${{ secrets.HA_PASSWORD }}" 
