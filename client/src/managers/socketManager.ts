@@ -1,5 +1,6 @@
 /* eslint-disable camelcase */
 import { io } from 'socket.io-client';
+import config from 'src/config/config';
 
 export interface EntityDataChanged<T> {
     entity_id: string;
@@ -11,7 +12,7 @@ class SocketManager {
     private socket: any;
 
     connect() {
-        this.socket = io('http://localhost:3000');
+        this.socket = io(config.BASE_URL);
         console.log('Connected to WS');
     }
 

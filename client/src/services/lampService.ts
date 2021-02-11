@@ -1,7 +1,5 @@
 import config from '../config/config';
 
-const baseUrl = `http://${config.MIDDLE_URL}:${config.MIDDLE_PORT}`;
-
 export interface LampData {
     name: string;
     id: string;
@@ -24,7 +22,7 @@ export function rgbToHex(r: number, g: number, b: number): string {
 }
 
 export async function getLamp(id: string): Promise<LampData> {
-    return fetch(`${baseUrl}/entity/${id}`)
+    return fetch(`${config.BASE_URL}/entity/${id}`)
         .then((x) => x.json());
 }
 
@@ -38,7 +36,7 @@ export async function changeBrightness(id: string, brightnessPct: number): Promi
 
     const headers = new Headers();
     headers.set('Content-Type', 'application/json');
-    fetch(`${baseUrl}/entity/${id}`, {
+    fetch(`${config.BASE_URL}/entity/${id}`, {
         headers,
         method: 'PUT',
         body,
@@ -61,7 +59,7 @@ export async function switchLamp(id: string, brightnessPct?: number): Promise<an
     const headers = new Headers();
     headers.set('Content-Type', 'application/json');
 
-    return fetch(`${baseUrl}/entity/${id}`, {
+    return fetch(`${config.BASE_URL}/entity/${id}`, {
         headers,
         method: 'PUT',
         body,
@@ -78,7 +76,7 @@ export async function changeLampRGB(id: string, r: number, g: number, b: number)
 
     const headers = new Headers();
     headers.set('Content-Type', 'application/json');
-    fetch(`${baseUrl}/entity/${id}`, {
+    fetch(`${config.BASE_URL}/entity/${id}`, {
         headers,
         method: 'PUT',
         body,

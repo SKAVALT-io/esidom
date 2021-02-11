@@ -1,7 +1,5 @@
 import config from '../config/config';
 
-const baseUrl = `http://${config.MIDDLE_URL}:${config.MIDDLE_PORT}`;
-
 export interface DoorData {
     name: string;
     id: string;
@@ -13,6 +11,6 @@ export interface DoorData {
 }
 
 export async function getDoor(id: string): Promise<DoorData> {
-    return fetch(`${baseUrl}/entity/${id}`)
+    return fetch(`${config.BASE_URL}/entity/${id}`)
         .then((x) => x.json());
 }
