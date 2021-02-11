@@ -27,7 +27,7 @@
         <category name="Objets" colour={Blockly.Msg.HUE_RED}>
             <!-- <block type="lamps"></block> -->
             <!-- <block type="binary_sensors"></block> -->
-            <!-- <block type="objet_action"></block> -->
+            <block type="objet_action" />
         </category>
         <category name="Couleur" colour={Blockly.Msg.HUE_MAUVE}>
             <block type="color_picker" />

@@ -2,6 +2,9 @@
     import { onMount } from 'svelte';
     import Blockly from 'blockly';
     import EntityService from '../../services/entity';
+    import BlocklyService from '../../services/blocklyService';
+
+    let blocklyService: BlocklyService;
 
     onMount(async () => {
         const toolbox = document.getElementById('toolbox') || undefined;
@@ -13,6 +16,8 @@
         const rootBlock =
             '<xml><block type="automation" deletable="false" movable="false"></block></xml>';
         Blockly.Xml.domToWorkspace(Blockly.Xml.textToDom(rootBlock), workspace);
+
+        blocklyService = new BlocklyService(toolbox, workspace);
     });
 
     // Need to fix async call
@@ -84,6 +89,10 @@
         },
     };
 </script>
+
+<p>
+    <button on:click={blocklyService.convertToBlock()}>Convert the blocks !</button>
+</p>
 
 <div>
     <div id="blocklyDiv" />

@@ -214,3 +214,5 @@ esidomGenerator.scrub_ = function (block, code, opt_thisOnly) {
 
     return `${code},\n${nextCode}`;
 };
+
+export default esidomGenerator;
