@@ -4,12 +4,10 @@ on:
   pull_request:
     branches: [ develop ]
     types: [ closed ]
-  push:
-    branches: [ develop ]
 
 jobs:
   deployApp:
-    if: github.event.pull_request.merged == true || github.event == 'push'
+    if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
