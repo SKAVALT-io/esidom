@@ -58,10 +58,11 @@ class EntityService {
     }
 
     async updateEntityState(id: string, service: string, serviceData: any = {}) {
+        const splitted: string[] = service.split('.');
         const res = await socketForwarder.forward<any>({
             type: 'call_service',
-            domain: service.split('.')[0],
-            service: service.split('.')[1],
+            domain: splitted[0],
+            service: splitted[1],
             service_data: { entity_id: id, ...serviceData },
         });
         // console.log(res);
