@@ -62,6 +62,16 @@
             <span class="icon"><i class="fa fa-envelope-o" /></span>
             <span class="title">Todo</span>
         </a>
+        <a
+            href="/#/blockly"
+            on:click={() => {
+                pageLinkClicked('blockly');
+            }}
+            class:selected={currentPageSelected === 'blockly'}
+        >
+            <span class="icon"><i class="fa fa-cogs" /></span>
+            <span class="title">Blockly</span>
+        </a>
     </div>
 </nav>
 
