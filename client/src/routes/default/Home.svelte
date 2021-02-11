@@ -5,7 +5,7 @@
     const names = getStaff().join(', ');
 </script>
 
-<div id="test">
+<div>
     Welcome to SKAVALT :)
     <br /><br />
 
@@ -22,9 +22,5 @@
 <style>
     #cool {
         margin: 0 20%;
-    }
-
-    #test {
-        margin-left: 4%;
     }
 </style>

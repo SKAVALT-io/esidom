@@ -1,22 +1,19 @@
 <script lang="ts">
+    import { createEventDispatcher } from 'svelte';
+
     import AccountSVG from '../svg_icons/AccountSVG.svelte';
     import HamburgerSVG from '../svg_icons/HamburgerSVG.svelte';
-    import Sidebar from './Sidebar.svelte';
 
-    let open = false;
-    const sideBarIsOpen = () => {
-        open = !open;
-    };
+    const dispatch = createEventDispatcher();
 </script>
 
 <nav
-    class="top-navbar flex-wrap flex w-full items-center justify-between px-3.5 h-12 bg-gray-900 text-white border-b border-gray-100 z-10"
+    class="top-navbar flex-wrap flex w-full items-center justify-between px-3.5 h-full bg-gray-900 text-white border-b border-gray-100 z-10"
 >
     <div class="hamburger flex items-center">
         <button
             class="hamburger mr-2 text-gray-400 hover:text-white"
-            class:open
-            on:click={sideBarIsOpen}
+            on:click={() => dispatch('press')}
         >
             <HamburgerSVG />
         </button>
@@ -43,7 +40,6 @@
         </a>
     </div>
 </nav>
-<Sidebar bind:open />
 
 <style>
 </style>
