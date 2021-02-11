@@ -18,7 +18,7 @@ class EntityController {
             const data = result ?? { message: 'No entities yet' };
             res.status(code).send(data);
         } catch (err) {
-            res.status(404).send({ message: err });
+            res.status(404).send({ message: err.message });
         }
     }
 
@@ -31,7 +31,7 @@ class EntityController {
             const data = result ?? { message: 'No entities yet' };
             res.status(code).send(data);
         } catch (err) {
-            res.status(404).send({ message: err });
+            res.status(404).send({ message: err.message });
         }
     }
 
@@ -43,8 +43,8 @@ class EntityController {
             const code: number = result ? 200 : 404;
             const data: Entity | any = result || { message: 'No entity with such id' };
             res.status(code).send(data);
-        } catch (err) { // TODO: define error handling
-            res.status(404).send({ message: err });
+        } catch (err) {
+            res.status(404).send({ message: err.message });
         }
     }
 
@@ -60,7 +60,7 @@ class EntityController {
             const data = result ?? { message: 'No entities with such id' };
             res.status(code).send(data);
         } catch (err) {
-            res.status(404).send(err);
+            res.status(404).send(err.message);
         }
     }
 
@@ -74,7 +74,7 @@ class EntityController {
             const data = result ?? { message: 'No entity with such id' };
             res.status(code).send(data);
         } catch (err) {
-            res.status(404).send({ message: err });
+            res.status(404).send({ message: err.message });
         }
     }
 
