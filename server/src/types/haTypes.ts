@@ -74,3 +74,9 @@ export interface HaService {
         }
     }
 }
+
+export interface HaEntityUpdated {
+    entity_id: string;
+    old_state: HaStateResponse;
+    new_state: HaStateResponse;
+}
