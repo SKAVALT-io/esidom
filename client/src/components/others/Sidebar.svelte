@@ -33,6 +33,7 @@
 >
     <div class="navigation absolute -top-0 -left-0 w-full">
         <a
+            class="home-link"
             href="/#/"
             on:click={() => {
                 pageLinkClicked('home');
@@ -43,6 +44,7 @@
             <span class="title">Home</span>
         </a>
         <a
+            class="devices-link"
             href="/#/devices"
             on:click={() => {
                 pageLinkClicked('devices');
