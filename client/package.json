@@ -10,7 +10,6 @@
         "ts-check": "svelte-check",
         "test": "jest --coverage",
         "tsc": "tsc",
-        "lance": "http-server build -p 8080",
         "lint": "eslint --ext .ts,.svelte src"
     },
     "repository": {
