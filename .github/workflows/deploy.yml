@@ -9,7 +9,7 @@ on:
 
 jobs:
   deployApp:
-    if: github.event.pull_request.merged == true
+    if: github.event.pull_request.merged == true || github.event == 'push'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
