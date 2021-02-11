@@ -52,13 +52,6 @@
 <div id="test">
     <div id="blocklyDiv" style="height: 600px;" />
     <xml id="toolbox" style="display: none">
-        <category name="Logic" colour={Blockly.Msg.HUE_LIGHT_BLUE}>
-            <block type="controls_if" />
-            <block type="logic_compare" />
-            <block type="logic_operation" />
-            <block type="logic_negate" />
-            <block type="logic_boolean" />
-        </category>
         <category name="Declencheurs" colour={Blockly.Msg.HUE_GREEN}>
             <block type="binary_trigger"></block>
             <block type="time"></block>

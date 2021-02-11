@@ -50,7 +50,7 @@ Blockly.Blocks['automation'] = {
                     ]
                   }
                 ],
-                "colour": Blockly.Msg.HUE_PURPLE,
+                "colour": Blockly.Msg.HUE_DARK_BLUE,
                 "tooltip": "",
                 "helpUrl": ""
               }

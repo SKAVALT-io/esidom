@@ -6,7 +6,7 @@ Blockly.Msg.HUE_PURPLE = '260';
 // 
 Blockly.Msg.HUE_DARK_BLUE = '230';
 
-// Catégorie Logic
+//
 Blockly.Msg.HUE_LIGHT_BLUE = '210';
 
 //
