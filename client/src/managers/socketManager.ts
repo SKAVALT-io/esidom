@@ -1,6 +1,6 @@
 /* eslint-disable camelcase */
 import { io } from 'socket.io-client';
-import config from 'src/config/config';
+import config from '../config/config';
 
 export interface EntityDataChanged<T> {
     entity_id: string;
