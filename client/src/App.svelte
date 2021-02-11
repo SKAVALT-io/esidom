@@ -5,19 +5,19 @@
     import Devices from './routes/devices/Devices.svelte';
     import Home from './routes/default/Home.svelte';
 
-    import Lamp from './components/devices/LampRGB.svelte';
     import Navbar from './components/others/Navbar.svelte';
-    import Door from './components/devices/Door.svelte';
+    import { socketManager } from './managers/socketManager';
 
     const routes = {
         '/devices/': Devices,
         '/home/': Home,
-        '/lamp/': Lamp,
-        '/door': Door,
         '/blockly': Blockly,
         // This is optional, but if present it must be the last
         '*': Home,
     };
+
+    // Initiate the socket
+    socketManager.connect();
 </script>
 
 <main>
