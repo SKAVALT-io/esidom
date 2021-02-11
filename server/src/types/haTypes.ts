@@ -59,3 +59,18 @@ export interface HaRoomDetail {
     device: string[];
     entity: string[];
 }
+
+export interface HaService {
+    [domain: string]: {
+        [name: string]: {
+            description: string;
+            fields: {
+                [field: string]: {
+                    description: string;
+                    example: string;
+                    values?: string[];
+                }
+            }
+        }
+    }
+}

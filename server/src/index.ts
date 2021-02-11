@@ -9,6 +9,7 @@ import roomController from './controllers/roomController';
 import automationController from './controllers/automationController';
 import groupController from './controllers/groupController';
 import userController from './controllers/userController';
+import serviceController from './controllers/serviceController';
 
 config(); // Dot env config
 
@@ -36,5 +37,6 @@ doAuth();
 // 'Instanciate' each controller
 [
     deviceController, authController, entityController,
-    roomController, automationController, groupController, userController,
+    roomController, automationController, groupController,
+    userController, serviceController,
 ].forEach(() => {});
