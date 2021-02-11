@@ -1,21 +1,21 @@
-import Blockly from 'blockly';
-import EsidomGenerator from '../routes/automation/esidom_generator.js';
+import type { WorkspaceSvg } from 'blockly';
+import esidomGenerator from '../routes/automation/esidom_generator';
 
 export default class BlocklyService {
-    toolbox: string | HTMLElement | undefined;
+    private toolbox: string | HTMLElement | undefined;
 
-    workspace: Blockly.WorkspaceSvg;
+    private workspace: WorkspaceSvg;
 
-    constructor(toolbox: string | HTMLElement | undefined, workspace: Blockly.WorkspaceSvg) {
-        this.toolbox = toolbox,
+    constructor(toolbox: string | HTMLElement | undefined, workspace: WorkspaceSvg) {
+        this.toolbox = toolbox;
         this.workspace = workspace;
     }
 
-    convertToBlock() {
-        window.LoopTrap = 1000;
-        Blockly.JavaScript.INFINITE_LOOP_TRAP = 'if (--window.LoopTrap == 0) throw "Infinite loop.";\n';
-        const code = EsidomGenerator.workspaceToCode(this.workspace);
-        Blockly.JavaScript.INFINITE_LOOP_TRAP = null;
+    convertToBlock(): void {
+        const code = esidomGenerator.workspaceToCode(this.workspace);
+
+        console.log(this.toolbox);
+
         try {
             const json = JSON.parse(code);
             json.alias = 'test 3';

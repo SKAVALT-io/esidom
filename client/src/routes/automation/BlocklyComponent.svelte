@@ -1,10 +1,12 @@
 <script lang="ts">
+    // Execute blocks definition
+    import './esidom_blocks';
     import { onMount } from 'svelte';
     import Blockly from 'blockly';
     import EntityService from '../../services/entity';
     import BlocklyService from '../../services/blocklyService';
 
-    let blocklyService: BlocklyService;
+    let blocklyService: any;
 
     onMount(async () => {
         const toolbox = document.getElementById('toolbox') || undefined;
