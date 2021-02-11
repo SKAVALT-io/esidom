@@ -1,4 +1,4 @@
-import axios, { AxiosError, AxiosResponse } from 'axios';
+import axios, { AxiosResponse } from 'axios';
 import { Room } from '../src/types/room';
 
 const mock: Room = expect.objectContaining({
