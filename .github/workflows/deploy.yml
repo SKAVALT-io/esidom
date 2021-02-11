@@ -19,6 +19,7 @@ jobs:
           host: ${{ secrets.DEPLOY_HOST }}
           username: ${{ secrets.DEPLOY_USER }}
           password: ${{ secrets.DEPLOY_PASSWORD }}
+          command_timeout: 30m
           script: |
             cd esidom
             git pull
