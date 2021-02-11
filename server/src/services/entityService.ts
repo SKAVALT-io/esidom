@@ -47,9 +47,14 @@ class EntityService {
             });
     }
 
-    async getEntityById(id: string): Promise<Entity | undefined> {
+    async getEntityById(id: string): Promise<Entity> {
         const entities = await this.getEntities();
-        return entities.find((e: Entity) => e.id === id);
+        const result: Entity | undefined = entities
+            .find((e: Entity) => e.id === id);
+        if (result === undefined) {
+            throw new Error('No entity with such id');
+        }
+        return result as Entity;
     }
 
     async updateEntityState(id: string, service: string, serviceData: any = {}) {
@@ -63,10 +68,10 @@ class EntityService {
         return res;
     }
 
-    async toggleEntity(id: string, enable: boolean): Promise<Entity | undefined> {
+    async toggleEntity(id: string, enable: boolean): Promise<Entity> {
         const entity: Entity | undefined = await this.getEntityById(id);
         if (entity === undefined) {
-            return entity;
+            throw new Error('No entity with such id');
         }
         const body = {
             type: 'config/entity_registry/update',
