@@ -87,3 +87,13 @@ export interface HaEntityUpdated {
     old_state: HaStateResponse;
     new_state: HaStateResponse;
 }
+
+export interface HaAutomation {
+    id: string;
+    alias: string;
+    description: string;
+    trigger: any[];
+    condition: any[];
+    action: any[];
+    mode: 'single' | 'restart' | 'queued' | 'parallel';
+}

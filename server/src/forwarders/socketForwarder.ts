@@ -91,13 +91,11 @@ class SocketForwarder {
         this.forward<any>({
             type: 'subscribe_events',
             event_type: 'device_registry_updated',
-            id: this.uid++,
         });
 
         this.forward({
             type: 'subscribe_events',
             event_type: 'entity_registry_updated',
-            id: this.uid++,
         });
     }
 

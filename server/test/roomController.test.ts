@@ -1,5 +1,6 @@
 import axios, { AxiosResponse } from 'axios';
 import { Room } from '../src/types/room';
+import config from './config';
 
 const mock: Room = expect.objectContaining({
     roomId: expect.any(String),
@@ -8,12 +9,10 @@ const mock: Room = expect.objectContaining({
     automations: expect.any(Array),
 } as Room);
 
-const baseUrl: string = 'http://localhost:3000';
-
 describe('Create room controller test', () => {
     test('Should not create room with no name', async () => {
         await expect(async () => {
-            await axios.post(`${baseUrl}/room`);
+            await axios.post(`${config.baseUrl}/room`);
         }).rejects.toThrow().catch((err) => {
             expect(err).toHaveProperty('response');
             const res = err.response;
@@ -24,7 +23,7 @@ describe('Create room controller test', () => {
 
     test('Should not create room with empty name', async () => {
         await expect(async () => {
-            await axios.post(`${baseUrl}/room`, { name: '' });
+            await axios.post(`${config.baseUrl}/room`, { name: '' });
         }).rejects.toThrow().catch((err) => {
             expect(err).toHaveProperty('response');
             const res = err.response;
@@ -35,7 +34,7 @@ describe('Create room controller test', () => {
 
     test('Should create a room', async () => {
         const name = Math.random().toString(26).slice(2);
-        const res: AxiosResponse<any> = await axios.post(`${baseUrl}/room`, { name });
+        const res: AxiosResponse<any> = await axios.post(`${config.baseUrl}/room`, { name });
         expect(res.status).toBe(200);
         expect(res.data).toBeDefined();
         expect(res.data).toMatchObject(mock);
@@ -47,8 +46,8 @@ describe('Create room controller test', () => {
 describe('Get room controller test', () => {
     test('Get room', async () => {
         const uname = Math.random().toString(26).slice(2);
-        const room: AxiosResponse<any> = await axios.post(`${baseUrl}/room`, { name: uname });
-        const res: AxiosResponse<any> = await axios.get(`${baseUrl}/room/${room.data.roomId}`);
+        const room: AxiosResponse<any> = await axios.post(`${config.baseUrl}/room`, { name: uname });
+        const res: AxiosResponse<any> = await axios.get(`${config.baseUrl}/room/${room.data.roomId}`);
         expect(res.status).toBe(200);
         expect(res.data).toBeDefined();
         expect(res.data).toMatchObject(mock);
