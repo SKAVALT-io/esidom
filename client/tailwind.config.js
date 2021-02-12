@@ -338,6 +338,7 @@ module.exports = {
             10: 'repeat(10, minmax(0, 1fr))',
             11: 'repeat(11, minmax(0, 1fr))',
             12: 'repeat(12, minmax(0, 1fr))',
+            20: 'repeat(20, minmax(0, 1fr))',
         },
         gridTemplateRows: {
             none: 'none',
@@ -347,6 +348,7 @@ module.exports = {
             4: 'repeat(4, minmax(0, 1fr))',
             5: 'repeat(5, minmax(0, 1fr))',
             6: 'repeat(6, minmax(0, 1fr))',
+            12: 'repeat(12, minmax(0, 1fr))',
         },
         height: (theme) => ({
             auto: 'auto',

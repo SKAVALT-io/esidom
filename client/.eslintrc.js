@@ -23,6 +23,8 @@ module.exports = {
         'plugin:import/errors',
         'plugin:import/warnings',
         'plugin:import/typescript',
+        'plugin:@typescript-eslint/eslint-recommended',
+        'plugin:@typescript-eslint/recommended',
     ],
     parser: '@typescript-eslint/parser',
     parserOptions: {
@@ -39,6 +41,7 @@ module.exports = {
         'no-console': 'off',
         'no-plusplus': 'off',
         'import/extensions': 0,
+        'import/no-extraneous-dependencies': ['error', { devDependencies: true }],
     },
     overrides: [
         {

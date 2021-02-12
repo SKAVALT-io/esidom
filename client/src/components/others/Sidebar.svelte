@@ -28,11 +28,12 @@
 />
 
 <nav
-    class="main-menu bg-gray-900 fixed w-16 h-screen z-30 transition overflow-hidden"
+    class="main-menu bg-gray-900 absolute sm:relative w-full h-screen z-30 transition overflow-hidden"
     class:open
 >
     <div class="navigation absolute -top-0 -left-0 w-full">
         <a
+            class="home-link"
             href="/#/"
             on:click={() => {
                 pageLinkClicked('home');
@@ -43,6 +44,7 @@
             <span class="title">Home</span>
         </a>
         <a
+            class="devices-link"
             href="/#/devices"
             on:click={() => {
                 pageLinkClicked('devices');
@@ -61,6 +63,16 @@
         >
             <span class="icon"><i class="fa fa-envelope-o" /></span>
             <span class="title">Todo</span>
+        </a>
+        <a
+            href="/#/blockly"
+            on:click={() => {
+                pageLinkClicked('blockly');
+            }}
+            class:selected={currentPageSelected === 'blockly'}
+        >
+            <span class="icon"><i class="fa fa-cogs" /></span>
+            <span class="title">Blockly</span>
         </a>
     </div>
 </nav>

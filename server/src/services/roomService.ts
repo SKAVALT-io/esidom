@@ -32,13 +32,27 @@ class RoomService {
 
     private async injectAutomationsDevicesIntoRoomObject(room: Room): Promise<Room> {
         const haRoom: HaRoomDetail = await socketForwarder.forward({ type: 'search/related', item_type: 'area', item_id: room.roomId });
-        const devices = (await Promise.all(
-            haRoom.device.map(async (id: string) => deviceService.getDeviceById(id)),
-        ));
-        room.devices.push(...devices.filter((x) => x !== undefined) as Device[]);
-
+        if (haRoom.device !== undefined) {
+            const devices = (await Promise.all(
+                haRoom.device.map(async (id: string) => deviceService.getDeviceById(id)),
+            ));
+            room.devices.push(...devices.filter((x) => x !== undefined) as Device[]);
+        }
         // TODO inject automation
         return room;
+    }
+
+    deleteRoom(areaId: string) {
+        return socketForwarder.forward({ type: 'config/area_registry/delete', area_id: areaId });
+    }
+
+    async getRoomById(areaId: string) {
+        const rooms: Room[] = await this.getRooms();
+        return rooms.find((r: Room) => r.roomId === areaId);
+    }
+
+    private async updateRoomDevice(deviceId: string, areaId: string): Promise<any> {
+        return socketForwarder.forward({ type: 'config/device_registry/update', device_id: deviceId, area_id: areaId });
     }
 
 }

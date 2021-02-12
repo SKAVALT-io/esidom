@@ -10,7 +10,6 @@ class AuthService {
         const baseUrl = req.params.baseUrl || `http://${config.baseUrl}`;
         const username = req.params.username || config.username;
         const password = req.params.password || config.password;
-        console.log(this, baseUrl, username, password);
         const accessToken = await AuthService.auth(baseUrl, username, password);
         socketForwarder.initSocket(accessToken);
         httpForwarder.setToken(accessToken);
@@ -24,7 +23,6 @@ class AuthService {
             redirect_uri: `${baseUrl}/?auth_callback=1`,
         });
         const flowId = res.data.flow_id;
-        console.log(flowId);
         res = await httpForwarder.post(
             `/auth/login_flow/${flowId}`,
             {
