@@ -3,10 +3,9 @@
     import './esidom_blocks';
     import { onMount } from 'svelte';
     import Blockly from 'blockly';
-    import EntityService from '../../services/entity';
     import BlocklyService from '../../services/blocklyService';
 
-    let blocklyService: any;
+    let blocklyService: BlocklyService;
 
     onMount(async () => {
         const toolbox = document.getElementById('toolbox') || undefined;
@@ -20,76 +19,10 @@
         Blockly.Xml.domToWorkspace(Blockly.Xml.textToDom(rootBlock), workspace);
 
         blocklyService = new BlocklyService(toolbox, workspace);
+
+        // TODO: correct asynchrone call
+        await BlocklyService.createEntities();
     });
-
-    // Need to fix async call
-    const lights = EntityService.getEntities();
-
-    const lst = [];
-
-    lights.then((result) => {
-        result.forEach((element) => {
-            lst.push({
-                service: element.id,
-                name: element.name,
-
-                // TODO: Change to dynamic actions
-                actions: ['light.toggle', 'light.turn_off', 'light.turn_on'],
-            });
-        });
-    });
-
-    Blockly.Blocks.objet_action = {
-        init() {
-            const dropdown1 = [];
-            for (let i = 0; i < lst.length; i++) {
-                dropdown1.push([
-                    lst[i].name == null || lst[i].name === ''
-                        ? 'Pas de nom'
-                        : lst[i].name,
-                    i.toString(),
-                ]);
-            }
-
-            const dropdown2 = [];
-            for (let i = 0; i < lst[0].actions.length; i++) {
-                dropdown2.push([lst[0].actions[i], lst[0].actions[i]]);
-            }
-
-            this.appendDummyInput()
-                .appendField('Objet : ')
-                .appendField(new Blockly.FieldDropdown(dropdown1), 'object');
-            this.appendDummyInput('services')
-                .appendField('Action :')
-                .appendField(new Blockly.FieldDropdown(dropdown2), 'service');
-            this.setInputsInline(false);
-            this.setPreviousStatement(true, 'Action');
-            this.setNextStatement(true, 'Action');
-            this.setColour(255);
-            this.setTooltip('');
-            this.setHelpUrl('');
-        },
-        onchange(ev) {
-            if (ev.name === 'object') {
-                const index = parseInt(ev.newValue);
-                const newDropdown = [];
-                for (let i = 0; i < lst[index].actions.length; i++) {
-                    newDropdown.push([
-                        lst[index].actions[i],
-                        lst[index].actions[i],
-                    ]);
-                }
-
-                this.removeInput('services');
-                this.appendDummyInput('services')
-                    .appendField('Action :')
-                    .appendField(
-                        new Blockly.FieldDropdown(newDropdown),
-                        'service'
-                    );
-            }
-        },
-    };
 </script>
 
 <p>

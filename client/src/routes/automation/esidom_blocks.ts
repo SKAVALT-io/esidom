@@ -3,7 +3,7 @@
 import Blockly from 'blockly';
 import COLORS from './esidom_const';
 
-interface BlocksDefinitions {
+export interface BlocksDefinitions {
     automation: any;
     binary_trigger: any;
     time: any;
@@ -15,6 +15,7 @@ interface BlocksDefinitions {
     action: any;
     color_picker: any;
     color_rgb: any;
+    objet_action: any;
     jsonInit:(a: any)=> void;
 }
 
