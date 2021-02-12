@@ -70,15 +70,8 @@ export default class BlocklyService {
 
                     const dropdown1 = tmpDropdown1.length > 0 ? tmpDropdown1 : [["Pas de nom", "Pas de nom"]];
 
-                    const dropdown2: string[][] = [];
-
-                    if(entityWithServices.length > 0){
-                        entityWithServices[0].services.forEach((service: string) => {
-                            dropdown2.push([service, service]);
-                        });
-                    }else{
-                        dropdown2.push(["Action inconnu", "Action inconnu"]);
-                    }
+                    const dropdown2 = entityWithServices[0]?.services.map((service: string) => [ services, service ])
+                    ?? ["Action inconnue", "Action inconnue"];
 
                     console.log(Blockly.Blocks);
                     console.log(this);
