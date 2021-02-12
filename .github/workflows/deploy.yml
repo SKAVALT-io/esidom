@@ -20,6 +20,7 @@ jobs:
           username: ${{ secrets.DEPLOY_USER }}
           password: ${{ secrets.DEPLOY_PASSWORD }}
           command_timeout: 30m
+          port: 22222
           script: |
             cd esidom
             git pull
