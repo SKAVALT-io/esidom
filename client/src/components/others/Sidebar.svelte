@@ -1,4 +1,5 @@
 <script lang="ts">
+    import * as SPA from 'svelte-spa-router';
     export let open = false;
 
     let currentPageSelected = '';
@@ -34,7 +35,8 @@
     <div class="navigation absolute -top-0 -left-0 w-full">
         <a
             class="home-link"
-            href="/#/"
+            href="/"
+            use:SPA.link
             on:click={() => {
                 pageLinkClicked('home');
             }}
@@ -45,7 +47,8 @@
         </a>
         <a
             class="devices-link"
-            href="/#/devices"
+            href="/devices"
+            use:SPA.link
             on:click={() => {
                 pageLinkClicked('devices');
             }}
@@ -55,7 +58,8 @@
             <span class="title">Devices</span>
         </a>
         <a
-            href="/#/"
+            href="/"
+            use:SPA.link
             on:click={() => {
                 pageLinkClicked('todo');
             }}
@@ -65,7 +69,8 @@
             <span class="title">Todo</span>
         </a>
         <a
-            href="/#/blockly"
+            href="/blockly"
+            use:SPA.link
             on:click={() => {
                 pageLinkClicked('blockly');
             }}
