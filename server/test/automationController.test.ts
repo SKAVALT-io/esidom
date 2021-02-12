@@ -1,3 +1,5 @@
+/* eslint-disable jest/no-try-expect */
+/* eslint-disable jest/no-conditional-expect */
 import axios, { AxiosResponse } from 'axios';
 import { Automation, AutomationPreview } from '../src/types/automation';
 import config from './config';
