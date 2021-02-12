@@ -9,8 +9,8 @@ const mock: Entity = expect.objectContaining({
     attributes: expect.any(Object),
 } as Entity);
 
-const entitiesTypes: string[] = ['person', 'sun', 'zone', 'binary_sensor', 'switch', 'sensor', 'automation', 'weather', 'media_player', 'light', 'zwave'];
-const baseUrl: string = 'http://localhost:3000';
+const entitiesTypes: string[] = ['person', 'sun', 'zone', 'binary_sensor', 'switch', 'sensor', 'automation', 'weather', 'media_player', 'light', 'persistent_notification', 'zwave'];
+const baseUrl: string = 'http://domotique.3utilities.com:3000';
 const HaWeatherEntityId: string = 'weather.maison_hourly';
 
 describe('Entity controller tests', () => {
