@@ -4,9 +4,9 @@
   "description": "Esidom server",
   "main": "dist/src/index.js",
   "scripts": {
-    "start": "nodemon -r dotenv/config src/index.ts",
+    "start": "nodemon -r dotenv/config src/index.ts --ignore test/",
     "startProd": "node -r dotenv/config ./dist/index.js",
-    "test": "jest --coverage",
+    "test": "jest --coverage=true --detectOpenHandles --collectCoverageFrom='/src/**/*.ts'",
     "build": "tsc --project ./",
     "lint": "eslint . --ext .ts"
   },

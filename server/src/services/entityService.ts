@@ -1,8 +1,15 @@
 import socketForwarder from '../forwarders/socketForwarder';
 import { Entity } from '../types/entity';
-import { HaEntity, HaStateResponse } from '../types/haTypes';
+import { HaEntity, HaEntityUpdated, HaStateResponse } from '../types/haTypes';
 
 class EntityService {
+
+    constructor() {
+        socketForwarder.registerEventCallback(
+            'state_changed',
+            async (data: HaEntityUpdated): Promise<Entity> => this.getEntityById(data.entity_id),
+        );
+    }
 
     async getEntities(): Promise<Entity[]> {
         const entities: HaEntity[] = await socketForwarder
@@ -16,8 +23,8 @@ class EntityService {
             const { attributes } = entityState ?? {};
             const state = entityState?.state ?? '';
             const entity: Entity = {
-                id: e.entity_id,
-                name: e.name,
+                id: e.entity_id ?? '',
+                name: e.name ?? '',
                 type: e.entity_id.split('.')[0],
                 attributes,
                 state,
@@ -47,26 +54,31 @@ class EntityService {
             });
     }
 
-    async getEntityById(id: string): Promise<Entity | undefined> {
+    async getEntityById(id: string): Promise<Entity> {
         const entities = await this.getEntities();
-        return entities.find((e: Entity) => e.id === id);
+        const result: Entity | undefined = entities
+            .find((e: Entity) => e.id === id);
+        if (result === undefined) {
+            throw new Error(`No entity with id ${id}`);
+        }
+        return result as Entity;
     }
 
     async updateEntityState(id: string, service: string, serviceData: any = {}) {
+        const splitted: string[] = service.split('.');
         const res = await socketForwarder.forward<any>({
             type: 'call_service',
-            domain: service.split('.')[0],
-            service: service.split('.')[1],
+            domain: splitted[0],
+            service: splitted[1],
             service_data: { entity_id: id, ...serviceData },
         });
-        console.log(res);
         return res;
     }
 
-    async toggleEntity(id: string, enable: boolean): Promise<HaEntity | undefined> {
+    async toggleEntity(id: string, enable: boolean): Promise<Entity> {
         const entity: Entity | undefined = await this.getEntityById(id);
         if (entity === undefined) {
-            return entity;
+            throw new Error('No entity with such id');
         }
         const body = {
             type: 'config/entity_registry/update',
@@ -74,9 +86,8 @@ class EntityService {
             name: entity.name,
             disabled_by: (enable) ? null : 'user',
         };
-        const result: HaEntity = await socketForwarder.forward(body);
-        console.log(result);
-        return result;
+        const haEnt: any = await socketForwarder.forward(body);
+        return this.getEntityById(haEnt?.entity_entry.entity_id);
     }
 
     async getTypes(): Promise<string[]> {

@@ -7,8 +7,12 @@ class RoomController {
 
     @App.get('')
     async getRooms(req: Request, res: Response): Promise<void> {
-        const result = await roomService.getRooms();
-        res.status(200).send(result);
+        try {
+            const result = await roomService.getRooms();
+            res.status(200).send(result);
+        } catch (err) {
+            res.status(404).send({ message: err });
+        }
     }
 
     @App.post('')
@@ -17,19 +21,25 @@ class RoomController {
             res.status(400).send({ message: 'The parameter name is missing' });
             return;
         }
-        const result = await roomService.createRoom(req.body.name);
-        res.status(200).send(result);
+        try {
+            const result = await roomService.createRoom(req.body.name);
+            res.status(200).send(result);
+        } catch (err) {
+            res.status(404).send({ message: err });
+        }
     }
 
     @App.get('/:roomId')
     async getRoom(req: Request, res: Response): Promise<void> {
         const areaId = req.params.roomId;
-        const result = await roomService.getRoomById(areaId).catch(() => undefined);
-        if (result === undefined) {
-            res.status(400).send({ message: 'Error while getting room' });
-            return;
+        try {
+            const result = await roomService.getRoomById(areaId);
+            const code = result ? 200 : 404;
+            const data = result ?? { message: 'No room with such id' };
+            res.status(code).send(data);
+        } catch (err) {
+            res.status(404).send({ message: err });
         }
-        res.status(200).send(result);
     }
 
     @App.put('/:roomId')

@@ -19,15 +19,15 @@
     </div>
 </div>
 
-<!-- 
-    Exemple of use : 
+<!-- Exemple of use : 
 <DeviceContainer title="Lampes" iconPath="favicon.png">
     <Device />
     <Device />
     <Device />
     <Device />
     <Device />
-</DeviceContainer> -->
+</DeviceContainer>
+-->
 <style>
     #deviceContainer > #title {
         background-color: #22164d;

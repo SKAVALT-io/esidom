@@ -6,9 +6,6 @@ name: Node.js CI
 on:
   pull_request:
     branches: [ develop ]
-  # for testing
-  push:
-    branches: [ feature/setup-cd ]
 
 jobs:
   buildServer:
@@ -51,20 +48,3 @@ jobs:
     # Disabled because linter is broken on client
     # - run: npm run lint
     # - run: npm test
-
-  deployApp:
-    needs: [ buildClient, buildServer ]
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - name: Build and launch docker image
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ secrets.DEPLOY_HOST }}
-          username: ${{ secrets.DEPLOY_USER }}
-          password: ${{ secrets.DEPLOY_PASSWORD }}
-          script: |
-            cd esidom
-            git pull
-            chmod u+x docker_run.sh
-            ./docker_run.sh "${{ secrets.HA_HOST }}" "${{ secrets.HA_USER }}" "${{ secrets.HA_PASSWORD }}"

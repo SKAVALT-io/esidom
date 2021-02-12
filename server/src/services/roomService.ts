@@ -32,11 +32,12 @@ class RoomService {
 
     private async injectAutomationsDevicesIntoRoomObject(room: Room): Promise<Room> {
         const haRoom: HaRoomDetail = await socketForwarder.forward({ type: 'search/related', item_type: 'area', item_id: room.roomId });
-        const devices = (await Promise.all(
-            haRoom.device.map(async (id: string) => deviceService.getDeviceById(id)),
-        ));
-        room.devices.push(...devices.filter((x) => x !== undefined) as Device[]);
-
+        if (haRoom.device !== undefined) {
+            const devices = (await Promise.all(
+                haRoom.device.map(async (id: string) => deviceService.getDeviceById(id)),
+            ));
+            room.devices.push(...devices.filter((x) => x !== undefined) as Device[]);
+        }
         // TODO inject automation
         return room;
     }

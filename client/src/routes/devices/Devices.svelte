@@ -1,67 +1,75 @@
 <script lang="ts">
     import Device from '../../components/devices/Device.svelte';
-    import Door from '../../components/devices/Door.svelte';
-    import Lamp from '../../components/devices/LampRGB.svelte';
-    import Sensor from '../../components/devices/Sensor.svelte';
+    import Door from '../../components/devices/doors/Door.svelte';
+    import LampNormal from '../../components/devices/lamps/LampNormal.svelte';
+    import LampRgb from '../../components/devices/lamps/LampRGB.svelte';
+    import Temperature from '../../components/devices/sensors/Temperature.svelte';
+    import PairDevice from '../../components/others/PairDevice.svelte';
+    import RoundedButton from '../../components/UI/buttons/RoundedButton.svelte';
+    import DeviceContainer from '../../components/UI/container/DeviceContainer.svelte';
 
-    async function pair() {
-        const protocol = prompt('Protocol');
-
-        const body = JSON.stringify({ protocol });
-        const headers = new Headers();
-        headers.set('Content-Type', 'application/json');
-        await fetch('http://localhost:3000/device', {
-            headers,
-            method: 'POST',
-            body,
-        }).then((x) => x.json());
-        alert('✔️');
+    let isPairDeviceOpen = false;
+    async function pair(event) {
+        isPairDeviceOpen = true;
+        // TODO: PAIR
+        // const protocol = prompt('Protocol');
+        // const body = JSON.stringify({ protocol });
+        // const headers = new Headers();
+        // headers.set('Content-Type', 'application/json');
+        // await fetch('http://localhost:3000/device', {
+        //     headers,
+        //     method: 'POST',
+        //     body,
+        // }).then((x) => x.json());
+        // alert('✔️');
     }
 </script>
 
 <div id="test">
     <!-- Grid containing all devices -->
-    <div class="devices grid grid-flow-row grid-cols-4 mt-4 ml-4 gap-4">
-        <div>
-            <Lamp />
-        </div>
-        <div class="col-span-2">
-            <Sensor />
-        </div>
-        <div>
-            <Door />
-        </div>
-        <!-- <div class="">
-            lol
-            <Device />
-        </div>
-        <div>
-            <Device>
-                <img slot="img" src="https://via.placeholder.com/350x150" />
-            </Device>
-        </div>
-        <div>
-            <Device />
-        </div>
-        <div>
-            <Device />
-        </div>
-        <div>
-            <Device />
-        </div> -->
-    </div>
+
+    <DeviceContainer title="Lampes" iconPath="favicon.png">
+        <LampRgb entityId="light.zipato_bulb_2_level" />
+        <LampNormal entityId="light.0x7cb03eaa0a03e828" />
+    </DeviceContainer>
+
+    <DeviceContainer title="Capteurs" iconPath="favicon.png">
+        <Temperature
+            entityId="fibaro_system_fgms001_zw5_motion_sensor_temperature"
+        />
+        <Door entityId="binary_sensor.0x00158d0003cc152c_contact" />
+    </DeviceContainer>
+
+    <DeviceContainer title="Tests" iconPath="favicon.png">
+        <Device isError={true} />
+        <Device isError={false}>
+            <img slot="img" alt="" src="https://via.placeholder.com/400x400" />
+        </Device>
+    </DeviceContainer>
+
+    <!-- <div
+        class="devices grid grid-flow-row grid-cols-1 lg:grid-cols-4 mt-4 ml-4 gap-4"
+    >
+    </div> -->
 
     <!-- The + button to add device -->
     <div class="absolute bottom-0 right-0 h-16 w-16">
-        <button
-            class="py-2 px-4 bg-blue-400  text-white text-xl font-semibold rounded-full shadow-md hover:bg-blue-500 focus:outline-none absolute"
-            type="button"
-            on:click={pair}
-        >
-            +
-        </button>
+        <RoundedButton
+            on:click={() => {
+                isPairDeviceOpen = true;
+            }}
+            iconPath="icons/plus.svg"
+        />
     </div>
 </div>
+
+{#if isPairDeviceOpen}
+    <PairDevice
+        on:cancel={() => {
+            isPairDeviceOpen = false;
+        }}
+    />
+{/if}
 
 <style lang="scss">
     $color: rgb(8, 102, 0);

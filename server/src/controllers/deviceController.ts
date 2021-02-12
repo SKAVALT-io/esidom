@@ -9,9 +9,11 @@ class DeviceController {
     async getDevices(req: Request, res: Response): Promise<void> {
         try {
             const result = await deviceService.getDevices();
-            res.status(200).send(result);
+            const code = result ? 200 : 404;
+            const data = result ?? { message: 'No device yet :(' };
+            res.status(code).send(data);
         } catch (err) {
-            res.status(404).send({ message: err });
+            res.status(404).send({ message: err.message });
         }
     }
 
@@ -19,9 +21,11 @@ class DeviceController {
     async getDevice(req: Request, res: Response): Promise<void> {
         try {
             const result = await deviceService.getDeviceById(req.params.deviceId);
-            res.status(200).send(result);
+            const code = result ? 200 : 404;
+            const data = result ?? { message: 'No device with such id' };
+            res.status(code).send(data);
         } catch (err) {
-            res.status(404).send({ message: err });
+            res.status(404).send({ message: err.message });
         }
     }
 

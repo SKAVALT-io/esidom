@@ -1,7 +1,9 @@
 import socketIo from 'socket.io';
 import WebSocket from 'ws';
+import { HaEntityUpdated } from '../types/haTypes';
 import App from '../app';
 import config from '../config/config';
+import { Entity } from '../types/entity';
 
 type HaSocket = {
     type: string,
@@ -15,6 +17,9 @@ type HaSocket = {
     }
 }
 
+// eslint-disable-next-line no-unused-vars
+type Handler = (a: HaEntityUpdated) => Promise<Entity>;
+
 class SocketForwarder {
 
     // eslint-disable-next-line no-unused-vars
@@ -22,6 +27,9 @@ class SocketForwarder {
 
     // eslint-disable-next-line no-unused-vars
     private errorsMap: Map<number, (body: any) => void>;
+
+    // eslint-disable-next-line no-unused-vars
+    private eventsCallback: Map<string, Handler>;
 
     private socket: WebSocket | null;
 
@@ -32,6 +40,7 @@ class SocketForwarder {
     constructor() {
         this.socketsMap = new Map();
         this.errorsMap = new Map();
+        this.eventsCallback = new Map();
         this.socket = null;
         this.uid = 2;
         this.io = new socketIo.Server(App.http, {
@@ -96,7 +105,7 @@ class SocketForwarder {
         const { id } = data;
         console.log(`received result for ws ${id}`);
         if (data.success === true) {
-            console.log(data.result);
+            // console.log(data.result);
             (this.socketsMap.get(id) || console.log)(data.result);
         } else if (data.success === false) {
             console.log(`${data.error?.code} ${data.error?.message}`);
@@ -106,10 +115,11 @@ class SocketForwarder {
         this.errorsMap.delete(id);
     }
 
-    handleSocketEvent(data: HaSocket): void {
+    async handleSocketEvent(data: HaSocket): Promise<void> {
         const { id } = data;
         console.log(`received event for ws : ${id}`);
-        if (data.event.event_type === 'device_registry_updated') {
+        const eventType: string = data?.event?.event_type;
+        if (eventType === 'device_registry_updated') {
             console.log(data.event.data);
             switch (data?.event?.data?.action) {
             case 'create':
@@ -125,9 +135,16 @@ class SocketForwarder {
                 return;
             }
         }
-        if (data?.event?.event_type === 'state_changed') {
-            // console.log(`state changed : ${JSON.stringify(data.event.data)}`);
-            this.io.emit('entity_updated', data?.event?.data);
+        if (eventType === 'state_changed') {
+            const ent: HaEntityUpdated = data?.event?.data;
+            const callback = this.eventsCallback.get(eventType);
+            if (callback) {
+                callback(ent)
+                    .then((res) => {
+                        this.io.emit('entity_updated', res);
+                    })
+                    .catch((err) => console.log(err.message));
+            }
         }
     }
 
@@ -145,6 +162,10 @@ class SocketForwarder {
         const data: HaSocket = { id: this.uid++, ...body };
         const res: any = await this.getSocketResponse(data);
         return res;
+    }
+
+    registerEventCallback(event: string, fn: Handler) {
+        this.eventsCallback.set(event, fn);
     }
 
 }
