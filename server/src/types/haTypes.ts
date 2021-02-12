@@ -59,3 +59,11 @@ export interface HaRoomDetail {
     device: string[];
     entity: string[];
 }
+
+// Specifies the object structure send to HA
+// when calling /api/services/group/set
+export interface HaGroupSet {
+    object_id: string;
+    name: string;
+    entities: string;
+}
