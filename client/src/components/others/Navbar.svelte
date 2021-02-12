@@ -21,18 +21,6 @@
     </div>
     <div class="nav-links flex items-center space-x-4">
         <a
-            href="/#/devices/"
-            class="lg:inline-flex lg:w-auto w-full py-2 rounded text-gray-400 items-center justify-center hover:bg-gray-900 hover:text-white"
-        >
-            <span> Devices </span>
-        </a>
-        <a
-            href="/#/"
-            class="lg:inline-flex lg:w-auto w-full py-2 rounded text-gray-400 items-center justify-center hover:bg-gray-900 hover:text-white"
-        >
-            <span>Home</span>
-        </a>
-        <a
             href="/#/"
             class="lg:inline-flex lg:w-auto w-full py-2 rounded text-gray-400 items-center justify-center hover:bg-gray-900 hover:text-white"
         >

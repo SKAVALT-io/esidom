@@ -50,6 +50,6 @@
         font-family: Arial, Helvetica, sans-serif;
         background-color: #120639;
         color: white;
-        // overflow: hidden;
+        overflow: hidden;
     }
 </style>
