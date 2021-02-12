@@ -9,7 +9,7 @@
     import DeviceContainer from '../../components/UI/container/DeviceContainer.svelte';
 
     let isPairDeviceOpen = false;
-    async function pair() {
+    async function pair(event) {
         isPairDeviceOpen = true;
         // TODO: PAIR
         // const protocol = prompt('Protocol');
@@ -54,10 +54,22 @@
 
     <!-- The + button to add device -->
     <div class="absolute bottom-0 right-0 h-16 w-16">
-        <RoundedButton on:click={pair} iconPath="icons/plus.svg" />
+        <RoundedButton
+            on:click={() => {
+                isPairDeviceOpen = true;
+            }}
+            iconPath="icons/plus.svg"
+        />
     </div>
 </div>
-<PairDevice bind:isPairDeviceOpen />
+
+{#if isPairDeviceOpen}
+    <PairDevice
+        on:cancel={() => {
+            isPairDeviceOpen = false;
+        }}
+    />
+{/if}
 
 <style lang="scss">
     $color: rgb(8, 102, 0);
