@@ -3,7 +3,7 @@
 import Blockly from 'blockly';
 import type { Block } from 'blockly';
 
-const esidomGenerator = new Blockly.Generator('ESIDOM');
+const esidomGenerator: Blockly.Generator = new Blockly.Generator('ESIDOM');
 
 const PRECEDENCE = 0;
 
@@ -43,6 +43,7 @@ interface BlocklyJSON {
     to?: string;
     state?: string;
     rgb_color?: string;
+    dropdown_mode?: string;
 }
 
 interface BlocksGenerator {
@@ -63,17 +64,12 @@ interface BlocksGenerator {
 
 ((block: BlocksGenerator) => {
     block.automation = (blk: Block) => {
-        const statements_trigger = esidomGenerator.statementToCode(blk, 'Trigger');
-        const statements_condition = esidomGenerator.statementToCode(blk, 'Condition');
-        const statements_action = esidomGenerator.statementToCode(blk, 'Action');
-        const dropdown_mode = blk.getFieldValue('Mode');
+        const statements_trigger: string = esidomGenerator.statementToCode(blk, 'Trigger');
+        const statements_condition: string = esidomGenerator.statementToCode(blk, 'Condition');
+        const statements_action: string = esidomGenerator.statementToCode(blk, 'Action');
+        const dropdown_mode: string = blk.getFieldValue('Mode');
 
         const json: BlocklyJSON = {};
-
-        console.log(statements_trigger);
-        console.log(statements_condition);
-        console.log(statements_action);
-        console.log(dropdown_mode);
 
         if (statements_trigger !== '') {
             const triggers = `[${statements_trigger}]`;
@@ -89,6 +85,8 @@ interface BlocksGenerator {
             const actions = `[${statements_action}]`;
             json.action = JSON.parse(actions);
         }
+
+        json.dropdown_mode = dropdown_mode;
 
         return JSON.stringify(json);
     };

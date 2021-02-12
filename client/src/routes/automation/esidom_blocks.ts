@@ -47,7 +47,7 @@ export interface BlocksDefinitions {
                         },
                         {
                             type: 'field_dropdown',
-                            name: 'NAME',
+                            name: 'Mode',
                             options: [
                                 [
                                     'single',

@@ -8,13 +8,14 @@
     let blocklyService: BlocklyService;
 
     onMount(async () => {
-        const toolbox = document.getElementById('toolbox') || undefined;
+        const toolbox: HTMLElement | undefined =
+            document.getElementById('toolbox') || undefined;
 
-        const workspace = Blockly.inject('blocklyDiv', {
+        const workspace: Blockly.WorkspaceSvg = Blockly.inject('blocklyDiv', {
             toolbox,
         });
 
-        const rootBlock =
+        const rootBlock: string =
             '<xml><block type="automation" deletable="false" movable="false"></block></xml>';
         Blockly.Xml.domToWorkspace(Blockly.Xml.textToDom(rootBlock), workspace);
 

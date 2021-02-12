@@ -68,7 +68,7 @@ export default class BlocklyService {
                         return [entity.name, index.toString()];
                     });
 
-                    const dropdown1 = tmpDropdown1.length >0 ? tmpDropdown1 : [["Pas de nom", "Pas de nom"]];
+                    const dropdown1 = tmpDropdown1.length > 0 ? tmpDropdown1 : [["Pas de nom", "Pas de nom"]];
 
                     const dropdown2: string[][] = [];
 
