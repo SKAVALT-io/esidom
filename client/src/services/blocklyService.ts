@@ -98,19 +98,8 @@ export default class BlocklyService {
                 onchange(ev: EnvironmentBlockly) {
                     if (ev.name === 'entity') {
                         const index = parseInt(ev.newValue, 10);
-                        const newDropdown: string[][] = [];
-
-                        if(index < entityWithServices.length){
-                            entityWithServices[index].services.forEach((service: string) => {
-                                newDropdown.push([
-                                    service,
-                                    service,
-                                ]);
-                            });
-                        }
-                        else{
-                            newDropdown.push(["Action inconnu", "Action inconnu"]);
-                        }
+                        const newDropdown = entityWithServices[index]?.services.map((service: string) => [ service, service ])
+                            ?? ["Action inconnu", "Action inconnu"];
 
                         this.removeInput('services');
                         this.appendDummyInput('services')
