@@ -37,7 +37,7 @@
     async function switchLampHelper() {
         await (isOn
             ? switchLamp(LAMP.id)
-            : switchLamp(LAMP.id, (brightness / 255) * 100));
+            : switchLamp(LAMP.id, brightness ? (brightness / 255) * 100 : 50));
         isOn = !isOn;
     }
 
@@ -59,7 +59,7 @@
 
     async function loadLamp() {
         LAMP = await getLamp(entityId);
-        console.log(LAMP);
+        console.log('Lamp RGB', LAMP);
     }
 
     onMount(async () => {
