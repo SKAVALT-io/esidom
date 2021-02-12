@@ -57,7 +57,7 @@ export default class BlocklyService {
         ((block: BlocksDefinitions) => {
             block.objet_action = {
                 init() {
-                    const dropdown1 = entityWithServices.map((
+                    const tmpDropdown1 = entityWithServices.map((
                         entity: EntityWithServices,
                         index: number,
                         array: EntityWithServices[],
@@ -67,6 +67,8 @@ export default class BlocklyService {
                         }
                         return [entity.name, index.toString()];
                     });
+
+                    const dropdown1 = tmpDropdown1.length >0 ? tmpDropdown1 : [["Pas de nom", "Pas de nom"]];
 
                     const dropdown2: string[][] = [];
 
@@ -98,12 +100,17 @@ export default class BlocklyService {
                         const index = parseInt(ev.newValue, 10);
                         const newDropdown: string[][] = [];
 
-                        entityWithServices[index].services.forEach((service: string) => {
-                            newDropdown.push([
-                                service,
-                                service,
-                            ]);
-                        });
+                        if(index < entityWithServices.length){
+                            entityWithServices[index].services.forEach((service: string) => {
+                                newDropdown.push([
+                                    service,
+                                    service,
+                                ]);
+                            });
+                        }
+                        else{
+                            newDropdown.push(["Action inconnu", "Action inconnu"]);
+                        }
 
                         this.removeInput('services');
                         this.appendDummyInput('services')
