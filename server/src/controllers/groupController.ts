@@ -22,8 +22,12 @@ class GroupController {
             res.status(400).send({ message: 'The parameter entities is missing' });
             return;
         }
-        const result = await groupService.createGroup(req.body.name, req.body.entities);
-        res.status(200).send(result);
+        try {
+            const result = await groupService.createGroup(req.body.name, req.body.entities);
+            res.status(200).send(result);
+        } catch (err: any) {
+            res.status(400).send({ message: err.message ? err.message : err });
+        }
     }
 
 }

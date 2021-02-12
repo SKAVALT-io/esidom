@@ -12,12 +12,14 @@ const NameInsideGroupTable = 'InsideGroup';
 class GroupService {
 
     async initGroupHa() {
+        // Get all group
         const res = await databaseForwarder.db?.all<DBGroup[]>(`SELECT * FROM ${NameGroupTable}`).catch((err) => {
             console.log(err);
         });
         if (res === undefined) {
             return;
         }
+        // For each group
         res.forEach(async (g: DBGroup) => {
             const entities = await databaseForwarder.db?.all<InsideGroup[]>(`SELECT * FROM ${NameInsideGroupTable} WHERE groupEntityId = '${g.entityId}'`);
             if (entities === undefined) {
@@ -86,6 +88,34 @@ class GroupService {
 
     private normalizeEntityId(name: string): string {
         return name.toLowerCase().replace(/ /g, '_');
+    }
+
+    async getGroups(): Promise<Group[]> {
+        const res = await databaseForwarder.db?.all<DBGroup[]>(`SELECT * FROM ${NameGroupTable}`).catch((err) => {
+            console.log(err);
+        });
+        if (res === undefined) {
+            return Promise.reject(new Error('All entities not found in HA'));
+        }
+        // For each group
+        const groups: Group[] = await Promise.all(res.map(async (g: DBGroup) => {
+            const insideGroup = await databaseForwarder.db?.all<InsideGroup[]>(`SELECT * FROM ${NameInsideGroupTable} WHERE groupEntityId = '${g.entityId}'`);
+            if (insideGroup === undefined) {
+                return Promise.reject(new Error('Group with no entity'));
+            }
+            const entitiesId = insideGroup.map((value: InsideGroup) => value.entityId);
+            const entitiesFull = (await entityService.getEntities())
+                .filter((value: Entity) => entitiesId.includes(value.id));
+
+            const group: Group = {
+                groupId: g.entityId,
+                name: g.name,
+                entities: entitiesFull,
+            };
+            return group;
+
+        }));
+        return groups;
     }
 
 }
