@@ -14,11 +14,12 @@ class GroupController {
 
     @App.post('')
     async createGroup(req: Request, res: Response): Promise<void> {
-        if (req.body.name === undefined || req.body.name === '') {
+        const { name, entities } = req.body;
+        if (name === undefined || name === '') {
             res.status(400).send({ message: 'The parameter name is missing' });
             return;
         }
-        if (req.body.entities === undefined || req.body.name === []) {
+        if (entities === undefined || name === []) {
             res.status(400).send({ message: 'The parameter entities is missing' });
             return;
         }
