@@ -32,6 +32,7 @@ interface BlocklyJSON {
     trigger?: string;
     condition?: string;
     action?: string;
+    mode?: string;
     platform?: string;
     at?: string;
     service?: string;
@@ -58,6 +59,7 @@ interface BlocksGenerator {
     action: (blk: Block) => void;
     color_picker: (blk: Block) => void;
     color_rgb: (blk: Block) => void;
+    object_action: (blk: Block) => void;
     scrub: (blk: Block, code: string, opt_thisOnly: string) => void
     jsonInit:(a: Block)=> void;
 }
@@ -86,7 +88,7 @@ interface BlocksGenerator {
             json.action = JSON.parse(actions);
         }
 
-        json.dropdown_mode = dropdown_mode;
+        json.mode = dropdown_mode;
 
         return JSON.stringify(json);
     };
@@ -227,6 +229,19 @@ interface BlocksGenerator {
 
         json.condition = 'time';
         json.weekday = weekday;
+
+        return JSON.stringify(json);
+    };
+
+    block.object_action = (blk: Block) => {
+        const dropdown_entities = blk.getFieldValue('Entities');
+        const dropdown_services = blk.getFieldValue('Services');
+
+        const json: BlocklyJSON = {};
+
+        const entity_id = dropdown_entities.split(':')[1];
+        json.entity_id = entity_id;
+        json.service = dropdown_services;
 
         return JSON.stringify(json);
     };

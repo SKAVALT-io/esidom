@@ -16,15 +16,11 @@
             <block type="binary_condition" />
         </category>
         <category name="Actions" colour={COLORS.HUE_ORANGE}>
-            <category name="Services" colour={COLORS.HUE_ORANGE}>
-                <block type="action" />
-                <!-- <block type="services"></block> -->
-            </category>
+            <block type="object_action" />
         </category>
         <category name="Objets" colour={COLORS.HUE_RED}>
             <!-- <block type="lamps"></block> -->
             <!-- <block type="binary_sensors"></block> -->
-            <block type="objet_action" />
         </category>
         <category name="Couleur" colour={COLORS.HUE_MAUVE}>
             <block type="color_picker" />

@@ -27,7 +27,8 @@
 </script>
 
 <p>
-    <button on:click={blocklyService.convertToBlock()}>Convert the blocks !</button>
+    <button on:click={blocklyService.convertToBlock()}>TEST: Convert the blocks
+        !</button>
 </p>
 
 <div>
