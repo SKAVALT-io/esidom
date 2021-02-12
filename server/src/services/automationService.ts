@@ -22,10 +22,10 @@ class AutomationService {
                 id: automation.entity_id,
                 name: automation.attributes.friendly_name,
                 state: automation.state,
-            } as AutomationPreview));
+            }));
     }
 
-    async getAutomationById(entityId: string) {
+    async getAutomationById(entityId: string): Promise<Automation> {
         const automation: AutomationPreviewWithId = await this.getAutomationWithId(entityId);
         return httpForwarder.get<HaAutomation>(`/api/config/automation/config/${automation?.automationId}`)
             .then((auto: HaAutomation) => ({
@@ -37,19 +37,23 @@ class AutomationService {
                 action: auto.action,
                 condition: auto.condition,
                 mode: auto.mode,
-            } as Automation))
+            }))
             .catch((err) => { throw err; });
     }
 
     private async getAutomationWithId(entityId: string): Promise<AutomationPreviewWithId> {
-        return (await socketForwarder.forward<HaStateResponse[]>({ type: 'get_states' }))
-            .filter((s: HaStateResponse) => s.entity_id === entityId)
-            .map((automation: HaStateResponse) => ({
-                automationId: automation.attributes.id,
-                id: automation.entity_id,
-                name: automation.attributes.friendly_name,
-                state: automation.state,
-            } as AutomationPreviewWithId))[0];
+        const a: HaStateResponse | undefined = (await socketForwarder
+            .forward<HaStateResponse[]>({ type: 'get_states' })
+        ).find((s: HaStateResponse) => s.entity_id === entityId);
+        if (a === undefined) {
+            throw new Error(`No automation with id ${entityId}`);
+        }
+        return {
+            automationId: a.attributes.id,
+            id: a.entity_id,
+            name: a.attributes.friendly_name,
+            state: a.state,
+        };
     }
 
 }
