@@ -42,6 +42,7 @@ module.exports = {
         'no-plusplus': 'off',
         'import/extensions': 0,
         'import/no-extraneous-dependencies': ['error', { devDependencies: true }],
+        'no-return-assign': 'off',
     },
     overrides: [
         {
