@@ -1,8 +1,15 @@
 import socketForwarder from '../forwarders/socketForwarder';
 import { Entity } from '../types/entity';
-import { HaEntity, HaStateResponse } from '../types/haTypes';
+import { HaEntity, HaEntityUpdated, HaStateResponse } from '../types/haTypes';
 
 class EntityService {
+
+    constructor() {
+        socketForwarder.registerEventCallback(
+            'state_changed',
+            async (data: HaEntityUpdated): Promise<Entity> => this.getEntityById(data.entity_id),
+        );
+    }
 
     async getEntities(): Promise<Entity[]> {
         const entities: HaEntity[] = await socketForwarder
@@ -52,7 +59,7 @@ class EntityService {
         const result: Entity | undefined = entities
             .find((e: Entity) => e.id === id);
         if (result === undefined) {
-            throw new Error('No entity with such id');
+            throw new Error(`No entity with id ${id}`);
         }
         return result as Entity;
     }
@@ -65,7 +72,6 @@ class EntityService {
             service: splitted[1],
             service_data: { entity_id: id, ...serviceData },
         });
-        // console.log(res);
         return res;
     }
 

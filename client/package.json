@@ -6,7 +6,7 @@
     "scripts": {
         "start": "snowpack dev",
         "build": "snowpack build",
-        "startProd": "http-server build -p 8080",
+        "startProd": "http-server build -p 8080 -s",
         "ts-check": "svelte-check",
         "test": "jest --coverage",
         "tsc": "tsc",
