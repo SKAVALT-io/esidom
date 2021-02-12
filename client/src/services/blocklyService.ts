@@ -4,7 +4,7 @@ import Blockly from 'blockly';
 import esidomGenerator from '../routes/automation/esidom_generator';
 import EntityService from './entityService';
 import type { Entity } from '../../types/entityType';
-import type { Service } from '../../types/ServiceType';
+import type { Service } from '../../types/serviceType';
 import type { EntityWithServices } from '../../types/entityWithServicesType';
 import type { EnvironmentBlockly } from '../../types/environmentBlocklyType';
 import type { BlocksDefinitions } from '../routes/automation/esidom_blocks';

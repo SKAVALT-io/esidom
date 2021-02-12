@@ -1,5 +1,5 @@
 import type { Entity } from '../../types/entityType';
-import type { Service } from '../../types/ServiceType';
+import type { Service } from '../../types/serviceType';
 import config from '../config/config';
 
 export default class EntityService {
