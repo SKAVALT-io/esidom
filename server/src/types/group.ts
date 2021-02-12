@@ -1,7 +1,7 @@
-import { Device } from './device';
+import { Entity } from './entity';
 
 export interface Group {
     groupId: string;
     name: string;
-    devices: Array<Device>;
+    entities: Entity[];
 }
