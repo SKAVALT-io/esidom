@@ -70,11 +70,9 @@ export default class BlocklyService {
 
                     const dropdown1 = tmpDropdown1.length > 0 ? tmpDropdown1 : [["Pas de nom", "Pas de nom"]];
 
-                    const dropdown2 = entityWithServices[0]?.services.map((service: string) => [ services, service ])
-                    ?? ["Action inconnue", "Action inconnue"];
-
-                    console.log(Blockly.Blocks);
-                    console.log(this);
+                    const dropdown2 = entityWithServices[0]?.services.map((service: string) => [ service, service ])
+                        ?? [["Action inconnue", "Action inconnue"]];
+                    
                     this.appendDummyInput()
                         .appendField('Objet : ')
                         .appendField(new Blockly.FieldDropdown(dropdown1), 'entity');
@@ -92,7 +90,7 @@ export default class BlocklyService {
                     if (ev.name === 'entity') {
                         const index = parseInt(ev.newValue, 10);
                         const newDropdown = entityWithServices[index]?.services.map((service: string) => [ service, service ])
-                            ?? ["Action inconnu", "Action inconnu"];
+                            ?? [["Action inconnu", "Action inconnu"]];
 
                         this.removeInput('services');
                         this.appendDummyInput('services')
