@@ -13,7 +13,7 @@ const mock: Device = expect.objectContaining({
 
 const HaWeatherDeviceId = '45eb8f705b20fa1df358c7d22d8ffaf8';
 
-const baseUrl: string = 'http://localhost:3000';
+const baseUrl: string = 'http://domotique.3utilities:3000';
 
 describe('Device controller test', () => {
     test('it should get devices', async () => {
