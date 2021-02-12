@@ -7,6 +7,27 @@ const esidomGenerator = new Blockly.Generator('ESIDOM');
 
 const PRECEDENCE = 0;
 
+function getWeekday(blk: Block): string[] {
+    const checkbox_mon = blk.getFieldValue('mon') === 'TRUE';
+    const checkbox_tue = blk.getFieldValue('tue') === 'TRUE';
+    const checkbox_wed = blk.getFieldValue('wed') === 'TRUE';
+    const checkbox_thu = blk.getFieldValue('thu') === 'TRUE';
+    const checkbox_fri = blk.getFieldValue('fri') === 'TRUE';
+    const checkbox_sat = blk.getFieldValue('sat') === 'TRUE';
+    const checkbox_sun = blk.getFieldValue('sun') === 'TRUE';
+
+    const weekday = [];
+    if (checkbox_mon) { weekday.push('mon'); }
+    if (checkbox_tue) { weekday.push('tue'); }
+    if (checkbox_wed) { weekday.push('wed'); }
+    if (checkbox_thu) { weekday.push('thu'); }
+    if (checkbox_fri) { weekday.push('fri'); }
+    if (checkbox_sat) { weekday.push('sat'); }
+    if (checkbox_sun) { weekday.push('sun'); }
+
+    return weekday;
+}
+
 interface BlocklyJSON {
     trigger?: string;
     condition?: string;
@@ -104,24 +125,10 @@ interface BlocksGenerator {
         const number_hour_end = blk.getFieldValue('Hour_end');
         const number_minute_end = blk.getFieldValue('Minute_end');
         const number_second_end = blk.getFieldValue('Second_end');
-        const checkbox_mon = blk.getFieldValue('mon') === 'TRUE';
-        const checkbox_tue = blk.getFieldValue('tue') === 'TRUE';
-        const checkbox_wed = blk.getFieldValue('wed') === 'TRUE';
-        const checkbox_thu = blk.getFieldValue('thu') === 'TRUE';
-        const checkbox_fri = blk.getFieldValue('fri') === 'TRUE';
-        const checkbox_sat = blk.getFieldValue('sat') === 'TRUE';
-        const checkbox_sun = blk.getFieldValue('sun') === 'TRUE';
 
         const json: BlocklyJSON = {};
 
-        const weekday = [];
-        if (checkbox_mon) { weekday.push('mon'); }
-        if (checkbox_tue) { weekday.push('tue'); }
-        if (checkbox_wed) { weekday.push('wed'); }
-        if (checkbox_thu) { weekday.push('thu'); }
-        if (checkbox_fri) { weekday.push('fri'); }
-        if (checkbox_sat) { weekday.push('sat'); }
-        if (checkbox_sun) { weekday.push('sun'); }
+        const weekday = getWeekday(blk);
 
         json.condition = 'time';
         json.after = `${number_hour_debut}:${number_minute_debut}:${number_second_debut}`;
@@ -216,23 +223,9 @@ interface BlocksGenerator {
     };
 
     block.time_condition_week = (blk: Block) => {
-        const checkbox_mon = blk.getFieldValue('mon') === 'TRUE';
-        const checkbox_tue = blk.getFieldValue('tue') === 'TRUE';
-        const checkbox_wed = blk.getFieldValue('wed') === 'TRUE';
-        const checkbox_thu = blk.getFieldValue('thu') === 'TRUE';
-        const checkbox_fri = blk.getFieldValue('fri') === 'TRUE';
-        const checkbox_sat = blk.getFieldValue('sat') === 'TRUE';
-        const checkbox_sun = blk.getFieldValue('sun') === 'TRUE';
         const json: BlocklyJSON = {};
 
-        const weekday = [];
-        if (checkbox_mon) { weekday.push('mon'); }
-        if (checkbox_tue) { weekday.push('tue'); }
-        if (checkbox_wed) { weekday.push('wed'); }
-        if (checkbox_thu) { weekday.push('thu'); }
-        if (checkbox_fri) { weekday.push('fri'); }
-        if (checkbox_sat) { weekday.push('sat'); }
-        if (checkbox_sun) { weekday.push('sun'); }
+        const weekday = getWeekday(blk);
 
         json.condition = 'time';
         json.weekday = weekday;
