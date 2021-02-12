@@ -1,10 +1,14 @@
 <script lang="ts">
-    import Device from '../../components/devices/Device.svelte';
     import Door from '../../components/devices/Door.svelte';
     import Lamp from '../../components/devices/LampRGB.svelte';
     import Sensor from '../../components/devices/Sensor.svelte';
+    import PairDevice from '../../components/others/PairDevice.svelte';
+    import RoundedButton from '../../components/UI/buttons/RoundedButton.svelte';
+
+    let isPairDeviceOpen = false;
 
     async function pair() {
+        isPairDeviceOpen = true;
         const protocol = prompt('Protocol');
 
         const body = JSON.stringify({ protocol });
@@ -53,15 +57,10 @@
 
     <!-- The + button to add device -->
     <div class="absolute bottom-0 right-0 h-16 w-16">
-        <button
-            class="py-2 px-4 bg-blue-400  text-white text-xl font-semibold rounded-full shadow-md hover:bg-blue-500 focus:outline-none absolute"
-            type="button"
-            on:click={pair}
-        >
-            +
-        </button>
+        <RoundedButton on:click={pair} iconPath="icons/plus.svg" />
     </div>
 </div>
+<PairDevice bind:isPairDeviceOpen />
 
 <style lang="scss">
     $color: rgb(8, 102, 0);

@@ -13,6 +13,7 @@ module.exports = {
             '2xl': '1536px',
         },
         colors: {
+            esidom: '#120639',
             transparent: 'transparent',
             current: 'currentColor',
 
@@ -23,6 +24,7 @@ module.exports = {
             yellow: colors.amber,
             green: colors.emerald,
             blue: colors.blue,
+            lightBlue: colors.lightBlue,
             indigo: colors.indigo,
             purple: colors.violet,
             pink: colors.pink,
