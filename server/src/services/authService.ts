@@ -3,6 +3,7 @@ import { Request, Response } from 'express';
 import socketForwarder from '../forwarders/socketForwarder';
 import httpForwarder from '../forwarders/httpForwarder';
 import config from '../config/config';
+import groupService from './groupService';
 
 class AuthService {
 
@@ -13,6 +14,7 @@ class AuthService {
         const accessToken = await AuthService.auth(baseUrl, username, password);
         socketForwarder.initSocket(accessToken);
         httpForwarder.setToken(accessToken);
+        groupService.initGroupHa();
         res.status(200).send({ token: accessToken });
     }
 

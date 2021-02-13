@@ -4,9 +4,13 @@
     import LampNormal from '../../components/devices/lamps/LampNormal.svelte';
     import LampRgb from '../../components/devices/lamps/LampRGB.svelte';
     import Temperature from '../../components/devices/sensors/Temperature.svelte';
+    import PairDevice from '../../components/others/PairDevice.svelte';
+    import RoundedButton from '../../components/UI/buttons/RoundedButton.svelte';
     import DeviceContainer from '../../components/UI/container/DeviceContainer.svelte';
 
-    async function pair() {
+    let isPairDeviceOpen = false;
+    async function pair(event) {
+        isPairDeviceOpen = true;
         // TODO: PAIR
         // const protocol = prompt('Protocol');
         // const body = JSON.stringify({ protocol });
@@ -50,15 +54,22 @@
 
     <!-- The + button to add device -->
     <div class="absolute bottom-0 right-0 h-16 w-16">
-        <button
-            class="py-2 px-4 bg-blue-400  text-white text-xl font-semibold rounded-full shadow-md hover:bg-blue-500 focus:outline-none absolute"
-            type="button"
-            on:click={pair}
-        >
-            +
-        </button>
+        <RoundedButton
+            on:click={() => {
+                isPairDeviceOpen = true;
+            }}
+            iconPath="icons/plus.svg"
+        />
     </div>
 </div>
+
+{#if isPairDeviceOpen}
+    <PairDevice
+        on:cancel={() => {
+            isPairDeviceOpen = false;
+        }}
+    />
+{/if}
 
 <style lang="scss">
     $color: rgb(8, 102, 0);

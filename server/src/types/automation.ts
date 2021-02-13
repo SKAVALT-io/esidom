@@ -1,8 +1,13 @@
-export interface Automation {
+export interface AutomationPreview {
     id: string;
     name: string;
-    description?: string;
-    trigger: any;
-    condition: any;
-    action: any;
+    state: 'on' | 'off' | 'ready' | string;
+}
+
+export interface Automation extends AutomationPreview {
+    mode: 'single' | 'restart' | 'queued' | 'parallel';
+    description: string;
+    trigger: any[];
+    condition: any[];
+    action: any[];
 }

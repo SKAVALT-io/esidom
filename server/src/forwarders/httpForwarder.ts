@@ -14,8 +14,8 @@ class HttpForwarder {
         });
     }
 
-    get<T>(url: string): Promise<T> {
-        return axios.get(`http://${config.baseUrl}${url}`);
+    async get<T>(url: string): Promise<T> {
+        return (await axios.get(`http://${config.baseUrl}${url}`)).data;
     }
 
     post<T>(url: string, data: any, conf?: any): Promise<T> {
