@@ -31,29 +31,19 @@ class DeviceService {
         return devices.find((d: Device) => d.id === id);
     }
 
-    async pairdevice(protocol: string): Promise<any> {
+    async pairdevice(): Promise<any> {
 
-        switch (protocol.toLowerCase()) {
-        case 'zwave': {
-            const res = httpForwarder.post<any>('/api/services/zwave/add_node', null);
-            return res;
-        }
-        case 'zigbee': {
-            const res = await socketForwarder.forward({
-                type: 'call_service',
-                domain: 'mqtt',
-                service: 'publish',
-                service_data: {
-                    topic: 'zigbee2mqtt/bridge/request/permit_join',
-                    payload_template: '"{"value": true}"',
-                },
-            });
-            return res;
-        }
-        default: {
-            return undefined;
-        }
-        }
+        await httpForwarder.post<any>('/api/services/zwave/add_node', null);
+        await socketForwarder.forward({
+            type: 'call_service',
+            domain: 'mqtt',
+            service: 'publish',
+            service_data: {
+                topic: 'zigbee2mqtt/bridge/request/permit_join',
+                payload_template: '"{"value": true}"',
+            },
+        });
+
     }
 
 }

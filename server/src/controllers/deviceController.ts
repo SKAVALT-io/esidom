@@ -32,11 +32,11 @@ class DeviceController {
 
     @App.post('')
     async postDevice(req: Request, res: Response) {
-        const result: boolean = await deviceService.pairdevice(req.body.protocol);
-        if (result) {
-            res.status(200).send(result);
-        } else {
-            res.status(404).send({ message: 'Failed to pair device' });
+        try {
+            await deviceService.pairdevice();
+            res.status(200).send({ message: 'pairing mode enabled' });
+        } catch (err) {
+            res.status(500).send({ message: err });
         }
     }
 
