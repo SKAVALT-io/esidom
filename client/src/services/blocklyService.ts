@@ -8,6 +8,7 @@ import type { Service } from '../../types/serviceType';
 import type { EntityWithServices } from '../../types/entityWithServicesType';
 import type { EnvironmentBlockly } from '../../types/environmentBlocklyType';
 import type { BlocksDefinitions } from '../routes/automation/esidom_blocks';
+import COLORS from '../routes/automation/esidom_const';
 
 export default class BlocklyService {
     private toolbox: string | HTMLElement | undefined;
@@ -83,7 +84,7 @@ export default class BlocklyService {
                     this.setInputsInline(false);
                     this.setPreviousStatement(true, 'Action');
                     this.setNextStatement(true, 'Action');
-                    this.setColour(255);
+                    this.setColour(COLORS.HUE_RED);
                     this.setTooltip('');
                     this.setHelpUrl('');
                 },
