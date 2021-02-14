@@ -84,7 +84,7 @@ export interface BlocksDefinitions {
             this.jsonInit(
                 {
                     type: 'block_type',
-                    message0: 'Quand capteur binaire %1 passe à %2',
+                    message0: 'Quand le capteur %1 passe à %2',
                     args0: [
                         {
                             type: 'input_value',
@@ -460,7 +460,7 @@ export interface BlocksDefinitions {
             this.jsonInit(
                 {
                     type: 'block_type',
-                    message0: 'Si capteur binaire %1 est %2',
+                    message0: 'Si le capteur %1 est à %2',
                     args0: [
                         {
                             type: 'input_value',
