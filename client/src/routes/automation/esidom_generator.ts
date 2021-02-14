@@ -67,7 +67,7 @@ interface BlocksGenerator {
         const statements_trigger: string = esidomGenerator.statementToCode(blk, 'Trigger');
         const statements_condition: string = esidomGenerator.statementToCode(blk, 'Condition');
         const statements_action: string = esidomGenerator.statementToCode(blk, 'Action');
-        const dropdown_mode: string = blk.getFieldValue('Mode');
+        // const dropdown_mode: string = blk.getFieldValue('Mode');
 
         const json: BlocklyJSON = {};
 
@@ -86,7 +86,8 @@ interface BlocksGenerator {
             json.action = JSON.parse(actions);
         }
 
-        json.dropdown_mode = dropdown_mode;
+        // json.dropdown_mode = dropdown_mode;
+        json.dropdown_mode = 'single';
 
         return JSON.stringify(json);
     };

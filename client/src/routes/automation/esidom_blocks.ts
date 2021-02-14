@@ -28,7 +28,7 @@ export interface BlocksDefinitions {
             this.jsonInit(
                 {
                     type: 'automation',
-                    message0: 'Quels sont les déclencheurs ? %1 Sous quelles conditions ? %2 Que faire ? %3 Avec quel mode ? %4',
+                    message0: 'Quels sont les déclencheurs ? %1 Sous quelles conditions ? %2 Que faire ? %3', // 'Avec quel mode ? %4',
                     args0: [
                         {
                             type: 'input_statement',
@@ -45,28 +45,28 @@ export interface BlocksDefinitions {
                             name: 'Action',
                             check: 'Action',
                         },
-                        {
-                            type: 'field_dropdown',
-                            name: 'Mode',
-                            options: [
-                                [
-                                    'single',
-                                    'single',
-                                ],
-                                [
-                                    'restart',
-                                    'restart',
-                                ],
-                                [
-                                    'queued',
-                                    'queued',
-                                ],
-                                [
-                                    'parallel',
-                                    'parallel',
-                                ],
-                            ],
-                        },
+                        // {
+                        //     type: 'field_dropdown',
+                        //     name: 'Mode',
+                        //     options: [
+                        //         [
+                        //             'single',
+                        //             'single',
+                        //         ],
+                        //         [
+                        //             'restart',
+                        //             'restart',
+                        //         ],
+                        //         [
+                        //             'queued',
+                        //             'queued',
+                        //         ],
+                        //         [
+                        //             'parallel',
+                        //             'parallel',
+                        //         ],
+                        //     ],
+                        // },
                     ],
                     colour: COLORS.HUE_DARK_BLUE,
                     tooltip: '',
