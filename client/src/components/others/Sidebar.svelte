@@ -1,5 +1,6 @@
 <script lang="ts">
     import * as SPA from 'svelte-spa-router';
+    import { tr } from '../../utils/i18nHelper';
     export let open = false;
 
     let currentPageSelected = '';
@@ -43,7 +44,7 @@
             class:selected={currentPageSelected === 'home' || currentPageSelected === ''}
         >
             <span class="icon"><i class="fa fa-home" /></span>
-            <span class="title">Home</span>
+            <span class="title">{tr('menu.home')}</span>
         </a>
         <a
             class="devices-link"
@@ -55,7 +56,7 @@
             class:selected={currentPageSelected === 'devices'}
         >
             <span class="icon"><i class="fa fa-user" /></span>
-            <span class="title">Devices</span>
+            <span class="title">{tr('menu.devices')}</span>
         </a>
         <a
             href="/"
@@ -66,7 +67,7 @@
             class:selected={currentPageSelected === 'todo'}
         >
             <span class="icon"><i class="fa fa-envelope-o" /></span>
-            <span class="title">Todo</span>
+            <span class="title">{tr('menu.todo')}</span>
         </a>
         <a
             href="/blockly"
@@ -77,7 +78,7 @@
             class:selected={currentPageSelected === 'blockly'}
         >
             <span class="icon"><i class="fa fa-cogs" /></span>
-            <span class="title">Blockly</span>
+            <span class="title">{tr('menu.blockly')}</span>
         </a>
     </div>
 </nav>
