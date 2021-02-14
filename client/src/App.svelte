@@ -27,11 +27,7 @@
         '*': Home,
     };
 
-<<<<<<< HEAD
     /* Open/Close sidebar from navbar */
-=======
-    // Is sidebar open
->>>>>>> 984b581... feat(client): config i18n
     let open = false;
 
     // Configure and init i18n
