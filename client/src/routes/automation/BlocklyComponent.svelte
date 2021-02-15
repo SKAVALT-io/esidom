@@ -12,7 +12,7 @@
         const toolbox: HTMLElement | undefined =
             document.getElementById('toolbox') || undefined;
 
-        const options: BlocklyOptions | undefined = {
+        const options: BlocklyOptions = {
             toolbox: toolbox,
             collapse: false,
             comments: false,
