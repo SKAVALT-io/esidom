@@ -87,6 +87,10 @@ interface BlocksGenerator {
         }
 
         // json.dropdown_mode = dropdown_mode;
+        /*
+         * Choose to keep the default value 'single' because the user may
+         * not need the others options
+         */
         json.dropdown_mode = 'single';
 
         return JSON.stringify(json);
