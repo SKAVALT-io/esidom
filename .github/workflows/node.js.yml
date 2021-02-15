@@ -29,12 +29,9 @@ jobs:
         echo "baseUrl=${{ secrets.HA_HOST }}" > .env
         echo "user=${{ secrets.HA_USER }}" >> .env
         echo "password=${{ secrets.HA_PASSWORD }}" >> .env
-        cat .env
     - run: npm run build --if-present
     - run: npm run lint
-    - run: |
-        npm run startProd&
-        sleep 10
+    - run: npm run startProd&
     - run: npm test
 
   buildClient:
