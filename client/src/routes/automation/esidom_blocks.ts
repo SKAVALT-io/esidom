@@ -28,7 +28,7 @@ export interface BlocksDefinitions {
             this.jsonInit(
                 {
                     type: 'automation',
-                    message0: 'Quels sont les déclencheurs ? %1 Sous quelles conditions ? %2 Que faire ? %3 Avec quel mode ? %4',
+                    message0: 'Quels sont les déclencheurs ? %1 Sous quelles conditions ? %2 Que faire ? %3', // 'Avec quel mode ? %4',
                     args0: [
                         {
                             type: 'input_statement',
@@ -45,28 +45,28 @@ export interface BlocksDefinitions {
                             name: 'Action',
                             check: 'Action',
                         },
-                        {
-                            type: 'field_dropdown',
-                            name: 'Mode',
-                            options: [
-                                [
-                                    'single',
-                                    'single',
-                                ],
-                                [
-                                    'restart',
-                                    'restart',
-                                ],
-                                [
-                                    'queued',
-                                    'queued',
-                                ],
-                                [
-                                    'parallel',
-                                    'parallel',
-                                ],
-                            ],
-                        },
+                        // {
+                        //     type: 'field_dropdown',
+                        //     name: 'Mode',
+                        //     options: [
+                        //         [
+                        //             'single',
+                        //             'single',
+                        //         ],
+                        //         [
+                        //             'restart',
+                        //             'restart',
+                        //         ],
+                        //         [
+                        //             'queued',
+                        //             'queued',
+                        //         ],
+                        //         [
+                        //             'parallel',
+                        //             'parallel',
+                        //         ],
+                        //     ],
+                        // },
                     ],
                     colour: COLORS.HUE_DARK_BLUE,
                     tooltip: '',
@@ -84,7 +84,7 @@ export interface BlocksDefinitions {
             this.jsonInit(
                 {
                     type: 'block_type',
-                    message0: 'Quand capteur binaire %1 passe à %2',
+                    message0: 'Quand le capteur %1 passe à %2',
                     args0: [
                         {
                             type: 'input_value',
@@ -278,8 +278,8 @@ export interface BlocksDefinitions {
                         },
                     ],
                     inputsInline: false,
-                    previousStatement: 'Trigger',
-                    nextStatement: 'Trigger',
+                    previousStatement: 'Condition',
+                    nextStatement: 'Condition',
                     colour: COLORS.HUE_YELLOW,
                     tooltip: '',
                     helpUrl: '',
@@ -460,7 +460,7 @@ export interface BlocksDefinitions {
             this.jsonInit(
                 {
                     type: 'block_type',
-                    message0: 'Si capteur binaire %1 est %2',
+                    message0: 'Si le capteur %1 est à %2',
                     args0: [
                         {
                             type: 'input_value',
@@ -496,33 +496,6 @@ export interface BlocksDefinitions {
     /**
  * Catégorie Action
  */
-    block.action = {
-        init() {
-            this.jsonInit(
-                {
-                    type: 'action',
-                    message0: 'Faire :  %1 Sur :  %2',
-                    args0: [
-                        {
-                            type: 'input_value',
-                            name: 'Service',
-                            check: 'Service',
-                        },
-                        {
-                            type: 'input_value',
-                            name: 'Entity',
-                        },
-                    ],
-                    inputsInline: true,
-                    previousStatement: 'Action',
-                    nextStatement: 'Action',
-                    colour: COLORS.HUE_ORANGE,
-                    tooltip: '',
-                    helpUrl: '',
-                },
-            );
-        },
-    };
 
     /**
  * Catégorie Couleur

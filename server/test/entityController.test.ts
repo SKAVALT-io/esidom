@@ -10,7 +10,7 @@ const mock: Entity = expect.objectContaining({
     attributes: expect.any(Object),
 } as Entity);
 
-const entitiesTypes: string[] = ['person', 'sun', 'zone', 'binary_sensor', 'switch', 'sensor', 'automation', 'weather', 'media_player', 'light', 'persistent_notification', 'zwave'];
+const entitiesTypes: string[] = ['person', 'sun', 'group', 'zone', 'binary_sensor', 'switch', 'sensor', 'automation', 'weather', 'media_player', 'light', 'persistent_notification', 'zwave'];
 const HaWeatherEntityId: string = 'weather.maison_hourly';
 
 describe('Entity controller tests', () => {

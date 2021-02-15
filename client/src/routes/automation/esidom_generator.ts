@@ -67,7 +67,7 @@ interface BlocksGenerator {
         const statements_trigger: string = esidomGenerator.statementToCode(blk, 'Trigger');
         const statements_condition: string = esidomGenerator.statementToCode(blk, 'Condition');
         const statements_action: string = esidomGenerator.statementToCode(blk, 'Action');
-        const dropdown_mode: string = blk.getFieldValue('Mode');
+        // const dropdown_mode: string = blk.getFieldValue('Mode');
 
         const json: BlocklyJSON = {};
 
@@ -86,7 +86,12 @@ interface BlocksGenerator {
             json.action = JSON.parse(actions);
         }
 
-        json.dropdown_mode = dropdown_mode;
+        // json.dropdown_mode = dropdown_mode;
+        /*
+         * Choose to keep the default value 'single' because the user may
+         * not need the others options
+         */
+        json.dropdown_mode = 'single';
 
         return JSON.stringify(json);
     };
@@ -100,18 +105,6 @@ interface BlocksGenerator {
 
         json.platform = 'time';
         json.at = `${number_hour}:${number_minute}:${number_second}`;
-
-        return JSON.stringify(json);
-    };
-
-    block.action = (blk: Block) => {
-        const value_service = esidomGenerator.valueToCode(blk, 'Service', PRECEDENCE);
-        const value_entity = esidomGenerator.valueToCode(blk, 'Entity', PRECEDENCE);
-
-        const json: BlocklyJSON = {};
-
-        json.service = value_service;
-        json.entity_id = value_entity;
 
         return JSON.stringify(json);
     };
