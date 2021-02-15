@@ -18,7 +18,6 @@
         <category name="Actions" colour={COLORS.HUE_ORANGE}>
             <block type="object_action" />
         </category>
-        </category>
         <category name="Objets" colour={COLORS.HUE_RED} />
         <category name="Couleur" colour={COLORS.HUE_MAUVE}>
             <block type="color_picker" />
