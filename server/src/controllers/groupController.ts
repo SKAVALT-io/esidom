@@ -12,6 +12,25 @@ class GroupController {
         console.log(this);
     }
 
+    @App.post('')
+    async createGroup(req: Request, res: Response): Promise<void> {
+        const { name, entities } = req.body;
+        if (!name) {
+            res.status(400).send({ message: 'The parameter name is missing' });
+            return;
+        }
+        if (entities === undefined || entities.length === 0) {
+            res.status(400).send({ message: 'The parameter entities is missing' });
+            return;
+        }
+        try {
+            const result = await groupService.createGroup(name, entities);
+            res.status(200).send(result);
+        } catch (err: any) {
+            res.status(400).send({ message: err.message ? err.message : err });
+        }
+    }
+
 }
 
 export default new GroupController();

@@ -3,6 +3,7 @@
     import './esidom_blocks';
     import { onMount } from 'svelte';
     import Blockly from 'blockly';
+    import type { BlocklyOptions } from 'blockly';
     import BlocklyService from '../../services/blocklyService';
 
     let blocklyService: BlocklyService;
@@ -11,9 +12,41 @@
         const toolbox: HTMLElement | undefined =
             document.getElementById('toolbox') || undefined;
 
-        const workspace: Blockly.WorkspaceSvg = Blockly.inject('blocklyDiv', {
-            toolbox,
-        });
+        const options: BlocklyOptions = {
+            toolbox: toolbox,
+            collapse: false,
+            comments: false,
+            disable: false,
+            //maxBlocks: Infinity, // Infinity not a number
+            trashcan: true,
+            horizontalLayout: false,
+            toolboxPosition: 'start',
+            css: true,
+            media: 'https://blockly-demo.appspot.com/static/media/',
+            rtl: false,
+            //scrollbars: false, // don't existe in type declaration
+            sounds: true,
+            oneBasedIndex: true,
+            grid: {
+                spacing: 20,
+                length: 1,
+                colour: '#888',
+                snap: false,
+            },
+            zoom: {
+                controls: true,
+                wheel: true,
+                startScale: 1.2,
+                maxScale: 3,
+                minScale: 0.3,
+                scaleSpeed: 1.2,
+            },
+        };
+
+        const workspace: Blockly.WorkspaceSvg = Blockly.inject(
+            'blocklyDiv',
+            options
+        );
 
         const rootBlock: string =
             '<xml><block type="automation" deletable="false" movable="false"></block></xml>';
@@ -39,7 +72,7 @@
 
 <style scoped>
     #blocklyDiv {
-        height: 600px;
+        height: 700px;
         width: 100%;
         text-align: left;
     }

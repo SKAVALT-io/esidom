@@ -20,9 +20,10 @@ class DeviceController {
     @App.get('/:deviceId')
     async getDevice(req: Request, res: Response): Promise<void> {
         try {
-            const result = await deviceService.getDeviceById(req.params.deviceId);
+            const { deviceId } = req.params;
+            const result = await deviceService.getDeviceById(deviceId);
             const code = result ? 200 : 404;
-            const data = result ?? { message: 'No device with such id' };
+            const data = result ?? { message: `No device with id ${deviceId}` };
             res.status(code).send(data);
         } catch (err) {
             res.status(404).send({ message: err.message });
