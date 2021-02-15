@@ -6,6 +6,7 @@
     import BlocklyService from '../../services/blocklyService';
 
     let blocklyService: BlocklyService;
+    let entityPromise: Promise<void>;
 
     onMount(async () => {
         const toolbox: HTMLElement | undefined =
@@ -21,24 +22,40 @@
 
         blocklyService = new BlocklyService(toolbox, workspace);
 
-        // TODO: correct asynchrone call
-        await BlocklyService.createEntities();
+        entityPromise = BlocklyService.createEntities();
     });
 </script>
 
-<p>
-    <button on:click={blocklyService.convertToBlock()}>Convert the blocks !</button>
-</p>
-
 <div>
+    {#await entityPromise}
+        <p>Chargement de blockly ...</p>
+        <div id="blocklyDivHide" />
+    {:then}
+        <p>
+            <button on:click={blocklyService.convertToBlock()}>Convert the
+                blocks !</button>
+        </p>
+    {:catch error}
+        <p style="color: red">{error.message}</p>
+    {/await}
     <div id="blocklyDiv" />
-    <xml id="toolbox" style="display:none">
+    <xml id="toolbox" style="display: none">
         <slot />
     </xml>
 </div>
 
 <style scoped>
+    #blocklyDivHide {
+        position: absolute;
+        height: 600px;
+        width: 100%;
+        text-align: left;
+        background-color: #120639;
+        z-index: 100;
+    }
+
     #blocklyDiv {
+        position: absolute;
         height: 600px;
         width: 100%;
         text-align: left;
