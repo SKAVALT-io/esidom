@@ -6,6 +6,8 @@ name: Node.js CI
 on:
   pull_request:
     branches: [ develop ]
+  push:
+    branches: [ feature/fix-ci ]
   
 jobs:
   buildServer:
@@ -22,11 +24,11 @@ jobs:
       uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version }}
-    - run: |
-        npm ci
-        npm run build --if-present
-        npm run lint
-        npm test
+    - run: npm ci
+    - run: npm run build --if-present
+    - run: npm run lint
+    - run: npm run startProd
+    - run: npm test
 
   buildClient:
     runs-on: ubuntu-latest
