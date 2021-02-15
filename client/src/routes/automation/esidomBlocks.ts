@@ -4,7 +4,7 @@ import Blockly from 'blockly';
 import COLORS from './esidomConst';
 
 export interface BlocksDefinitions {
-    automation: any;
+    esidom_automation: any;
     binary_trigger: any;
     time: any;
     time_condition: any;
@@ -16,6 +16,15 @@ export interface BlocksDefinitions {
     color_picker: any;
     color_rgb: any;
     objet_action: any;
+    binary_sensor: any;
+    person: any;
+    weather: any;
+    zwave: any;
+    sensor: any;
+    light: any;
+    automation: any;
+    switch: any;
+    media_player: any;
     jsonInit:(a: any)=> void;
 }
 
@@ -23,11 +32,11 @@ export interface BlocksDefinitions {
  * Bloc ESIDOM
  */
 ((block: BlocksDefinitions) => {
-    block.automation = {
+    block.esidom_automation = {
         init() {
             this.jsonInit(
                 {
-                    type: 'automation',
+                    type: 'esidom_automation',
                     message0: 'Quels sont les déclencheurs ? %1 Sous quelles conditions ? %2 Que faire ? %3', // 'Avec quel mode ? %4',
                     args0: [
                         {

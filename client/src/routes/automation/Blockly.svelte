@@ -20,7 +20,17 @@
                 <block type="objet_action" />
             </category>
         </category>
-        <category name="Objets" colour={COLORS.HUE_RED} />
+        <category name="Objets" colour={COLORS.HUE_RED}>
+            <block type="binary_sensor" />
+            <block type="person" />
+            <block type="weather" />
+            <block type="zwave" />
+            <block type="sensor" />
+            <block type="light" />
+            <block type="automation" />
+            <block type="switch" />
+            <block type="media_player" />
+        </category>
         <category name="Couleur" colour={COLORS.HUE_MAUVE}>
             <block type="color_picker" />
             <block type="color_rgb" />

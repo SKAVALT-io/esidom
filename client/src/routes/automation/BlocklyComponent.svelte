@@ -1,6 +1,6 @@
 <script lang="ts">
     // Execute blocks definition
-    import './esidomBlocks'
+    import './esidomBlocks';
     import { onMount } from 'svelte';
     import Blockly from 'blockly';
     import type { BlocklyOptions } from 'blockly';
@@ -50,12 +50,12 @@
         );
 
         const rootBlock: string =
-            '<xml><block type="automation" deletable="false" movable="false"></block></xml>';
+            '<xml><block type="esidom_automation" deletable="false" movable="false"></block></xml>';
         Blockly.Xml.domToWorkspace(Blockly.Xml.textToDom(rootBlock), workspace);
 
         blocklyService = new BlocklyService(toolbox, workspace);
 
-        entityPromise = BlocklyService.createEntities();
+        entityPromise = BlocklyService.initBlockly();
     });
 </script>
 

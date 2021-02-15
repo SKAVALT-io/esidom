@@ -9,6 +9,138 @@ import type { EntityWithServices } from '../../types/entityWithServicesType';
 import type { EnvironmentBlockly } from '../../types/environmentBlocklyType';
 import type { BlocksDefinitions } from '../routes/automation/esidomBlocks';
 import COLORS from '../routes/automation/esidomConst';
+import BlocklyObjects from '../routes/automation/blocklyObject';
+import type { ObjectBlock } from '../../types/objectsBlockType';
+
+interface BlockFactory {
+    (objectBlock: ObjectBlock): void;
+}
+
+interface Type {
+    name: string;
+    friendlyName: string,
+    createBlock: BlockFactory;
+}
+
+const TYPES: Type[] = [
+    {
+        name: 'binary_sensor',
+        friendlyName: 'Capteur Binaire',
+        createBlock(objectBlock: ObjectBlock): void {
+            ((block: BlocksDefinitions) => {
+                block.binary_sensor = {
+                    init() {
+                        this.jsonInit(objectBlock);
+                    },
+                };
+            })(Blockly.Blocks as unknown as BlocksDefinitions);
+        },
+    },
+    {
+        name: 'person',
+        friendlyName: 'Personne',
+        createBlock(objectBlock: ObjectBlock): void {
+            ((block: BlocksDefinitions) => {
+                block.person = {
+                    init() {
+                        this.jsonInit(objectBlock);
+                    },
+                };
+            })(Blockly.Blocks as unknown as BlocksDefinitions);
+        },
+    },
+    {
+        name: 'weather',
+        friendlyName: 'Météo',
+        createBlock(objectBlock: ObjectBlock): void {
+            ((block: BlocksDefinitions) => {
+                block.weather = {
+                    init() {
+                        this.jsonInit(objectBlock);
+                    },
+                };
+            })(Blockly.Blocks as unknown as BlocksDefinitions);
+        },
+    },
+    {
+        name: 'zwave',
+        friendlyName: 'Zwave',
+        createBlock(objectBlock: ObjectBlock): void {
+            ((block: BlocksDefinitions) => {
+                block.zwave = {
+                    init() {
+                        this.jsonInit(objectBlock);
+                    },
+                };
+            })(Blockly.Blocks as unknown as BlocksDefinitions);
+        },
+    },
+    {
+        name: 'sensor',
+        friendlyName: 'Capteur',
+        createBlock(objectBlock: ObjectBlock): void {
+            ((block: BlocksDefinitions) => {
+                block.sensor = {
+                    init() {
+                        this.jsonInit(objectBlock);
+                    },
+                };
+            })(Blockly.Blocks as unknown as BlocksDefinitions);
+        },
+    },
+    {
+        name: 'light',
+        friendlyName: 'Lampe',
+        createBlock(objectBlock: ObjectBlock): void {
+            ((block: BlocksDefinitions) => {
+                block.light = {
+                    init() {
+                        this.jsonInit(objectBlock);
+                    },
+                };
+            })(Blockly.Blocks as unknown as BlocksDefinitions);
+        },
+    },
+    {
+        name: 'automation',
+        friendlyName: 'Routine',
+        createBlock(objectBlock: ObjectBlock): void {
+            ((block: BlocksDefinitions) => {
+                block.automation = {
+                    init() {
+                        this.jsonInit(objectBlock);
+                    },
+                };
+            })(Blockly.Blocks as unknown as BlocksDefinitions);
+        },
+    },
+    {
+        name: 'switch',
+        friendlyName: 'Interrupteur',
+        createBlock(objectBlock: ObjectBlock): void {
+            ((block: BlocksDefinitions) => {
+                block.switch = {
+                    init() {
+                        this.jsonInit(objectBlock);
+                    },
+                };
+            })(Blockly.Blocks as unknown as BlocksDefinitions);
+        },
+    },
+    {
+        name: 'media_player',
+        friendlyName: 'Lecteur multimédia',
+        createBlock(objectBlock: ObjectBlock): void {
+            ((block: BlocksDefinitions) => {
+                block.media_player = {
+                    init() {
+                        this.jsonInit(objectBlock);
+                    },
+                };
+            })(Blockly.Blocks as unknown as BlocksDefinitions);
+        },
+    },
+];
 
 export default class BlocklyService {
     private toolbox: string | HTMLElement | undefined;
@@ -35,10 +167,15 @@ export default class BlocklyService {
         }
     }
 
-    static async createEntities(): Promise<void> {
+    static async initBlockly(): Promise<void> {
         const entities = await EntityService.getEntities();
         const services = await EntityService.getServices();
 
+        this.createEntities(entities, services);
+        this.createObjects(entities);
+    }
+
+    static createEntities(entities: Entity[], services: Service[]): void {
         const entityWithServices: EntityWithServices[] = [];
 
         entities.forEach((entity: Entity) => {
@@ -106,5 +243,25 @@ export default class BlocklyService {
                 },
             };
         })(Blockly.Blocks as unknown as BlocksDefinitions);
+    }
+
+    static createObjects(entities: Entity[]): void {
+        TYPES.forEach((type: Type) => {
+            const typeName = type.name;
+            const options: string[][] = entities
+                .filter((entity: Entity) => entity.type === typeName)
+                .map((entity: Entity) => [entity.name === '' ? 'Pas de nom' : entity.name, entity.id]);
+
+            const blocklyObjects = new BlocklyObjects(
+                typeName,
+                typeName.charAt(0).toUpperCase() + typeName.slice(1),
+                type.friendlyName,
+                0,
+            );
+
+            blocklyObjects.addOptions(options);
+            const objectBlock = blocklyObjects.getJson();
+            type.createBlock(objectBlock);
+        });
     }
 }

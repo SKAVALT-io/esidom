@@ -28,6 +28,11 @@ function getWeekday(blk: Block): string[] {
     return weekday;
 }
 
+function getDropdownChoice(blk: Block): string {
+    const dropdownChoice = blk.getFieldValue('object');
+    return dropdownChoice;
+}
+
 interface BlocklyJSON {
     trigger?: string;
     condition?: string;
@@ -46,8 +51,8 @@ interface BlocklyJSON {
     dropdown_mode?: string;
 }
 
-interface BlocksGenerator {
-    automation: (blk: Block) => void;
+export interface BlocksGenerator {
+    esidom_automation: (blk: Block) => void;
     binary_trigger: (blk: Block) => void;
     time: (blk: Block) => void;
     time_condition: (blk: Block) => void;
@@ -58,12 +63,21 @@ interface BlocksGenerator {
     action: (blk: Block) => void;
     color_picker: (blk: Block) => void;
     color_rgb: (blk: Block) => void;
+    binary_sensor: (blk: Block) => void;
+    person: (blk: Block) => void;
+    weather: (blk: Block) => void;
+    zwave: (blk: Block) => void;
+    sensor: (blk: Block) => void;
+    light: (blk: Block) => void;
+    automation: (blk: Block) => void;
+    switch: (blk: Block) => void;
+    media_player: (blk: Block) => void;
     scrub: (blk: Block, code: string, opt_thisOnly: string) => void
     jsonInit:(a: Block)=> void;
 }
 
 ((block: BlocksGenerator) => {
-    block.automation = (blk: Block) => {
+    block.esidom_automation = (blk: Block) => {
         const statements_trigger: string = esidomGenerator.statementToCode(blk, 'Trigger');
         const statements_condition: string = esidomGenerator.statementToCode(blk, 'Condition');
         const statements_action: string = esidomGenerator.statementToCode(blk, 'Action');
@@ -223,6 +237,24 @@ interface BlocksGenerator {
 
         return JSON.stringify(json);
     };
+
+    block.binary_sensor = (blk: Block) => [getDropdownChoice(blk), PRECEDENCE];
+
+    block.person = (blk: Block) => [getDropdownChoice(blk), PRECEDENCE];
+
+    block.weather = (blk: Block) => [getDropdownChoice(blk), PRECEDENCE];
+
+    block.zwave = (blk: Block) => [getDropdownChoice(blk), PRECEDENCE];
+
+    block.sensor = (blk: Block) => [getDropdownChoice(blk), PRECEDENCE];
+
+    block.light = (blk: Block) => [getDropdownChoice(blk), PRECEDENCE];
+
+    block.automation = (blk: Block) => [getDropdownChoice(blk), PRECEDENCE];
+
+    block.switch = (blk: Block) => [getDropdownChoice(blk), PRECEDENCE];
+
+    block.media_player = (blk: Block) => [getDropdownChoice(blk), PRECEDENCE];
 
     // Scrub for combining two same blks
     block.scrub = (blk, code, opt_thisOnly) => {
