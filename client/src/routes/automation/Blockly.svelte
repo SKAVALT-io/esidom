@@ -1,6 +1,6 @@
 <script lang="ts">
     import BlocklyComponent from './BlocklyComponent.svelte';
-    import COLORS from './esidom_const';
+    import COLORS from './esidomConst';
 </script>
 
 <div id="test">

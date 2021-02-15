@@ -1,7 +1,7 @@
 /* eslint-disable camelcase */
 /* eslint-disable no-param-reassign */
 import Blockly from 'blockly';
-import COLORS from './esidom_const';
+import COLORS from './esidomConst';
 
 export interface BlocksDefinitions {
     automation: any;

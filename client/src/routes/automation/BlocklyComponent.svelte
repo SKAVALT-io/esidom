@@ -1,6 +1,6 @@
 <script lang="ts">
     // Execute blocks definition
-    import './esidom_blocks';
+    import './esidomBlocks'
     import { onMount } from 'svelte';
     import Blockly from 'blockly';
     import type { BlocklyOptions } from 'blockly';
@@ -61,15 +61,19 @@
 
 <div>
     {#await entityPromise}
-        <p>Chargement de blockly ...</p>
+        <p>Chargement de Blockly ...</p>
         <div id="blocklyDivHide" />
     {:then}
         <p>
             <button on:click={blocklyService.convertToBlock()}>Convert the
                 blocks !</button>
         </p>
-    {:catch error}
-        <p style="color: red">{error.message}</p>
+    {:catch}
+        <p style="color: red">
+            Erreur : Blockly n'a pas pu charger à cause d'un problème avec le
+            serveur.
+        </p>
+        <div id="blocklyDivHide" />
     {/await}
     <div id="blocklyDiv" />
     <xml id="toolbox" style="display: none">
@@ -84,7 +88,7 @@
         width: 100%;
         text-align: left;
         background-color: #120639;
-        z-index: 100;
+        z-index: 90;
     }
 
     #blocklyDiv {
