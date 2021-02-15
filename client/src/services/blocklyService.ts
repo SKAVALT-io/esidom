@@ -84,7 +84,7 @@ export default class BlocklyService {
                     this.setInputsInline(false);
                     this.setPreviousStatement(true, 'Action');
                     this.setNextStatement(true, 'Action');
-                    this.setColour(COLORS.HUE_RED);
+                    this.setColour(COLORS.HUE_ORANGE);
                     this.setTooltip('');
                     this.setHelpUrl('');
                 },
