@@ -105,18 +105,6 @@ interface BlocksGenerator {
         return JSON.stringify(json);
     };
 
-    block.action = (blk: Block) => {
-        const value_service = esidomGenerator.valueToCode(blk, 'Service', PRECEDENCE);
-        const value_entity = esidomGenerator.valueToCode(blk, 'Entity', PRECEDENCE);
-
-        const json: BlocklyJSON = {};
-
-        json.service = value_service;
-        json.entity_id = value_entity;
-
-        return JSON.stringify(json);
-    };
-
     block.time_condition = (blk: Block) => {
         const number_hour_debut = blk.getFieldValue('Hour_debut');
         const number_minute_debut = blk.getFieldValue('Minute_debut');

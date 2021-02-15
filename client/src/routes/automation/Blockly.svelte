@@ -18,7 +18,6 @@
         <category name="Actions" colour={COLORS.HUE_RED}>
             <category name="Services" colour={COLORS.HUE_RED}>
                 <block type="objet_action" />
-                <!-- <block type="action" /> -->
             </category>
         </category>
         <category name="Couleur" colour={COLORS.HUE_MAUVE}>

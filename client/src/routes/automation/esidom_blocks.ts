@@ -496,33 +496,6 @@ export interface BlocksDefinitions {
     /**
  * Catégorie Action
  */
-    block.action = {
-        init() {
-            this.jsonInit(
-                {
-                    type: 'action',
-                    message0: 'Faire :  %1 Sur :  %2',
-                    args0: [
-                        {
-                            type: 'input_value',
-                            name: 'Service',
-                            check: 'Service',
-                        },
-                        {
-                            type: 'input_value',
-                            name: 'Entity',
-                        },
-                    ],
-                    inputsInline: true,
-                    previousStatement: 'Action',
-                    nextStatement: 'Action',
-                    colour: COLORS.HUE_ORANGE,
-                    tooltip: '',
-                    helpUrl: '',
-                },
-            );
-        },
-    };
 
     /**
  * Catégorie Couleur
