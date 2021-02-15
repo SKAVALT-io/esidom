@@ -9,6 +9,7 @@
     import Blockly from './routes/automation/Blockly.svelte';
     import Devices from './routes/devices/Devices.svelte';
     import Home from './routes/default/Home.svelte';
+    import Automations from './routes/automation/Automations.svelte';
 
     import Navbar from './components/others/Navbar.svelte';
     import { socketManager } from './managers/socketManager';
@@ -19,6 +20,7 @@
         '/devices/': Devices,
         '/home/': Home,
         '/blockly': Blockly,
+        '/automations': Automations,
         // This is optional, but if present it must be the last
         '*': Home,
     };
