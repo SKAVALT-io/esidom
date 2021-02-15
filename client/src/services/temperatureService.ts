@@ -5,6 +5,7 @@ export interface TemperatureData {
     name: string;
     id: string,
     state: string;
+    message?: string;
     attributes: {
         unit_of_measurement: string;
     };
