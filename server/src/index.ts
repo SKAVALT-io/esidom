@@ -28,7 +28,7 @@ const doAuth = async () => {
     console.log('COUCOUCOUCOCU');
     const { status } = await axios
         .get(`http://localhost:${port}/auth`) as AxiosResponse<any>;
-        console.log('FDJLKSJHFDSFJLKDSF');
+    console.log('FDJLKSJHFDSFJLKDSF');
     if (status !== 200) {
         throw new Error('Unable to authenticate server to HA');
     }
