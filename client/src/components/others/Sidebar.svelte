@@ -1,4 +1,6 @@
 <script lang="ts">
+    import * as SPA from 'svelte-spa-router';
+    import { tr } from '../../utils/i18nHelper';
     export let open = false;
 
     let currentPageSelected = '';
@@ -34,45 +36,49 @@
     <div class="navigation absolute -top-0 -left-0 w-full">
         <a
             class="home-link"
-            href="/#/"
+            href="/"
+            use:SPA.link
             on:click={() => {
                 pageLinkClicked('home');
             }}
             class:selected={currentPageSelected === 'home' || currentPageSelected === ''}
         >
             <span class="icon"><i class="fa fa-home" /></span>
-            <span class="title">Home</span>
+            <span class="title">{tr('menu.home')}</span>
         </a>
         <a
             class="devices-link"
-            href="/#/devices"
+            href="/devices"
+            use:SPA.link
             on:click={() => {
                 pageLinkClicked('devices');
             }}
             class:selected={currentPageSelected === 'devices'}
         >
             <span class="icon"><i class="fa fa-user" /></span>
-            <span class="title">Devices</span>
+            <span class="title">{tr('menu.devices')}</span>
         </a>
         <a
-            href="/#/"
+            href="/"
+            use:SPA.link
             on:click={() => {
                 pageLinkClicked('todo');
             }}
             class:selected={currentPageSelected === 'todo'}
         >
             <span class="icon"><i class="fa fa-envelope-o" /></span>
-            <span class="title">Todo</span>
+            <span class="title">{tr('menu.todo')}</span>
         </a>
         <a
-            href="/#/blockly"
+            href="/blockly"
+            use:SPA.link
             on:click={() => {
                 pageLinkClicked('blockly');
             }}
             class:selected={currentPageSelected === 'blockly'}
         >
             <span class="icon"><i class="fa fa-cogs" /></span>
-            <span class="title">Blockly</span>
+            <span class="title">{tr('menu.blockly')}</span>
         </a>
     </div>
 </nav>

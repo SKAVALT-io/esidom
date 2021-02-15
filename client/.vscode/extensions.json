@@ -6,6 +6,7 @@
         "dbaeumer.vscode-eslint",
         "bradlc.vscode-tailwindcss",
         "orta.vscode-jest",
-        "syler.sass-indented"
+        "syler.sass-indented",
+        "lokalise.i18n-ally"
     ]
 }

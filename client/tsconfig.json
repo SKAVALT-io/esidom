@@ -16,7 +16,9 @@
         "baseUrl": "./",
         "sourceMap": true,
         /* paths - If you configure Snowpack import aliases, add them here. */
-        "paths": {},
+        "paths": {
+            "locales/*": ["public/locales/*"]
+        },
         /* noEmit - Snowpack builds (emits) files, not tsc. */
         "noEmit": true,
         /* Additional Options */
