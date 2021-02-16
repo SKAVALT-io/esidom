@@ -5,6 +5,7 @@
     import Blockly from 'blockly';
     import type { BlocklyOptions } from 'blockly';
     import BlocklyService from '../../services/blocklyService';
+    import BorderedButton from '../../components/UI/buttons/BorderedButton.svelte';
 
     let blocklyService: BlocklyService;
     let entityPromise: Promise<void>;
@@ -64,9 +65,11 @@
         <p>Chargement de blockly ...</p>
         <div id="blocklyDivHide" />
     {:then}
-        <p>
-            <button on:click={blocklyService.convertToBlock()}>Convert the
-                blocks !</button>
+        <p class="py-4">
+            <BorderedButton
+                on:click={() => blocklyService.convertToBlock()}
+                text="Convert the blocks !"
+            />
         </p>
     {:catch error}
         <p style="color: red">{error.message}</p>
