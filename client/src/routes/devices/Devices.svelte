@@ -5,6 +5,7 @@
     import LampRgb from '../../components/devices/lamps/LampRGB.svelte';
     import Temperature from '../../components/devices/sensors/Temperature.svelte';
     import PairDevice from '../../components/others/PairDevice.svelte';
+    import PlusSvg from '../../components/svg_icons/PlusSVG.svelte';
     import RoundedButton from '../../components/UI/buttons/RoundedButton.svelte';
     import DeviceContainer from '../../components/UI/container/DeviceContainer.svelte';
 
@@ -58,8 +59,9 @@
             on:click={() => {
                 isPairDeviceOpen = true;
             }}
-            iconPath="icons/plus.svg"
-        />
+        >
+            <PlusSvg />
+        </RoundedButton>
     </div>
 </div>
 

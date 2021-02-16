@@ -12,7 +12,7 @@
 </script>
 
 <nav
-    class="navbar relative w-screen h-screen border-r-2 shadow-lg bg-gray-900"
+    class="navbar relative w-16 h-screen border-r-2 shadow-lg bg-gray-900"
     class:open
 >
     <ul class="navbar-nav list-none p-0 m-0 flex flex-col items-center">
@@ -26,7 +26,7 @@
                 }}
                 class:selected={currentPageSelected === 'home' || currentPageSelected === ''}
             >
-                <span class="link-svg"><HamburgerSvg size={5} /></span>
+                <span class="link-svg"><HamburgerSvg size={6} /></span>
                 <span class="link-text">{tr('menu.home')}</span>
             </a>
         </li>
@@ -40,7 +40,7 @@
                 }}
                 class:selected={currentPageSelected === 'devices'}
             >
-                <span class="link-svg"><HamburgerSvg size={5} /></span>
+                <span class="link-svg"><HamburgerSvg size={6} /></span>
                 <span class="link-text">{tr('menu.devices')}</span>
             </a>
         </li>
@@ -54,7 +54,7 @@
                 }}
                 class:selected={currentPageSelected === 'todo'}
             >
-                <span class="link-svg"><HamburgerSvg size={5} /></span>
+                <span class="link-svg"><HamburgerSvg size={6} /></span>
                 <span class="link-text">{tr('menu.todo')}</span>
             </a>
         </li>
@@ -68,7 +68,7 @@
                 }}
                 class:selected={currentPageSelected === 'blockly'}
             >
-                <span class="link-svg"><HamburgerSvg size={5} /></span>
+                <span class="link-svg"><HamburgerSvg size={6} /></span>
                 <span class="link-text">{tr('menu.blockly')}</span>
             </a>
         </li>
@@ -131,7 +131,7 @@
     .link-svg {
         width: 0.1rem;
         min-width: 1rem;
-        margin: 0 1rem;
+        margin: 0 0.7rem;
     }
 
     /* Large screens */
