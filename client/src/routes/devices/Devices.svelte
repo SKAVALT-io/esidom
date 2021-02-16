@@ -25,7 +25,7 @@
     }
 </script>
 
-<div id="test">
+<div>
     <!-- Grid containing all devices -->
 
     <DeviceContainer title="Lampes" iconPath="favicon.png">
@@ -81,9 +81,5 @@
 
     div {
         color: $color;
-    }
-
-    #test {
-        margin-left: 4%;
     }
 </style>
