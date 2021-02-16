@@ -7,8 +7,8 @@
     "realizedBy": "Fait par {0}"
   },
   "menu": {
-    "devices": "appareils",
-    "home": "acceuil",
+    "devices": "équipements",
+    "home": "accueil",
     "blockly": "blockly"
   },
   "devices": {
