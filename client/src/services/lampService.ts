@@ -5,6 +5,7 @@ export interface LampData {
     id: string;
     state: string;
     type: string;
+    message?: string;
     attributes: {
         // eslint-disable-next-line camelcase
         rgb_color: number[];
@@ -23,7 +24,12 @@ export function rgbToHex(r: number, g: number, b: number): string {
 
 export async function getLamp(id: string): Promise<LampData> {
     return fetch(`${config.BASE_URL}/entity/${id}`)
-        .then((x) => x.json());
+        .then((x) => {
+            if (!x.ok) {
+                throw Error('');
+            }
+            return x.json();
+        });
 }
 
 export async function changeBrightness(id: string, brightnessPct: number): Promise<void> {
@@ -45,6 +51,7 @@ export async function changeBrightness(id: string, brightnessPct: number): Promi
 
 export async function switchLamp(id: string, brightnessPct?: number): Promise<any> {
     // If brightness is provided, then turn on, else, turn it off
+    console.log(brightnessPct);
     const body = JSON.stringify(
         brightnessPct
             ? {
@@ -56,6 +63,7 @@ export async function switchLamp(id: string, brightnessPct?: number): Promise<an
                 service: 'light.turn_off',
             },
     );
+    console.log(body);
     const headers = new Headers();
     headers.set('Content-Type', 'application/json');
 

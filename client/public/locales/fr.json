@@ -1,0 +1,18 @@
+{
+  "app": {
+    "name": "ESIDOM"
+  },
+  "home": {
+    "welcome": "Bienvenue sur {0}",
+    "realizedBy": "Fait par {0}"
+  },
+  "menu": {
+      "devices": "appareils",
+      "home": "home",
+      "blockly": "blockly"
+  },
+  "devices": {
+      "lights": "lampes",
+      "sensors": "capteurs"
+  }
+}

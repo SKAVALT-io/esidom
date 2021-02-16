@@ -60,6 +60,13 @@ export interface HaRoomDetail {
     entity: string[];
 }
 
+// Specifies the object structure send to HA
+// when calling /api/services/group/set
+export interface HaGroupSet {
+    object_id: string;
+    name: string;
+    entities: string;
+}
 export interface HaService {
     [domain: string]: {
         [name: string]: {
@@ -79,4 +86,14 @@ export interface HaEntityUpdated {
     entity_id: string;
     old_state: HaStateResponse;
     new_state: HaStateResponse;
+}
+
+export interface HaAutomation {
+    id: string;
+    alias: string;
+    description: string;
+    trigger: any[];
+    condition: any[];
+    action: any[];
+    mode: 'single' | 'restart' | 'queued' | 'parallel';
 }

@@ -46,11 +46,10 @@
     }
 
     async function loadLamp() {
-        LAMP = await getLamp(entityId);
-        // TODO: Change this ugly
-        if (LAMP.message) {
-            LAMP = undefined;
-        }
+        LAMP = await getLamp(entityId).catch((e) => {
+            console.log('loading error', e);
+            return undefined;
+        });
         console.log(LAMP);
         return LAMP;
     }

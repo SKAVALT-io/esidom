@@ -1,12 +1,13 @@
 <script lang="ts">
     import getStaff from '../../utils/skavalt';
     import TailwindExample from '../../components/default/TailwindExample.svelte';
+    import { format, tr } from '../../utils/i18nHelper';
 
     const names = getStaff().join(', ');
 </script>
 
 <div>
-    Welcome to SKAVALT :)
+    {format(tr('home.welcome'), tr('app.name'))}
     <br /><br />
 
     <div id="cool" class="flex">
@@ -15,8 +16,7 @@
 
     <br /><br />
 
-    Made by
-    {names}
+    {format(tr('home.realizedBy'), names)}
 </div>
 
 <style>

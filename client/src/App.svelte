@@ -1,6 +1,13 @@
 <script lang="ts">
     import Router from 'svelte-spa-router';
 
+    import {
+        addMessages, init, getLocaleFromNavigator, _,
+} from 'svelte-i18n';
+
+    import fr from 'locales/fr.json';
+    import en from 'locales/en.json';
+
     import Blockly from './routes/automation/Blockly.svelte';
     import Devices from './routes/devices/Devices.svelte';
     import Home from './routes/default/Home.svelte';
@@ -9,6 +16,7 @@
     import { socketManager } from './managers/socketManager';
     import Sidebar from './components/others/Sidebar.svelte';
 
+    // Configure the app routes
     const routes = {
         '/devices/': Devices,
         '/home/': Home,
@@ -19,6 +27,15 @@
 
     /* Open/Close sidebar from navbar */
     let open = false;
+
+    // Configure and init i18n
+    addMessages('fr', fr);
+    addMessages('en', en);
+
+    init({
+        fallbackLocale: 'fr',
+        initialLocale: getLocaleFromNavigator(),
+    });
 
     // Initiate the socket
     socketManager.connect();

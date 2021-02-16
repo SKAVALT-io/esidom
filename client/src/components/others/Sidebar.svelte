@@ -1,5 +1,7 @@
 <script lang="ts">
     import HamburgerSvg from '../svg_icons/HamburgerSVG.svelte';
+    import * as SPA from 'svelte-spa-router';
+    import { tr } from '../../utils/i18nHelper';
 
     export let open = false;
     let currentPageSelected = '';
@@ -18,28 +20,58 @@
     <ul class="navbar-nav list-none p-0 m-0 flex flex-col items-center">
         <li class="nav_item">
             <a
-                href="/#/"
                 class="nav-link"
+                href="/"
+                use:SPA.link
                 on:click={() => {
                     pageLinkClicked('home');
                 }}
                 class:selected={currentPageSelected === 'home' || currentPageSelected === ''}
             >
                 <span class="link-svg"><HamburgerSvg size={5} /></span>
-                <span class="link-text">Home</span>
+                <span class="link-text">{tr('menu.home')}</span>
             </a>
         </li>
         <li class="nav_item">
             <a
-                href="/#/devices"
+                href="/devices"
                 class="nav-link"
+                use:SPA.link
                 on:click={() => {
                     pageLinkClicked('devices');
                 }}
                 class:selected={currentPageSelected === 'devices'}
             >
                 <span class="link-svg"><HamburgerSvg size={5} /></span>
-                <span class="link-text">Devices</span>
+                <span class="link-text">{tr('menu.devices')}</span>
+            </a>
+        </li>
+        <li class="nav_item">
+            <a
+                href="/"
+                class="nav-link"
+                use:SPA.link
+                on:click={() => {
+                    pageLinkClicked('todo');
+                }}
+                class:selected={currentPageSelected === 'todo'}
+            >
+                <span class="link-svg"><HamburgerSvg size={5} /></span>
+                <span class="link-text">{tr('menu.todo')}</span>
+            </a>
+        </li>
+        <li class="nav_item">
+            <a
+                href="/blockly"
+                class="nav-link"
+                use:SPA.link
+                on:click={() => {
+                    pageLinkClicked('todo');
+                }}
+                class:selected={currentPageSelected === 'blockly'}
+            >
+                <span class="link-svg"><HamburgerSvg size={5} /></span>
+                <span class="link-text">{tr('menu.blockly')}</span>
             </a>
         </li>
     </ul>

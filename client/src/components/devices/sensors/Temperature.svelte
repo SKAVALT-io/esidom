@@ -22,6 +22,10 @@
 
     async function loadDoor() {
         sensor = await getTemp(entityId);
+        // TODO: do better
+        if (sensor.message) {
+            sensor = undefined;
+        }
         console.log('sensor loaded', sensor);
     }
 

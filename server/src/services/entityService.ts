@@ -61,7 +61,7 @@ class EntityService {
         if (result === undefined) {
             throw new Error(`No entity with id ${id}`);
         }
-        return result as Entity;
+        return result;
     }
 
     async updateEntityState(id: string, service: string, serviceData: any = {}) {

@@ -1,5 +1,6 @@
 import axios, { AxiosResponse } from 'axios';
 import { Entity } from '../src/types/entity';
+import config from './config';
 
 const mock: Entity = expect.objectContaining({
     id: expect.any(String),
@@ -9,13 +10,12 @@ const mock: Entity = expect.objectContaining({
     attributes: expect.any(Object),
 } as Entity);
 
-const entitiesTypes: string[] = ['person', 'sun', 'zone', 'binary_sensor', 'switch', 'sensor', 'automation', 'weather', 'media_player', 'light', 'zwave'];
-const baseUrl: string = 'http://localhost:3000';
+const entitiesTypes: string[] = ['person', 'sun', 'group', 'zone', 'binary_sensor', 'switch', 'sensor', 'automation', 'weather', 'media_player', 'light', 'persistent_notification', 'zwave'];
 const HaWeatherEntityId: string = 'weather.maison_hourly';
 
 describe('Entity controller tests', () => {
     test('it should get entities', async () => {
-        const res: AxiosResponse<any> = await axios.get(`${baseUrl}/entity`);
+        const res: AxiosResponse<any> = await axios.get(`${config.baseUrl}/entity`);
         expect(res.status).toBe(200);
         expect(res.data.length).toBeDefined();
         const { data } = res;
@@ -26,7 +26,7 @@ describe('Entity controller tests', () => {
 
     test('it should get an entity by its id', async () => {
         const res: AxiosResponse<any> = await axios
-            .get(`${baseUrl}/entity/${HaWeatherEntityId}`);
+            .get(`${config.baseUrl}/entity/${HaWeatherEntityId}`);
         expect(res.status).toBe(200);
         expect(res.data).toBeDefined();
         expect(res.data).toMatchObject(mock);
@@ -34,7 +34,7 @@ describe('Entity controller tests', () => {
 
     test('it should return 404 when calling entityById with unknown id', async () => {
         await expect(async () => {
-            await axios.get(`${baseUrl}/entity/notAndId`);
+            await axios.get(`${config.baseUrl}/entity/notAndId`);
         }).rejects.toThrow().catch((err) => {
             expect(err).toHaveProperty('response');
             const res = err.response;
@@ -46,7 +46,7 @@ describe('Entity controller tests', () => {
     });
 
     test('it should populate entities type', async () => {
-        const res: AxiosResponse<any> = await axios.get(`${baseUrl}/entity/types`);
+        const res: AxiosResponse<any> = await axios.get(`${config.baseUrl}/entity/types`);
         expect(res.status).toBe(200);
         expect(res.data).toBeDefined();
         expect(res.data).toHaveProperty('length');
@@ -57,7 +57,7 @@ describe('Entity controller tests', () => {
     });
 
     test('it should enable/disable an entity', async () => {
-        const res = await axios.patch(`${baseUrl}/entity/${HaWeatherEntityId}`, { enable: true });
+        const res = await axios.patch(`${config.baseUrl}/entity/${HaWeatherEntityId}`, { enable: true });
         expect(res.status).toBe(200);
         expect(res.data).toMatchObject(mock);
     });
