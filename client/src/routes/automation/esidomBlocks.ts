@@ -1,31 +1,41 @@
 /* eslint-disable camelcase */
 /* eslint-disable no-param-reassign */
 import Blockly from 'blockly';
+import type { EnvironmentBlockly } from '../../../types/environmentBlocklyType';
 import COLORS from './esidomConst';
+import type { EntityTypeEnum } from './esidomGenerator';
 
-export interface BlocksDefinitions {
-    esidom_automation: any;
-    binary_trigger: any;
-    time: any;
-    time_condition: any;
-    sun_condition: any;
-    time_condition_hour: any;
-    time_condition_week: any;
-    binary_condition: any;
-    action: any;
-    color_picker: any;
-    color_rgb: any;
-    objet_action: any;
-    binary_sensor: any;
-    person: any;
-    weather: any;
-    zwave: any;
-    sensor: any;
-    light: any;
-    automation: any;
-    switch: any;
-    media_player: any;
-    jsonInit:(a: any)=> void;
+type BlockFunctions = {
+    init: ()=> void;
+    jsonInit?:(a: any)=> void;
+    onchange?: (ev: EnvironmentBlockly)=> void;
+    appendDummyInput?: (str?: string)=> BlockFunctions;
+    appendField?: (...args: Array<string | Blockly.FieldDropdown>)=> BlockFunctions;
+    setInputsInline?: (b: boolean) => BlockFunctions;
+    setPreviousStatement?: (b: boolean, str: string)=> BlockFunctions;
+    setNextStatement?: (b: boolean, str: string) => BlockFunctions;
+    setColour?: (str: string) => BlockFunctions;
+    setTooltip?: (str: string) => BlockFunctions;
+    setHelpUrl?: (str: string) => BlockFunctions;
+    removeInput?: (str: string) => BlockFunctions;
+
+};
+
+export type BlocksDefinitions = {
+    [key in EntityTypeEnum]: BlockFunctions;
+} & {
+    esidom_automation: BlockFunctions;
+    binary_trigger: BlockFunctions;
+    time: BlockFunctions;
+    time_condition: BlockFunctions;
+    sun_condition: BlockFunctions;
+    time_condition_hour: BlockFunctions;
+    time_condition_week: BlockFunctions;
+    binary_condition: BlockFunctions;
+    action: BlockFunctions;
+    color_picker: BlockFunctions;
+    color_rgb: BlockFunctions;
+    objet_action: BlockFunctions;
 }
 
 /**
@@ -34,7 +44,7 @@ export interface BlocksDefinitions {
 ((block: BlocksDefinitions) => {
     block.esidom_automation = {
         init() {
-            this.jsonInit(
+            this.jsonInit?.(
                 {
                     type: 'esidom_automation',
                     message0: 'Quels sont les déclencheurs ? %1 Sous quelles conditions ? %2 Que faire ? %3', // 'Avec quel mode ? %4',
@@ -90,7 +100,7 @@ export interface BlocksDefinitions {
  */
     block.binary_trigger = {
         init() {
-            this.jsonInit(
+            this.jsonInit?.(
                 {
                     type: 'block_type',
                     message0: 'Quand le capteur %1 passe à %2',
@@ -128,7 +138,7 @@ export interface BlocksDefinitions {
 
     block.time = {
         init() {
-            this.jsonInit(
+            this.jsonInit?.(
                 {
                     type: 'time',
                     message0: '%1 h %2 %3 m %4 %5 s',
@@ -177,7 +187,7 @@ export interface BlocksDefinitions {
  */
     block.time_condition = {
         init() {
-            this.jsonInit(
+            this.jsonInit?.(
                 {
                     type: 'time_condition',
                     message0: 'Début : %1 h %2 m %3 s %4 Fin : %5 h %6 m %7 s %8 %9 lundi %10 %11 mardi %12 %13 mercredi %14 %15 jeudi %16 %17 vendredi %18 %19 samedi %20 %21 dimanche',
@@ -299,7 +309,7 @@ export interface BlocksDefinitions {
 
     block.sun_condition = {
         init() {
-            this.jsonInit(
+            this.jsonInit?.(
                 {
                     type: 'sun_state',
                     message0: 'Lorsque le soleil se %1',
@@ -331,7 +341,7 @@ export interface BlocksDefinitions {
 
     block.time_condition_hour = {
         init() {
-            this.jsonInit({
+            this.jsonInit?.({
                 type: 'time_condition_2',
                 lastDummyAlign0: 'RIGHT',
                 message0: 'Début : %1 h %2 m %3 s %4 Fin : %5 h %6 m %7 s',
@@ -394,7 +404,7 @@ export interface BlocksDefinitions {
 
     block.time_condition_week = {
         init() {
-            this.jsonInit(
+            this.jsonInit?.(
                 {
                     type: 'week_condition',
                     message0: '%1 lundi %2 %3 mardi %4 %5 mercredi %6 %7 jeudi %8 %9 vendredi %10 %11 samedi %12 %13 dimanche',
@@ -466,7 +476,7 @@ export interface BlocksDefinitions {
 
     block.binary_condition = {
         init() {
-            this.jsonInit(
+            this.jsonInit?.(
                 {
                     type: 'block_type',
                     message0: 'Si le capteur %1 est à %2',
@@ -511,7 +521,7 @@ export interface BlocksDefinitions {
  */
     block.color_picker = {
         init() {
-            this.jsonInit(
+            this.jsonInit?.(
                 {
                     type: 'attribut_color',
                     message0: 'Couleur : %1',
@@ -533,7 +543,7 @@ export interface BlocksDefinitions {
 
     block.color_rgb = {
         init() {
-            this.jsonInit({
+            this.jsonInit?.({
                 type: 'color_rgb',
                 message0: 'Couleur personnalisée : %1 rouge : %2 vert : %3 bleu %4',
                 args0: [

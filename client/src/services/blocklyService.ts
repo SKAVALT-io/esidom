@@ -2,6 +2,7 @@
 import type { WorkspaceSvg } from 'blockly';
 import Blockly from 'blockly';
 import esidomGenerator from '../routes/automation/esidomGenerator';
+import type { EntityTypeEnum } from '../routes/automation/esidomGenerator';
 import EntityService from './entityService';
 import type { Entity } from '../../types/entityType';
 import type { Service } from '../../types/serviceType';
@@ -12,133 +13,48 @@ import COLORS from '../routes/automation/esidomConst';
 import BlocklyObjects from '../routes/automation/blocklyObject';
 import type { ObjectBlock } from '../../types/objectsBlockType';
 
-interface BlockFactory {
-    (objectBlock: ObjectBlock): void;
-}
-
 interface Type {
-    name: string;
+    name: EntityTypeEnum;
     friendlyName: string,
-    createBlock: BlockFactory;
+    // createBlock: BlockFactory;
 }
 
 const TYPES: Type[] = [
     {
         name: 'binary_sensor',
         friendlyName: 'Capteur Binaire',
-        createBlock(objectBlock: ObjectBlock): void {
-            ((block: BlocksDefinitions) => {
-                block.binary_sensor = {
-                    init() {
-                        this.jsonInit(objectBlock);
-                    },
-                };
-            })(Blockly.Blocks as unknown as BlocksDefinitions);
-        },
     },
     {
         name: 'person',
         friendlyName: 'Personne',
-        createBlock(objectBlock: ObjectBlock): void {
-            ((block: BlocksDefinitions) => {
-                block.person = {
-                    init() {
-                        this.jsonInit(objectBlock);
-                    },
-                };
-            })(Blockly.Blocks as unknown as BlocksDefinitions);
-        },
     },
     {
         name: 'weather',
         friendlyName: 'Météo',
-        createBlock(objectBlock: ObjectBlock): void {
-            ((block: BlocksDefinitions) => {
-                block.weather = {
-                    init() {
-                        this.jsonInit(objectBlock);
-                    },
-                };
-            })(Blockly.Blocks as unknown as BlocksDefinitions);
-        },
     },
     {
         name: 'zwave',
         friendlyName: 'Zwave',
-        createBlock(objectBlock: ObjectBlock): void {
-            ((block: BlocksDefinitions) => {
-                block.zwave = {
-                    init() {
-                        this.jsonInit(objectBlock);
-                    },
-                };
-            })(Blockly.Blocks as unknown as BlocksDefinitions);
-        },
     },
     {
         name: 'sensor',
         friendlyName: 'Capteur',
-        createBlock(objectBlock: ObjectBlock): void {
-            ((block: BlocksDefinitions) => {
-                block.sensor = {
-                    init() {
-                        this.jsonInit(objectBlock);
-                    },
-                };
-            })(Blockly.Blocks as unknown as BlocksDefinitions);
-        },
     },
     {
         name: 'light',
         friendlyName: 'Lampe',
-        createBlock(objectBlock: ObjectBlock): void {
-            ((block: BlocksDefinitions) => {
-                block.light = {
-                    init() {
-                        this.jsonInit(objectBlock);
-                    },
-                };
-            })(Blockly.Blocks as unknown as BlocksDefinitions);
-        },
     },
     {
         name: 'automation',
         friendlyName: 'Routine',
-        createBlock(objectBlock: ObjectBlock): void {
-            ((block: BlocksDefinitions) => {
-                block.automation = {
-                    init() {
-                        this.jsonInit(objectBlock);
-                    },
-                };
-            })(Blockly.Blocks as unknown as BlocksDefinitions);
-        },
     },
     {
         name: 'switch',
         friendlyName: 'Interrupteur',
-        createBlock(objectBlock: ObjectBlock): void {
-            ((block: BlocksDefinitions) => {
-                block.switch = {
-                    init() {
-                        this.jsonInit(objectBlock);
-                    },
-                };
-            })(Blockly.Blocks as unknown as BlocksDefinitions);
-        },
     },
     {
         name: 'media_player',
         friendlyName: 'Lecteur multimédia',
-        createBlock(objectBlock: ObjectBlock): void {
-            ((block: BlocksDefinitions) => {
-                block.media_player = {
-                    init() {
-                        this.jsonInit(objectBlock);
-                    },
-                };
-            })(Blockly.Blocks as unknown as BlocksDefinitions);
-        },
     },
 ];
 
@@ -192,60 +108,60 @@ export default class BlocklyService {
             }
         });
 
-        ((block: BlocksDefinitions) => {
-            block.objet_action = {
-                init() {
-                    const tmpDropdown1 = entityWithServices.map((
-                        entity: EntityWithServices,
-                        index: number,
-                        array: EntityWithServices[],
-                    ) => {
-                        if (entity.name === null || entity.name === '') {
-                            entity.name = 'Nom inconnu';
-                        }
-                        return [entity.name, index.toString()];
-                    });
+        const block = Blockly.Blocks as unknown as BlocksDefinitions;
+        block.objet_action = {
+            init() {
+                const tmpDropdown1 = entityWithServices.map((
+                    entity: EntityWithServices,
+                    index: number,
+                    array: EntityWithServices[],
+                ) => {
+                    if (entity.name === null || entity.name === '') {
+                        entity.name = 'Nom inconnu';
+                    }
+                    return [entity.name, index.toString()];
+                });
 
-                    const dropdown1 = tmpDropdown1.length > 0 ? tmpDropdown1 : [['Pas de nom', 'Pas de nom']];
+                const dropdown1 = tmpDropdown1.length > 0 ? tmpDropdown1 : [['Pas de nom', 'Pas de nom']];
 
-                    const dropdown2 = entityWithServices[0]
-                        ?.services.map((service: string) => [service, service])
+                const dropdown2 = entityWithServices[0]
+                    ?.services.map((service: string) => [service, service])
                         ?? [['Action inconnue', 'Action inconnue']];
 
-                    this.appendDummyInput()
-                        .appendField('Objet : ')
-                        .appendField(new Blockly.FieldDropdown(dropdown1), 'entity');
-                    this.appendDummyInput('services')
-                        .appendField('Action :')
-                        .appendField(new Blockly.FieldDropdown(dropdown2), 'services');
-                    this.setInputsInline(false);
-                    this.setPreviousStatement(true, 'Action');
-                    this.setNextStatement(true, 'Action');
-                    this.setColour(COLORS.HUE_ORANGE);
-                    this.setTooltip('');
-                    this.setHelpUrl('');
-                },
-                onchange(ev: EnvironmentBlockly) {
-                    if (ev.name === 'entity') {
-                        const index = parseInt(ev.newValue, 10);
-                        const newDropdown = entityWithServices[index]
-                            ?.services.map((service: string) => [service, service])
+                this.appendDummyInput?.()
+                    .appendField?.('Objet : ')
+                    .appendField?.(new Blockly.FieldDropdown(dropdown1), 'entity');
+                this.appendDummyInput?.('services')
+                    .appendField?.('Action :')
+                    .appendField?.(new Blockly.FieldDropdown(dropdown2), 'services');
+                this.setInputsInline?.(false);
+                this.setPreviousStatement?.(true, 'Action');
+                this.setNextStatement?.(true, 'Action');
+                this.setColour?.(COLORS.HUE_ORANGE);
+                this.setTooltip?.('');
+                this.setHelpUrl?.('');
+            },
+            onchange(ev: EnvironmentBlockly) {
+                if (ev.name === 'entity') {
+                    const index = parseInt(ev.newValue, 10);
+                    const newDropdown = entityWithServices[index]
+                        ?.services.map((service: string) => [service, service])
                             ?? [['Action inconnu', 'Action inconnu']];
 
-                        this.removeInput('services');
-                        this.appendDummyInput('services')
-                            .appendField('Action :')
-                            .appendField(
-                                new Blockly.FieldDropdown(newDropdown),
-                                'service',
-                            );
-                    }
-                },
-            };
-        })(Blockly.Blocks as unknown as BlocksDefinitions);
+                    this.removeInput?.('services');
+                    this.appendDummyInput?.('services')
+                        .appendField?.('Action :')
+                        .appendField?.(
+                            new Blockly.FieldDropdown(newDropdown),
+                            'service',
+                        );
+                }
+            },
+        };
     }
 
     static createObjects(entities: Entity[]): void {
+        const block = Blockly.Blocks as unknown as BlocksDefinitions;
         TYPES.forEach((type: Type) => {
             const typeName = type.name;
             const options: string[][] = entities
@@ -260,8 +176,14 @@ export default class BlocklyService {
             );
 
             blocklyObjects.addOptions(options);
-            const objectBlock = blocklyObjects.getJson();
-            type.createBlock(objectBlock);
+            const objectBlock: ObjectBlock = blocklyObjects.getJson();
+
+            // Create "objects" Block
+            block[type.name] = {
+                init() {
+                    this.jsonInit?.(objectBlock);
+                },
+            };
         });
     }
 }

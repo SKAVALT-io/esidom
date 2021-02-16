@@ -48,10 +48,15 @@ interface BlocklyJSON {
     to?: string;
     state?: string;
     rgb_color?: string;
-    dropdown_mode?: string;
+    mode?: string;
 }
 
-export interface BlocksGenerator {
+export type EntityTypeEnum = 'binary_sensor' | 'person' | 'weather' | 'zwave' | 'sensor' | 'light' | 'automation' | 'switch' | 'media_player';
+const types: EntityTypeEnum[] = ['binary_sensor', 'person', 'weather', 'zwave', 'sensor', 'light', 'automation', 'switch', 'media_player'];
+
+export type BlocksGenerator = {
+    [key in EntityTypeEnum]: (a: Block, code: string, opt_thisOnly: string) => void;
+} & {
     esidom_automation: (blk: Block) => void;
     binary_trigger: (blk: Block) => void;
     time: (blk: Block) => void;
@@ -63,20 +68,15 @@ export interface BlocksGenerator {
     action: (blk: Block) => void;
     color_picker: (blk: Block) => void;
     color_rgb: (blk: Block) => void;
-    binary_sensor: (blk: Block) => void;
-    person: (blk: Block) => void;
-    weather: (blk: Block) => void;
-    zwave: (blk: Block) => void;
-    sensor: (blk: Block) => void;
-    light: (blk: Block) => void;
-    automation: (blk: Block) => void;
-    switch: (blk: Block) => void;
-    media_player: (blk: Block) => void;
-    scrub: (blk: Block, code: string, opt_thisOnly: string) => void
-    jsonInit:(a: Block)=> void;
-}
+    scrub: (blk: Block, code: string, opt_thisOnly: string) => void;
+    jsonInit: (a: Block) => void;
+};
 
 ((block: BlocksGenerator) => {
+    types.forEach((t: EntityTypeEnum) => {
+        block[t] = (blk: Block) => [getDropdownChoice(blk), PRECEDENCE];
+    });
+
     block.esidom_automation = (blk: Block) => {
         const statements_trigger: string = esidomGenerator.statementToCode(blk, 'Trigger');
         const statements_condition: string = esidomGenerator.statementToCode(blk, 'Condition');
@@ -100,12 +100,12 @@ export interface BlocksGenerator {
             json.action = JSON.parse(actions);
         }
 
-        // json.dropdown_mode = dropdown_mode;
+        // json.mode = dropdown_mode;
         /*
          * Choose to keep the default value 'single' because the user may
          * not need the others options
          */
-        json.dropdown_mode = 'single';
+        json.mode = 'single';
 
         return JSON.stringify(json);
     };
@@ -237,24 +237,6 @@ export interface BlocksGenerator {
 
         return JSON.stringify(json);
     };
-
-    block.binary_sensor = (blk: Block) => [getDropdownChoice(blk), PRECEDENCE];
-
-    block.person = (blk: Block) => [getDropdownChoice(blk), PRECEDENCE];
-
-    block.weather = (blk: Block) => [getDropdownChoice(blk), PRECEDENCE];
-
-    block.zwave = (blk: Block) => [getDropdownChoice(blk), PRECEDENCE];
-
-    block.sensor = (blk: Block) => [getDropdownChoice(blk), PRECEDENCE];
-
-    block.light = (blk: Block) => [getDropdownChoice(blk), PRECEDENCE];
-
-    block.automation = (blk: Block) => [getDropdownChoice(blk), PRECEDENCE];
-
-    block.switch = (blk: Block) => [getDropdownChoice(blk), PRECEDENCE];
-
-    block.media_player = (blk: Block) => [getDropdownChoice(blk), PRECEDENCE];
 
     // Scrub for combining two same blks
     block.scrub = (blk, code, opt_thisOnly) => {
