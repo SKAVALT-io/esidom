@@ -15,7 +15,7 @@ export interface BlocksDefinitions {
     action: any;
     color_picker: any;
     color_rgb: any;
-    objet_action: any;
+    object_action: any;
     jsonInit:(a: any)=> void;
 }
 
