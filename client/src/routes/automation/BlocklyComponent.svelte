@@ -1,10 +1,12 @@
 <script lang="ts">
     // Execute blocks definition
-    import './esidom_blocks';
+    import './esidomBlocks';
     import { onMount } from 'svelte';
     import Blockly from 'blockly';
     import type { BlocklyOptions } from 'blockly';
     import BlocklyService from '../../services/blocklyService';
+    import { tr } from '../../utils/i18nHelper';
+    import BorderedButton from '../../components/UI/buttons/BorderedButton.svelte';
 
     let blocklyService: BlocklyService;
     let entityPromise: Promise<void>;
@@ -50,26 +52,29 @@
         );
 
         const rootBlock: string =
-            '<xml><block type="automation" deletable="false" movable="false"></block></xml>';
+            '<xml><block type="esidom_automation" deletable="false" movable="false"></block></xml>';
         Blockly.Xml.domToWorkspace(Blockly.Xml.textToDom(rootBlock), workspace);
 
         blocklyService = new BlocklyService(toolbox, workspace);
 
-        entityPromise = BlocklyService.createEntities();
+        entityPromise = BlocklyService.initBlockly();
     });
 </script>
 
 <div>
     {#await entityPromise}
-        <p>Chargement de blockly ...</p>
+        <p>{tr('blockly.loading')}</p>
         <div id="blocklyDivHide" />
     {:then}
-        <p>
-            <button on:click={blocklyService.convertToBlock()}>Convert the
-                blocks !</button>
+        <p class="py-4">
+            <BorderedButton
+                on:click={() => blocklyService.convertToBlock()}
+                text={tr('blockly.convertBlock')}
+            />
         </p>
-    {:catch error}
-        <p style="color: red">{error.message}</p>
+    {:catch}
+        <p style="color: red">{tr('blockly.loadingError')}</p>
+        <div id="blocklyDivHide" />
     {/await}
     <div id="blocklyDiv" />
     <xml id="toolbox" style="display: none">
@@ -84,7 +89,7 @@
         width: 100%;
         text-align: left;
         background-color: #120639;
-        z-index: 100;
+        z-index: 90;
     }
 
     #blocklyDiv {
