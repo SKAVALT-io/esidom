@@ -39,26 +39,28 @@
     socketManager.connect();
 </script>
 
-<div id="row1">
-    <div class="header">
-        <Navbar
-            on:press={() => {
-                open = !open;
-            }}
-        />
+<main>
+    <div id="row1">
+        <div class="header">
+            <Navbar
+                on:press={() => {
+                    open = !open;
+                }}
+            />
+        </div>
     </div>
-</div>
-<div
-    id="row2"
-    class="flex flex-row space-x-4 sm:space-x-20 overflow-y-scroll h-screen"
->
-    <div class="sidenav fixed z-100">
-        <Sidebar bind:open />
+    <div
+        id="row2"
+        class="flex flex-row space-x-4 sm:space-x-20 overflow-y-scroll h-screen"
+    >
+        <div class="sidenav fixed z-100">
+            <Sidebar bind:open />
+        </div>
+        <div class="main-content mt-6 z-10">
+            <Router {routes} />
+        </div>
     </div>
-    <main class="main-content mt-6 z-10">
-        <Router {routes} />
-    </main>
-</div>
+</main>
 
 <style lang="scss">
     :global(body) {
