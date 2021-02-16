@@ -24,11 +24,11 @@
     }
 
     input[type='checkbox']:checked ~ .thumb {
-        @apply transform translate-x-full border-green-500;
+        @apply transform translate-x-full border-blue-500;
     }
 
     input[type='checkbox']:checked ~ .track {
-        @apply transform transition-colors bg-green-500;
+        @apply transform transition-colors bg-blue-500;
     }
 
     input[type='checkbox']:disabled ~ .track {
