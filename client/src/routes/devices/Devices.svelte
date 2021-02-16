@@ -53,7 +53,7 @@
     </div> -->
 
     <!-- The + button to add device -->
-    <div class="absolute bottom-0 right-0 h-16 w-16">
+    <div class="fixed bottom-0 right-0 h-16 w-16">
         <RoundedButton
             on:click={() => {
                 isPairDeviceOpen = true;

@@ -5,11 +5,21 @@ import { Group } from '../types/group';
 import { HaGroupSet } from '../types/haTypes';
 import entityService from './entityService';
 import { Entity } from '../types/entity';
+import socketForwarder from '../forwarders/socketForwarder';
+import { EventObserver } from '../types/observer';
 
 const NameGroupTable = 'HAGroup';
 const NameInsideGroupTable = 'InsideGroup';
 
-class GroupService {
+class GroupService implements EventObserver {
+
+    constructor() {
+        socketForwarder.registerObserver(this);
+    }
+
+    onAuthOk() {
+        this.initGroupHa();
+    }
 
     async initGroupHa() {
         // Get all group
