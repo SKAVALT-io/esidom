@@ -16,7 +16,6 @@ import type { ObjectBlock } from '../../types/objectsBlockType';
 interface Type {
     name: EntityTypeEnum;
     friendlyName: string,
-    // createBlock: BlockFactory;
 }
 
 const TYPES: Type[] = [
@@ -68,13 +67,13 @@ export default class BlocklyService {
         this.workspace = workspace;
     }
 
-    convertToBlock(): void {
+    convertToBlock(alias = 'test', description = 'test description'): void {
         const code = esidomGenerator.workspaceToCode(this.workspace);
 
         try {
             const json = JSON.parse(code);
-            json.alias = 'test 3';
-            json.description = 'test description';
+            json.alias = alias;
+            json.description = description;
 
             // TODO: send the json to HA
             console.log(JSON.stringify(json));
@@ -114,7 +113,6 @@ export default class BlocklyService {
                 const tmpDropdown1 = entityWithServices.map((
                     entity: EntityWithServices,
                     index: number,
-                    array: EntityWithServices[],
                 ) => {
                     if (entity.name === null || entity.name === '') {
                         entity.name = 'Nom inconnu';

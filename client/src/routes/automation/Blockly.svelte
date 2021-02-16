@@ -16,9 +16,7 @@
             <block type="time_condition_week" />
         </category>
         <category name="Actions" colour={COLORS.HUE_ORANGE}>
-            <category name="Services" colour={COLORS.HUE_ORANGE}>
-                <block type="objet_action" />
-            </category>
+            <block type="object_action" />
         </category>
         <category name="Objets" colour={COLORS.HUE_RED}>
             <block type="binary_sensor" />
