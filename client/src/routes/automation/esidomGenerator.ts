@@ -28,6 +28,11 @@ function getWeekday(blk: Block): string[] {
     return weekday;
 }
 
+function getDropdownChoice(blk: Block): string {
+    const dropdownChoice = blk.getFieldValue('object');
+    return dropdownChoice;
+}
+
 interface BlocklyJSON {
     trigger?: string;
     condition?: string;
@@ -44,11 +49,15 @@ interface BlocklyJSON {
     to?: string;
     state?: string;
     rgb_color?: string;
-    dropdown_mode?: string;
 }
 
-interface BlocksGenerator {
-    automation: (blk: Block) => void;
+export type EntityTypeEnum = 'binary_sensor' | 'person' | 'weather' | 'zwave' | 'sensor' | 'light' | 'automation' | 'switch' | 'media_player';
+const types: EntityTypeEnum[] = ['binary_sensor', 'person', 'weather', 'zwave', 'sensor', 'light', 'automation', 'switch', 'media_player'];
+
+export type BlocksGenerator = {
+    [key in EntityTypeEnum]: (a: Block, code: string, opt_thisOnly: string) => void;
+} & {
+    esidom_automation: (blk: Block) => void;
     binary_trigger: (blk: Block) => void;
     time: (blk: Block) => void;
     time_condition: (blk: Block) => void;
@@ -65,7 +74,11 @@ interface BlocksGenerator {
 }
 
 ((block: BlocksGenerator) => {
-    block.automation = (blk: Block) => {
+    types.forEach((t: EntityTypeEnum) => {
+        block[t] = (blk: Block) => [getDropdownChoice(blk), PRECEDENCE];
+    });
+
+    block.esidom_automation = (blk: Block) => {
         const statements_trigger: string = esidomGenerator.statementToCode(blk, 'Trigger');
         const statements_condition: string = esidomGenerator.statementToCode(blk, 'Condition');
         const statements_action: string = esidomGenerator.statementToCode(blk, 'Action');
@@ -87,11 +100,12 @@ interface BlocksGenerator {
             json.action = JSON.parse(actions);
         }
 
+        // json.mode = dropdown_mode;
         /*
          * Choose to keep the default value 'single' because the user may
          * not need the others options
          */
-        json.dropdown_mode = 'single';
+        json.mode = 'single';
 
         return JSON.stringify(json);
     };

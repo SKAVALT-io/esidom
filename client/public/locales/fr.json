@@ -7,12 +7,17 @@
     "realizedBy": "Fait par {0}"
   },
   "menu": {
-      "devices": "appareils",
-      "home": "home",
-      "blockly": "blockly"
+    "devices": "appareils",
+    "home": "home",
+    "blockly": "blockly"
   },
   "devices": {
-      "lights": "lampes",
-      "sensors": "capteurs"
+    "lights": "lampes",
+    "sensors": "capteurs"
+  },
+  "blockly": {
+    "loading": "Chargement de Blockly...",
+    "loadingError": "Erreur : Blockly n'a pas pu charger à cause d'un problème avec le serveur.",
+    "convertBlock": "Enregistrer la routine !"
   }
 }
