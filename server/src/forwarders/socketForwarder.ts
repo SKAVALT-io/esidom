@@ -3,7 +3,7 @@ import WebSocket from 'ws';
 import { HaEntityUpdated } from '../types/haTypes';
 import App from '../app';
 import config from '../config/config';
-import { Entity } from '../types/entity';
+import { EventObserver, Event } from '../types/observer';
 
 type HaSocket = {
     type: string,
@@ -17,9 +17,6 @@ type HaSocket = {
     }
 }
 
-// eslint-disable-next-line no-unused-vars
-type Handler = (a: HaEntityUpdated) => Promise<Entity>;
-
 class SocketForwarder {
 
     // eslint-disable-next-line no-unused-vars
@@ -28,25 +25,63 @@ class SocketForwarder {
     // eslint-disable-next-line no-unused-vars
     private errorsMap: Map<number, (body: any) => void>;
 
-    // eslint-disable-next-line no-unused-vars
-    private eventsCallback: Map<string, Handler>;
-
     private socket: WebSocket | null;
 
     private uid: number;
 
     private io: socketIo.Server;
 
+    private observers: EventObserver[];
+
     constructor() {
         this.socketsMap = new Map();
         this.errorsMap = new Map();
-        this.eventsCallback = new Map();
         this.socket = null;
         this.uid = 2;
+        this.observers = [];
         this.io = new socketIo.Server(App.http, {
             cors: {
                 origin: '*',
             },
+        });
+    }
+
+    registerObserver(observer: EventObserver) {
+        this.observers.push(observer);
+    }
+
+    notifyObservers(event: Event, data?: HaEntityUpdated) {
+        this.observers.forEach((observer: EventObserver) => {
+            switch (event) {
+            case 'authOk':
+                if (observer.onAuthOk) {
+                    observer.onAuthOk();
+                }
+                break;
+            case 'entityUpdated':
+                if (observer.onEntityUpdated && data) {
+                    observer.onEntityUpdated(data);
+                }
+                break;
+            case 'automationUpdated':
+                if (observer.onAutomationUpdated && data) {
+                    observer.onAutomationUpdated(data);
+                }
+                break;
+            case 'deviceRegistryUpdated':
+                if (observer.onDeviceRegistryUpdated) {
+                    observer.onDeviceRegistryUpdated();
+                }
+                break;
+            case 'entityRegistryUpdated':
+                if (observer.onEntityRegistryUpdated) {
+                    observer.onEntityRegistryUpdated();
+                }
+                break;
+            default:
+                console.log(`No such event ${event}`);
+                break;
+            }
         });
     }
 
@@ -70,6 +105,7 @@ class SocketForwarder {
                     break;
                 case 'auth_ok':
                     console.log('Authorized');
+                    this.notifyObservers('authOk');
                     break;
                 case 'event':
                     this.handleSocketEvent(data);
@@ -135,13 +171,10 @@ class SocketForwarder {
         }
         if (eventType === 'state_changed') {
             const ent: HaEntityUpdated = data?.event?.data;
-            const callback = this.eventsCallback.get(eventType);
-            if (callback) {
-                callback(ent)
-                    .then((res) => {
-                        this.io.emit('entity_updated', res);
-                    })
-                    .catch((err) => console.log(err.message));
+            if (ent.entity_id.split('.')[0] === 'automation') {
+                this.notifyObservers('automationUpdated', ent);
+            } else {
+                this.notifyObservers('entityUpdated', ent);
             }
         }
     }
@@ -162,8 +195,8 @@ class SocketForwarder {
         return res;
     }
 
-    registerEventCallback(event: string, fn: Handler) {
-        this.eventsCallback.set(event, fn);
+    emitSocket<T>(event: string, data: T): void {
+        this.io.emit(event, data);
     }
 
 }
