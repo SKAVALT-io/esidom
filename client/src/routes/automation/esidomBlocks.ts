@@ -35,7 +35,7 @@ export type BlocksDefinitions = {
     action: BlockFunctions;
     color_picker: BlockFunctions;
     color_rgb: BlockFunctions;
-    objet_action: BlockFunctions;
+    object_action: BlockFunctions;
 }
 
 /**

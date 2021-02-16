@@ -78,7 +78,7 @@ export default class BlocklyService {
             // TODO: send the json to HA
             console.log(JSON.stringify(json));
         } catch (e) {
-            alert(e);
+            console.log(e);
         }
     }
 
@@ -108,7 +108,7 @@ export default class BlocklyService {
         });
 
         const block = Blockly.Blocks as unknown as BlocksDefinitions;
-        block.objet_action = {
+        block.object_action = {
             init() {
                 const tmpDropdown1 = entityWithServices.map((
                     entity: EntityWithServices,
