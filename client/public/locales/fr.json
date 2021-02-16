@@ -7,13 +7,13 @@
     "realizedBy": "Fait par {0}"
   },
   "menu": {
-    "devices": "Appareils",
-    "home": "Home",
-    "blockly": "Blockly"
+    "devices": "appareils",
+    "home": "acceuil",
+    "blockly": "blockly"
   },
   "devices": {
-    "lights": "Lampes",
-    "sensors": "Capteurs"
+    "lights": "lampes",
+    "sensors": "capteurs"
   },
   "blockly": {
     "loading": "Chargement de Blockly...",
