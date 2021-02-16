@@ -86,7 +86,9 @@ export default class BlocklyService {
         const entities = await EntityService.getEntities();
         const services = await EntityService.getServices();
 
+        // We create the object_action Block
         this.createEntities(entities, services);
+        // We create all the object Blocks
         this.createObjects(entities);
     }
 
@@ -108,6 +110,7 @@ export default class BlocklyService {
         });
 
         const block = Blockly.Blocks as unknown as BlocksDefinitions;
+        // Create object_action Block
         block.object_action = {
             init() {
                 const tmpDropdown1 = entityWithServices.map((
@@ -176,7 +179,7 @@ export default class BlocklyService {
             blocklyObjects.addOptions(options);
             const objectBlock: ObjectBlock = blocklyObjects.getJson();
 
-            // Create "objects" Block
+            // Create object Block
             block[type.name] = {
                 init() {
                     this.jsonInit?.(objectBlock);
