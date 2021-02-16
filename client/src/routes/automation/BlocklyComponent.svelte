@@ -94,8 +94,8 @@
 
     #blocklyDiv {
         position: absolute;
-        height: 700px;
-        width: 100%;
+        height: 600px;
+        width: 90%;
         text-align: left;
     }
 </style>

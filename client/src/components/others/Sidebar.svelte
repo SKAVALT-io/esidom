@@ -1,150 +1,154 @@
 <script lang="ts">
     import * as SPA from 'svelte-spa-router';
     import { tr } from '../../utils/i18nHelper';
+
     export let open = false;
-
     let currentPageSelected = '';
-    // $: currentPageSelected = (() => {
-    //     const b = window.location.hash.split('/');
-    //     console.log(b);
-    //     return b[1];
-    // })();
-
     const pageLinkClicked = (currentPage: string) => {
         currentPageSelected = currentPage;
         open = false;
     };
-
-    // onMount(() => {
-    //     window.onhashchange = () => {
-    //         [, currentPageSelected] = window.location.hash.split('/');
-    //     };
-    // });
 </script>
 
-<!-- TODO Change this -->
-<link
-    rel="stylesheet"
-    type="text/css"
-    href="https://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css"
-/>
-
 <nav
-    class="main-menu bg-gray-900 absolute sm:relative w-full h-screen z-100 transition overflow-hidden"
+    class="navbar relative w-16 h-screen border-r-2 shadow-lg bg-gray-900"
     class:open
 >
-    <div class="navigation absolute -top-0 -left-0 w-full">
-        <a
-            class="home-link"
-            href="/"
-            use:SPA.link
-            on:click={() => {
-                pageLinkClicked('home');
-            }}
-            class:selected={currentPageSelected === 'home' || currentPageSelected === ''}
-        >
-            <span class="icon"><i class="fa fa-home" /></span>
-            <span class="title">{tr('menu.home')}</span>
-        </a>
-        <a
-            class="devices-link"
-            href="/devices"
-            use:SPA.link
-            on:click={() => {
-                pageLinkClicked('devices');
-            }}
-            class:selected={currentPageSelected === 'devices'}
-        >
-            <span class="icon"><i class="fa fa-user" /></span>
-            <span class="title">{tr('menu.devices')}</span>
-        </a>
-        <a
-            href="/"
-            use:SPA.link
-            on:click={() => {
-                pageLinkClicked('todo');
-            }}
-            class:selected={currentPageSelected === 'todo'}
-        >
-            <span class="icon"><i class="fa fa-envelope-o" /></span>
-            <span class="title">{tr('menu.todo')}</span>
-        </a>
-        <a
-            href="/blockly"
-            use:SPA.link
-            on:click={() => {
-                pageLinkClicked('blockly');
-            }}
-            class:selected={currentPageSelected === 'blockly'}
-        >
-            <span class="icon"><i class="fa fa-cogs" /></span>
-            <span class="title">{tr('menu.blockly')}</span>
-        </a>
-    </div>
+    <ul class="navbar-nav list-none p-0 m-0 flex flex-col items-center">
+        <li class="nav_item">
+            <a
+                class="nav-link"
+                href="/"
+                use:SPA.link
+                on:click={() => {
+                    pageLinkClicked('home');
+                }}
+                class:selected={currentPageSelected === 'home' || currentPageSelected === ''}
+            >
+                <img
+                    class="link-svg"
+                    src="icons/sidebar/home.svg"
+                    alt={tr('menu.home')}
+                />
+                <span class="link-text">{tr('menu.home')}</span>
+            </a>
+        </li>
+        <li class="nav_item">
+            <a
+                href="/devices"
+                class="nav-link"
+                use:SPA.link
+                on:click={() => {
+                    pageLinkClicked('devices');
+                }}
+                class:selected={currentPageSelected === 'devices'}
+            >
+                <img
+                    class="link-svg"
+                    src="icons/sidebar/devices.svg"
+                    alt={tr('menu.devices')}
+                />
+                <span class="link-text">{tr('menu.devices')}</span>
+            </a>
+        </li>
+        <li class="nav_item">
+            <a
+                href="/blockly"
+                class="nav-link"
+                use:SPA.link
+                on:click={() => {
+                    pageLinkClicked('blockly');
+                }}
+                class:selected={currentPageSelected === 'blockly'}
+            >
+                <img
+                    class="link-svg"
+                    src="icons/sidebar/blockly.svg"
+                    alt={tr('menu.blockly')}
+                />
+                <span class="link-text">{tr('menu.blockly')}</span>
+            </a>
+        </li>
+    </ul>
 </nav>
 
 <style>
-    .main-menu,
-    .open:active {
-        transition: 0.3s;
-    }
-
-    .main-menu:hover,
-    .open {
-        width: 300px;
-    }
-
-    a {
-        position: relative;
-        display: flex;
-        width: 100%;
-        text-decoration: none;
-        color: white;
-    }
-
-    .icon {
-        position: relative;
-        display: block;
-        min-width: 60px;
-        height: 60px;
-        line-height: 60px;
-        text-align: center;
-    }
-
-    .fa {
-        font-size: 24px;
-    }
-
-    .title {
-        position: relative;
-        display: block;
-        padding: 0 10px;
-        height: 60px;
-        line-height: 60px;
-        text-align: start;
-        white-space: nowrap;
-        text-transform: uppercase;
-    }
-
-    a:hover,
     a.selected {
         color: white;
         background-color: #505050;
     }
 
-    /* Change this by tailwind components (media max-width doesn't exist in tailwind, find another way)*/
-    @media (max-width: 640px) {
-        .main-menu {
-            left: -70px;
-        }
+    /*nav*/
+    .navbar {
+        transition: width 500ms ease-in-out;
+        width: 0px;
+    }
 
-        .main-menu:hover {
-            width: 100%;
-        }
+    .open {
+        @apply w-screen;
+    }
 
+    .open .link-svg,
+    .open .link-text {
+        @apply opacity-100;
+    }
+
+    /*li*/
+    .nav_item {
+        @apply w-full;
+    }
+
+    /* a */
+    .nav-link {
+        @apply flex items-center h-12 no-underline duration-300;
+    }
+
+    .nav-link {
+        filter: grayscale(100%) opacity(0.8);
+    }
+
+    .nav-link:hover {
+        filter: grayscale(0%) opacity(1);
+        color: white;
+        background-color: #505050;
+    }
+
+    /* span */
+    .link-text {
+        @apply ml-4 text-sm;
+    }
+
+    .link-text,
+    .link-svg {
+        transition: opacity 600ms ease;
+        opacity: 0;
+    }
+
+    /* span */
+    .link-svg {
+        width: 1.4rem;
+        margin: 0 0.7rem;
+    }
+
+    /* Large screens */
+    @media only screen and (min-width: 640px) {
+        .navbar,
         .open {
-            left: 0px;
-            width: 100%;
+            @apply top-0 w-12 h-screen block;
+        }
+
+        .navbar:hover,
+        .open {
+            @apply w-36;
+        }
+
+        .link-svg {
+            @apply opacity-100;
+        }
+
+        .navbar:hover .link-text,
+        .open .link-text {
+            @apply opacity-100;
         }
     }
 </style>

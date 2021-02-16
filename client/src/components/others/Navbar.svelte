@@ -2,20 +2,20 @@
     import { createEventDispatcher } from 'svelte';
 
     import AccountSVG from '../svg_icons/AccountSVG.svelte';
-    import HamburgerSVG from '../svg_icons/HamburgerSVG.svelte';
 
     const dispatch = createEventDispatcher();
 </script>
 
 <nav
-    class="top-navbar flex-wrap flex w-full items-center justify-between px-3.5 h-full bg-gray-900 text-white border-b border-gray-100 z-10"
+    class="top-navbar flex flex-wrap w-full items-center justify-between px-2 h-full bg-gray-900 text-white border-b border-gray-100 z-10"
 >
-    <div class="hamburger flex items-center">
-        <button
-            class="hamburger mr-2 text-gray-400 hover:text-white"
-            on:click={() => dispatch('press')}
-        >
-            <HamburgerSVG />
+    <div class="flex items-center">
+        <button class="mr-2" on:click={() => dispatch('press')}>
+            <img
+                class="link-svg opacity-80 hover:opacity-100"
+                src="icons/navbar/hamburger_menu.svg"
+                alt="hamburger_menu"
+            />
         </button>
         <img src="logo-esidom.png" alt="ESIDOM" class="logo h-auto w-12" />
     </div>
