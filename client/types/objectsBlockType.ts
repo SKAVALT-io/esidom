@@ -1,4 +1,8 @@
-import type { ArgumentObject } from './argumentObjectsType';
+export interface ArgumentObject {
+    type: string;
+    name: string;
+    options: string[][];
+}
 
 export interface ObjectBlock {
     type: string;

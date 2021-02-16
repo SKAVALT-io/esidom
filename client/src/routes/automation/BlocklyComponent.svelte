@@ -5,6 +5,7 @@
     import Blockly from 'blockly';
     import type { BlocklyOptions } from 'blockly';
     import BlocklyService from '../../services/blocklyService';
+    import { tr } from '../../utils/i18nHelper';
 
     let blocklyService: BlocklyService;
     let entityPromise: Promise<void>;
@@ -61,7 +62,7 @@
 
 <div>
     {#await entityPromise}
-        <p>Chargement de Blockly ...</p>
+        <p>{tr('blockly.loading')}</p>
         <div id="blocklyDivHide" />
     {:then}
         <p>
@@ -69,10 +70,7 @@
                 blocks !</button>
         </p>
     {:catch}
-        <p style="color: red">
-            Erreur : Blockly n'a pas pu charger à cause d'un problème avec le
-            serveur.
-        </p>
+        <p style="color: red">{tr('blockly.loadingError')}</p>
         <div id="blocklyDivHide" />
     {/await}
     <div id="blocklyDiv" />
