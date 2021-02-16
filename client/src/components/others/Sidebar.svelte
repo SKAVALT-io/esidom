@@ -3,6 +3,8 @@
     import * as SPA from 'svelte-spa-router';
     import { tr } from '../../utils/i18nHelper';
     import HomeSvg from '../svg_icons/HomeSVG.svelte';
+    import BlocklySvg from '../svg_icons/BlocklySVG.svelte';
+    import DeviceSvg from '../svg_icons/DeviceSVG.svelte';
 
     export let open = false;
     let currentPageSelected = '';
@@ -41,7 +43,7 @@
                 }}
                 class:selected={currentPageSelected === 'devices'}
             >
-                <span class="link-svg"><HamburgerSvg size={6} /></span>
+                <span class="link-svg"><DeviceSvg size={6} /></span>
                 <span class="link-text">{tr('menu.devices')}</span>
             </a>
         </li>
@@ -69,7 +71,7 @@
                 }}
                 class:selected={currentPageSelected === 'blockly'}
             >
-                <span class="link-svg"><HamburgerSvg size={6} /></span>
+                <span class="link-svg"><BlocklySvg size={6} /></span>
                 <span class="link-text">{tr('menu.blockly')}</span>
             </a>
         </li>
