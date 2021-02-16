@@ -1,5 +1,9 @@
+<script>
+    export let size = 8;
+</script>
+
 <svg
-    class="hamburger w-8 h-8"
+    class="{`w-${size}`} {`h-${size}`}"
     viewBox="0 0 24 24"
     fill="none"
     stroke="currentColor"

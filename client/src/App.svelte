@@ -17,39 +17,61 @@
         '*': Home,
     };
 
+    /* Open/Close sidebar from navbar */
     let open = false;
 
     // Initiate the socket
     socketManager.connect();
 </script>
 
-<main>
-    <div class="grid grid-cols-20 grid-rows-12 h-screen">
-        <div class="row-span-1 col-span-full" id="non">
-            <Navbar on:press={() => (open = !open)} />
-        </div>
-        <div class="row-start-2 row-span-full col-span-1" id="oui">
-            <Sidebar bind:open />
-        </div>
-        <div
-            class="row-start-2 row-span-full col-start-2 col-span-full"
-            id="rest"
-        >
-            <Router {routes} />
-        </div>
+<div id="row1">
+    <div class="header">
+        <Navbar
+            on:press={() => {
+                open = !open;
+            }}
+        />
     </div>
-</main>
+</div>
+<div
+    id="row2"
+    class="flex flex-row space-x-4 sm:space-x-20 overflow-y-scroll h-screen"
+>
+    <div class="sidenav fixed">
+        <Sidebar bind:open />
+    </div>
+    <main class="main-content mt-6">
+        <Router {routes} />
+    </main>
+</div>
 
 <style lang="scss">
-    div > div {
-        border: 1px solid rgb(219, 226, 188);
-    }
-
     :global(body) {
         margin: 0;
         font-family: Arial, Helvetica, sans-serif;
         background-color: #120639;
         color: white;
-        // overflow: hidden;
+        overflow: hidden;
+    }
+
+    /* -------- SCROLLBAR -------- */
+
+    /*Firefox*/
+    #row2 {
+        scrollbar-color: #c2d2e4 #4c4c4e;
+        scrollbar-width: thin;
+    }
+
+    /* Chrome */
+    #row2::-webkit-scrollbar {
+        width: 0.25rem;
+    }
+
+    #row2::-webkit-scrollbar-track {
+        background: #4c4c4e;
+    }
+
+    #row2::-webkit-scrollbar-thumb {
+        background: #c2d2e4;
     }
 </style>
