@@ -170,7 +170,7 @@ export default class BlocklyService {
                 typeName,
                 typeName.charAt(0).toUpperCase() + typeName.slice(1),
                 type.friendlyName,
-                0,
+                parseInt(COLORS.HUE_RED, 10),
             );
 
             blocklyObjects.addOptions(options);
