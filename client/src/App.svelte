@@ -1,9 +1,7 @@
 <script lang="ts">
     import Router from 'svelte-spa-router';
 
-    import {
-        addMessages, init, getLocaleFromNavigator, _,
-} from 'svelte-i18n';
+    import { addMessages, init, getLocaleFromNavigator, _ } from 'svelte-i18n';
 
     import fr from 'locales/fr.json';
     import en from 'locales/en.json';
@@ -54,10 +52,10 @@
     id="row2"
     class="flex flex-row space-x-4 sm:space-x-20 overflow-y-scroll h-screen"
 >
-    <div class="sidenav fixed">
+    <div class="sidenav fixed z-100">
         <Sidebar bind:open />
     </div>
-    <main class="main-content mt-6">
+    <main class="main-content mt-6 z-10">
         <Router {routes} />
     </main>
 </div>

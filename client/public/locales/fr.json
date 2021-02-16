@@ -7,12 +7,12 @@
     "realizedBy": "Fait par {0}"
   },
   "menu": {
-      "devices": "appareils",
-      "home": "home",
+      "devices": "Appareils",
+      "home": "Home",
       "blockly": "blockly"
   },
   "devices": {
-      "lights": "lampes",
-      "sensors": "capteurs"
+      "lights": "Lampes",
+      "sensors": "Capteurs"
   }
 }

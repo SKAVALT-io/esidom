@@ -9,8 +9,6 @@
         currentPageSelected = currentPage;
         open = false;
     };
-
-    $: console.log('Open : ' + open);
 </script>
 
 <nav

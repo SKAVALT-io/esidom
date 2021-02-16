@@ -3,7 +3,7 @@
     import COLORS from './esidom_const';
 </script>
 
-<div id="test">
+<div>
     <BlocklyComponent>
         <category name="Déclencheurs" colour={COLORS.HUE_GREEN}>
             <block type="binary_trigger" />
@@ -29,11 +29,4 @@
 </div>
 
 <style>
-    #cool {
-        margin: 0 20%;
-    }
-
-    #test {
-        margin-left: 4%;
-    }
 </style>
