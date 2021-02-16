@@ -4,11 +4,11 @@ import httpForwarder from '../forwarders/httpForwarder';
 import { Group } from '../types/group';
 import { HaGroupSet, HaStateResponse } from '../types/haTypes';
 import entityService from './entityService';
+import roomService from './roomService';
 import { Entity } from '../types/entity';
 import socketForwarder from '../forwarders/socketForwarder';
 import { EventObserver } from '../types/observer';
 import deviceService from './deviceService';
-import roomService from './roomService';
 import { Room } from '../types/room';
 import { Device } from '../types/device';
 
@@ -28,7 +28,6 @@ class GroupService implements EventObserver {
 
     async initGroupHa() {
         await this.loadGroupFromDb();
-        await (new Promise((resolve) => setTimeout(resolve, 1000)));
         await this.generateImplicitGroup();
     }
 
@@ -131,7 +130,6 @@ class GroupService implements EventObserver {
     async generateImplicitGroup() {
         // Generate implicit group per room
         const rooms = await roomService.getRooms();
-        // eslint-disable-next-line max-len
         await Promise.all(rooms.map((r: Room) => this.generateImplicitGroupForOneRoom(r)));
         // Generate implicit group for from all devices
         const devices: Device[] = await deviceService.getDevices();
@@ -191,9 +189,6 @@ class GroupService implements EventObserver {
         if (!e.attributes.entity_id) {
             throw new Error('Cant convert entity to group');
         }
-        console.log('### Debut ####');
-        console.log(e);
-        console.log('### Fin ####');
         const entities: Entity[] = await Promise.all(
             e.attributes.entity_id.map((entityId: string) => entityService.getEntityById(entityId)),
         );
