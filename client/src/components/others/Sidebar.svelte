@@ -2,6 +2,7 @@
     import HamburgerSvg from '../svg_icons/HamburgerSVG.svelte';
     import * as SPA from 'svelte-spa-router';
     import { tr } from '../../utils/i18nHelper';
+    import HomeSvg from '../svg_icons/HomeSVG.svelte';
 
     export let open = false;
     let currentPageSelected = '';
@@ -26,7 +27,7 @@
                 }}
                 class:selected={currentPageSelected === 'home' || currentPageSelected === ''}
             >
-                <span class="link-svg"><HamburgerSvg size={6} /></span>
+                <span class="link-svg"><HomeSvg size={6} /></span>
                 <span class="link-text">{tr('menu.home')}</span>
             </a>
         </li>
