@@ -1,5 +1,4 @@
 <script lang="ts">
-    import type { AutomationPreview } from '../../../types/automationType';
     import Automation from '../../components/automations/Automation.svelte';
     import AutomationService from '../../services/automationService';
 </script>
