@@ -49,6 +49,20 @@
         </li>
         <li class="nav_item">
             <a
+                href="/blockly"
+                class="nav-link"
+                use:SPA.link
+                on:click={() => {
+                    pageLinkClicked('blockly');
+                }}
+                class:selected={currentPageSelected === 'blockly'}
+            >
+                <span class="link-svg"><BlocklySvg size={6} /></span>
+                <span class="link-text">{tr('menu.blockly')}</span>
+            </a>
+        </li>
+        <li class="nav_item">
+            <a
                 href="/"
                 class="nav-link"
                 use:SPA.link
@@ -59,20 +73,6 @@
             >
                 <span class="link-svg"><HamburgerSvg size={6} /></span>
                 <span class="link-text">{tr('menu.todo')}</span>
-            </a>
-        </li>
-        <li class="nav_item">
-            <a
-                href="/blockly"
-                class="nav-link"
-                use:SPA.link
-                on:click={() => {
-                    pageLinkClicked('todo');
-                }}
-                class:selected={currentPageSelected === 'blockly'}
-            >
-                <span class="link-svg"><BlocklySvg size={6} /></span>
-                <span class="link-text">{tr('menu.blockly')}</span>
             </a>
         </li>
     </ul>
