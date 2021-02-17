@@ -61,6 +61,8 @@
 
     function loadAutomation() {
         const test_json: Automation = {
+            id: '0',
+            state: 'on',
             trigger: [
                 {
                     platform: 'time',
