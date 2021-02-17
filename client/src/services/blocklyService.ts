@@ -191,9 +191,13 @@ export default class BlocklyService {
             });
         };
 
-        Blockly.Extensions.registerMutator('object_action_esidom_mutator',
-            OBJECT_ACTION_MUTATOR_MIXIN,
-            OBJECT_ACTION_MUTATION_EXTENSION);
+        try {
+            Blockly.Extensions.registerMutator('object_action_esidom_mutator',
+                OBJECT_ACTION_MUTATOR_MIXIN,
+                OBJECT_ACTION_MUTATION_EXTENSION);
+        } catch (error) {
+            console.log(error);
+        }
     }
 
     static createObjects(entities: Entity[]): void {
