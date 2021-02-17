@@ -50,32 +50,36 @@ class SocketForwarder {
         this.observers.push(observer);
     }
 
-    notifyObservers(event: Event, data?: HaEntityUpdated) {
+    notifyObservers(event: Event, data?: string) {
         this.observers.forEach((observer: EventObserver) => {
             switch (event) {
             case 'authOk':
-                if (observer.onAuthOk) {
-                    observer.onAuthOk();
-                }
+                observer.onAuthOk?.();
                 break;
             case 'entityUpdated':
-                if (observer.onEntityUpdated && data) {
-                    observer.onEntityUpdated(data);
+                if (data) {
+                    observer.onEntityUpdated?.(data);
                 }
                 break;
             case 'automationUpdated':
-                if (observer.onAutomationUpdated && data) {
-                    observer.onAutomationUpdated(data);
+                if (data) {
+                    observer.onAutomationUpdated?.(data);
                 }
                 break;
             case 'deviceRegistryUpdated':
-                if (observer.onDeviceRegistryUpdated) {
-                    observer.onDeviceRegistryUpdated();
-                }
+                observer.onDeviceRegistryUpdated?.();
                 break;
             case 'entityRegistryUpdated':
-                if (observer.onEntityRegistryUpdated) {
-                    observer.onEntityRegistryUpdated();
+                observer.onEntityRegistryUpdated?.();
+                break;
+            case 'areaUpdated':
+                if (data) {
+                    observer.onAreaUpdated?.(data);
+                }
+                break;
+            case 'areaRemoved':
+                if (data) {
+                    observer.onAreaRemoved?.(data);
                 }
                 break;
             default:
@@ -133,6 +137,11 @@ class SocketForwarder {
             type: 'subscribe_events',
             event_type: 'entity_registry_updated',
         });
+
+        this.forward({
+            type: 'subscribe_events',
+            event_type: 'area_registry_updated',
+        });
     }
 
     handleSocketResult(data: HaSocket): void {
@@ -152,6 +161,7 @@ class SocketForwarder {
     async handleSocketEvent(data: HaSocket): Promise<void> {
         const { id } = data;
         console.log(`received event for ws : ${id}`);
+        console.log(data);
         const eventType: string = data?.event?.event_type;
         if (eventType === 'device_registry_updated') {
             console.log(data.event.data);
@@ -164,6 +174,9 @@ class SocketForwarder {
             case 'remove':
                 this.io.emit('device_removed', data.event.data);
                 return;
+            case 'update':
+                this.notifyObservers('deviceRegistryUpdated');
+                return;
             default:
                 console.log(`Unknown event ${data.event.event_type}`);
                 return;
@@ -171,10 +184,17 @@ class SocketForwarder {
         }
         if (eventType === 'state_changed') {
             const ent: HaEntityUpdated = data?.event?.data;
-            if (ent.entity_id.split('.')[0] === 'automation') {
-                this.notifyObservers('automationUpdated', ent);
+            if (ent.entity_id.startsWith('automation')) {
+                this.notifyObservers('automationUpdated', ent.entity_id);
             } else {
-                this.notifyObservers('entityUpdated', ent);
+                this.notifyObservers('entityUpdated', ent.entity_id);
+            }
+        }
+        if (eventType === 'area_registry_updated') {
+            if (data?.event?.data?.action === 'remove') {
+                this.notifyObservers('areaRemoved', data.event?.data?.area_id);
+            } else if (data?.event?.data?.action === 'update') {
+                this.notifyObservers('areaUpdated', data.event?.data?.area_id);
             }
         }
     }
