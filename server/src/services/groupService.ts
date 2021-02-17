@@ -85,7 +85,7 @@ class GroupService implements EventObserver {
         // Create group in Home Assistant
         await this.createGroupInHa({
             object_id: groupEntityId,
-            name: `${name}`,
+            name,
             entities: entities.join(','),
         });
         // Insert group into ESIDOM DB
@@ -134,26 +134,26 @@ class GroupService implements EventObserver {
     }
 
     private normalizeEntityId(name: string): string {
-        return name.toLowerCase().replace(/ /g, ' ');
+        return name.toLowerCase().replace(/ /g, '_');
     }
 
     async getGroups(): Promise<Group[]> {
         const res: HaStateResponse[] = await socketForwarder.forward({ type: 'get_states' });
-        return Promise.all(res.filter((val) => val.entity_id.startsWith('group')).map((val) => this.convertEntityToGroup(val)));
+        return Promise.all(res.filter((val) => val.entity_id.startsWith('group')).map(this.convertEntityToGroup));
     }
 
-    async generateImplicitGroup() {
+    async generateImplicitGroup():Promise<void> {
         // Generate implicit group per room
         const rooms = await roomService.getRooms();
-        await Promise.all(rooms.map((r: Room) => this.generateImplicitGroupForOneRoom(r)));
-        // Generate implicit group for from all devices
+        await Promise.all(rooms.map(this.generateImplicitGroupForOneRoom));
+        // Generate implicit group for all devices
         const devices: Device[] = await deviceService.getDevices();
         const entities = devices.flatMap((d: Device) => d.entities.filter((entity: Entity) => entity.id.startsWith('switch') || entity.id.startsWith('light')).map((entity) => entity.id));
         if (!entities) {
-            return Promise.resolve();
+            return;
         }
         const nameGroup = 'All switch and light';
-        return this.createGroupInHa({
+        this.createGroupInHa({
             object_id: this.normalizeImplicitGroupName('switchlight'),
             name: nameGroup,
             entities: entities.join(','),
@@ -205,7 +205,7 @@ class GroupService implements EventObserver {
             throw new Error('Cant convert entity to group');
         }
         const entities: Entity[] = await Promise.all(
-            e.attributes.entity_id.map((entityId: string) => entityService.getEntityById(entityId)),
+            e.attributes.entity_id.map(entityService.getEntityById),
         );
         return {
             groupId: e.entity_id.split('.')[1],
