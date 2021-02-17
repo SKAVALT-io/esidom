@@ -1,6 +1,7 @@
 <script lang="ts">
     import * as SPA from 'svelte-spa-router';
     import { tr } from '../../utils/i18nHelper';
+    import { clickOutside } from '../../utils/functions';
 
     export let open = false;
     let currentPageSelected = '';
@@ -8,11 +9,17 @@
         currentPageSelected = currentPage;
         open = false;
     };
+
+    function handleClickOutside() {
+        open = false;
+    }
 </script>
 
 <nav
     class="navbar relative w-16 h-screen border-r-2 shadow-lg bg-gray-900"
     class:open
+    use:clickOutside
+    on:click_outside={handleClickOutside}
 >
     <ul class="navbar-nav list-none p-0 m-0 flex flex-col items-center">
         <li class="nav_item">
