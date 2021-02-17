@@ -11,19 +11,19 @@ debounce<T = unknown, R = unknown>(func: (args?: T) => R, timeout = 300): (args?
 }
 
 export function clickOutside(node: any):{ destroy(): void; } {
-    const handleClick = (event:MouseEvent) => {
+    const handleClick = (event: Event) => {
         if (node && !node.contains(event.target) && !event.defaultPrevented) {
             node.dispatchEvent(
-                new CustomEvent('click_outside', node),
+                new CustomEvent('click_outside', { detail: event.target }),
             );
         }
     };
 
-    document.addEventListener('click', handleClick, true);
+    document.addEventListener('click', handleClick, false);
 
     return {
         destroy() {
-            document.removeEventListener('click', handleClick, true);
+            document.removeEventListener('click', handleClick, false);
         },
     };
 }

@@ -10,8 +10,11 @@
         open = false;
     };
 
-    function handleClickOutside() {
-        open = false;
+    function handleClickOutside(event: any) {
+        // In the navbar file the humburger menu id is 'hamburger', pay attention to any changes!
+        if (event.detail.parentElement.id !== 'hamburger') {
+            open = false;
+        }
     }
 </script>
 

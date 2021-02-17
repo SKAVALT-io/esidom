@@ -10,7 +10,7 @@
     class="top-navbar flex flex-wrap w-full items-center justify-between px-2 h-full bg-gray-900 text-white border-b border-gray-100 z-10"
 >
     <div class="flex items-center">
-        <button class="mr-2" on:click={() => dispatch('press')}>
+        <button id="hamburger" class="mr-2" on:click={() => dispatch('press')}>
             <img
                 class="link-svg opacity-80 hover:opacity-100"
                 src="icons/navbar/hamburger_menu.svg"
