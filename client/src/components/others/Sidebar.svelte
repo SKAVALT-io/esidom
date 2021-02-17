@@ -87,17 +87,12 @@
 
     /*nav*/
     .navbar {
-        transition: width 500ms ease-in-out;
+        transition: width 300ms ease-in-out;
         width: 0px;
     }
 
     .open {
         @apply w-screen;
-    }
-
-    .open .link-svg,
-    .open .link-text {
-        @apply opacity-100;
     }
 
     /*li*/
@@ -122,13 +117,11 @@
 
     /* span */
     .link-text {
-        @apply ml-4 text-sm;
+        @apply ml-4 text-sm opacity-0;
     }
 
-    .link-text,
-    .link-svg {
-        transition: opacity 600ms ease;
-        opacity: 0;
+    .open .link-text {
+        @apply opacity-100;
     }
 
     /* span */
@@ -149,13 +142,9 @@
             @apply w-full;
         }
 
-        .link-svg {
-            @apply opacity-100;
-        }
-
         .navbar:hover .link-text,
         .open .link-text {
-            @apply opacity-100 mr-4;
+            @apply opacity-100 transition-opacity delay-150 mr-4;
         }
     }
 </style>
