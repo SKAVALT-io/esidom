@@ -1,17 +1,19 @@
 /* eslint-disable no-param-reassign */
 import type { WorkspaceSvg } from 'blockly';
 import Blockly from 'blockly';
-import esidomGenerator from '../routes/automation/esidomGenerator';
-import type { EntityTypeEnum } from '../routes/automation/esidomGenerator';
+import BlockFactory from 'blockly';
+import esidomGenerator, { EntityTypeEnum } from '../routes/automation/esidomGenerator';
 import EntityService from './entityService';
 import type { Entity } from '../../types/entityType';
 import type { Service } from '../../types/serviceType';
 import type { EntityWithServices } from '../../types/entityWithServicesType';
-import type { EnvironmentBlockly } from '../../types/environmentBlocklyType';
 import type { BlocksDefinitions } from '../routes/automation/esidomBlocks';
 import COLORS from '../routes/automation/esidomConst';
 import BlocklyObjects from '../routes/automation/blocklyObject';
 import type { ObjectBlock } from '../../types/objectsBlockType';
+import type { Automation } from '../../types/automationType';
+import type { EsidomBlockType } from '../../types/esidomBlockType';
+import EsidomBlockGenerator from '../routes/automation/esidomBlockGenerator';
 
 interface Type {
     name: EntityTypeEnum;
@@ -58,12 +60,9 @@ const TYPES: Type[] = [
 ];
 
 export default class BlocklyService {
-    private toolbox: string | HTMLElement | undefined;
-
     private workspace: WorkspaceSvg;
 
-    constructor(toolbox: string | HTMLElement | undefined, workspace: WorkspaceSvg) {
-        this.toolbox = toolbox;
+    constructor(workspace: WorkspaceSvg) {
         this.workspace = workspace;
     }
 
@@ -80,6 +79,12 @@ export default class BlocklyService {
         } catch (e) {
             console.log(e);
         }
+    }
+
+    loadAutomation(xml: string): void {
+        BlockFactory.mainWorkspace.clear();
+        const block: Element = Blockly.Xml.textToDom(xml);
+        Blockly.Xml.domToWorkspace(block, this.workspace);
     }
 
     static async initBlockly(): Promise<void> {
@@ -117,45 +122,75 @@ export default class BlocklyService {
                     if (entity.name === null || entity.name === '') {
                         entity.name = 'Nom inconnu';
                     }
-                    return [entity.name, `${index.toString()}:${entity.id}`];
+                    return [entity.name, `${index.toString()}:${entity.id}:${entity.name}`];
                 });
 
                 const dropdown1 = tmpDropdown1.length > 0 ? tmpDropdown1 : [['Pas de nom', 'Pas de nom']];
 
-                const dropdown2 = entityWithServices[0]
-                    ?.services.map((service: string) => [service.split('.')[1], service])
-                    ?? [['Action inconnue', 'Action inconnue']];
+                this.jsonInit?.(
+                    {
+                        type: 'object_action',
+                        message0: 'Objet : %1',
+                        args0: [
+                            {
+                                type: 'field_dropdown',
+                                name: 'Entities',
+                                options: dropdown1,
+                            },
 
-                this.appendDummyInput?.()
-                    .appendField?.('Objet : ')
-                    .appendField?.(new Blockly.FieldDropdown(dropdown1), 'Entities');
-                this.appendDummyInput?.('services')
-                    .appendField?.('Action :')
-                    .appendField?.(new Blockly.FieldDropdown(dropdown2), 'Services');
-                this.setInputsInline?.(false);
-                this.setPreviousStatement?.(true, 'Action');
-                this.setNextStatement?.(true, 'Action');
-                this.setColour?.(COLORS.HUE_ORANGE);
-                this.setTooltip?.('');
-                this.setHelpUrl?.('');
-            },
-            onchange(ev: EnvironmentBlockly) {
-                if (ev.name === 'Entities') {
-                    const index = parseInt(ev.newValue.split(':')[0], 10);
-                    const newDropdown = entityWithServices[index]
-                        ?.services.map((service: string) => [service.split('.')[1], service])
-                        ?? [['Action inconnu', 'Action inconnu']];
-
-                    this.removeInput?.('services');
-                    this.appendDummyInput?.('services')
-                        .appendField?.('Action :')
-                        .appendField?.(
-                            new Blockly.FieldDropdown(newDropdown),
-                            'Services',
-                        );
-                }
+                        ],
+                        inputsInline: false,
+                        previousStatement: 'Action',
+                        nextStatement: 'Action',
+                        colour: COLORS.HUE_ORANGE,
+                        tooltip: '',
+                        helpUrl: '',
+                        mutator: 'object_action_esidom_mutator',
+                    },
+                );
             },
         };
+
+        const OBJECT_ACTION_MUTATOR_MIXIN = {
+
+            mutationToDom(): HTMLElement {
+                const container = document.createElement('mutation');
+                const entitiesInput: number = parseInt((this as EsidomBlockType).getFieldValue('Entities').split(':')[0], 10);
+                container.setAttribute('entities_input', entitiesInput.toString());
+                return container;
+            },
+
+            domToMutation(xmlElement: HTMLElement): void {
+                const attribute = xmlElement.getAttribute('entities_input');
+                const index = attribute != null ? parseInt(attribute, 10) : 0;
+                this.objectActionUpdateShape(index);
+            },
+
+            objectActionUpdateShape(index: number): void {
+                const newDropdown = entityWithServices[index]
+                    ?.services.map((service: string) => [service.split('.')[1], service])
+                    ?? [['Action inconnu', 'Action inconnu']];
+
+                (this as EsidomBlockType).removeInput?.('services', true);
+                (this as EsidomBlockType).appendDummyInput?.('services')
+                    .appendField?.('Action :')
+                    .appendField?.(
+                        new Blockly.FieldDropdown(newDropdown),
+                        'Services',
+                    );
+            },
+        };
+
+        const OBJECT_ACTION_MUTATION_EXTENSION = function mutate(this: EsidomBlockType) {
+            this.getField('Entities').setValidator((option: string) => {
+                const index: number = parseInt(option.split(':')[0], 10);
+                this.objectActionUpdateShape(index);
+            });
+        };
+
+        Blockly.Extensions.registerMutator('object_action_esidom_mutator',
+            OBJECT_ACTION_MUTATOR_MIXIN,
+            OBJECT_ACTION_MUTATION_EXTENSION);
     }
 
     static createObjects(entities: Entity[]): void {
@@ -183,5 +218,50 @@ export default class BlocklyService {
                 },
             };
         });
+    }
+
+    static automationToXml(automation: Automation): string {
+        let xml = `
+            <xml xmlns="https://developers.google.com/blockly/xml">
+            <block type="esidom_automation" deletable="false" movable="false">
+        `;
+
+        automation.trigger.forEach((trigger) => {
+            const plf = trigger.platform;
+
+            xml += `
+                <value name="Trigger">
+                ${EsidomBlockGenerator.platform[plf](trigger)};
+                </value>
+            `;
+        });
+
+        automation.condition.forEach((condition) => {
+            const cdt = condition.condition;
+
+            xml += `
+                <value name="Condition">;
+                ${EsidomBlockGenerator.condition[cdt](condition)}
+                </value>
+            `;
+        });
+
+        automation.action.forEach((action) => {
+            const { alias } = action;
+            const { service } = action;
+
+            xml += `
+                <value name="Action">
+                <block type="object_action">
+                <field name="Entities">${alias}</field>
+                <field name="Services">${service}</field>
+                </block>
+                </value>
+            `;
+        });
+
+        xml += '</block></xml>';
+
+        return xml;
     }
 }

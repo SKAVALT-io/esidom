@@ -1,14 +1,12 @@
 /* eslint-disable camelcase */
 /* eslint-disable no-param-reassign */
 import Blockly from 'blockly';
-import type { EnvironmentBlockly } from '../../../types/environmentBlocklyType';
 import COLORS from './esidomConst';
 import type { EntityTypeEnum } from './esidomGenerator';
 
 type BlockFunctions = {
     init: ()=> void;
     jsonInit?:(a: any)=> void;
-    onchange?: (ev: EnvironmentBlockly)=> void;
     appendDummyInput?: (str?: string)=> BlockFunctions;
     appendField?: (...args: Array<string | Blockly.FieldDropdown>)=> BlockFunctions;
     setInputsInline?: (b: boolean) => BlockFunctions;
@@ -18,7 +16,7 @@ type BlockFunctions = {
     setTooltip?: (str: string) => BlockFunctions;
     setHelpUrl?: (str: string) => BlockFunctions;
     removeInput?: (str: string) => BlockFunctions;
-
+    setmutator?: (str: string) => BlockFunctions;
 };
 
 export type BlocksDefinitions = {
@@ -26,7 +24,7 @@ export type BlocksDefinitions = {
 } & {
     esidom_automation: BlockFunctions;
     binary_trigger: BlockFunctions;
-    time: BlockFunctions;
+    time_trigger: BlockFunctions;
     time_condition: BlockFunctions;
     sun_condition: BlockFunctions;
     time_condition_hour: BlockFunctions;
@@ -136,7 +134,7 @@ export type BlocksDefinitions = {
         },
     };
 
-    block.time = {
+    block.time_trigger = {
         init() {
             this.jsonInit?.(
                 {
@@ -348,21 +346,21 @@ export type BlocksDefinitions = {
                 args0: [
                     {
                         type: 'field_number',
-                        name: 'Hour_debut',
+                        name: 'Hour_start',
                         value: 0,
                         min: 0,
                         max: 23,
                     },
                     {
                         type: 'field_number',
-                        name: 'Minute_debut',
+                        name: 'Minute_start',
                         value: 0,
                         min: 0,
                         max: 59,
                     },
                     {
                         type: 'field_number',
-                        name: 'Second_debut',
+                        name: 'Second_start',
                         value: 0,
                         min: 0,
                         max: 59,

@@ -33,7 +33,7 @@ function getDropdownChoice(blk: Block): string {
     return dropdownChoice;
 }
 
-interface BlocklyJSON {
+export interface BlocklyJSON {
     trigger?: string;
     condition?: string;
     action?: string;
@@ -49,6 +49,7 @@ interface BlocklyJSON {
     to?: string;
     state?: string;
     rgb_color?: string;
+    alias?: string;
 }
 
 export type EntityTypeEnum = 'binary_sensor' | 'person' | 'weather' | 'zwave' | 'sensor' | 'light' | 'automation' | 'switch' | 'media_player';
@@ -59,7 +60,7 @@ export type BlocksGenerator = {
 } & {
     esidom_automation: (blk: Block) => void;
     binary_trigger: (blk: Block) => void;
-    time: (blk: Block) => void;
+    time_trigger: (blk: Block) => void;
     time_condition: (blk: Block) => void;
     sun_condition: (blk: Block) => void;
     time_condition_hour: (blk: Block) => void;
@@ -110,7 +111,7 @@ export type BlocksGenerator = {
         return JSON.stringify(json);
     };
 
-    block.time = (blk: Block) => {
+    block.time_trigger = (blk: Block) => {
         const number_hour = blk.getFieldValue('Hour');
         const number_minute = blk.getFieldValue('Minute');
         const number_second = blk.getFieldValue('Second');
@@ -190,8 +191,6 @@ export type BlocksGenerator = {
     block.color_picker = (blk: Block) => {
         const color_value = blk.getFieldValue('color');
 
-        console.log(color_value);
-
         const json: BlocklyJSON = {};
 
         json.rgb_color = color_value;
@@ -245,9 +244,10 @@ export type BlocksGenerator = {
         const json: BlocklyJSON = {};
 
         const entity_id = dropdown_entities.split(':')[1];
+
+        json.alias = dropdown_entities;
         json.entity_id = entity_id;
         json.service = dropdown_services;
-
         return JSON.stringify(json);
     };
 
