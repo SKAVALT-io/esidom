@@ -16,6 +16,9 @@ echo "baseUrl=${server}" > ${filename}
 echo "user=${user}" >> ${filename}
 echo "password=${password}" >> ${filename}
 
+echo "Cleaning of unused images"
+docker image prune -f
+
 docker build -t ${image_name} .
 
 docker rm -f ${container_name}

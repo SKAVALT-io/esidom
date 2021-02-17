@@ -1,12 +1,15 @@
 <script lang="ts">
     // Execute blocks definition
-    import './esidom_blocks';
+    import './esidomBlocks';
     import { onMount } from 'svelte';
     import Blockly from 'blockly';
     import type { BlocklyOptions } from 'blockly';
     import BlocklyService from '../../services/blocklyService';
+    import { tr } from '../../utils/i18nHelper';
+    import BorderedButton from '../../components/UI/buttons/BorderedButton.svelte';
 
     let blocklyService: BlocklyService;
+    let entityPromise: Promise<void>;
 
     onMount(async () => {
         const toolbox: HTMLElement | undefined =
@@ -49,31 +52,50 @@
         );
 
         const rootBlock: string =
-            '<xml><block type="automation" deletable="false" movable="false"></block></xml>';
+            '<xml><block type="esidom_automation" deletable="false" movable="false"></block></xml>';
         Blockly.Xml.domToWorkspace(Blockly.Xml.textToDom(rootBlock), workspace);
 
         blocklyService = new BlocklyService(toolbox, workspace);
 
-        // TODO: correct asynchrone call
-        await BlocklyService.createEntities();
+        entityPromise = BlocklyService.initBlockly();
     });
 </script>
 
-<p>
-    <button on:click={blocklyService.convertToBlock()}>Convert the blocks !</button>
-</p>
-
 <div>
+    {#await entityPromise}
+        <p>{tr('blockly.loading')}</p>
+        <div id="blocklyDivHide" />
+    {:then}
+        <p class="py-4">
+            <BorderedButton
+                on:click={() => blocklyService.convertToBlock()}
+                text={tr('blockly.convertBlock')}
+            />
+        </p>
+    {:catch}
+        <p style="color: red">{tr('blockly.loadingError')}</p>
+        <div id="blocklyDivHide" />
+    {/await}
     <div id="blocklyDiv" />
-    <xml id="toolbox" style="display:none">
+    <xml id="toolbox" style="display: none">
         <slot />
     </xml>
 </div>
 
 <style scoped>
-    #blocklyDiv {
+    #blocklyDivHide {
+        position: absolute;
         height: 700px;
         width: 100%;
+        text-align: left;
+        background-color: #120639;
+        z-index: 90;
+    }
+
+    #blocklyDiv {
+        position: absolute;
+        height: 600px;
+        width: 90%;
         text-align: left;
     }
 </style>

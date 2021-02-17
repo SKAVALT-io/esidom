@@ -17,8 +17,8 @@ class AutomationService implements EventObserver {
         socketForwarder.registerObserver(this);
     }
 
-    onAutomationUpdated(data: HaEntityUpdated) {
-        this.getAutomationPreviewById(data.entity_id)
+    onAutomationUpdated(data: string) {
+        this.getAutomationPreviewById(data)
             .then((updated: AutomationPreview) => {
                 socketForwarder.emitSocket('entity_updated', updated);
             })

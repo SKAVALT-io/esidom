@@ -25,7 +25,7 @@
     }
 </script>
 
-<div id="test">
+<div>
     <!-- Grid containing all devices -->
 
     <DeviceContainer title="Lampes" iconPath="favicon.png">
@@ -58,7 +58,7 @@
             on:click={() => {
                 isPairDeviceOpen = true;
             }}
-            iconPath="icons/plus.svg"
+            iconPath="icons/button/plus.svg"
         />
     </div>
 </div>
@@ -81,9 +81,5 @@
 
     div {
         color: $color;
-    }
-
-    #test {
-        margin-left: 4%;
     }
 </style>

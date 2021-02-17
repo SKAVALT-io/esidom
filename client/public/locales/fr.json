@@ -7,8 +7,8 @@
     "realizedBy": "Fait par {0}"
   },
   "menu": {
-    "devices": "appareils",
-    "home": "home",
+    "devices": "équipements",
+    "home": "accueil",
     "blockly": "blockly"
   },
   "devices": {
@@ -24,6 +24,10 @@
             "name": "Noms",
             "state": "Actives"
         }
-    }
+    },
+  "blockly": {
+    "loading": "Chargement de Blockly...",
+    "loadingError": "Erreur : Blockly n'a pas pu charger à cause d'un problème avec le serveur.",
+    "convertBlock": "Enregistrer la routine !"
   }
 }
