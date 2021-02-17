@@ -66,7 +66,7 @@
         <p>{tr('blockly.loading')}</p>
         <div id="blocklyDivHide" />
     {:then}
-        <p class="py-4">
+        <p class="pb-6">
             <BorderedButton
                 on:click={() => blocklyService.convertToBlock()}
                 text={tr('blockly.convertBlock')}
