@@ -39,9 +39,9 @@
             zoom: {
                 controls: true,
                 wheel: true,
-                startScale: 1.2,
-                maxScale: 3,
-                minScale: 0.3,
+                startScale: 1.1,
+                maxScale: 2,
+                minScale: 0.8,
                 scaleSpeed: 1.2,
             },
         };
