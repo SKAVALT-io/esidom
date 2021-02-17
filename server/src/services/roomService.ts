@@ -51,7 +51,7 @@ class RoomService {
         console.log(roomId);
         const room = rooms.find((r: Room) => r.roomId === roomId);
         if (!room) {
-            throw new Error('There are no rooms with this id ');
+            throw new Error(`There are no rooms with this id : ${roomId}`);
         }
         return room;
     }

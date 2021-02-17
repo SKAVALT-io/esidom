@@ -50,32 +50,36 @@ class SocketForwarder {
         this.observers.push(observer);
     }
 
-    notifyObservers(event: Event, data?: HaEntityUpdated) {
+    notifyObservers(event: Event, data?: string) {
         this.observers.forEach((observer: EventObserver) => {
             switch (event) {
             case 'authOk':
-                if (observer.onAuthOk) {
-                    observer.onAuthOk();
-                }
+                observer.onAuthOk?.();
                 break;
             case 'entityUpdated':
-                if (observer.onEntityUpdated && data) {
-                    observer.onEntityUpdated(data);
+                if (data) {
+                    observer.onEntityUpdated?.(data);
                 }
                 break;
             case 'automationUpdated':
-                if (observer.onAutomationUpdated && data) {
-                    observer.onAutomationUpdated(data);
+                if (data) {
+                    observer.onAutomationUpdated?.(data);
                 }
                 break;
             case 'deviceRegistryUpdated':
-                if (observer.onDeviceRegistryUpdated) {
-                    observer?.onDeviceRegistryUpdated();
-                }
+                observer.onDeviceRegistryUpdated?.();
                 break;
             case 'entityRegistryUpdated':
-                if (observer.onEntityRegistryUpdated) {
-                    observer.onEntityRegistryUpdated();
+                observer.onEntityRegistryUpdated?.();
+                break;
+            case 'areaUpdated':
+                if (data) {
+                    observer.onAreaUpdated?.(data);
+                }
+                break;
+            case 'areaRemoved':
+                if (data) {
+                    observer.onAreaRemoved?.(data);
                 }
                 break;
             default:
@@ -180,25 +184,17 @@ class SocketForwarder {
         }
         if (eventType === 'state_changed') {
             const ent: HaEntityUpdated = data?.event?.data;
-            if (ent.entity_id.split('.')[0] === 'automation') {
-                this.notifyObservers('automationUpdated', ent);
+            if (ent.entity_id.startsWith('automation')) {
+                this.notifyObservers('automationUpdated', ent.entity_id);
             } else {
-                this.notifyObservers('entityUpdated', ent);
+                this.notifyObservers('entityUpdated', ent.entity_id);
             }
         }
         if (eventType === 'area_registry_updated') {
             if (data?.event?.data?.action === 'remove') {
-                this.observers.forEach((ob) => {
-                    if (ob.onAreaRemoved) {
-                        ob.onAreaRemoved(data.event?.data?.area_id);
-                    }
-                });
+                this.notifyObservers('areaRemoved', data.event?.data?.area_id);
             } else if (data?.event?.data?.action === 'update') {
-                this.observers.forEach((ob) => {
-                    if (ob.onAreaUpdated) {
-                        ob.onAreaUpdated(data.event?.data?.area_id);
-                    }
-                });
+                this.notifyObservers('areaUpdated', data.event?.data?.area_id);
             }
         }
     }
