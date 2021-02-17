@@ -61,7 +61,7 @@
     });
 </script>
 
-<div>
+<div class="pr-4">
     {#await entityPromise}
         <p>{tr('blockly.loading')}</p>
         <div id="blocklyDivHide" />
@@ -82,7 +82,7 @@
     </xml>
 </div>
 
-<style scoped>
+<style>
     #blocklyDivHide {
         position: absolute;
         height: 700px;
@@ -93,9 +93,9 @@
     }
 
     #blocklyDiv {
-        position: absolute;
+        position: relative;
         height: 600px;
-        width: 90%;
+        width: 100%;
         text-align: left;
     }
 </style>
