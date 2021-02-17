@@ -26,6 +26,21 @@ class GroupService implements EventObserver {
         this.initGroupHa();
     }
 
+    onDeviceRegistryUpdated() {
+        // To avoid search recreate all implicit group
+        this.generateImplicitGroup();
+    }
+
+    async onAreaUpdated(roomId: string) {
+        console.log('GPService : this.onAreaUpdated');
+        this.generateImplicitGroupForOneRoom(await roomService.getRoomById(roomId));
+    }
+
+    onAreaRemoved(roomId: string) {
+        console.log('GPService : this.onAreaRemoved');
+        this.deleteImplicitGroupForOneRoom(roomId);
+    }
+
     async initGroupHa() {
         await this.loadGroupFromDb();
         await this.generateImplicitGroup();
@@ -119,7 +134,7 @@ class GroupService implements EventObserver {
     }
 
     private normalizeEntityId(name: string): string {
-        return name.toLowerCase().replace(/ /g, '');
+        return name.toLowerCase().replace(/ /g, ' ');
     }
 
     async getGroups(): Promise<Group[]> {
