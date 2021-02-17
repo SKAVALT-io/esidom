@@ -12,9 +12,9 @@ import deviceService from './deviceService';
 import { Room } from '../types/room';
 import { Device } from '../types/device';
 
-const NameGroupTable = 'HAGroup';
-const NameInsideGroupTable = 'InsideGroup';
-const IdentifierGroupImplicit = 'imp';
+const GroupTableName = 'HAGroup';
+const InsideGroupTableName = 'InsideGroup';
+const GroupImplicitIdentifier = 'imp';
 
 class GroupService implements EventObserver {
 
@@ -48,7 +48,7 @@ class GroupService implements EventObserver {
 
     private async loadGroupFromDb() {
         // Get all group
-        const res = await databaseForwarder.db?.all<DBGroup[]>(`SELECT * FROM ${NameGroupTable}`).catch((err) => {
+        const res = await databaseForwarder.db?.all<DBGroup[]>(`SELECT * FROM ${GroupTableName}`).catch((err) => {
             console.log(err);
         });
         if (res === undefined) {
@@ -56,7 +56,7 @@ class GroupService implements EventObserver {
         }
         // For each group
         res.forEach(async (g: DBGroup) => {
-            const entities = await databaseForwarder.db?.all<InsideGroup[]>(`SELECT * FROM ${NameInsideGroupTable} WHERE groupEntityId = '${g.entityId}'`);
+            const entities = await databaseForwarder.db?.all<InsideGroup[]>(`SELECT * FROM ${InsideGroupTableName} WHERE groupEntityId = '${g.entityId}'`);
             if (entities === undefined) {
                 return;
             }
@@ -73,7 +73,7 @@ class GroupService implements EventObserver {
     async createGroup(name:string, entities: string[]): Promise<Group> {
         const groupEntityId = this.normalizeEntityId(name);
         // Test if group exist
-        const g = await databaseForwarder.db?.get<DBGroup>(`SELECT * FROM ${NameGroupTable} WHERE entityId = '${groupEntityId}'`);
+        const g = await databaseForwarder.db?.get<DBGroup>(`SELECT * FROM ${GroupTableName} WHERE entityId = '${groupEntityId}'`);
         if (g !== undefined) {
             throw new Error('Group already exist');
         }
@@ -101,9 +101,9 @@ class GroupService implements EventObserver {
     private async insertGroupIntoDb(groupId: string, name: string, entities: string[]) {
         try {
             await databaseForwarder.db?.run('BEGIN TRANSACTION');
-            await databaseForwarder.db?.run(`INSERT INTO ${NameGroupTable} (entityId, name) VALUES ('${groupId}','${name}')`);
+            await databaseForwarder.db?.run(`INSERT INTO ${GroupTableName} (entityId, name) VALUES ('${groupId}','${name}')`);
             await Promise.all(
-                entities.map(async (entityId: string) => databaseForwarder.db?.run(`INSERT INTO ${NameInsideGroupTable} (entityId, groupEntityId) VALUES ('${entityId}','${groupId}')`)),
+                entities.map(async (entityId: string) => databaseForwarder.db?.run(`INSERT INTO ${InsideGroupTableName} (entityId, groupEntityId) VALUES ('${entityId}','${groupId}')`)),
             );
             await databaseForwarder.db?.run('COMMIT');
         } catch (err) {
@@ -177,9 +177,9 @@ class GroupService implements EventObserver {
 
     private normalizeImplicitGroupName(type: string, roomId?: string): string {
         if (roomId) {
-            return `${IdentifierGroupImplicit}_${roomId}_${type}`;
+            return `${GroupImplicitIdentifier}_${roomId}_${type}`;
         }
-        return `${IdentifierGroupImplicit}_all_${type}`;
+        return `${GroupImplicitIdentifier}_all_${type}`;
     }
 
     async deleteImplicitGroupForOneRoom(roomId: string) {
