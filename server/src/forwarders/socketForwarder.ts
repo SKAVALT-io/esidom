@@ -70,7 +70,7 @@ class SocketForwarder {
                 break;
             case 'deviceRegistryUpdated':
                 if (observer.onDeviceRegistryUpdated) {
-                    observer.onDeviceRegistryUpdated();
+                    observer?.onDeviceRegistryUpdated();
                 }
                 break;
             case 'entityRegistryUpdated':
@@ -133,6 +133,11 @@ class SocketForwarder {
             type: 'subscribe_events',
             event_type: 'entity_registry_updated',
         });
+
+        this.forward({
+            type: 'subscribe_events',
+            event_type: 'area_registry_updated',
+        });
     }
 
     handleSocketResult(data: HaSocket): void {
@@ -152,6 +157,7 @@ class SocketForwarder {
     async handleSocketEvent(data: HaSocket): Promise<void> {
         const { id } = data;
         console.log(`received event for ws : ${id}`);
+        console.log(data);
         const eventType: string = data?.event?.event_type;
         if (eventType === 'device_registry_updated') {
             console.log(data.event.data);
@@ -164,6 +170,9 @@ class SocketForwarder {
             case 'remove':
                 this.io.emit('device_removed', data.event.data);
                 return;
+            case 'update':
+                this.notifyObservers('deviceRegistryUpdated');
+                return;
             default:
                 console.log(`Unknown event ${data.event.event_type}`);
                 return;
@@ -175,6 +184,21 @@ class SocketForwarder {
                 this.notifyObservers('automationUpdated', ent);
             } else {
                 this.notifyObservers('entityUpdated', ent);
+            }
+        }
+        if (eventType === 'area_registry_updated') {
+            if (data?.event?.data?.action === 'remove') {
+                this.observers.forEach((ob) => {
+                    if (ob.onAreaRemoved) {
+                        ob.onAreaRemoved(data.event?.data?.area_id);
+                    }
+                });
+            } else if (data?.event?.data?.action === 'update') {
+                this.observers.forEach((ob) => {
+                    if (ob.onAreaUpdated) {
+                        ob.onAreaUpdated(data.event?.data?.area_id);
+                    }
+                });
             }
         }
     }
