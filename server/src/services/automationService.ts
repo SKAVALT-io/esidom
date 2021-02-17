@@ -1,5 +1,5 @@
 import socketForwarder from '../forwarders/socketForwarder';
-import { HaAutomation, HaEntityUpdated, HaStateResponse } from '../types/haTypes';
+import { HaAutomation, HaStateResponse } from '../types/haTypes';
 import httpForwarder from '../forwarders/httpForwarder';
 import { Automation, AutomationPreview } from '../types/automation';
 import { EventObserver } from '../types/observer';

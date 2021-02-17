@@ -24,7 +24,8 @@
             "name": "Noms",
             "state": "Actives"
         }
-    },
+    }
+  },
   "blockly": {
     "loading": "Chargement de Blockly...",
     "loadingError": "Erreur : Blockly n'a pas pu charger à cause d'un problème avec le serveur.",
