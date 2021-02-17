@@ -25,7 +25,7 @@
     }
 </script>
 
-<div id="test">
+<div>
     <!-- Grid containing all devices -->
 
     <DeviceContainer title="Lampes" iconPath="favicon.png">
@@ -53,12 +53,12 @@
     </div> -->
 
     <!-- The + button to add device -->
-    <div class="absolute bottom-0 right-0 h-16 w-16">
+    <div class="fixed bottom-0 right-0 h-16 w-16">
         <RoundedButton
             on:click={() => {
                 isPairDeviceOpen = true;
             }}
-            iconPath="icons/plus.svg"
+            iconPath="icons/button/plus.svg"
         />
     </div>
 </div>
@@ -81,9 +81,5 @@
 
     div {
         color: $color;
-    }
-
-    #test {
-        margin-left: 4%;
     }
 </style>

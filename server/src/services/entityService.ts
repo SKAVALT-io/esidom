@@ -1,14 +1,20 @@
+import { EventObserver } from '../types/observer';
 import socketForwarder from '../forwarders/socketForwarder';
 import { Entity } from '../types/entity';
-import { HaEntity, HaEntityUpdated, HaStateResponse } from '../types/haTypes';
+import { HaEntity, HaStateResponse } from '../types/haTypes';
 
-class EntityService {
+class EntityService implements EventObserver {
 
     constructor() {
-        socketForwarder.registerEventCallback(
-            'state_changed',
-            async (data: HaEntityUpdated): Promise<Entity> => this.getEntityById(data.entity_id),
-        );
+        socketForwarder.registerObserver(this);
+    }
+
+    onEntityUpdated(data: string) {
+        this.getEntityById(data)
+            .then((updated: Entity) => {
+                socketForwarder.emitSocket('entity_updated', updated);
+            })
+            .catch((err) => console.log(err.message));
     }
 
     async getEntities(): Promise<Entity[]> {

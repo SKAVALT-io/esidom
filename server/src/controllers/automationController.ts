@@ -21,6 +21,15 @@ class AutomationController {
             .catch((err) => res.status(404).send({ message: err.message }));
     }
 
+    @App.patch('/:id')
+    toggleAutomationById(req: Request, res: Response): void {
+        const { id } = req.params;
+        const { state } = req.body;
+        automationService.toggleAutomationById(id, state)
+            .then((result: void) => res.status(200).send(result))
+            .catch((err) => res.status(404).send({ message: err.message }));
+    }
+
 }
 
 export default new AutomationController();

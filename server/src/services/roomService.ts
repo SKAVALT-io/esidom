@@ -42,13 +42,18 @@ class RoomService {
         return room;
     }
 
-    deleteRoom(areaId: string) {
-        return socketForwarder.forward({ type: 'config/area_registry/delete', area_id: areaId });
+    deleteRoom(roomId: string) {
+        return socketForwarder.forward({ type: 'config/area_registry/delete', area_id: roomId });
     }
 
-    async getRoomById(areaId: string) {
+    async getRoomById(roomId: string): Promise<Room> {
         const rooms: Room[] = await this.getRooms();
-        return rooms.find((r: Room) => r.roomId === areaId);
+        console.log(roomId);
+        const room = rooms.find((r: Room) => r.roomId === roomId);
+        if (!room) {
+            throw new Error(`There are no rooms with this id : ${roomId}`);
+        }
+        return room;
     }
 
     private async updateRoomDevice(deviceId: string, areaId: string): Promise<any> {

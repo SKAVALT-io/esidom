@@ -62,28 +62,6 @@ export type BlocksDefinitions = {
                             name: 'Action',
                             check: 'Action',
                         },
-                        // {
-                        //     type: 'field_dropdown',
-                        //     name: 'Mode',
-                        //     options: [
-                        //         [
-                        //             'single',
-                        //             'single',
-                        //         ],
-                        //         [
-                        //             'restart',
-                        //             'restart',
-                        //         ],
-                        //         [
-                        //             'queued',
-                        //             'queued',
-                        //         ],
-                        //         [
-                        //             'parallel',
-                        //             'parallel',
-                        //         ],
-                        //     ],
-                        // },
                     ],
                     colour: COLORS.HUE_DARK_BLUE,
                     tooltip: '',
@@ -530,7 +508,7 @@ export type BlocksDefinitions = {
                             colour: '#ff0000',
                         },
                     ],
-                    output: null,
+                    output: 'Color',
                     colour: COLORS.HUE_MAUVE,
                     tooltip: '',
                     helpUrl: '',
@@ -570,7 +548,7 @@ export type BlocksDefinitions = {
                         max: 255,
                     },
                 ],
-                output: null,
+                output: 'Color',
                 colour: COLORS.HUE_MAUVE,
                 tooltip: 'Les valeurs doivent être comprise entre 0 et 255',
                 helpUrl: '',
