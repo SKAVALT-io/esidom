@@ -146,7 +146,7 @@
 
         .navbar:hover,
         .open {
-            @apply w-36;
+            @apply w-full;
         }
 
         .link-svg {
@@ -155,7 +155,7 @@
 
         .navbar:hover .link-text,
         .open .link-text {
-            @apply opacity-100;
+            @apply opacity-100 mr-4;
         }
     }
 </style>
