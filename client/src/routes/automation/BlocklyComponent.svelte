@@ -85,7 +85,7 @@
 <style>
     #blocklyDivHide {
         position: absolute;
-        height: 700px;
+        height: 80vh;
         width: 100%;
         text-align: left;
         background-color: #120639;
@@ -94,7 +94,7 @@
 
     #blocklyDiv {
         position: relative;
-        height: 600px;
+        height: 80vh;
         width: 100%;
         text-align: left;
     }
