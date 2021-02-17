@@ -1,7 +1,7 @@
 import { EventObserver } from '../types/observer';
 import socketForwarder from '../forwarders/socketForwarder';
 import { Entity } from '../types/entity';
-import { HaEntity, HaEntityUpdated, HaStateResponse } from '../types/haTypes';
+import { HaEntity, HaStateResponse } from '../types/haTypes';
 
 class EntityService implements EventObserver {
 
@@ -9,8 +9,8 @@ class EntityService implements EventObserver {
         socketForwarder.registerObserver(this);
     }
 
-    onEntityUpdated(data: HaEntityUpdated) {
-        this.getEntityById(data.entity_id)
+    onEntityUpdated(data: string) {
+        this.getEntityById(data)
             .then((updated: Entity) => {
                 socketForwarder.emitSocket('entity_updated', updated);
             })

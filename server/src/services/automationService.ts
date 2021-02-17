@@ -1,5 +1,5 @@
 import socketForwarder from '../forwarders/socketForwarder';
-import { HaAutomation, HaEntityUpdated, HaStateResponse } from '../types/haTypes';
+import { HaAutomation, HaStateResponse } from '../types/haTypes';
 import httpForwarder from '../forwarders/httpForwarder';
 import { Automation, AutomationPreview } from '../types/automation';
 import { EventObserver } from '../types/observer';
@@ -17,8 +17,8 @@ class AutomationService implements EventObserver {
         socketForwarder.registerObserver(this);
     }
 
-    onAutomationUpdated(data: HaEntityUpdated) {
-        this.getAutomationPreviewById(data.entity_id)
+    onAutomationUpdated(data: string) {
+        this.getAutomationPreviewById(data)
             .then((updated: AutomationPreview) => {
                 socketForwarder.emitSocket('entity_updated', updated);
             })
