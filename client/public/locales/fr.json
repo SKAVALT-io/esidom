@@ -7,12 +7,23 @@
     "realizedBy": "Fait par {0}"
   },
   "menu": {
-      "devices": "appareils",
-      "home": "home",
-      "blockly": "blockly"
+    "devices": "appareils",
+    "home": "home",
+    "blockly": "blockly"
   },
   "devices": {
-      "lights": "lampes",
-      "sensors": "capteurs"
+    "lights": "lampes",
+    "sensors": "capteurs"
+  },
+  "automations": {
+    "myAutomations": "Mes Routines",
+    "search": "Rechercher...",
+    "sortBy": {
+        "title": "Trier par",
+        "options": {
+            "name": "Noms",
+            "state": "Actives"
+        }
+    }
   }
 }
