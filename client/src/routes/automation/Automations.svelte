@@ -51,9 +51,12 @@
         <DropdownButton
             dropDownOptions={[tr('automations.sortBy.options.name'), tr('automations.sortBy.options.state')]}
             title={tr('automations.sortBy.title')}
+            arrowUp={flipSwitch}
             on:click={(e) => {
+                if (e.detail === selectedSortOption) {
+                    flipSwitch = !flipSwitch;
+                }
                 selectedSortOption = e.detail;
-                flipSwitch = !flipSwitch;
             }}
         />
         <SearchBar

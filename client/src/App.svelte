@@ -58,7 +58,7 @@
         <div class="sidenav fixed z-100">
             <Sidebar bind:open />
         </div>
-        <div class="main-content mt-6 z-10">
+        <div class="main-content w-full mt-6 z-10">
             <Router {routes} />
         </div>
     </div>
