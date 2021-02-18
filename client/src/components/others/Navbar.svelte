@@ -18,7 +18,7 @@
             />
         </button>
 
-        <a href="/#/" class="inline-flex items-center">
+        <a href="/#/" class="contents">
             <img src="logo-esidom.png" alt="ESIDOM" class="logo h-auto w-12" />
             <p>ESIDOM</p>
         </a>
