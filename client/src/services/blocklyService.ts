@@ -14,6 +14,7 @@ import type { ObjectBlock } from '../../types/objectsBlockType';
 import type { Automation } from '../../types/automationType';
 import type { EsidomBlockType } from '../../types/esidomBlockType';
 import EsidomBlockGenerator from '../routes/automation/esidomBlockGenerator';
+import { tr } from '../utils/i18nHelper';
 
 interface Type {
     name: EntityTypeEnum;
@@ -123,12 +124,12 @@ export default class BlocklyService {
                     index: number,
                 ) => {
                     if (entity.name === null || entity.name === '') {
-                        entity.name = 'Nom inconnu';
+                        entity.name = tr(('blockly.unknownName'));
                     }
                     return [entity.name, `${index.toString()}:${entity.id}:${entity.name}`];
                 });
 
-                const dropdown1 = tmpDropdown1.length > 0 ? tmpDropdown1 : [['Pas de nom', 'Pas de nom']];
+                const dropdown1 = tmpDropdown1.length > 0 ? tmpDropdown1 : [[tr(('blockly.unknownName')), tr(('blockly.unknownName'))]];
 
                 this.jsonInit?.(
                     {
@@ -172,7 +173,7 @@ export default class BlocklyService {
             objectActionUpdateShape(index: number): void {
                 const newDropdown = entityWithServices[index]
                     ?.services.map((service: string) => [service.split('.')[1], service])
-                    ?? [['Action inconnu', 'Action inconnu']];
+                    ?? [[tr(('blockly.unknownAction')), tr(('blockly.unknownAction'))]];
 
                 (this as EsidomBlockType).removeInput?.('services', true);
                 (this as EsidomBlockType).appendDummyInput?.('services')
@@ -206,7 +207,7 @@ export default class BlocklyService {
             const typeName = type.name;
             const options: string[][] = entities
                 .filter((entity: Entity) => entity.type === typeName)
-                .map((entity: Entity) => [entity.name === '' ? 'Pas de nom' : entity.name, entity.id]);
+                .map((entity: Entity) => [entity.name === '' ? tr(('blockly.unknownName')) : entity.name, entity.id]);
 
             const blocklyObjects = new BlocklyObjects(
                 typeName,

@@ -1,6 +1,6 @@
 export interface AutomationPreview {
     id: string;
-    alias: string;
+    name: string;
     state: 'on' | 'off' | 'ready' | string;
 }
 

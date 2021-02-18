@@ -84,7 +84,7 @@
                 },
             ],
             mode: 'single',
-            alias: 'test',
+            name: 'test',
             description: 'test description',
         };
         const xml = BlocklyService.automationToXml(test_json);
