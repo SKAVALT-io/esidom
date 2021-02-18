@@ -22,7 +22,7 @@ class AuthService {
             handler: ['homeassistant', null],
             redirect_uri: `${baseUrl}/?auth_callback=1`,
         });
-        const flowId = res.data.flow_id;
+        const flowId = res.flow_id;
         res = await httpForwarder.post(
             `/auth/login_flow/${flowId}`,
             {
@@ -31,7 +31,7 @@ class AuthService {
                 client_id: `${baseUrl}/`,
             },
         );
-        const resultData: string = res.data.result;
+        const resultData: string = res.result;
         const bodyFormData: FormData = new FormData();
         bodyFormData.append('code', resultData);
         bodyFormData.append('client_id', `${baseUrl}/`);
@@ -41,7 +41,7 @@ class AuthService {
             bodyFormData,
             { headers: { ...bodyFormData.getHeaders() } },
         );
-        const accessToken: string = res.data.access_token;
+        const accessToken: string = res.access_token;
         return accessToken;
     }
 

@@ -1,6 +1,11 @@
 {
-  "home": {
-      "welcome": "Hello World",
-      "coucou": "Yo people :D"
+    "home": {
+        "welcome": "Hello World",
+        "coucou": "Yo people :D"
+    },
+    "automations": {
+        "myAutomations": "My Automations",
+        "search": "Search...",
+        "sortBy": "Sort by"
     }
-  }
+}
