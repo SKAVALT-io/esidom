@@ -7,6 +7,8 @@
     import SearchBar from '../../components/others/SearchBar.svelte';
     import AutomationService from '../../services/automationService';
     import DropdownButton from '../../components/UI/buttons/DropdownButton.svelte';
+    import RoundedButton from '../../components/UI/buttons/RoundedButton.svelte';
+    import { push } from 'svelte-spa-router';
 
     let automations: AutomationPreview[] = [];
     let searchValue = '';
@@ -46,7 +48,14 @@
     class="pt-2 flex justify-between relative right-0 top-0 mt-2 mr-2 ml-2 mx-auto text-white"
 >
     <h1 class="text-2xl">{tr('automations.myAutomations')}</h1>
-
+    <div class="fixed bottom-0 right-0 h-16 w-16">
+        <RoundedButton
+            on:click={() => {
+                push('/blockly');
+            }}
+            iconPath="icons/button/plus.svg"
+        />
+    </div>
     <div>
         <DropdownButton
             dropDownOptions={[tr('automations.sortBy.options.name'), tr('automations.sortBy.options.state')]}

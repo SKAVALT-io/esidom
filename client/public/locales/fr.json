@@ -9,6 +9,7 @@
   "menu": {
     "devices": "équipements",
     "home": "accueil",
+    "automations": "routines",
     "blockly": "blockly"
   },
   "devices": {

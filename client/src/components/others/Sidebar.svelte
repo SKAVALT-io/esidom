@@ -63,20 +63,20 @@
         </li>
         <li class="nav_item">
             <a
-                href="/blockly"
+                href="/automations"
                 class="nav-link"
                 use:SPA.link
                 on:click={() => {
-                    pageLinkClicked('blockly');
+                    pageLinkClicked('automations');
                 }}
-                class:selected={currentPageSelected === 'blockly'}
+                class:selected={currentPageSelected === 'automations'}
             >
                 <img
                     class="link-svg"
                     src="icons/sidebar/blockly.svg"
-                    alt={tr('menu.blockly')}
+                    alt={tr('menu.automations')}
                 />
-                <span class="link-text">{tr('menu.blockly')}</span>
+                <span class="link-text">{tr('menu.automations')}</span>
             </a>
         </li>
     </ul>
