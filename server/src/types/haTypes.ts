@@ -97,3 +97,9 @@ export interface HaAutomation {
     action: any[];
     mode: 'single' | 'restart' | 'queued' | 'parallel';
 }
+
+export interface HaSearchDeviceResponse {
+    config_entry: string[];
+    entity: string[];
+    automation: string[];
+}

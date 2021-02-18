@@ -67,7 +67,9 @@ class SocketForwarder {
                 }
                 break;
             case 'deviceRegistryUpdated':
-                observer.onDeviceRegistryUpdated?.();
+                if (data) {
+                    observer.onDeviceRegistryUpdated?.(data);
+                }
                 break;
             case 'entityRegistryUpdated':
                 observer.onEntityRegistryUpdated?.();
@@ -169,7 +171,7 @@ class SocketForwarder {
             case 'create':
                 (this.socketsMap.get(id) || console.log)(data.event.data);
                 this.socketsMap.delete(id);
-                this.io.emit('device_created', data.event.data);
+                this.notifyObservers('deviceRegistryUpdated', data.event.data);
                 return;
             case 'remove':
                 this.io.emit('device_removed', data.event.data);

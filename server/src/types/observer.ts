@@ -6,7 +6,7 @@ export interface EventObserver {
     onEntityUpdated?: (data: string) => void;
     onAutomationUpdated?: (data: string) => void;
     onEntityRegistryUpdated?: () => void;
-    onDeviceRegistryUpdated?: () => void;
+    onDeviceRegistryUpdated?: (data: string) => void;
     onAreaUpdated?: (roomId: string) => void;
     onAreaRemoved?: (roomId: string) => void;
 }
