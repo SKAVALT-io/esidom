@@ -1,16 +1,14 @@
 <script lang="ts">
-    import type { hasContext, SvelteComponent } from 'svelte';
+    import type { SvelteComponent } from 'svelte';
     import { pop } from 'svelte-spa-router';
-    import BinarySensorFull from '../../components/devices/binarySensor/BinarySensorFull.svelte';
-    import LightFull from '../../components/devices/lights/LightFull.svelte';
+    import Light from '../../components/entities/lights/Light.svelte';
 
     export let params: { id: string };
     const { id } = params;
     const domain = id.split('.')[0];
 
     const mapTypeToComp = new Map<string, typeof SvelteComponent>();
-    mapTypeToComp.set('light', LightFull);
-    mapTypeToComp.set('binary_sensor', BinarySensorFull);
+    mapTypeToComp.set('light', Light);
 
     function getCompByType(id: string) {
         return mapTypeToComp.get(domain);

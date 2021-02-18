@@ -45,13 +45,13 @@
         </li>
         <li class="nav_item">
             <a
-                href="/devices"
+                href="/entities"
                 class="nav-link"
                 use:SPA.link
                 on:click={() => {
-                    pageLinkClicked('devices');
+                    pageLinkClicked('entities');
                 }}
-                class:selected={currentPageSelected === 'devices'}
+                class:selected={currentPageSelected === 'entities'}
             >
                 <img
                     class="link-svg"

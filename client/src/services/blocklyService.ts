@@ -92,7 +92,7 @@ export default class BlocklyService {
         this.createObjects(entities);
     }
 
-    static createEntities(entities: Entity[], services: Service[]): void {
+    static createEntities(entities: Entity<any>[], services: Service[]): void {
         const entityWithServices: EntityWithServices[] = [];
 
         entities.forEach((entity: Entity<any>) => {
@@ -161,13 +161,13 @@ export default class BlocklyService {
         };
     }
 
-    static createObjects(entities: Entity[]): void {
+    static createObjects(entities: Entity<any>[]): void {
         const block = Blockly.Blocks as unknown as BlocksDefinitions;
         TYPES.forEach((type: Type) => {
             const typeName = type.name;
             const options: string[][] = entities
-                .filter((entity: Entity) => entity.type === typeName)
-                .map((entity: Entity) => [entity.name === '' ? 'Pas de nom' : entity.name, entity.id]);
+                .filter((entity: Entity<any>) => entity.type === typeName)
+                .map((entity: Entity<any>) => [entity.name === '' ? 'Pas de nom' : entity.name, entity.id]);
 
             const blocklyObjects = new BlocklyObjects(
                 typeName,
