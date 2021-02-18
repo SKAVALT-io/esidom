@@ -95,7 +95,6 @@
     }
 </script>
 
-
 <BorderedButton
     on:click={() => loadAutomation()}
     text="(TO BE REMOVED OR REPLACED) LOAD AUTOMATION"
