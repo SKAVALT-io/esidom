@@ -19,6 +19,14 @@
         );
     }
 
+    function handleEdit() {
+        push(`/blockly/${automation.id}`);
+    }
+
+    function handleTrigger() {
+        AutomationService.triggerAutomation(automation.id);
+    }
+
     function automationUpdatedHandler(data: any) {
         automation = data;
     }
@@ -41,19 +49,24 @@
 
 <div
     id="automation"
-    class="rounded-lg items-center text-center grid grid-cols-10 px-1 py-4"
+    class="rounded-lg items-center text-center grid grid-cols-8 px-1 py-4"
 >
     <div class="col-span-1">
         <ToggleButton on:change={handleToggle} bind:checked />
     </div>
-    <div class="flex justify-center items-center col-span-8">
-        {automation.name}
+    <div class="content-center col-span-5">{automation.name}</div>
+    <div class="col-span-1">
+        <RoundedButton
+            iconPath="icons/button/trigger.svg"
+            size={8}
+            on:click={handleTrigger}
+        />
     </div>
-    <div class="col-span-1 relative">
+    <div class="col-span-1">
         <RoundedButton
             size={8}
-            on:click={() /*TODO: go to edit page*/ => push('/home')}
-            iconPath="icons/edit.svg"
+            on:click={handleEdit}
+            iconPath="icons/button/edit.svg"
         />
     </div>
 </div>

@@ -47,7 +47,7 @@
 >
     <h1 class="text-2xl">{tr('automations.myAutomations')}</h1>
 
-    <div class="flex">
+    <div>
         <DropdownButton
             dropDownOptions={[tr('automations.sortBy.options.name'), tr('automations.sortBy.options.state')]}
             title={tr('automations.sortBy.title')}
