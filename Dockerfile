@@ -1,5 +1,6 @@
 FROM node:12.20.1-buster
 
+ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD true
 WORKDIR /usr/src/esidom/client
 COPY client/ ./
 RUN npm ci && npm run build
