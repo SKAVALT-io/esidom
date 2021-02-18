@@ -17,7 +17,11 @@
                 alt="hamburger_menu"
             />
         </button>
-        <img src="logo-esidom.png" alt="ESIDOM" class="logo h-auto w-12" />
+
+        <a href="/#/" class="inline-flex items-center">
+            <img src="logo-esidom.png" alt="ESIDOM" class="logo h-auto w-12" />
+            <p>ESIDOM</p>
+        </a>
     </div>
     <div class="nav-links flex items-center space-x-4">
         <a
