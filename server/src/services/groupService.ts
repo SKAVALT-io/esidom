@@ -139,17 +139,18 @@ class GroupService implements EventObserver {
 
     async getGroups(): Promise<Group[]> {
         const res: HaStateResponse[] = await socketForwarder.forward({ type: 'get_states' });
-        return Promise.all(res.filter((val) => val.entity_id.startsWith('group')).map(this.convertEntityToGroup));
+        return Promise.all(res.filter((val) => val.entity_id.startsWith('group')).map((v) => this.convertEntityToGroup(v)));
     }
 
     async generateImplicitGroup():Promise<void> {
         // Generate implicit group per room
         const rooms = await roomService.getRooms();
-        await Promise.all(rooms.map(this.generateImplicitGroupForOneRoom));
+        await Promise.all(rooms.map((r) => this.generateImplicitGroupForOneRoom(r)));
+
         // Generate implicit group for all devices
         const devices: Device[] = await deviceService.getDevices();
         const entities = devices.flatMap((d: Device) => d.entities.filter((entity: Entity) => entity.id.startsWith('switch') || entity.id.startsWith('light')).map((entity) => entity.id));
-        if (!entities) {
+        if (!entities || entities.length === 0) {
             return;
         }
         const nameGroup = 'All switch and light';
@@ -165,7 +166,8 @@ class GroupService implements EventObserver {
         const entities = r.devices
             .flatMap((x) => x.entities.filter((entity) => entity.id.startsWith('switch') || entity.id.startsWith('light')))
             .map((entity) => entity.id);
-        if (!entities) {
+        console.log(entities);
+        if (!entities || entities.length === 0) {
             return Promise.resolve();
         }
         return this.createGroupInHa({
@@ -205,7 +207,7 @@ class GroupService implements EventObserver {
             throw new Error('Cant convert entity to group');
         }
         const entities: Entity[] = await Promise.all(
-            e.attributes.entity_id.map(entityService.getEntityById),
+            e.attributes.entity_id.map((v: string) => entityService.getEntityById(v)),
         );
         return {
             groupId: e.entity_id.split('.')[1],

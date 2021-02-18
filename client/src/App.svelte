@@ -20,6 +20,7 @@
         '/devices/': Devices,
         '/home/': Home,
         '/blockly': Blockly,
+        '/blockly/:id': Blockly,
         '/automations': Automations,
         // This is optional, but if present it must be the last
         '*': Home,
@@ -58,7 +59,7 @@
         <div class="sidenav fixed z-100">
             <Sidebar bind:open />
         </div>
-        <div class="main-content mt-6 z-10 w-full">
+        <div class="main-content w-full mt-6 z-10">
             <Router {routes} />
         </div>
     </div>

@@ -18,9 +18,14 @@ class AutomationService implements EventObserver {
     }
 
     onAutomationUpdated(data: string) {
-        this.getAutomationPreviewById(data)
-            .then((updated: AutomationPreview) => {
-                socketForwarder.emitSocket('entity_updated', updated);
+        this.getAutomationById(data)
+            .then((updated: Automation) => {
+                const updatedPreview: AutomationPreview = {
+                    id: updated.id,
+                    name: updated.name,
+                    state: updated.state,
+                };
+                socketForwarder.emitSocket('entity_updated', updatedPreview);
             })
             .catch((err) => console.log(err.message));
     }
@@ -86,6 +91,31 @@ class AutomationService implements EventObserver {
             type: 'call_service',
             domain: 'automation',
             service,
+            service_data: data,
+        });
+    }
+
+    async createAutomation(automation: Automation) {
+        const haAut: HaAutomation = {
+            id: automation.id,
+            alias: automation.name,
+            mode: automation.mode,
+            description: automation.description,
+            trigger: automation.trigger,
+            condition: automation.condition,
+            action: automation.action,
+        };
+        const result: { result?: string, message?: string} = await httpForwarder
+            .post(`/api/config/automation/config/${haAut.id}`, haAut);
+        return result;
+    }
+
+    async triggerAutomation(id: string) {
+        const data = { entity_id: id };
+        await socketForwarder.forward({
+            type: 'call_service',
+            domain: 'automation',
+            service: 'trigger',
             service_data: data,
         });
     }

@@ -9,11 +9,23 @@
   "menu": {
     "devices": "équipements",
     "home": "accueil",
+    "automations": "routines",
     "blockly": "blockly"
   },
   "devices": {
     "lights": "lampes",
     "sensors": "capteurs"
+  },
+  "automations": {
+    "myAutomations": "Mes Routines",
+    "search": "Rechercher...",
+    "sortBy": {
+        "title": "Trier par",
+        "options": {
+            "name": "Noms",
+            "state": "Actives"
+        }
+    }
   },
   "blockly": {
     "loading": "Chargement de Blockly...",

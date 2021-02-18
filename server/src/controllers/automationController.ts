@@ -30,6 +30,25 @@ class AutomationController {
             .catch((err) => res.status(404).send({ message: err.message }));
     }
 
+    @App.post('')
+    createAutomation(req: Request, res: Response): void {
+        const { automation }: {automation: Automation } = req.body;
+        automationService.createAutomation(automation)
+            .then((result) => {
+                console.log('RESULT', result);
+                res.status(200).send(result);
+            })
+            .catch((err) => res.status(400).send({ message: err.message }));
+    }
+
+    @App.post('/:id')
+    triggerAutomation(req: Request, res: Response): void {
+        const { id } = req.params;
+        automationService.triggerAutomation(id)
+            .then((result) => res.status(200).send(result))
+            .catch((err) => res.status(404).send({ message: err.message }));
+    }
+
 }
 
 export default new AutomationController();
