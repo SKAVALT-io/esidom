@@ -1,6 +1,11 @@
 <script lang="ts">
     import BlocklyComponent from './BlocklyComponent.svelte';
     import COLORS from './esidomConst';
+
+    // url param --> can be accessed via params.id
+    // if id exists --> get /automation/id to edit routine
+    // if id is undefined --> creating new automation
+    export let params: { id: string };
 </script>
 
 <div>

@@ -20,6 +20,7 @@
         '/devices/': Devices,
         '/home/': Home,
         '/blockly': Blockly,
+        '/blockly/:id': Blockly,
         '/automations': Automations,
         // This is optional, but if present it must be the last
         '*': Home,
