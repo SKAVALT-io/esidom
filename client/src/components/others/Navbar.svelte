@@ -3,6 +3,7 @@
 
     import AccountSVG from '../svg_icons/AccountSVG.svelte';
     import Clock from './Clock.svelte';
+    import { tr } from '../../utils/i18nHelper';
 
     const dispatch = createEventDispatcher();
 </script>
@@ -21,7 +22,7 @@
 
         <a href="/#/" class="contents">
             <img src="logo-esidom.png" alt="ESIDOM" class="logo h-auto w-12" />
-            <p>ESIDOM</p>
+            <p>{tr('app.name')}</p>
         </a>
     </div>
     <div class="text-lg">
