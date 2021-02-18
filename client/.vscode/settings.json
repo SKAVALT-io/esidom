@@ -26,4 +26,16 @@
     "emmet.showExpandedAbbreviation": "always",
     "emmet.includeLanguages": { "svelte": "html" },
     "typescript.preferences.importModuleSpecifier": "relative",
+    "i18n-ally.localesPaths": [
+        "public/locales"
+    ],
+    "i18n-ally.enabledFrameworks": [
+        "svelte"
+    ],
+    "i18n-ally.sourceLanguage": "fr",
+    "javascript.preferences.quoteStyle": "single",
+    "i18n-ally.regex.usageMatch": [
+        "(?:\\$[_t]|tr)\\([\\'\"`]({key})[\\'\"`]"
+    ],
+    "i18n-ally.keystyle": "nested",
 }

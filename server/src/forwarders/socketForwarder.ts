@@ -3,7 +3,7 @@ import WebSocket from 'ws';
 import { HaEntityUpdated } from '../types/haTypes';
 import App from '../app';
 import config from '../config/config';
-import { Entity } from '../types/entity';
+import { EventObserver, Event } from '../types/observer';
 
 type HaSocket = {
     type: string,
@@ -17,9 +17,6 @@ type HaSocket = {
     }
 }
 
-// eslint-disable-next-line no-unused-vars
-type Handler = (a: HaEntityUpdated) => Promise<Entity>;
-
 class SocketForwarder {
 
     // eslint-disable-next-line no-unused-vars
@@ -28,25 +25,67 @@ class SocketForwarder {
     // eslint-disable-next-line no-unused-vars
     private errorsMap: Map<number, (body: any) => void>;
 
-    // eslint-disable-next-line no-unused-vars
-    private eventsCallback: Map<string, Handler>;
-
     private socket: WebSocket | null;
 
     private uid: number;
 
     private io: socketIo.Server;
 
+    private observers: EventObserver[];
+
     constructor() {
         this.socketsMap = new Map();
         this.errorsMap = new Map();
-        this.eventsCallback = new Map();
         this.socket = null;
         this.uid = 2;
+        this.observers = [];
         this.io = new socketIo.Server(App.http, {
             cors: {
                 origin: '*',
             },
+        });
+    }
+
+    registerObserver(observer: EventObserver) {
+        this.observers.push(observer);
+    }
+
+    notifyObservers(event: Event, data?: string) {
+        this.observers.forEach((observer: EventObserver) => {
+            switch (event) {
+            case 'authOk':
+                observer.onAuthOk?.();
+                break;
+            case 'entityUpdated':
+                if (data) {
+                    observer.onEntityUpdated?.(data);
+                }
+                break;
+            case 'automationUpdated':
+                if (data) {
+                    observer.onAutomationUpdated?.(data);
+                }
+                break;
+            case 'deviceRegistryUpdated':
+                observer.onDeviceRegistryUpdated?.();
+                break;
+            case 'entityRegistryUpdated':
+                observer.onEntityRegistryUpdated?.();
+                break;
+            case 'areaUpdated':
+                if (data) {
+                    observer.onAreaUpdated?.(data);
+                }
+                break;
+            case 'areaRemoved':
+                if (data) {
+                    observer.onAreaRemoved?.(data);
+                }
+                break;
+            default:
+                console.log(`No such event ${event}`);
+                break;
+            }
         });
     }
 
@@ -70,6 +109,7 @@ class SocketForwarder {
                     break;
                 case 'auth_ok':
                     console.log('Authorized');
+                    this.notifyObservers('authOk');
                     break;
                 case 'event':
                     this.handleSocketEvent(data);
@@ -97,6 +137,11 @@ class SocketForwarder {
             type: 'subscribe_events',
             event_type: 'entity_registry_updated',
         });
+
+        this.forward({
+            type: 'subscribe_events',
+            event_type: 'area_registry_updated',
+        });
     }
 
     handleSocketResult(data: HaSocket): void {
@@ -116,6 +161,7 @@ class SocketForwarder {
     async handleSocketEvent(data: HaSocket): Promise<void> {
         const { id } = data;
         console.log(`received event for ws : ${id}`);
+        console.log(data);
         const eventType: string = data?.event?.event_type;
         if (eventType === 'device_registry_updated') {
             console.log(data.event.data);
@@ -128,6 +174,9 @@ class SocketForwarder {
             case 'remove':
                 this.io.emit('device_removed', data.event.data);
                 return;
+            case 'update':
+                this.notifyObservers('deviceRegistryUpdated');
+                return;
             default:
                 console.log(`Unknown event ${data.event.event_type}`);
                 return;
@@ -135,13 +184,17 @@ class SocketForwarder {
         }
         if (eventType === 'state_changed') {
             const ent: HaEntityUpdated = data?.event?.data;
-            const callback = this.eventsCallback.get(eventType);
-            if (callback) {
-                callback(ent)
-                    .then((res) => {
-                        this.io.emit('entity_updated', res);
-                    })
-                    .catch((err) => console.log(err.message));
+            if (ent.entity_id.startsWith('automation')) {
+                this.notifyObservers('automationUpdated', ent.entity_id);
+            } else {
+                this.notifyObservers('entityUpdated', ent.entity_id);
+            }
+        }
+        if (eventType === 'area_registry_updated') {
+            if (data?.event?.data?.action === 'remove') {
+                this.notifyObservers('areaRemoved', data.event?.data?.area_id);
+            } else if (data?.event?.data?.action === 'update') {
+                this.notifyObservers('areaUpdated', data.event?.data?.area_id);
             }
         }
     }
@@ -162,8 +215,8 @@ class SocketForwarder {
         return res;
     }
 
-    registerEventCallback(event: string, fn: Handler) {
-        this.eventsCallback.set(event, fn);
+    emitSocket<T>(event: string, data: T): void {
+        this.io.emit(event, data);
     }
 
 }
