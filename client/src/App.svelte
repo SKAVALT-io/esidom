@@ -1,7 +1,9 @@
 <script lang="ts">
     import Router from 'svelte-spa-router';
 
-    import { addMessages, init, getLocaleFromNavigator } from 'svelte-i18n';
+    import {
+        addMessages, init, getLocaleFromNavigator, _,
+} from 'svelte-i18n';
 
     import fr from 'locales/fr.json';
     import en from 'locales/en.json';
@@ -16,6 +18,7 @@
     import { socketManager } from './managers/socketManager';
     import Sidebar from './components/UI/bar/Sidebar.svelte';
     import Toast from './Toast.svelte';
+    import Groups from './routes/groups/Groups.svelte';
 
     // Configure the app routes
     const routes = {
@@ -25,6 +28,7 @@
         '/blockly': Blockly,
         '/blockly/:id': Blockly,
         '/automations': Automations,
+        '/groups': Groups,
         // This is optional, but if present it must be the last
         '*': Entities,
     };
