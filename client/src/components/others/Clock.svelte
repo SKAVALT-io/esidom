@@ -1,9 +1,9 @@
 <script lang="ts">
     // eslint-disable-next-line import/first
     import { onMount } from 'svelte';
+    export let formatDate = '';
 
     let date = new Date();
-    let test = new String();
     let options = {
         weekday: 'long',
         year: 'numeric',
@@ -29,8 +29,10 @@
 <section>
     <div>
         <p>
-            {date.toLocaleDateString('fr-FR', options).toUpperCase()}
-            -
+            {#if formatDate == 'long'}
+                {date.toLocaleDateString('fr-FR', options).toUpperCase()}
+                -
+            {/if}
             {format(hour)}
             :
             {format(min)}

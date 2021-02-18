@@ -24,9 +24,14 @@
             <p>ESIDOM</p>
         </a>
     </div>
-    <p class="text-lg">
-        <Clock />
-    </p>
+    <div class="text-lg">
+        <p class="sm:hidden">
+            <Clock formatDate="short" />
+        </p>
+        <p class="hidden sm:flex">
+            <Clock formatDate="long" />
+        </p>
+    </div>
     <div class="nav-links flex items-center space-x-4">
         <a
             href="/#/"
