@@ -4,4 +4,4 @@
     export let entity: Entity<any>;
 </script>
 
-{entity.name}
+<div>{entity.name}</div>

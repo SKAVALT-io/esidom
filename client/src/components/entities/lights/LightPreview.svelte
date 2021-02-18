@@ -3,7 +3,10 @@
 
     import type { LightEntity } from '../../../../types/entities/lightEntity';
     import { socketManager } from '../../../managers/socketManager';
-    import { updateLight } from '../../../services/entities/lightService';
+    import {
+        switchLamp,
+        updateLight,
+    } from '../../../services/entities/lightService';
 
     import EntityPreview from '../EntityPreview.svelte';
     import BrightnessPicker from './things/BrightnessPicker.svelte';
@@ -27,6 +30,10 @@
         updateLight(entity.id, event.detail);
     }
 
+    function switchLight() {
+        switchLamp(entity.id, !isOn);
+    }
+
     onMount(() => {
         socketManager.registerListener(
             'entity_updated',
@@ -42,11 +49,7 @@
 
 <EntityPreview isError={false} {entity}>
     <!-- Image -->
-    <img slot="img" src={srcLamp} alt="" on:click={console.log} />
-    <!-- Name -->
-    <div slot="name">
-        <h2 class="">{entity.name} est {isOn ? 'allumé' : 'éteinte'}</h2>
-    </div>
+    <img slot="img" src={srcLamp} alt="" on:click={switchLight} />
     <!-- Data -->
     <div slot="sensor">
         {#if isOn}

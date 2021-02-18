@@ -58,7 +58,7 @@
 
 {#await loadLight()}
     Loading data...
-{:then l}
+{:then}
     <div>
         <h1>{light.name}</h1>
 

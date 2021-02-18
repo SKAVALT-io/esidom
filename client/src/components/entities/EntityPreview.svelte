@@ -1,5 +1,6 @@
 <script>
     import type { Entity } from '../../../types/entityType';
+    import Tooltip from '../UI/utils/Tooltip.svelte';
 
     /* import { link } from 'svelte-spa-router';
     If we use:link in <a>, we can't middle click it (= open in new tab)
@@ -7,12 +8,21 @@
 
     export let isError: boolean;
     export let entity: Entity<any>;
+    let show = false;
+
+    function parseStringByLength(str: string, len = 20): string {
+        return str
+            ? str.length >= len
+                ? str.substring(0, 20) + ' [...]'
+                : str
+            : '<Sans nom>';
+    }
 </script>
 
-<div id="all" class="grid grid-cols-5" class:error={isError}>
+<div id="all" class="grid grid-cols-5 max-w-lg max-h-32" class:error={isError}>
     <div
         id="img"
-        class="col-span-2 rounded-xl rounded-r-none flex items-center px-5"
+        class="col-span-2 rounded-xl rounded-r-none flex items-center px-4"
     >
         {#if !isError}
             <slot name="img">
@@ -24,17 +34,30 @@
             </slot>
         {:else}:({/if}
     </div>
-
+    <!-- flex items-center px-3 py-8 -->
     <div
         id="data"
-        class="col-span-3 rounded-xl rounded-l-none flex items-center px-3 py-8"
+        class="col-span-3 rounded-xl rounded-l-none grid grid-rows-5 items-center text-center"
     >
-        <a href="#/entity/{entity.id}">
-            <slot name="name">NAME</slot>
-        </a>
-        {#if !isError}
-            <slot name="sensor">PLACEHOLDER</slot>
-        {:else}Data unavailable{/if}
+        <div
+            class="row-span-3 relative"
+            on:touchstart={() => (show = true)}
+            on:touchend={() => (show = false)}
+            on:mouseleave={() => (show = false)}
+            on:mouseenter={() => (show = true)}
+        >
+            <a href="#/entity/{entity.id}">
+                {parseStringByLength(entity.name)}
+            </a>
+            {#if entity.name}
+                <Tooltip text={entity.name} position="top" {show} />
+            {/if}
+        </div>
+        <div class="row-span-2">
+            {#if !isError}
+                <slot name="sensor">PLACEHOLDER</slot>
+            {:else}Data unavailable{/if}
+        </div>
     </div>
 </div>
 
