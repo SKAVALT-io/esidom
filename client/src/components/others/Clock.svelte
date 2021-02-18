@@ -16,7 +16,7 @@
     $: sec = date.getSeconds();
 
     function format(num: number): string {
-        return num < 10 ? '0' + num.toString() : num.toString();
+        return num < 10 ? `0${num}` : `${num}`;
     }
 
     onMount(() => {
