@@ -67,14 +67,14 @@ export default class BlocklyService {
         this.workspace = workspace;
     }
 
-    convertToBlock(alias = 'test', description = 'test description'): void {
+    convertToBlock(name = 'test', description = 'test description'): void {
         const code = esidomGenerator.workspaceToCode(this.workspace);
 
         try {
             const json = JSON.parse(code);
-            json.alias = alias;
+            json.name = name;
             json.description = description;
-
+            json.id = `automation.${name.toLowerCase().replace(/ /g, '_')}`;
             // TODO: send the json to HA
             console.log(JSON.stringify(json));
         } catch (e) {
@@ -234,7 +234,7 @@ export default class BlocklyService {
             <block type="esidom_automation" deletable="false" movable="false">
         `;
 
-        automation.trigger.forEach((trigger) => {
+        automation.trigger?.forEach((trigger) => {
             const plf = trigger.platform;
 
             xml += `
@@ -244,7 +244,7 @@ export default class BlocklyService {
             `;
         });
 
-        automation.condition.forEach((condition) => {
+        automation.condition?.forEach((condition) => {
             const cdt = condition.condition;
 
             xml += `
@@ -254,7 +254,7 @@ export default class BlocklyService {
             `;
         });
 
-        automation.action.forEach((action) => {
+        automation.action?.forEach((action) => {
             const { alias } = action;
             const { service } = action;
 

@@ -70,7 +70,7 @@ export type BlocksGenerator = {
     color_picker: (blk: Block) => void;
     color_rgb: (blk: Block) => void;
     object_action: (blk: Block) => void;
-    scrub: (blk: Block, code: string, opt_thisOnly: string) => void
+    scrub_: (blk: Block, code: string, opt_thisOnly: string) => string;
     jsonInit:(a: Block)=> void;
 }
 
@@ -252,7 +252,8 @@ export type BlocksGenerator = {
     };
 
     // Scrub for combining two same blks
-    block.scrub = (blk, code, opt_thisOnly) => {
+    // eslint-disable-next-line no-underscore-dangle
+    block.scrub_ = (blk, code, opt_thisOnly) => {
         const nextBlock = blk.nextConnection && blk.nextConnection.targetBlock();
         const nextCode = opt_thisOnly ? '' : esidomGenerator.blockToCode(nextBlock);
 
