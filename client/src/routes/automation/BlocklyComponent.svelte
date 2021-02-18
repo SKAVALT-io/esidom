@@ -64,7 +64,10 @@
 <div class="pr-4">
     {#await entityPromise}
         <p>{tr('blockly.loading')}</p>
-        <div id="blocklyDivHide" />
+        <div
+            id="blocklyDivHideAwait"
+            class="absolute bg-esidom z-100 w-full h-vh-80"
+        />
     {:then}
         <p class="pb-6">
             <BorderedButton
@@ -74,28 +77,13 @@
         </p>
     {:catch}
         <p style="color: red">{tr('blockly.loadingError')}</p>
-        <div id="blocklyDivHide" />
+        <div
+            id="blocklyDivHideError"
+            class="absolute bg-esidom z-100 w-full h-vh-80"
+        />
     {/await}
-    <div id="blocklyDiv" />
+    <div id="blocklyDiv" class="h-vh-80" />
     <xml id="toolbox" style="display: none">
         <slot />
     </xml>
 </div>
-
-<style>
-    #blocklyDivHide {
-        position: absolute;
-        height: 80vh;
-        width: 100%;
-        text-align: left;
-        background-color: #120639;
-        z-index: 90;
-    }
-
-    #blocklyDiv {
-        position: relative;
-        height: 80vh;
-        width: 100%;
-        text-align: left;
-    }
-</style>
