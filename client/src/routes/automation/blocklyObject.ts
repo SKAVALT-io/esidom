@@ -40,7 +40,7 @@ export default class BlocklyObjects {
             args0: [
                 {
                     type: 'field_dropdown',
-                    name: 'object',
+                    name: 'Object',
                     options: this.options,
                 },
             ],
