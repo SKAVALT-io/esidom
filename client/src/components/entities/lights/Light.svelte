@@ -27,7 +27,6 @@
     }
 
     const lightPropMap = new Map<String, typeof SvelteComponent>();
-    lightPropMap.set('node_id', CancelButton);
     lightPropMap.set('rgb_color', RgbColorPicker);
     lightPropMap.set('brightness', BrightnessPicker);
     lightPropMap.set('color_temp', ColorTemperaturePicker);
