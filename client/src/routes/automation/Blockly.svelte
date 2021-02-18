@@ -9,7 +9,7 @@
 </script>
 
 <div>
-    <BlocklyComponent>
+    <BlocklyComponent automationId={params?.id ?? ''}>
         <category name="Déclencheurs" colour={COLORS.HUE_GREEN}>
             <block type="binary_trigger" />
             <block type="time_trigger" />

@@ -8,6 +8,11 @@
     import { tr } from '../../utils/i18nHelper';
     import BorderedButton from '../../components/UI/buttons/BorderedButton.svelte';
     import type { Automation } from '../../../types/automationType';
+    import AutomationService from '../../services/automationService';
+    import { push } from 'svelte-spa-router';
+    import LoadingAnimation from '../../components/animations/LoadingAnimation.svelte';
+
+    export let automationId: string;
 
     let blocklyService: BlocklyService;
     let entityPromise: Promise<void>;
@@ -56,65 +61,70 @@
 
         blocklyService = new BlocklyService(workspace);
 
-        entityPromise = BlocklyService.initBlockly();
+        entityPromise = BlocklyService.initBlockly().then((res) => {
+            if (automationId !== '') {
+                loadAutomation();
+            }
+        });
     });
 
-    function loadAutomation() {
-        const test_json: Automation = {
-            id: '0',
-            state: 'on',
-            trigger: [
-                {
-                    platform: 'state',
-                    entity_id: 'binary_sensor.0x00158d0003cc152c_contact',
-                    from: 'on',
-                    to: 'off',
-                },
-            ],
-            condition: [
-                {
-                    condition: 'time',
-                    weekday: ['mon', 'tue', 'wed', 'thu', 'fri'],
-                    after: '0:0:0',
-                    before: '0:0:0',
-                },
-            ],
-            action: [
-                {
-                    alias: '20:light.zipato_bulb_2_level:Lampe Z-wave Zipato',
-                    entity_id: 'light.zipato_bulb_2_level',
-                    service: 'light.turn_off',
-                },
-            ],
-            mode: 'single',
-            name: 'test',
-            description: 'test description',
-        };
-        const xml = BlocklyService.automationToXml(test_json);
+    async function loadAutomation() {
+        const automation: Automation = await AutomationService.getAutomationById(
+            automationId
+        );
+
+        const xml = BlocklyService.automationToXml(automation);
         blocklyService.loadAutomation(xml);
+
+        automationName = automation.name;
+        automationDesc = automation.description;
     }
+
+    async function handleSubmit() {
+        const automation = blocklyService.convertToBlock(
+            automationName,
+            automationDesc
+        );
+
+        await AutomationService.postAutomation(automation);
+        // Don't go if request fail.
+        push('/automations');
+    }
+
+    let automationName: string;
+    let automationDesc: string;
 </script>
-
-
-<BorderedButton
-    on:click={() => loadAutomation()}
-    text="(TO BE REMOVED OR REPLACED) LOAD AUTOMATION"
-/>
 
 <div class="pr-4">
     {#await entityPromise}
         <p>{tr('blockly.loading')}</p>
+        <LoadingAnimation />
         <div
             id="blocklyDivHideAwait"
             class="absolute bg-esidom z-100 w-full h-vh-80"
         />
     {:then}
-        <p class="pb-6">
-            <BorderedButton
-                on:click={() => blocklyService.convertToBlock()}
-                text={tr('blockly.convertBlock')}
+        <form on:submit|preventDefault={handleSubmit}>
+            <input
+                class="bg-blue-500 hover:bg-blue-600 text-white py-1 px-3 border border-blue-700 rounded"
+                type="submit"
+                value={tr('blockly.convertBlock')}
             />
-        </p>
+            <input
+                type="text"
+                required
+                placeholder={tr('blockly.automationName')}
+                class="text-black"
+                bind:value={automationName}
+            />
+            <input
+                type="text"
+                placeholder={tr('blockly.automationDesc')}
+                class="text-black"
+                bind:value={automationDesc}
+            />
+        </form>
+        <br />
     {:catch}
         <p style="color: red">{tr('blockly.loadingError')}</p>
         <div
