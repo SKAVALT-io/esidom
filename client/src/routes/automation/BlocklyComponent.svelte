@@ -72,6 +72,7 @@
             condition: [
                 {
                     condition: 'time',
+                    weekday: ['mon', 'tue', 'wed', 'thu', 'fri'],
                     after: '0:0:0',
                     before: '0:0:0',
                 },
