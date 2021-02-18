@@ -95,7 +95,7 @@ export default class BlocklyService {
     static createEntities(entities: Entity[], services: Service[]): void {
         const entityWithServices: EntityWithServices[] = [];
 
-        entities.forEach((entity: Entity) => {
+        entities.forEach((entity: Entity<any>) => {
             const tmpServices: string[] = services
                 .filter((service: Service) => service.name.split('.')[0] === entity.type)
                 .map((service: Service) => service.name);

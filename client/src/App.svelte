@@ -1,15 +1,16 @@
 <script lang="ts">
     import Router from 'svelte-spa-router';
 
-    import { addMessages, init, getLocaleFromNavigator, _ } from 'svelte-i18n';
+    import { addMessages, init, getLocaleFromNavigator } from 'svelte-i18n';
 
     import fr from 'locales/fr.json';
     import en from 'locales/en.json';
 
     import Blockly from './routes/automation/Blockly.svelte';
-    import Devices from './routes/devices/Devices.svelte';
+    import Entities from './routes/entities/Entities.svelte';
     import Home from './routes/default/Home.svelte';
     import Automations from './routes/automation/Automations.svelte';
+    import Entity from './routes/entities/Entity.svelte';
 
     import Navbar from './components/others/Navbar.svelte';
     import { socketManager } from './managers/socketManager';
@@ -17,7 +18,8 @@
 
     // Configure the app routes
     const routes = {
-        '/devices/': Devices,
+        '/entities/': Entities,
+        '/entity/:id': Entity,
         '/home/': Home,
         '/blockly': Blockly,
         '/automations': Automations,
