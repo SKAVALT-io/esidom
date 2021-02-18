@@ -10,16 +10,6 @@ export function rgbToHex(r: number, g: number, b: number): string {
     return `#${componentToHex(r)}${componentToHex(g)}${componentToHex(b)}`;
 }
 
-export async function getLamp(id: string): Promise<LightEntity> {
-    return fetch(`${config.BASE_URL}/entity/${id}`)
-        .then((x) => {
-            if (!x.ok) {
-                throw Error('');
-            }
-            return x.json();
-        });
-}
-
 export async function updateLight(id: string, serviceData: {[id: string]: string}): Promise<void> {
     const body = JSON.stringify({
         service: 'light.turn_on',

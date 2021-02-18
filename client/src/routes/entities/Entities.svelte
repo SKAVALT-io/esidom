@@ -2,6 +2,7 @@
     import type { SvelteComponent } from 'svelte';
 
     import type { Entity } from '../../../types/entityType';
+    import BinarySensorPreview from '../../components/entities/binarySensor/BinarySensorPreview.svelte';
     import LightPreview from '../../components/entities/lights/LightPreview.svelte';
     import PlaceholderPreview from '../../components/entities/PlaceholderPreview.svelte';
 
@@ -28,6 +29,7 @@
 
     const mapDomainToComp = new Map<string, typeof SvelteComponent>();
     mapDomainToComp.set('light', LightPreview);
+    mapDomainToComp.set('binary_sensor', BinarySensorPreview);
 
     function getCompByDomain(entityId: string): typeof SvelteComponent {
         const domain = entityId.split('.')[0];

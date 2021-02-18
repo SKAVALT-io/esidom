@@ -8,12 +8,12 @@
         updateLight,
     } from '../../../services/entities/lightService';
 
-    import CancelButton from '../../UI/buttons/CancelButton.svelte';
     import RgbColorPicker from './things/RgbColorPicker.svelte';
     import BrightnessPicker from './things/BrightnessPicker.svelte';
     import ColorTemperaturePicker from './things/ColorTemperaturePicker.svelte';
     import { socketManager } from '../../../managers/socketManager';
     import type { LightEntity } from '../../../../types/entities/lightEntity';
+    import { getEntity } from '../../../services/entityService';
 
     export let entityId: string;
 
@@ -22,7 +22,7 @@
     $: isOn = light?.state === 'on';
 
     async function loadLight() {
-        light = await getLamp(entityId);
+        light = await getEntity<LightEntity>(entityId);
         console.log('light', light);
     }
 
