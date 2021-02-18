@@ -216,7 +216,7 @@ export default class BlocklyService {
                 parseInt(COLORS.HUE_RED, 10),
             );
 
-            blocklyObjects.addOptions(options);
+            blocklyObjects.addOptions(options.length !== 0 ? options : [[tr(('blockly.unknownName')), tr(('blockly.unknownName'))]]);
             const objectBlock: ObjectBlock = blocklyObjects.getJson();
 
             // Create object Block
@@ -261,8 +261,8 @@ export default class BlocklyService {
             xml += `
                 <value name="Action">
                 <block type="object_action">
-                <field name="Entities">${alias}</field>
-                <field name="Services">${service}</field>
+                    <field name="Entities">${alias}</field>
+                    <field name="Services">${service}</field>
                 </block>
                 </value>
             `;

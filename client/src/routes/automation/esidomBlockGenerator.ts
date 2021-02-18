@@ -37,6 +37,21 @@ const esidomBlockGenerator: EsidomBlockGenerator = {
             `;
             return xml;
         },
+        state(blocklyJSON: BlocklyJSON): string {
+            const service = blocklyJSON.entity_id;
+            const state = blocklyJSON.to;
+            const xml = `
+            <block type="binary_trigger">
+                <value name="Service">    
+                <block type="binary_sensor">
+                    <field name="Object">${service}</field>
+                </block>
+                </value>
+            <field name="State">${state}</field>
+            </block>
+            `;
+            return xml;
+        },
     },
     condition: {
         time(blocklyJSON: BlocklyJSON): string {
@@ -46,8 +61,9 @@ const esidomBlockGenerator: EsidomBlockGenerator = {
             if (keys.includes('weekday') && !keys.includes('after') && !keys.includes('before')) {
                 const { weekday } = blocklyJSON;
 
-                xml += `<block type="time_condition_week">';
-                    ${weekday ? getWeekFields(weekday) : ''}
+                xml += `
+                    <block type="time_condition_week">';
+                        ${weekday ? getWeekFields(weekday) : ''}
                     </block>
                 `;
                 return xml;
@@ -64,12 +80,12 @@ const esidomBlockGenerator: EsidomBlockGenerator = {
 
                 xml += `
                     <block type="time_condition_hour">
-                    <field name="Hour_start">${hourStart}</field>
-                    <field name="Minute_start">${minutesStart}</field>
-                    <field name="Second_start">${secondStart}</field>
-                    <field name="Hour_end">${hourEnd}</field>
-                    <field name="Minute_end">${minutesEnd}</field>
-                    <field name="Second_end">${secondEnd}</field>
+                        <field name="Hour_start">${hourStart}</field>
+                        <field name="Minute_start">${minutesStart}</field>
+                        <field name="Second_start">${secondStart}</field>
+                        <field name="Hour_end">${hourEnd}</field>
+                        <field name="Minute_end">${minutesEnd}</field>
+                        <field name="Second_end">${secondEnd}</field>
                     </block>
                 `;
             } else if (keys.includes('weekday') && keys.includes('after') && keys.includes('before')) {
@@ -87,13 +103,13 @@ const esidomBlockGenerator: EsidomBlockGenerator = {
 
                 xml += `
                     <block type="time_condition">
-                    <field name="Hour_start">${hourStart}</field>
-                    <field name="Minute_start">${minutesStart}</field>
-                    <field name="Second_start">${secondStart}</field>
-                    <field name="Hour_end">${hourEnd}</field>
-                    <field name="Minute_end">${minutesEnd}</field>
-                    <field name="Second_end">${secondEnd}</field>
-                    ${weekday ? getWeekFields(weekday) : ''}
+                        <field name="Hour_start">${hourStart}</field>
+                        <field name="Minute_start">${minutesStart}</field>
+                        <field name="Second_start">${secondStart}</field>
+                        <field name="Hour_end">${hourEnd}</field>
+                        <field name="Minute_end">${minutesEnd}</field>
+                        <field name="Second_end">${secondEnd}</field>
+                        ${weekday ? getWeekFields(weekday) : ''}
                     </block>
                 `;
             }

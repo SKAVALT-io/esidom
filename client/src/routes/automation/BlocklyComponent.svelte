@@ -65,8 +65,10 @@
             state: 'on',
             trigger: [
                 {
-                    platform: 'time',
-                    at: '23:0:0',
+                    platform: 'state',
+                    entity_id: 'binary_sensor.0x00158d0003cc152c_contact',
+                    from: 'on',
+                    to: 'off',
                 },
             ],
             condition: [
