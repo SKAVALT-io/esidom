@@ -8,13 +8,13 @@ const esidomGenerator: Blockly.Generator = new Blockly.Generator('ESIDOM');
 const PRECEDENCE = 0;
 
 function getWeekday(blk: Block): string[] {
-    const checkbox_mon = blk.getFieldValue('mon') === 'TRUE';
-    const checkbox_tue = blk.getFieldValue('tue') === 'TRUE';
-    const checkbox_wed = blk.getFieldValue('wed') === 'TRUE';
-    const checkbox_thu = blk.getFieldValue('thu') === 'TRUE';
-    const checkbox_fri = blk.getFieldValue('fri') === 'TRUE';
-    const checkbox_sat = blk.getFieldValue('sat') === 'TRUE';
-    const checkbox_sun = blk.getFieldValue('sun') === 'TRUE';
+    const checkbox_mon = blk.getFieldValue('Mon') === 'TRUE';
+    const checkbox_tue = blk.getFieldValue('Tue') === 'TRUE';
+    const checkbox_wed = blk.getFieldValue('Wed') === 'TRUE';
+    const checkbox_thu = blk.getFieldValue('Thu') === 'TRUE';
+    const checkbox_fri = blk.getFieldValue('Fri') === 'TRUE';
+    const checkbox_sat = blk.getFieldValue('Sat') === 'TRUE';
+    const checkbox_sun = blk.getFieldValue('Sun') === 'TRUE';
 
     const weekday = [];
     if (checkbox_mon) { weekday.push('mon'); }
@@ -29,11 +29,11 @@ function getWeekday(blk: Block): string[] {
 }
 
 function getDropdownChoice(blk: Block): string {
-    const dropdownChoice = blk.getFieldValue('object');
+    const dropdownChoice = blk.getFieldValue('Object');
     return dropdownChoice;
 }
 
-interface BlocklyJSON {
+export interface BlocklyJSON {
     trigger?: string;
     condition?: string;
     action?: string;
@@ -49,6 +49,7 @@ interface BlocklyJSON {
     to?: string;
     state?: string;
     rgb_color?: string;
+    alias?: string;
 }
 
 export type EntityTypeEnum = 'binary_sensor' | 'person' | 'weather' | 'zwave' | 'sensor' | 'light' | 'automation' | 'switch' | 'media_player';
@@ -59,7 +60,7 @@ export type BlocksGenerator = {
 } & {
     esidom_automation: (blk: Block) => void;
     binary_trigger: (blk: Block) => void;
-    time: (blk: Block) => void;
+    time_trigger: (blk: Block) => void;
     time_condition: (blk: Block) => void;
     sun_condition: (blk: Block) => void;
     time_condition_hour: (blk: Block) => void;
@@ -69,7 +70,7 @@ export type BlocksGenerator = {
     color_picker: (blk: Block) => void;
     color_rgb: (blk: Block) => void;
     object_action: (blk: Block) => void;
-    scrub: (blk: Block, code: string, opt_thisOnly: string) => void
+    scrub_: (blk: Block, code: string, opt_thisOnly: string) => string;
     jsonInit:(a: Block)=> void;
 }
 
@@ -110,7 +111,7 @@ export type BlocksGenerator = {
         return JSON.stringify(json);
     };
 
-    block.time = (blk: Block) => {
+    block.time_trigger = (blk: Block) => {
         const number_hour = blk.getFieldValue('Hour');
         const number_minute = blk.getFieldValue('Minute');
         const number_second = blk.getFieldValue('Second');
@@ -124,9 +125,9 @@ export type BlocksGenerator = {
     };
 
     block.time_condition = (blk: Block) => {
-        const number_hour_debut = blk.getFieldValue('Hour_debut');
-        const number_minute_debut = blk.getFieldValue('Minute_debut');
-        const number_second_debut = blk.getFieldValue('Second_debut');
+        const number_hour_debut = blk.getFieldValue('Hour_start');
+        const number_minute_debut = blk.getFieldValue('Minute_start');
+        const number_second_debut = blk.getFieldValue('Second_start');
         const number_hour_end = blk.getFieldValue('Hour_end');
         const number_minute_end = blk.getFieldValue('Minute_end');
         const number_second_end = blk.getFieldValue('Second_end');
@@ -145,7 +146,7 @@ export type BlocksGenerator = {
 
     block.binary_trigger = (blk: Block) => {
         const value_service = esidomGenerator.valueToCode(blk, 'Service', PRECEDENCE);
-        const dropdown_state = blk.getFieldValue('state');
+        const dropdown_state = blk.getFieldValue('State');
 
         const json: BlocklyJSON = {};
 
@@ -164,7 +165,7 @@ export type BlocksGenerator = {
     };
 
     block.sun_condition = (blk: Block) => {
-        const dropdown_sun_sun = blk.getFieldValue('sun.sun');
+        const dropdown_sun_sun = blk.getFieldValue('Sun.sun');
 
         const json: BlocklyJSON = {};
         json.condition = 'state';
@@ -176,7 +177,7 @@ export type BlocksGenerator = {
 
     block.binary_condition = (blk: Block) => {
         const value_service = esidomGenerator.valueToCode(blk, 'Service', PRECEDENCE);
-        const dropdown_state = blk.getFieldValue('state');
+        const dropdown_state = blk.getFieldValue('State');
 
         const json: BlocklyJSON = {};
 
@@ -188,9 +189,7 @@ export type BlocksGenerator = {
     };
 
     block.color_picker = (blk: Block) => {
-        const color_value = blk.getFieldValue('color');
-
-        console.log(color_value);
+        const color_value = blk.getFieldValue('Color');
 
         const json: BlocklyJSON = {};
 
@@ -200,9 +199,9 @@ export type BlocksGenerator = {
     };
 
     block.color_rgb = (blk: Block) => {
-        const number_red = blk.getFieldValue('red');
-        const number_green = blk.getFieldValue('green');
-        const number_blue = blk.getFieldValue('blue');
+        const number_red = blk.getFieldValue('Red');
+        const number_green = blk.getFieldValue('Green');
+        const number_blue = blk.getFieldValue('Blue');
         const color_value = `#${number_red.toString(16).padStart(2, '0')}${number_green.toString(16).padStart(2, '0')}${number_blue.toString(16).padStart(2, '0')}`;
         const json: BlocklyJSON = {};
 
@@ -212,9 +211,9 @@ export type BlocksGenerator = {
     };
 
     block.time_condition_hour = (blk: Block) => {
-        const number_hour_debut = blk.getFieldValue('Hour_debut');
-        const number_minute_debut = blk.getFieldValue('Minute_debut');
-        const number_second_debut = blk.getFieldValue('Second_debut');
+        const number_hour_debut = blk.getFieldValue('Hour_start');
+        const number_minute_debut = blk.getFieldValue('Minute_start');
+        const number_second_debut = blk.getFieldValue('Second_start');
         const number_hour_end = blk.getFieldValue('Hour_end');
         const number_minute_end = blk.getFieldValue('Minute_end');
         const number_second_end = blk.getFieldValue('Second_end');
@@ -245,14 +244,16 @@ export type BlocksGenerator = {
         const json: BlocklyJSON = {};
 
         const entity_id = dropdown_entities.split(':')[1];
+
+        json.alias = dropdown_entities;
         json.entity_id = entity_id;
         json.service = dropdown_services;
-
         return JSON.stringify(json);
     };
 
     // Scrub for combining two same blks
-    block.scrub = (blk, code, opt_thisOnly) => {
+    // eslint-disable-next-line no-underscore-dangle
+    block.scrub_ = (blk, code, opt_thisOnly) => {
         const nextBlock = blk.nextConnection && blk.nextConnection.targetBlock();
         const nextCode = opt_thisOnly ? '' : esidomGenerator.blockToCode(nextBlock);
 
