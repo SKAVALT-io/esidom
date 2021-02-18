@@ -54,7 +54,7 @@
     </div>
     <div
         id="row2"
-        class="flex flex-row space-x-4 sm:space-x-20 overflow-y-scroll h-screen"
+        class="flex flex-row space-x-4 sm:space-x-20 overflow-y-auto h-screen"
     >
         <div class="sidenav fixed z-100">
             <Sidebar bind:open />

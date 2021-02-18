@@ -2,6 +2,8 @@
     import { createEventDispatcher } from 'svelte';
 
     import AccountSVG from '../svg_icons/AccountSVG.svelte';
+    import Clock from './Clock.svelte';
+    import { tr } from '../../utils/i18nHelper';
 
     const dispatch = createEventDispatcher();
 </script>
@@ -17,7 +19,19 @@
                 alt="hamburger_menu"
             />
         </button>
-        <img src="logo-esidom.png" alt="ESIDOM" class="logo h-auto w-12" />
+
+        <a href="/#/" class="contents">
+            <img src="logo-esidom.png" alt="ESIDOM" class="logo h-auto w-12" />
+            <p>{tr('app.name')}</p>
+        </a>
+    </div>
+    <div class="text-lg">
+        <p class="sm:hidden">
+            <Clock formatDate="short" />
+        </p>
+        <p class="hidden sm:flex">
+            <Clock formatDate="long" />
+        </p>
     </div>
     <div class="nav-links flex items-center space-x-4">
         <a

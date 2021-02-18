@@ -39,9 +39,9 @@
             zoom: {
                 controls: true,
                 wheel: true,
-                startScale: 1.2,
-                maxScale: 3,
-                minScale: 0.3,
+                startScale: 1.1,
+                maxScale: 2,
+                minScale: 0.8,
                 scaleSpeed: 1.2,
             },
         };
@@ -61,12 +61,15 @@
     });
 </script>
 
-<div>
+<div class="pr-4">
     {#await entityPromise}
         <p>{tr('blockly.loading')}</p>
-        <div id="blocklyDivHide" />
+        <div
+            id="blocklyDivHideAwait"
+            class="absolute bg-esidom z-100 w-full h-vh-80"
+        />
     {:then}
-        <p class="py-4">
+        <p class="pb-6">
             <BorderedButton
                 on:click={() => blocklyService.convertToBlock()}
                 text={tr('blockly.convertBlock')}
@@ -74,28 +77,13 @@
         </p>
     {:catch}
         <p style="color: red">{tr('blockly.loadingError')}</p>
-        <div id="blocklyDivHide" />
+        <div
+            id="blocklyDivHideError"
+            class="absolute bg-esidom z-100 w-full h-vh-80"
+        />
     {/await}
-    <div id="blocklyDiv" />
+    <div id="blocklyDiv" class="h-vh-80" />
     <xml id="toolbox" style="display: none">
         <slot />
     </xml>
 </div>
-
-<style scoped>
-    #blocklyDivHide {
-        position: absolute;
-        height: 700px;
-        width: 100%;
-        text-align: left;
-        background-color: #120639;
-        z-index: 90;
-    }
-
-    #blocklyDiv {
-        position: absolute;
-        height: 600px;
-        width: 90%;
-        text-align: left;
-    }
-</style>

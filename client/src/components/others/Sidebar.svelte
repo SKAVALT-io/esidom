@@ -24,7 +24,9 @@
     use:clickOutside
     on:click_outside={handleClickOutside}
 >
-    <ul class="navbar-nav list-none p-0 m-0 flex flex-col items-center">
+    <ul
+        class="navbar-nav list-none p-0 m-0 flex flex-col items-center capitalize"
+    >
         <li class="nav_item">
             <a
                 class="nav-link"
