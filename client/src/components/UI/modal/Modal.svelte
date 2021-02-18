@@ -1,6 +1,8 @@
 <script lang="ts">
     export let isOpen = false;
-
+    function open() {
+        isOpen = true;
+    }
     function close() {
         isOpen = false;
     }
