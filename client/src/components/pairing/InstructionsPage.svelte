@@ -1,15 +1,28 @@
-<script>
+<script lang="ts">
     import { createEventDispatcher } from 'svelte';
     import BorderedButton from '../UI/buttons/BorderedButton.svelte';
     import CancelButton from '../UI/buttons/CancelButton.svelte';
     import { tr } from '../../utils/i18nHelper';
 
     import { step, reset } from './PairingStore.svelte';
+    import config from '../../config/config';
 
     const dispatch = createEventDispatcher();
 
-    function startPairing() {
+    async function pair() {
+        const headers = new Headers();
+        headers.set('Content-Type', 'application/json');
+        await fetch(`${config.BASE_URL}/device`, {
+            headers,
+            method: 'POST',
+        }).then((x) => {
+            console.log('LULUBULE ', x.status);
+        });
+    }
+
+    async function startPairing() {
         step.update(() => 'StartPairingPage');
+        await pair();
     }
 </script>
 

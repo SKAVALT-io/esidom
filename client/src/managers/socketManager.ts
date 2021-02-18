@@ -34,6 +34,13 @@ class SocketManager {
         });
     }
 
+    registerPairListener(name: string, func: (data: any) => void) {
+        this.socket.on(name, (data: any) => {
+            // console.log(data.id, id);
+            func(data);
+        });
+    }
+
     removeListener<T>(name: string, func: (data: T) => void) {
         this.socket.off(name, func);
     }
