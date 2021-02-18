@@ -2,7 +2,7 @@
     import Router from 'svelte-spa-router';
 
     import {
-        addMessages, init, getLocaleFromNavigator, _,
+        addMessages, init, getLocaleFromNavigator,
 } from 'svelte-i18n';
 
     import fr from 'locales/fr.json';
