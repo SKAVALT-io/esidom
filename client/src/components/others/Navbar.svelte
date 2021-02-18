@@ -2,6 +2,7 @@
     import { createEventDispatcher } from 'svelte';
 
     import AccountSVG from '../svg_icons/AccountSVG.svelte';
+    import Clock from './Clock.svelte';
 
     const dispatch = createEventDispatcher();
 </script>
@@ -23,6 +24,9 @@
             <p>ESIDOM</p>
         </a>
     </div>
+    <p class="text-lg">
+        <Clock />
+    </p>
     <div class="nav-links flex items-center space-x-4">
         <a
             href="/#/"
