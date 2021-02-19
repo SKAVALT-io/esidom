@@ -35,15 +35,14 @@
         </h1>
         {#if currentStep === 'InstructionPage'}
             <InstructionPage on:cancel />
-            <!-- <SuccessPairingPage /> -->
-            <!-- <FinishPairingPage /> -->
-            <!-- <SuccessPairingPage /> -->
         {:else if currentStep === 'StartPairingPage'}
             <StartPairingPage on:cancel />
         {:else if currentStep === 'SuccessPairingPage'}
             <SuccessPairingPage />
         {:else if currentStep === 'FailurePairingPage'}
             <FailurePairingPage on:cancel />
+        {:else if currentStep === 'FinishPairingPage'}
+            <FinishPairingPage on:cancel />
         {/if}
     </div>
 </div>

@@ -1,5 +1,7 @@
 <script>
     import { tr } from '../../utils/i18nHelper';
+    import BorderedButton from '../UI/buttons/BorderedButton.svelte';
+    import CancelButton from '../UI/buttons/CancelButton.svelte';
     import OutlineButton from '../UI/buttons/OutlineButton.svelte';
     import { step, reset } from './PairingStore.svelte';
 
@@ -10,9 +12,15 @@
     function validateName() {
         if (deviceName.length === 0) {
             // TODO CHECK IF THE NAME HAS ALREADY REGISTERED
+            console.log('laaa');
             isValidInput = false;
         }
+        console.log('lbbbb');
         isValidInput = true;
+    }
+
+    function finish() {
+        step.update(() => 'FinishPairingPage');
     }
 </script>
 
@@ -36,6 +44,7 @@
             <input
                 bind:value={deviceName}
                 on:input={validateName}
+                required
                 class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-900"
                 id="username"
                 type="text"
@@ -43,5 +52,7 @@
             />
         </div>
     </div>
-    <button class="bg-white text-black" disabled={isValidInput}>Ok, I'm ready!</button>
+    <div class="flex flex-row space-x-4">
+        <BorderedButton text="Valider" on:click={finish} />
+    </div>
 </div>
