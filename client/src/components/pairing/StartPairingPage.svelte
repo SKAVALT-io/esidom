@@ -14,11 +14,6 @@
         step.update(() => 'FailurePairingPage');
     }
 
-    // It's a hack, to wait for the end of the home assistant configuration
-    function configurationDevicePaired() {
-        timeout = setTimeout(failureDevicePaired, 10000);
-    }
-
     function successDevicePaired(data) {
         console.log('M.....', data);
         step.update(() => 'SuccessPairingPage');
@@ -30,7 +25,7 @@
             successDevicePaired
         );
         // Wait 60s an object was paired otherwise we go into the failure page
-        timeout = setTimeout(configurationDevicePaired, 50000);
+        timeout = setTimeout(failureDevicePaired, 60000);
     });
 
     onDestroy(() => {

@@ -33,8 +33,8 @@
             {tr('menu.pairing')}
         </h1>
         {#if currentStep === 'InstructionPage'}
-            <!-- <InstructionPage on:cancel /> -->
-            <SuccessPairingPage />
+            <InstructionPage on:cancel />
+            <!-- <SuccessPairingPage /> -->
         {:else if currentStep === 'StartPairingPage'}
             <StartPairingPage on:cancel />
         {:else if currentStep === 'SuccessPairingPage'}
