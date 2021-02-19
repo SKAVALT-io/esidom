@@ -5,7 +5,7 @@
     import RoundedButton from "../UI/buttons/RoundedButton.svelte";
     import ToggleButton from "../UI/buttons/ToggleButton.svelte";
     import type { Group } from "../../../types/groupType";
-    import Modal from "../../components/UI/modal/Modal.svelte";
+    import Modal from "../UI/modal/Modal.svelte";
 
     export let group: Group;
 
@@ -30,11 +30,7 @@
     <div class="flex justify-center items-center col-span-8">{group.name}</div>
     {#if !group.groupId.startsWith('imp')}
         <div class="col-span-1 relative">
-            <RoundedButton
-                size={8}
-                on:click={() /*TODO: go to edit page*/ => push('/home')}
-                iconPath="icons/edit.svg"
-            />
+            <RoundedButton size={8} on:click iconPath="icons/edit.svg" />
         </div>
     {/if}
 </div>
