@@ -29,7 +29,7 @@ class EntityService implements EventObserver {
             const state = e?.state ?? '';
             const entity: Entity = {
                 id: e.entity_id ?? '',
-                name: entityState?.name ?? '',
+                name: entityState?.name ?? e.attributes?.friendly_name ?? '',
                 type: e.entity_id.split('.')[0],
                 attributes,
                 state,

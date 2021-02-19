@@ -25,7 +25,7 @@
         '/blockly/:id': Blockly,
         '/automations': Automations,
         // This is optional, but if present it must be the last
-        '*': Home,
+        '*': Entities,
     };
 
     /* Open/Close sidebar from navbar */

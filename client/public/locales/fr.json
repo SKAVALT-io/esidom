@@ -21,11 +21,11 @@
     "myAutomations": "Mes Routines",
     "search": "Rechercher...",
     "sortBy": {
-        "title": "Trier par",
-        "options": {
-            "name": "Noms",
-            "state": "Actives"
-        }
+      "title": "Trier par",
+      "options": {
+        "name": "Noms",
+        "state": "Actives"
+      }
     }
 },
   "pairing": {
@@ -44,6 +44,8 @@
     "loadingError": "Erreur : Blockly n'a pas pu charger à cause d'un problème avec le serveur.",
     "convertBlock": "Enregistrer la routine !",
     "unknownAction": "Action inconnue",
-    "unknownName": "Nom inconnu"
+    "unknownName": "Nom inconnu",
+    "automationName": "Nom",
+    "automationDesc": "Description"
   }
 }

@@ -46,14 +46,14 @@
             on:mouseleave={() => (show = false)}
             on:mouseenter={() => (show = true)}
         >
-            <a href="#/entity/{entity.id}">
+            <a href="#/entity/{entity.id}" class="text-white">
                 {parseStringByLength(entity.name)}
             </a>
             {#if entity.name}
                 <Tooltip text={entity.name} position="top" {show} />
             {/if}
         </div>
-        <div class="row-span-2">
+        <div class="row-span-2 text-white">
             {#if !isError}
                 <slot name="sensor">PLACEHOLDER</slot>
             {:else}Data unavailable{/if}

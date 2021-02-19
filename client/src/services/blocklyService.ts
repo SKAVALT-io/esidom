@@ -67,18 +67,36 @@ export default class BlocklyService {
         this.workspace = workspace;
     }
 
-    convertToBlock(name = 'test', description = 'test description'): void {
+    convertToBlock(name = 'test', description = 'test description', id?: string): Automation {
         const code = esidomGenerator.workspaceToCode(this.workspace);
 
         try {
-            const json = JSON.parse(code);
-            json.name = name;
-            json.description = description;
-            json.id = `automation.${name.toLowerCase().replace(/ /g, '_')}`;
-            // TODO: send the json to HA
-            console.log(JSON.stringify(json));
+            const automationTmp = JSON.parse(code);
+            const automation: Automation = {
+                id: id ?? `automation.${name.toLowerCase().replace(/ /g, '_')}`,
+                name,
+                description,
+                action: automationTmp.action ?? [],
+                condition: automationTmp.condition ?? [],
+                trigger: automationTmp.trigger ?? [],
+                mode: 'single',
+                state: 'on',
+            };
+
+            console.log(automation);
+            return automation;
         } catch (e) {
-            console.log(e);
+            const a : Automation = {
+                id: '',
+                name: '',
+                state: '',
+                action: [],
+                trigger: [],
+                condition: [],
+                description: '',
+                mode: 'parallel',
+            };
+            return a;
         }
     }
 
