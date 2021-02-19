@@ -6,6 +6,12 @@
     "automations": {
         "myAutomations": "My Automations",
         "search": "Search...",
-        "sortBy": "Sort by"
+        "sortBy": {
+            "title": "Sort by",
+            "options": {
+                "name": "Name",
+                "state": "State"
+            }
+        }
     }
 }
