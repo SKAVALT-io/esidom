@@ -166,7 +166,7 @@ class GroupService implements EventObserver {
         const entities = r.devices
             .flatMap((x) => x.entities.filter((entity) => entity.id.startsWith('switch') || entity.id.startsWith('light')))
             .map((entity) => entity.id);
-        console.log(entities);
+        // console.log(entities);
         if (!entities || entities.length === 0) {
             return Promise.resolve();
         }

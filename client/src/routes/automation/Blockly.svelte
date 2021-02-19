@@ -1,13 +1,18 @@
 <script lang="ts">
     import BlocklyComponent from './BlocklyComponent.svelte';
     import COLORS from './esidomConst';
+
+    // url param --> can be accessed via params.id
+    // if id exists --> get /automation/id to edit routine
+    // if id is undefined --> creating new automation
+    export let params: { id: string };
 </script>
 
 <div>
     <BlocklyComponent>
         <category name="Déclencheurs" colour={COLORS.HUE_GREEN}>
             <block type="binary_trigger" />
-            <block type="time" />
+            <block type="time_trigger" />
         </category>
         <category name="Conditions" colour={COLORS.HUE_YELLOW}>
             <block type="binary_condition" />
@@ -16,7 +21,9 @@
             <block type="time_condition_week" />
         </category>
         <category name="Actions" colour={COLORS.HUE_ORANGE}>
-            <block type="object_action" />
+            <block type="object_action">
+                <mutation entities_input="0" />
+            </block>
         </category>
         <category name="Objets" colour={COLORS.HUE_RED}>
             <block type="binary_sensor" />

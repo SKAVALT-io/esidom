@@ -26,4 +26,15 @@ export default class AutomationService {
             .then((res) => console.log(res))
             .catch((err) => console.log(err));
     }
+
+    static async triggerAutomation(id: string): Promise<void> {
+        const headers = new Headers();
+        headers.set('Content-Type', 'application/json');
+        return fetch(`${config.BASE_URL}/automation/${id}`, {
+            headers,
+            method: 'POST',
+        })
+            .then((res) => res.json())
+            .catch((err) => console.log(err));
+    }
 }

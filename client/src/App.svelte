@@ -22,6 +22,7 @@
         '/entity/:id': Entity,
         '/home/': Home,
         '/blockly': Blockly,
+        '/blockly/:id': Blockly,
         '/automations': Automations,
         // This is optional, but if present it must be the last
         '*': Home,
@@ -55,12 +56,12 @@
     </div>
     <div
         id="row2"
-        class="flex flex-row space-x-4 sm:space-x-20 overflow-y-scroll h-screen"
+        class="flex flex-row space-x-4 sm:space-x-20 overflow-y-auto h-screen"
     >
         <div class="sidenav fixed z-100">
             <Sidebar bind:open />
         </div>
-        <div class="main-content mt-6 z-10">
+        <div class="main-content w-full mt-6 z-10">
             <Router {routes} />
         </div>
     </div>

@@ -23,14 +23,13 @@ class EntityService implements EventObserver {
         const states: HaStateResponse[] = await socketForwarder
             .forward({ type: 'get_states' });
 
-        return entities.map((e: HaEntity) => {
-            const entityState = states
-                .find((ent: HaStateResponse) => ent.entity_id === e.entity_id);
-            const { attributes } = entityState ?? {};
-            const state = entityState?.state ?? '';
+        return states.map((e: HaStateResponse) => {
+            const entityState = entities.find((ent: HaEntity) => ent.entity_id === e.entity_id);
+            const { attributes } = e ?? {};
+            const state = e?.state ?? '';
             const entity: Entity = {
                 id: e.entity_id ?? '',
-                name: e.name ?? '',
+                name: entityState?.name ?? '',
                 type: e.entity_id.split('.')[0],
                 attributes,
                 state,

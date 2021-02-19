@@ -1,14 +1,12 @@
 /* eslint-disable camelcase */
 /* eslint-disable no-param-reassign */
 import Blockly from 'blockly';
-import type { EnvironmentBlockly } from '../../../types/environmentBlocklyType';
 import COLORS from './esidomConst';
 import type { EntityTypeEnum } from './esidomGenerator';
 
 type BlockFunctions = {
     init: ()=> void;
     jsonInit?:(a: any)=> void;
-    onchange?: (ev: EnvironmentBlockly)=> void;
     appendDummyInput?: (str?: string)=> BlockFunctions;
     appendField?: (...args: Array<string | Blockly.FieldDropdown>)=> BlockFunctions;
     setInputsInline?: (b: boolean) => BlockFunctions;
@@ -18,7 +16,7 @@ type BlockFunctions = {
     setTooltip?: (str: string) => BlockFunctions;
     setHelpUrl?: (str: string) => BlockFunctions;
     removeInput?: (str: string) => BlockFunctions;
-
+    setmutator?: (str: string) => BlockFunctions;
 };
 
 export type BlocksDefinitions = {
@@ -26,7 +24,7 @@ export type BlocksDefinitions = {
 } & {
     esidom_automation: BlockFunctions;
     binary_trigger: BlockFunctions;
-    time: BlockFunctions;
+    time_trigger: BlockFunctions;
     time_condition: BlockFunctions;
     sun_condition: BlockFunctions;
     time_condition_hour: BlockFunctions;
@@ -90,7 +88,7 @@ export type BlocksDefinitions = {
                         },
                         {
                             type: 'field_dropdown',
-                            name: 'state',
+                            name: 'State',
                             options: [
                                 [
                                     'ON',
@@ -114,7 +112,7 @@ export type BlocksDefinitions = {
         },
     };
 
-    block.time = {
+    block.time_trigger = {
         init() {
             this.jsonInit?.(
                 {
@@ -172,21 +170,21 @@ export type BlocksDefinitions = {
                     args0: [
                         {
                             type: 'field_number',
-                            name: 'Hour_debut',
+                            name: 'Hour_start',
                             value: 0,
                             min: 0,
                             max: 23,
                         },
                         {
                             type: 'field_number',
-                            name: 'Minute_debut',
+                            name: 'Minute_start',
                             value: 0,
                             min: 0,
                             max: 59,
                         },
                         {
                             type: 'field_number',
-                            name: 'Second_debut',
+                            name: 'Second_start',
                             value: 0,
                             min: 0,
                             max: 59,
@@ -222,7 +220,7 @@ export type BlocksDefinitions = {
                         },
                         {
                             type: 'field_checkbox',
-                            name: 'mon',
+                            name: 'Mon',
                             checked: true,
                         },
                         {
@@ -230,7 +228,7 @@ export type BlocksDefinitions = {
                         },
                         {
                             type: 'field_checkbox',
-                            name: 'tue',
+                            name: 'Tue',
                             checked: true,
                         },
                         {
@@ -238,7 +236,7 @@ export type BlocksDefinitions = {
                         },
                         {
                             type: 'field_checkbox',
-                            name: 'wen',
+                            name: 'Wed',
                             checked: true,
                         },
                         {
@@ -246,7 +244,7 @@ export type BlocksDefinitions = {
                         },
                         {
                             type: 'field_checkbox',
-                            name: 'thu',
+                            name: 'Thu',
                             checked: true,
                         },
                         {
@@ -254,7 +252,7 @@ export type BlocksDefinitions = {
                         },
                         {
                             type: 'field_checkbox',
-                            name: 'fri',
+                            name: 'Fri',
                             checked: true,
                         },
                         {
@@ -262,7 +260,7 @@ export type BlocksDefinitions = {
                         },
                         {
                             type: 'field_checkbox',
-                            name: 'sat',
+                            name: 'Sat',
                             checked: true,
                         },
                         {
@@ -270,7 +268,7 @@ export type BlocksDefinitions = {
                         },
                         {
                             type: 'field_checkbox',
-                            name: 'sun',
+                            name: 'Sun',
                             checked: true,
                         },
                     ],
@@ -294,7 +292,7 @@ export type BlocksDefinitions = {
                     args0: [
                         {
                             type: 'field_dropdown',
-                            name: 'sun.sun',
+                            name: 'Sun.sun',
                             options: [
                                 [
                                     'lève',
@@ -326,21 +324,21 @@ export type BlocksDefinitions = {
                 args0: [
                     {
                         type: 'field_number',
-                        name: 'Hour_debut',
+                        name: 'Hour_start',
                         value: 0,
                         min: 0,
                         max: 23,
                     },
                     {
                         type: 'field_number',
-                        name: 'Minute_debut',
+                        name: 'Minute_start',
                         value: 0,
                         min: 0,
                         max: 59,
                     },
                     {
                         type: 'field_number',
-                        name: 'Second_debut',
+                        name: 'Second_start',
                         value: 0,
                         min: 0,
                         max: 59,
@@ -389,7 +387,7 @@ export type BlocksDefinitions = {
                     args0: [
                         {
                             type: 'field_checkbox',
-                            name: 'mon',
+                            name: 'Mon',
                             checked: true,
                         },
                         {
@@ -397,7 +395,7 @@ export type BlocksDefinitions = {
                         },
                         {
                             type: 'field_checkbox',
-                            name: 'tue',
+                            name: 'Tue',
                             checked: true,
                         },
                         {
@@ -405,7 +403,7 @@ export type BlocksDefinitions = {
                         },
                         {
                             type: 'field_checkbox',
-                            name: 'wen',
+                            name: 'Wed',
                             checked: true,
                         },
                         {
@@ -413,7 +411,7 @@ export type BlocksDefinitions = {
                         },
                         {
                             type: 'field_checkbox',
-                            name: 'thu',
+                            name: 'Thu',
                             checked: true,
                         },
                         {
@@ -421,7 +419,7 @@ export type BlocksDefinitions = {
                         },
                         {
                             type: 'field_checkbox',
-                            name: 'fri',
+                            name: 'Fri',
                             checked: true,
                         },
                         {
@@ -429,7 +427,7 @@ export type BlocksDefinitions = {
                         },
                         {
                             type: 'field_checkbox',
-                            name: 'sat',
+                            name: 'Sat',
                             checked: true,
                         },
                         {
@@ -437,7 +435,7 @@ export type BlocksDefinitions = {
                         },
                         {
                             type: 'field_checkbox',
-                            name: 'sun',
+                            name: 'Sun',
                             checked: true,
                         },
                     ],
@@ -466,7 +464,7 @@ export type BlocksDefinitions = {
                         },
                         {
                             type: 'field_dropdown',
-                            name: 'state',
+                            name: 'State',
                             options: [
                                 [
                                     'ON',
@@ -506,7 +504,7 @@ export type BlocksDefinitions = {
                     args0: [
                         {
                             type: 'field_colour',
-                            name: 'color',
+                            name: 'Color',
                             colour: '#ff0000',
                         },
                     ],
@@ -530,21 +528,21 @@ export type BlocksDefinitions = {
                     },
                     {
                         type: 'field_number',
-                        name: 'red',
+                        name: 'Red',
                         value: 0,
                         min: 0,
                         max: 255,
                     },
                     {
                         type: 'field_number',
-                        name: 'green',
+                        name: 'Green',
                         value: 0,
                         min: 0,
                         max: 255,
                     },
                     {
                         type: 'field_number',
-                        name: 'blue',
+                        name: 'Blue',
                         value: 0,
                         min: 0,
                         max: 255,
