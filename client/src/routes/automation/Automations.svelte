@@ -9,6 +9,7 @@
     import DropdownButton from '../../components/UI/buttons/DropdownButton.svelte';
     import RoundedButton from '../../components/UI/buttons/RoundedButton.svelte';
     import { push } from 'svelte-spa-router';
+    import LoadingAnimation from '../../components/animations/LoadingAnimation.svelte';
 
     let automations: AutomationPreview[] = [];
     let searchValue = '';
@@ -33,14 +34,14 @@
     ];
     $: comparator = comparators[selectedSortOption][flipSwitch ? 0 : 1];
 
-    onMount(async () => {
-        automations = await AutomationService.getAutomations();
-    });
-
     function filterAutomations(searchInput: string): AutomationPreview[] {
         return automations.filter((aut: AutomationPreview) =>
             aut.name.toLowerCase().includes(searchInput)
         );
+    }
+
+    async function getAutomations() {
+        automations = await AutomationService.getAutomations();
     }
 </script>
 
@@ -78,11 +79,20 @@
         />
     </div>
 </div>
-<div
-    id="automation"
-    class="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mr-2 ml-2 mt-2"
->
-    {#each [...(isFiltered ? filteredAutomations : automations)].sort(comparator) as automation}
-        <Automation {automation} />
-    {/each}
-</div>
+
+{#await getAutomations()}
+    <div id="loader" class="flex h-4/6 items-center justify-center">
+        <LoadingAnimation />
+    </div>
+{:then}
+    <div
+        id="automation"
+        class="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mr-2 ml-2 mt-2"
+    >
+        {#each [...(isFiltered ? filteredAutomations : automations)].sort(comparator) as automation}
+            <Automation {automation} />
+        {/each}
+    </div>
+{:catch err}
+    <p class="text-red-800">{err.message}</p>
+{/await}
