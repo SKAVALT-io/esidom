@@ -3,7 +3,6 @@
     import { onMount } from 'svelte';
 
     import {
-        getLamp,
         switchLamp,
         updateLight,
     } from '../../../services/entities/lightService';
