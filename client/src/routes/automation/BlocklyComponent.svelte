@@ -83,7 +83,8 @@
     async function handleSubmit() {
         const automation = blocklyService.convertToBlock(
             automationName,
-            automationDesc
+            automationDesc,
+            automationId === '' ? undefined : automationId
         );
 
         await AutomationService.postAutomation(automation);

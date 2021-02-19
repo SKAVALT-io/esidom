@@ -67,13 +67,13 @@ export default class BlocklyService {
         this.workspace = workspace;
     }
 
-    convertToBlock(name = 'test', description = 'test description'): Automation {
+    convertToBlock(name = 'test', description = 'test description', id?: string): Automation {
         const code = esidomGenerator.workspaceToCode(this.workspace);
 
         try {
             const automationTmp = JSON.parse(code);
             const automation: Automation = {
-                id: `automation.${name.toLowerCase().replace(/ /g, '_')}`,
+                id: id ?? `automation.${name.toLowerCase().replace(/ /g, '_')}`,
                 name,
                 description,
                 action: automationTmp.action ?? [],
