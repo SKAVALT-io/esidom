@@ -5,6 +5,7 @@
     import BinarySensorPreview from '../../components/entities/binarySensor/BinarySensorPreview.svelte';
     import LightPreview from '../../components/entities/lights/LightPreview.svelte';
     import PlaceholderPreview from '../../components/entities/PlaceholderPreview.svelte';
+    import SensorPreview from '../../components/entities/sensors/SensorPreview.svelte';
 
     import PairDevice from '../../components/others/PairDevice.svelte';
     import RoundedButton from '../../components/UI/buttons/RoundedButton.svelte';
@@ -30,6 +31,7 @@
     const mapDomainToComp = new Map<string, typeof SvelteComponent>();
     mapDomainToComp.set('light', LightPreview);
     mapDomainToComp.set('binary_sensor', BinarySensorPreview);
+    mapDomainToComp.set('sensor', SensorPreview);
 
     function getCompByDomain(entityId: string): typeof SvelteComponent {
         const domain = entityId.split('.')[0];
@@ -57,7 +59,7 @@
     {#await loadEntities()}
         Loading entities ...
     {:then values}
-        {#each Object.entries(values) as [domain, entities] (domain)}
+        {#each Object.entries(values).sort() as [domain, entities] (domain)}
             <DeviceContainer title={domain} iconPath="favicon.png">
                 {#each entities as entity}
                     <svelte:component
@@ -66,6 +68,7 @@
                     />
                 {/each}
             </DeviceContainer>
+            <br />
         {/each}
     {/await}
 
@@ -90,11 +93,6 @@
 
 <style lang="scss">
     $color: rgb(8, 102, 0);
-
-    div.devices div {
-        border: 1px solid black;
-        border-radius: 2px;
-    }
 
     div {
         color: $color;

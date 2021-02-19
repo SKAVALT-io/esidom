@@ -4,7 +4,7 @@
     import { clickOutside } from '../../utils/functions';
     export let open = false;
 
-    let currentPageSelected = '';
+    let currentPageSelected = 'entities';
     const pageLinkClicked = (currentPage: string) => {
         currentPageSelected = currentPage;
         open = false;
@@ -30,7 +30,7 @@
         <li class="nav_item">
             <a
                 class="nav-link"
-                href="/"
+                href="/home"
                 use:SPA.link
                 on:click={() => {
                     pageLinkClicked('home');
