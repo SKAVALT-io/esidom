@@ -5,7 +5,7 @@
     import OutlineButton from '../UI/buttons/OutlineButton.svelte';
     import { step, reset, device } from './PairingStore.svelte';
 
-    const deviceName = device?.name;
+    const deviceName = device?.model;
 
     let isValidInput = false;
 
