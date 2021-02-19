@@ -58,10 +58,10 @@
         id="row2"
         class="flex flex-row space-x-4 sm:space-x-20 overflow-y-auto h-screen"
     >
-        <div class="sidenav fixed z-100">
+        <div class="sidenav fixed z-20">
             <Sidebar bind:open />
         </div>
-        <div class="main-content w-full mt-6 z-10">
+        <div class="main-content w-full mt-6">
             <Router {routes} />
         </div>
     </div>
@@ -73,6 +73,7 @@
         font-family: Arial, Helvetica, sans-serif;
         background-color: #120639;
         color: white;
+        overflow: hidden;
     }
 
     /* -------- SCROLLBAR -------- */

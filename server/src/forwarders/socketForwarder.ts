@@ -67,7 +67,9 @@ class SocketForwarder {
                 }
                 break;
             case 'deviceRegistryUpdated':
-                observer.onDeviceRegistryUpdated?.();
+                if (data) {
+                    observer.onDeviceRegistryUpdated?.(data);
+                }
                 break;
             case 'entityRegistryUpdated':
                 observer.onEntityRegistryUpdated?.();
@@ -161,7 +163,7 @@ class SocketForwarder {
     async handleSocketEvent(data: HaSocket): Promise<void> {
         const { id } = data;
         console.log(`received event for ws : ${id}`);
-        console.log(data);
+        // console.log(data);
         const eventType: string = data?.event?.event_type;
         if (eventType === 'device_registry_updated') {
             console.log(data.event.data);
@@ -169,7 +171,7 @@ class SocketForwarder {
             case 'create':
                 (this.socketsMap.get(id) || console.log)(data.event.data);
                 this.socketsMap.delete(id);
-                this.io.emit('device_created', data.event.data);
+                this.notifyObservers('deviceRegistryUpdated', data.event.data.device_id);
                 return;
             case 'remove':
                 this.io.emit('device_removed', data.event.data);
