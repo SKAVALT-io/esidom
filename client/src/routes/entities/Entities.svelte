@@ -5,8 +5,8 @@
     import BinarySensorPreview from '../../components/entities/binarySensor/BinarySensorPreview.svelte';
     import LightPreview from '../../components/entities/lights/LightPreview.svelte';
     import PlaceholderPreview from '../../components/entities/PlaceholderPreview.svelte';
+    import PairDevice from '../../components/pairing/PairDevice.svelte';
 
-    import PairDevice from '../../components/others/PairDevice.svelte';
     import RoundedButton from '../../components/UI/buttons/RoundedButton.svelte';
     import DeviceContainer from '../../components/UI/container/DeviceContainer.svelte';
     import EntityService, { actualDomains } from '../../services/entityService';
@@ -75,7 +75,7 @@
             on:click={() => {
                 isPairDeviceOpen = true;
             }}
-            iconPath="icons/plus.svg"
+            iconPath="icons/button/plus.svg"
         />
     </div>
 </div>

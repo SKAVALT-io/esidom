@@ -6,6 +6,7 @@
     import { step } from './PairingStore.svelte';
     import FailurePairingPage from './FailurePairingPage.svelte';
     import SuccessPairingPage from './SuccessPairingPage.svelte';
+    import FinishPairingPage from './FinishPairingPage.svelte';
 
     // const steps = [
     //     '1_Request',
@@ -33,8 +34,10 @@
             {tr('menu.pairing')}
         </h1>
         {#if currentStep === 'InstructionPage'}
-            <InstructionPage on:cancel />
+            <!-- <InstructionPage on:cancel /> -->
             <!-- <SuccessPairingPage /> -->
+            <!-- <FinishPairingPage /> -->
+            <SuccessPairingPage />
         {:else if currentStep === 'StartPairingPage'}
             <StartPairingPage on:cancel />
         {:else if currentStep === 'SuccessPairingPage'}

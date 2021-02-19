@@ -26,7 +26,8 @@
             "name": "Noms",
             "state": "Actives"
         }
-    },
+    }
+},
   "pairing": {
       "instructions": {
           "welcome": "Bienvenue, dans le mode d'appairage de ESIDOM.",
