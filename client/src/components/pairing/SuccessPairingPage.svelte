@@ -3,19 +3,17 @@
     import BorderedButton from '../UI/buttons/BorderedButton.svelte';
     import CancelButton from '../UI/buttons/CancelButton.svelte';
     import OutlineButton from '../UI/buttons/OutlineButton.svelte';
-    import { step, reset } from './PairingStore.svelte';
+    import { step, reset, device } from './PairingStore.svelte';
 
-    let deviceName = '';
+    const deviceName = device?.name;
 
     let isValidInput = false;
 
     function validateName() {
         if (deviceName.length === 0) {
             // TODO CHECK IF THE NAME HAS ALREADY REGISTERED
-            console.log('laaa');
             isValidInput = false;
         }
-        console.log('lbbbb');
         isValidInput = true;
     }
 
@@ -26,14 +24,15 @@
 
 <div class="flex flex-col space-y-4 ml-10 mr-10 justify-center items-center">
     <p class="max-w-lg md:max-w-xl">
-        Equipement trouvé : TODO NOM EQUIPEMENT
+        Equipement trouvé :
+        {deviceName}
         <br />
         Veuillez nommer votre équipement :
         <br />
         <br />
         <!--TODO CHANGE THIS -->
     </p>
-    <div class="shadow-sm space-y-px ">
+    <!-- <div class="shadow-sm space-y-px ">
         <div class="mb-4">
             <label
                 class="block text-grey-darker text-md font-bold mb-2"
@@ -51,8 +50,8 @@
                 placeholder="Nom de l'équipement"
             />
         </div>
-    </div>
+    </div> -->
     <div class="flex flex-row space-x-4">
-        <BorderedButton text="Valider" on:click={finish} />
+        <BorderedButton text="Finish" on:click={finish} />
     </div>
 </div>

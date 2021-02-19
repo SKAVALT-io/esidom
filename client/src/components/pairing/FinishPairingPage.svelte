@@ -2,10 +2,10 @@
     import { createEventDispatcher } from 'svelte';
     import { tr } from '../../utils/i18nHelper';
 
-    import { step, reset } from './PairingStore.svelte';
+    import { step, reset, device } from './PairingStore.svelte';
     import OutlineButton from '../UI/buttons/OutlineButton.svelte';
 
-    const deviceName = '';
+    const deviceName = device?.model;
     const dispatch = createEventDispatcher();
 </script>
 

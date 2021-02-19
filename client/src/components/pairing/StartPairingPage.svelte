@@ -2,7 +2,7 @@
     import { createEventDispatcher, onMount, onDestroy } from 'svelte';
     import LoadingAnimation from '../animations/LoadingAnimation.svelte';
     import CancelButton from '../UI/buttons/CancelButton.svelte';
-    import { step, reset } from './PairingStore.svelte';
+    import { step, reset, device } from './PairingStore.svelte';
 
     import { socketManager } from '../../managers/socketManager';
 
@@ -15,6 +15,7 @@
     }
 
     function successDevicePaired(data) {
+        device = data;
         console.log('M.....', data);
         step.update(() => 'SuccessPairingPage');
     }
@@ -24,8 +25,8 @@
             'device_created',
             successDevicePaired
         );
-        // Wait 60s an object was paired otherwise we go into the failure page
-        timeout = setTimeout(failureDevicePaired, 60000);
+        // Wait 120s an object was paired otherwise we go into the failure page
+        timeout = setTimeout(failureDevicePaired, 120000);
     });
 
     onDestroy(() => {
