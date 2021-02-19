@@ -4,7 +4,7 @@
 
 <button
     on:click
-    class="w-24 bg-blue-500 hover:bg-blue-600 text-white py-1 px-3 border border-blue-700 rounded "
+    class="bg-blue-500 hover:bg-blue-600 text-white py-1 px-3 border border-blue-700 rounded "
 >
     <span>{text}</span>
 </button>
