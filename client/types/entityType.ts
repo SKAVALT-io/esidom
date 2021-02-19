@@ -1,7 +1,8 @@
-export interface Entity {
+export type Entity<T> = {
     id: string;
     name: string;
     type: string;
     state: string;
-    attributes: any;
+    message?: string;
+    attributes: T;
 }

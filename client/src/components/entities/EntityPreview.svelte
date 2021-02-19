@@ -1,0 +1,86 @@
+<script>
+    import type { Entity } from '../../../types/entityType';
+    import Tooltip from '../UI/utils/Tooltip.svelte';
+
+    /* import { link } from 'svelte-spa-router';
+    If we use:link in <a>, we can't middle click it (= open in new tab)
+    */
+
+    export let isError: boolean;
+    export let entity: Entity<any>;
+    let show = false;
+
+    function parseStringByLength(str: string, len = 20): string {
+        return str
+            ? str.length >= len
+                ? str.substring(0, 20) + ' [...]'
+                : str
+            : '<Sans nom>';
+    }
+</script>
+
+<div id="all" class="grid grid-cols-5 max-w-lg max-h-32" class:error={isError}>
+    <div
+        id="img"
+        class="col-span-2 rounded-xl rounded-r-none flex items-center px-4"
+    >
+        {#if !isError}
+            <slot name="img">
+                <img
+                    class="object-scale-down"
+                    alt=""
+                    src="https://via.placeholder.com/350x150"
+                />
+            </slot>
+        {:else}:({/if}
+    </div>
+    <!-- flex items-center px-3 py-8 -->
+    <div
+        id="data"
+        class="col-span-3 rounded-xl rounded-l-none grid grid-rows-5 items-center text-center"
+    >
+        <div
+            class="row-span-3 relative"
+            on:touchstart={() => (show = true)}
+            on:touchend={() => (show = false)}
+            on:mouseleave={() => (show = false)}
+            on:mouseenter={() => (show = true)}
+        >
+            <a href="#/entity/{entity.id}">
+                {parseStringByLength(entity.name)}
+            </a>
+            {#if entity.name}
+                <Tooltip text={entity.name} position="top" {show} />
+            {/if}
+        </div>
+        <div class="row-span-2">
+            {#if !isError}
+                <slot name="sensor">PLACEHOLDER</slot>
+            {:else}Data unavailable{/if}
+        </div>
+    </div>
+</div>
+
+<style lang="scss">
+    #all {
+        height: 120px;
+
+        #img {
+            background-color: #7ea874;
+        }
+
+        #data {
+            background-color: #5e9251;
+        }
+    }
+
+    #all.error {
+        #img {
+            background-color: #b45561;
+        }
+
+        #data {
+            background-color: #a12b39;
+        }
+    }
+</style>

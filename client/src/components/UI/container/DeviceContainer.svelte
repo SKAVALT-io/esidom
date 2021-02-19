@@ -9,11 +9,11 @@
         class="h-auto w-max rounded-t-lg inline-flex items-center pr-3 pl-3 space-x-3"
     >
         <img class="h-5 w-auto" src={iconPath} alt="icon" />
-        <h1>{title}</h1>
+        <h1 class="text-white">{title}</h1>
     </div>
     <div
         id="items"
-        class="grid grid-rows-1 md:grid-cols-4 gap-x-5 gap-y-5 p-5 rounded-r-lg max-w-screen-lg"
+        class="grid md:grid-cols-4 gap-x-5 gap-y-5 p-5 rounded-r-lg max-w-screen-lg"
     >
         <slot />
     </div>

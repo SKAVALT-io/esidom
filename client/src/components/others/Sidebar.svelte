@@ -2,8 +2,8 @@
     import * as SPA from 'svelte-spa-router';
     import { tr } from '../../utils/i18nHelper';
     import { clickOutside } from '../../utils/functions';
-
     export let open = false;
+
     let currentPageSelected = '';
     const pageLinkClicked = (currentPage: string) => {
         currentPageSelected = currentPage;
@@ -47,13 +47,13 @@
         </li>
         <li class="nav_item">
             <a
-                href="/devices"
+                href="/entities"
                 class="nav-link"
                 use:SPA.link
                 on:click={() => {
-                    pageLinkClicked('devices');
+                    pageLinkClicked('entities');
                 }}
-                class:selected={currentPageSelected === 'devices'}
+                class:selected={currentPageSelected === 'entities'}
             >
                 <img
                     class="link-svg"
