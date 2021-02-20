@@ -177,7 +177,7 @@ class SocketForwarder {
                 this.io.emit('device_removed', data.event.data);
                 return;
             case 'update':
-                this.notifyObservers('deviceRegistryUpdated');
+                this.notifyObservers('deviceRegistryUpdated', data.event.data.device_id);
                 return;
             default:
                 console.log(`Unknown event ${data.event.event_type}`);

@@ -26,7 +26,7 @@ class GroupService implements EventObserver {
         this.initGroupHa();
     }
 
-    onDeviceRegistryUpdated() {
+    onDeviceRegistryUpdated(deviceId: string) {
         // To avoid search recreate all implicit group
         this.generateImplicitGroup();
     }
