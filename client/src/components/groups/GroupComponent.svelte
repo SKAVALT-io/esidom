@@ -30,7 +30,7 @@
     <div class="flex justify-center items-center col-span-8">{group.name}</div>
     {#if !group.groupId.startsWith('imp')}
         <div class="col-span-1 relative">
-            <RoundedButton size={8} on:click iconPath="icons/edit.svg" />
+            <RoundedButton size={8} on:click iconPath="icons/button/edit.svg" />
         </div>
     {/if}
 </div>

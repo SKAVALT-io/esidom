@@ -28,4 +28,10 @@ export default class EntityService {
     static async patchEntityName(id:string, name: string): Promise<void> {
         return http.patch(`/entity/update/${id}`, { name });
     }
+
+    static async getOnlyEquipmentEntity():Promise<Entity<any>[]> {
+        const lights = await EntityService.getEntities('light');
+        const switchs = await EntityService.getEntities('switch');
+        return lights.concat(switchs);
+    }
 }

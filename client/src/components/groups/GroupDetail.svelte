@@ -9,9 +9,10 @@
     import SaveButton from "../UI/buttons/SaveButton.svelte";
     import { each } from "svelte/internal";
 
-    export let currentGroup: Group;
+    import LoadingAnimation from "../../components/animations/LoadingAnimation.svelte";
+    import EntityService from "../../services/entityService";
 
-    $: checked = true;
+    export let currentGroup: Group;
 </script>
 
 <div>
@@ -41,22 +42,32 @@
             >Equipement dans le groupe</label>
 
             <div class="mt-2">
-                {#each currentGroup.entities as entity}
-                    <div>
-                        <label class="inline-flex items-center">
-                            <input
-                                type="checkbox"
-                                class="form-checkbox"
-                                checked={currentGroup.entities.includes(entity)}
-                            />
-                            <span class="ml-2">{entity.name}</span>
-                        </label>
+                {#await EntityService.getEntities()}
+                    <div class="loader">
+                        <LoadingAnimation />
                     </div>
-                {/each}
+                {:then entities}
+                    {#each entities as entity}
+                        <div>
+                            <label class="inline-flex items-center">
+                                <input
+                                    type="checkbox"
+                                    class="form-checkbox"
+                                    checked={currentGroup.entities.find((e) => {
+                                        console.log(e.id + ' ' + entity.id + ' => ' + (e.id === entity.id).toString());
+                                        return e.id === entity.id;
+                                    })}
+                                />
+                                <span class="ml-2">{entity.name}</span>
+                            </label>
+                        </div>
+                    {/each}
+                {/await}
             </div>
         </div>
-
-        <SaveButton />
+        <div class="flex flex-col mb-4">
+            <SaveButton />
+        </div>
     </form>
 </div>
 
