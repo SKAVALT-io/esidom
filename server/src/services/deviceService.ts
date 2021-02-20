@@ -69,18 +69,24 @@ class DeviceService implements EventObserver {
     }
 
     async pairdevice(): Promise<any> {
-
-        await httpForwarder.post<any>('/api/services/zwave/add_node', null);
-        await socketForwarder.forward({
-            type: 'call_service',
-            domain: 'mqtt',
-            service: 'publish',
-            service_data: {
-                topic: 'zigbee2mqtt/bridge/request/permit_join',
-                payload_template: '"{"value": true}"',
-            },
-        });
-
+        try {
+            await httpForwarder.post<any>('/api/services/zwave/add_node', null);
+        } catch (err) {
+            console.log(err);
+        }
+        try {
+            await socketForwarder.forward({
+                type: 'call_service',
+                domain: 'mqtt',
+                service: 'publish',
+                service_data: {
+                    topic: 'zigbee2mqtt/bridge/request/permit_join',
+                    payload_template: '"{"value": true}"',
+                },
+            });
+        } catch (err) {
+            console.log(err);
+        }
     }
 
 }
