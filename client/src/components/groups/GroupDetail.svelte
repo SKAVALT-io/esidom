@@ -11,6 +11,8 @@
 
     import LoadingAnimation from "../../components/animations/LoadingAnimation.svelte";
     import EntityService from "../../services/entityService";
+    import { tr } from "../../utils/i18nHelper";
+    import GroupService from "../../services/groupService";
 
     export let currentGroup: Group;
 </script>
@@ -19,30 +21,32 @@
     <h1
         class=" block w-full text-center text-grey-darkest mb-6 font-bold text-3xl"
     >
-        Create new group
+        {currentGroup.groupId ? currentGroup.name : tr('groups.createGroup')}
     </h1>
     <form class="mb-4">
         <div class="flex flex-col mb-4">
             <label
                 class="mb-2 font-bold text-lg text-grey-darkest"
                 for="Name"
-            >Nom du group</label>
+            >{tr('groups.groupName')}</label>
             <input
                 type="text"
                 name="Name"
                 id="Name"
-                value={currentGroup.name}
+                bind:value={currentGroup.name}
                 class="border py-2 px-3 text-grey-darkest"
+                on:change={(val) => console.log(val)}
+                placeholder={tr('groups.groupName')}
             />
         </div>
         <div class="block">
             <label
                 class="mb-2 font-bold text-lg text-grey-darkest"
                 for="Name"
-            >Equipement dans le groupe</label>
+            >{tr('groups.groupEntities')}</label>
 
             <div class="mt-2">
-                {#await EntityService.getEntities()}
+                {#await EntityService.getOnlyEquipmentEntity()}
                     <div class="loader">
                         <LoadingAnimation />
                     </div>
@@ -54,11 +58,22 @@
                                     type="checkbox"
                                     class="form-checkbox"
                                     checked={currentGroup.entities.find((e) => {
-                                        console.log(e.id + ' ' + entity.id + ' => ' + (e.id === entity.id).toString());
                                         return e.id === entity.id;
                                     })}
+                                    on:click={(val) => {
+                                        if (val.target.checked) {
+                                            currentGroup.entities.push(entity);
+                                        } else {
+                                            const index = currentGroup.entities.indexOf(entity);
+                                            if (index > -1) {
+                                                currentGroup.entities = currentGroup.entities.splice(index, 1);
+                                            }
+                                        }
+                                    }}
                                 />
-                                <span class="ml-2">{entity.name}</span>
+                                <span
+                                    class="ml-2"
+                                >{entity.name ? entity.name : entity.id}</span>
                             </label>
                         </div>
                     {/each}
@@ -66,7 +81,9 @@
             </div>
         </div>
         <div class="flex flex-col mb-4">
-            <SaveButton />
+            <SaveButton
+                on:click={() => GroupService.createGroup(currentGroup)}
+            />
         </div>
     </form>
 </div>

@@ -2,19 +2,43 @@
     import GroupService from "../../services/groupService";
     import GroupComponent from "../../components/groups/GroupComponent.svelte";
     import Modal from "../../components/UI/modal/Modal.svelte";
-    import RoundedButton from "../../components/UI/buttons/RoundedButton.svelte";
     import GroupDetail from "../../components/groups/GroupDetail.svelte";
     import type { Group } from "../../../types/groupType";
     import LoadingAnimation from "../../components/animations/LoadingAnimation.svelte";
+    import DropdownButton from "../../components/UI/buttons/DropdownButton.svelte";
+    import RoundedButton from "../../components/UI/buttons/RoundedButton.svelte";
+    import SearchBar from "../../components/others/SearchBar.svelte";
+    import { tr } from "../../utils/i18nHelper";
 
     let isOpen = false;
     let currentGroup: Group = {
-        groupId: "test",
+        groupId: "init",
         name: "Name of the group",
         entities: [],
     };
+    let flipSwitch = false;
 </script>
 
+<div
+    class="pt-2 flex justify-between relative right-0 top-0 mt-2 mr-2 ml-2 mx-auto text-white"
+>
+    <h1 class="text-2xl">{tr('groups.myGroups')}</h1>
+    <div>
+        <DropdownButton
+            dropDownOptions={[tr('groups.sortBy.options.name')]}
+            title={tr('groups.sortBy.title')}
+            arrowUp={flipSwitch}
+            on:click={(e) => {}}
+        />
+        <SearchBar
+            debounce={300}
+            on:type={(e) => {
+                console.log(e);
+            }}
+            on:clear={(e) => console.log(e)}
+        />
+    </div>
+</div>
 {#await GroupService.getGroup()}
     <div class="loader">
         <LoadingAnimation />
@@ -47,6 +71,7 @@
     <RoundedButton
         on:click={() => {
             isOpen = true;
+            currentGroup = { entities: [] };
         }}
         iconPath="icons/button/plus.svg"
     />

@@ -79,5 +79,18 @@
     "confirm": "Valider",
     "retry": "Réessayer",
     "close": "Fermer"
+  },
+  "groups": {
+    "myGroups": "Mes groupes",
+    "search": "Rechercher ...",
+    "sortBy": {
+        "title": "Trier par",
+        "options": {
+            "name": "Noms"
+        }
+    },
+    "createGroup": "Nouveau group",
+    "groupName": "Nom du groupe",
+    "groupEntities": "Equipement dans le groupe"
   }
 }
