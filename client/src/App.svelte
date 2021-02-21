@@ -58,7 +58,7 @@
         id="row2"
         class="flex flex-row space-x-4 sm:space-x-20 overflow-y-auto h-screen"
     >
-        <div class="sidenav fixed z-20">
+        <div class="sidenav fixed z-100">
             <Sidebar bind:open />
         </div>
         <div class="main-content w-full mt-6">
