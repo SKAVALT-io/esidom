@@ -37,6 +37,26 @@
           "ready": "Une fois prêt, cliquez sur le bouton",
           "validate":"valider",
           "start": "pour lancer la procédure d'appairage."
+      },
+      "start": {
+          "information":"Veuillez appairer votre objet"
+      },
+
+      "success": {
+          "deviceFound": "Equipement trouvé :",
+          "deviceName": "Veuillez nommer votre équipement :"
+      },
+
+      "failure": {
+        "deviceNotFound": "Nous n'avons pas trouvé votre équipement 😟",
+        "followInstructions": "Assurez-vous d'avoir bien suivi les étapes d'appairage de votre équipement.",
+        "retryPairingProcedure": "Pour relancer la procédure d'appairage, cliquez sur le bouton",
+        "retry": "Réassayer"
+      },
+
+      "finish":{
+          "congratulation": "Félicitation, votre appareil",
+          "congratulationFollowing": "a bien été rajouté au sein de votre réseau."
       }
   },
   "blockly": {

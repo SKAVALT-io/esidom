@@ -9,9 +9,9 @@
 
 <div class="flex flex-col space-y-3 ml-10 mr-10 justify-center items-center">
     <p class="max-w-lg md:max-w-xl">
-        Félicitation, votre appareil
+        {tr('pairing.finish.congratulation')}
         <span class="text-blue-300">{Device.data.model}</span>
-        a bien été rajouté au sein de votre réseau.
+        {tr('pairing.finish.congratulationFollowing')}
     </p>
     <OutlineButton
         text="Fermer"

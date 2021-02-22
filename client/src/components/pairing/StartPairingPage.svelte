@@ -2,6 +2,7 @@
     import { createEventDispatcher, onMount, onDestroy } from 'svelte';
     import { step, reset, Device } from './PairingStore.svelte';
     import { socketManager } from '../../managers/socketManager';
+    import { tr } from '../../utils/i18nHelper';
     import LoadingAnimation from '../animations/LoadingAnimation.svelte';
     import CancelButton from '../UI/buttons/CancelButton.svelte';
     import config from '../../config/config';
@@ -53,7 +54,9 @@
 </script>
 
 <div class="flex flex-col space-y-6 justify-center items-center">
-    <p class="text-lg uppercase text-center">Veuillez appairer votre objet</p>
+    <p class="text-lg uppercase text-center">
+        {tr('pairing.start.information')}
+    </p>
     <LoadingAnimation />
     <CancelButton
         on:click={() => {

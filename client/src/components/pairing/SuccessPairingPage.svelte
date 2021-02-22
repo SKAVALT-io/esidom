@@ -20,10 +20,10 @@
 
 <div class="flex flex-col space-y-4 ml-10 mr-10 justify-center items-center">
     <p class="max-w-lg md:max-w-xl">
-        Equipement trouvé :
+        {tr('pairing.success.deviceFound')}
         {Device.data.model}
         <br />
-        Veuillez nommer votre équipement :
+        {tr('pairing.success.deviceName')}
         <br />
         <br />
         <!--TODO CHANGE THIS -->

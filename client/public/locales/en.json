@@ -3,9 +3,48 @@
         "welcome": "Hello World",
         "coucou": "Yo people :D"
     },
+    "menu": {
+        "devices": "devices",
+        "home": "home",
+        "automations": "automations",
+        "blockly": "blockly",
+        "pairing": "pairing"
+    },
     "automations": {
         "myAutomations": "My Automations",
         "search": "Search...",
         "sortBy": "Sort by"
+    },
+
+    "pairing": {
+        "instructions": {
+            "welcome": "Welcome to ESIDOM pairing mode.",
+            "advice" : "Follow the following preparatory steps to pair your connected devices within your network:",
+            "advice1": "Prepare the device that you want to add within your network.",
+            "advice2": "Please read the instructions for your device to know the manipulation to be carried out during the pairing procedure to add your object.",
+            "ready": "When ready, click on the button",
+            "validate":"validate",
+            "start": "to start the pairing procedure."
+        },
+        "start": {
+            "information":"Please pair your object"
+        },
+  
+        "success": {
+            "deviceFound": "Device found:",
+            "deviceName": "Please name your device:"
+        },
+  
+        "failure": {
+          "deviceNotFound": "We did not find your device 😟",
+          "followInstructions": "Make sure you have followed the steps for pairing your device.",
+          "retryPairingProcedure": "To restart the pairing procedure, click on the button",
+          "retry": "Retry"
+        },
+  
+        "finish":{
+            "congratulation": "Congratulations, your device",
+            "congratulationFollowing": "has been added to your network."
+        }
     }
 }
