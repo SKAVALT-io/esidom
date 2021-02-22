@@ -1,7 +1,7 @@
 export function
-debounce<T = unknown, R = unknown>(func: (...args: T[]) => R, timeout = 300): (args?: T) => void {
+debounce<T = unknown, R = unknown>(func: (...args: T[]) => R, timeout = 300): (args: T) => void {
     let timer: NodeJS.Timeout;
-    return (...args: any[]) => {
+    return (...args: T[]) => {
         const next = () => func(...args);
         if (timer) {
             clearTimeout(timer);
@@ -26,4 +26,13 @@ export function clickOutside(node: any):{ destroy(): void; } {
             document.removeEventListener('click', handleClick, false);
         },
     };
+}
+
+export function componentToHex(c: number): string {
+    const hex = c.toString(16);
+    return hex.length === 1 ? `0${hex}` : hex;
+}
+
+export function rgbToHex(r: number, g: number, b: number): string {
+    return `#${componentToHex(r)}${componentToHex(g)}${componentToHex(b)}`;
 }

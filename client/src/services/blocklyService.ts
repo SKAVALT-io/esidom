@@ -1,7 +1,6 @@
 /* eslint-disable no-param-reassign */
 import type { WorkspaceSvg } from 'blockly';
 import Blockly from 'blockly';
-import BlockFactory from 'blockly';
 import esidomGenerator, { EntityTypeEnum } from '../routes/automation/esidomGenerator';
 import EntityService from './entityService';
 import type { Entity } from '../../types/entityType';
@@ -101,7 +100,7 @@ export default class BlocklyService {
     }
 
     loadAutomation(xml: string): void {
-        BlockFactory.mainWorkspace.clear();
+        Blockly.mainWorkspace.clear();
         const block: Element = Blockly.Xml.textToDom(xml);
         Blockly.Xml.domToWorkspace(block, this.workspace);
     }
@@ -116,10 +115,10 @@ export default class BlocklyService {
         this.createObjects(entities);
     }
 
-    static createEntities(entities: Entity<any>[], services: Service[]): void {
+    static createEntities(entities: Entity<unknown>[], services: Service[]): void {
         const entityWithServices: EntityWithServices[] = [];
 
-        entities.forEach((entity: Entity<any>) => {
+        entities.forEach((entity: Entity<unknown>) => {
             const tmpServices: string[] = services
                 .filter((service: Service) => service.name.split('.')[0] === entity.type)
                 .map((service: Service) => service.name);
@@ -219,13 +218,13 @@ export default class BlocklyService {
         }
     }
 
-    static createObjects(entities: Entity<any>[]): void {
+    static createObjects(entities: Entity<unknown>[]): void {
         const block = Blockly.Blocks as unknown as BlocksDefinitions;
         TYPES.forEach((type: Type) => {
             const typeName = type.name;
             const options: string[][] = entities
-                .filter((entity: Entity<any>) => entity.type === typeName)
-                .map((entity: Entity<any>) => [entity.name === '' ? tr(('blockly.unknownName')) : entity.name, entity.id]);
+                .filter((entity: Entity<unknown>) => entity.type === typeName)
+                .map((entity: Entity<unknown>) => [entity.name === '' ? tr(('blockly.unknownName')) : entity.name, entity.id]);
 
             const blocklyObjects = new BlocklyObjects(
                 typeName,

@@ -42,6 +42,3 @@
         </category>
     </BlocklyComponent>
 </div>
-
-<style>
-</style>

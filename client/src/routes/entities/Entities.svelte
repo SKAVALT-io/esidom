@@ -13,20 +13,6 @@
     import EntityService, { actualDomains } from '../../services/entityService';
 
     let isPairDeviceOpen = false;
-    async function pair(event) {
-        isPairDeviceOpen = true;
-        // TODO: PAIR
-        // const protocol = prompt('Protocol');
-        // const body = JSON.stringify({ protocol });
-        // const headers = new Headers();
-        // headers.set('Content-Type', 'application/json');
-        // await fetch('http://localhost:3000/device', {
-        //     headers,
-        //     method: 'POST',
-        //     body,
-        // }).then((x) => x.json());
-        // alert('✔️');
-    }
 
     const mapDomainToComp = new Map<string, typeof SvelteComponent>();
     mapDomainToComp.set('light', LightPreview);

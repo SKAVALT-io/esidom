@@ -6,7 +6,7 @@ import {
     HaDevice,
     HaEntity,
     HaSearchDeviceResponse,
-    HaStateResponse
+    HaStateResponse,
 } from '../types/haTypes';
 import entityService from './entityService';
 
