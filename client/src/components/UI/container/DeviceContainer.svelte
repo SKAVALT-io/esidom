@@ -13,7 +13,7 @@
     </div>
     <div
         id="items"
-        class="grid md:grid-cols-4 gap-x-5 gap-y-5 p-5 rounded-r-lg max-w-screen-lg"
+        class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-6 gap-y-6 p-5 rounded-r-lg max-w-screen-2xl"
     >
         <slot />
     </div>

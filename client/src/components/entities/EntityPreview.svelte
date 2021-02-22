@@ -23,7 +23,7 @@
 <div id="all" class="grid grid-cols-5 max-w-lg max-h-32" class:error={isError}>
     <div
         id="img"
-        class="col-span-2 rounded-xl rounded-r-none flex items-center px-4"
+        class="col-span-2 rounded-xl rounded-r-none flex items-center px-4 h-inherit"
     >
         {#if !isError}
             <slot name="img">

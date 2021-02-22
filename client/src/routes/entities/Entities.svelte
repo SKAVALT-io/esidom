@@ -56,7 +56,7 @@
 </script>
 
 <!-- Div containing all devices -->
-<div id="test">
+<div id="test" class="pr-6 xl:pr-10">
     {#await loadEntities()}
         {tr('devices.loading')}
     {:then values}

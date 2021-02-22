@@ -371,6 +371,7 @@ module.exports = {
             'vh-80': '80vh',
             full: '100%',
             screen: '100vh',
+            inherit: 'inherit',
         }),
         inset: (theme, { negative }) => ({
             auto: 'auto',
