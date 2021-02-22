@@ -55,6 +55,13 @@
             options
         );
 
+        // This will fix the toolbox scrollbar glitch
+        const display = document.createAttribute('display');
+        display.value = 'none';
+        workspace.toolbox_.flyout_.scrollbar.svgHandle_.attributes.setNamedItem(
+            display
+        );
+
         const rootBlock: string =
             '<xml><block type="esidom_automation" deletable="false" movable="false"></block></xml>';
         Blockly.Xml.domToWorkspace(Blockly.Xml.textToDom(rootBlock), workspace);
@@ -138,3 +145,5 @@
         <slot />
     </xml>
 </div>
+
+<!-- blocklyScrollbarHandle -->
