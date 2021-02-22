@@ -33,8 +33,11 @@ jobs:
     - name: Archive production artifacts
       uses: actions/upload-artifact@v2
       with:
-        name: dist
-        path: server/dist_folder
+        name: esidom_app
+        path: |
+          server/dist_folder
+          server/package*.json
+          server/src
         if-no-files-found: error
 
 
@@ -59,27 +62,32 @@ jobs:
     - name: Archive production artifacts
       uses: actions/upload-artifact@v2
       with:
-        name: build
-        path: client/build_folder/
+        name: esidom_app
+        path: |
+          client/build_folder/
+          client/package*.json
         if-no-files-found: error
 
   copyBuildFiles:
     needs: [buildServer, buildClient]
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
-    - run: mkdir server/dist
-    - uses: actions/download-artifact@v2
+    - name: Archive production artifacts
+      uses: actions/upload-artifact@v2
       with:
-        name: dist
-        path: server/dist
+        name: esidom_app
+        path: |
+          Dockerfile
+          docker_run.sh
+          run_all.sh
 
-        #      uses: actions/checkout@v2
-    - run: mkdir client/build
+    - uses: actions/checkout@v2
+    - run: mkdir artifact
     - uses: actions/download-artifact@v2
       with:
-        name: build
-        path: client/build
+        name: esidom_app
+        path: artifact
+
 
     - name: Copy Dockerfile and scripts to server
       uses: appleboy/scp-action@master
@@ -90,7 +98,7 @@ jobs:
         command_timeout: 30m
         port: 22222
         strip_components: 1
-        source: "Dockerfile,docker_run.sh,run_all.sh,client/build/*,server/dist/*,client/package*.json,server/package*.json"
+        source: "artifact/*"
         target: "esidom_autoDeploy"
 
 
