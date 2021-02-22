@@ -63,7 +63,7 @@ jobs:
     needs: [buildServer, buildClient]
     runs-on: ubuntu-latest
     steps:
-      uses: actions/checkout@v2
+    - uses: actions/checkout@v2
     - run: mkdir server/dist
     - uses: actions/download-artifact@v2
       with:
