@@ -5,7 +5,7 @@ on:
   #  branches: [ develop ]
   #  types: [ closed ]
   push:
-    branches: [ feature/docker_without_complilation ]
+    branches: [ develop ]
 
 jobs:
   buildServer:
