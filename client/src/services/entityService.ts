@@ -3,7 +3,7 @@ import type { Service } from '../../types/serviceType';
 import http from '../utils/HttpHelper';
 
 export async function getEntity<T extends Entity<unknown>>(id: string): Promise<T> {
-    return http.get(`/entity/${id}`);
+    return http.get<T>(`/entity/${id}`);
 }
 
 export const actualDomains = ['binary_sensor', 'switch', 'sensor', 'light'];
