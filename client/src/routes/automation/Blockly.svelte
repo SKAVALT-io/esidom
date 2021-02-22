@@ -19,6 +19,7 @@
             <block type="time_condition" />
             <block type="time_condition_hour" />
             <block type="time_condition_week" />
+            <block type="sun_condition" />
         </category>
         <category name="Actions" colour={COLORS.HUE_ORANGE}>
             <block type="object_action">

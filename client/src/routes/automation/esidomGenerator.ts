@@ -79,6 +79,10 @@ export type BlocksGenerator = {
         block[t] = (blk: Block) => [getDropdownChoice(blk), PRECEDENCE];
     });
 
+    /**
+     * Bloc ESIDOM
+     */
+
     block.esidom_automation = (blk: Block) => {
         const statements_trigger: string = esidomGenerator.statementToCode(blk, 'Trigger');
         const statements_condition: string = esidomGenerator.statementToCode(blk, 'Condition');
@@ -111,6 +115,10 @@ export type BlocksGenerator = {
         return JSON.stringify(json);
     };
 
+    /**
+     * Catégorie Déclencheur
+     */
+
     block.time_trigger = (blk: Block) => {
         const number_hour = blk.getFieldValue('Hour');
         const number_minute = blk.getFieldValue('Minute');
@@ -120,26 +128,6 @@ export type BlocksGenerator = {
 
         json.platform = 'time';
         json.at = `${number_hour}:${number_minute}:${number_second}`;
-
-        return JSON.stringify(json);
-    };
-
-    block.time_condition = (blk: Block) => {
-        const number_hour_debut = blk.getFieldValue('Hour_start');
-        const number_minute_debut = blk.getFieldValue('Minute_start');
-        const number_second_debut = blk.getFieldValue('Second_start');
-        const number_hour_end = blk.getFieldValue('Hour_end');
-        const number_minute_end = blk.getFieldValue('Minute_end');
-        const number_second_end = blk.getFieldValue('Second_end');
-
-        const json: BlocklyJSON = {};
-
-        const weekday = getWeekday(blk);
-
-        json.condition = 'time';
-        json.after = `${number_hour_debut}:${number_minute_debut}:${number_second_debut}`;
-        json.before = `${number_hour_end}:${number_minute_end}:${number_second_end}`;
-        json.weekday = weekday;
 
         return JSON.stringify(json);
     };
@@ -164,48 +152,26 @@ export type BlocksGenerator = {
         return JSON.stringify(json);
     };
 
-    block.sun_condition = (blk: Block) => {
-        const dropdown_sun_sun = blk.getFieldValue('Sun.sun');
+    /**
+     * Catégorie Condition
+     */
 
-        const json: BlocklyJSON = {};
-        json.condition = 'state';
-        json.entity_id = 'sun.sun';
-        json.state = dropdown_sun_sun;
-
-        return JSON.stringify(json);
-    };
-
-    block.binary_condition = (blk: Block) => {
-        const value_service = esidomGenerator.valueToCode(blk, 'Service', PRECEDENCE);
-        const dropdown_state = blk.getFieldValue('State');
+    block.time_condition = (blk: Block) => {
+        const number_hour_debut = blk.getFieldValue('Hour_start');
+        const number_minute_debut = blk.getFieldValue('Minute_start');
+        const number_second_debut = blk.getFieldValue('Second_start');
+        const number_hour_end = blk.getFieldValue('Hour_end');
+        const number_minute_end = blk.getFieldValue('Minute_end');
+        const number_second_end = blk.getFieldValue('Second_end');
 
         const json: BlocklyJSON = {};
 
-        json.condition = 'state';
-        json.entity_id = value_service;
-        json.state = dropdown_state;
+        const weekday = getWeekday(blk);
 
-        return JSON.stringify(json);
-    };
-
-    block.color_picker = (blk: Block) => {
-        const color_value = blk.getFieldValue('Color');
-
-        const json: BlocklyJSON = {};
-
-        json.rgb_color = color_value;
-
-        return JSON.stringify(json);
-    };
-
-    block.color_rgb = (blk: Block) => {
-        const number_red = blk.getFieldValue('Red');
-        const number_green = blk.getFieldValue('Green');
-        const number_blue = blk.getFieldValue('Blue');
-        const color_value = `#${number_red.toString(16).padStart(2, '0')}${number_green.toString(16).padStart(2, '0')}${number_blue.toString(16).padStart(2, '0')}`;
-        const json: BlocklyJSON = {};
-
-        json.rgb_color = color_value;
+        json.condition = 'time';
+        json.after = `${number_hour_debut}:${number_minute_debut}:${number_second_debut}`;
+        json.before = `${number_hour_end}:${number_minute_end}:${number_second_end}`;
+        json.weekday = weekday;
 
         return JSON.stringify(json);
     };
@@ -237,6 +203,34 @@ export type BlocksGenerator = {
         return JSON.stringify(json);
     };
 
+    block.binary_condition = (blk: Block) => {
+        const value_service = esidomGenerator.valueToCode(blk, 'Service', PRECEDENCE);
+        const dropdown_state = blk.getFieldValue('State');
+
+        const json: BlocklyJSON = {};
+
+        json.condition = 'state';
+        json.entity_id = value_service;
+        json.state = dropdown_state;
+
+        return JSON.stringify(json);
+    };
+
+    block.sun_condition = (blk: Block) => {
+        const dropdown_sun_sun = blk.getFieldValue('Sun');
+
+        const json: BlocklyJSON = {};
+        json.condition = 'state';
+        json.entity_id = 'sun.sun';
+        json.state = dropdown_sun_sun;
+
+        return JSON.stringify(json);
+    };
+
+    /**
+     * Catégorie Action
+     */
+
     block.object_action = (blk: Block) => {
         const dropdown_entities = blk.getFieldValue('Entities');
         const dropdown_services = blk.getFieldValue('Services');
@@ -248,6 +242,32 @@ export type BlocksGenerator = {
         json.alias = dropdown_entities;
         json.entity_id = entity_id;
         json.service = dropdown_services ?? '';
+        return JSON.stringify(json);
+    };
+
+    /**
+     * Catégorie Couleur
+     */
+
+    block.color_picker = (blk: Block) => {
+        const color_value = blk.getFieldValue('Color');
+
+        const json: BlocklyJSON = {};
+
+        json.rgb_color = color_value;
+
+        return JSON.stringify(json);
+    };
+
+    block.color_rgb = (blk: Block) => {
+        const number_red = blk.getFieldValue('Red');
+        const number_green = blk.getFieldValue('Green');
+        const number_blue = blk.getFieldValue('Blue');
+        const color_value = `#${number_red.toString(16).padStart(2, '0')}${number_green.toString(16).padStart(2, '0')}${number_blue.toString(16).padStart(2, '0')}`;
+        const json: BlocklyJSON = {};
+
+        json.rgb_color = color_value;
+
         return JSON.stringify(json);
     };
 

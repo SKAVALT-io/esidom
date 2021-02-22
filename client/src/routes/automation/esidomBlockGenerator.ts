@@ -120,6 +120,14 @@ const esidomBlockGenerator: EsidomBlockGenerator = {
             const service = blocklyJSON.entity_id;
             const { state } = blocklyJSON;
 
+            if (service === 'sun.sun') {
+                return `
+                <block type="sun_condition">
+                <field name="Sun">${state}</field>
+                </block>
+            `;
+            }
+
             return `
                 <block type="binary_condition">
                     <value name="Service">    

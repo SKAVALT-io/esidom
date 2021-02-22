@@ -72,14 +72,14 @@ export type BlocksDefinitions = {
     };
 
     /**
- * Catégorie Déclencheur
- */
+     * Catégorie Déclencheur
+     */
     block.binary_trigger = {
         init() {
             this.jsonInit?.(
                 {
                     type: 'binary_trigger',
-                    message0: 'Quand le capteur %1 passe à %2',
+                    message0: 'Quand le capteur binaire %1 passe à %2',
                     args0: [
                         {
                             type: 'input_value',
@@ -159,8 +159,8 @@ export type BlocksDefinitions = {
     };
 
     /**
- * Catégorie Condition
- */
+     * Catégorie Condition
+     */
     block.time_condition = {
         init() {
             this.jsonInit?.(
@@ -288,18 +288,18 @@ export type BlocksDefinitions = {
             this.jsonInit?.(
                 {
                     type: 'sun_condition',
-                    message0: 'Lorsque le soleil se %1',
+                    message0: 'Si le soleil est %1',
                     args0: [
                         {
                             type: 'field_dropdown',
-                            name: 'Sun.sun',
+                            name: 'Sun',
                             options: [
                                 [
-                                    'lève',
+                                    'levé',
                                     'above_horizon',
                                 ],
                                 [
-                                    'couche',
+                                    'couché',
                                     'below_horizon',
                                 ],
                             ],
@@ -455,7 +455,7 @@ export type BlocksDefinitions = {
             this.jsonInit?.(
                 {
                     type: 'binary_condition',
-                    message0: 'Si le capteur %1 est à %2',
+                    message0: 'Si le capteur binaire %1 est à %2',
                     args0: [
                         {
                             type: 'input_value',
@@ -489,12 +489,12 @@ export type BlocksDefinitions = {
     };
 
     /**
- * Catégorie Action
- */
+     * Catégorie Action
+     */
 
     /**
- * Catégorie Couleur
- */
+     * Catégorie Couleur
+     */
     block.color_picker = {
         init() {
             this.jsonInit?.(
