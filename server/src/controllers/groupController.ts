@@ -41,6 +41,38 @@ class GroupController {
             .then(sendf<Group>(res, 200));
     }
 
+    @App.get('/:groupId')
+    async getGroup(req: Request, res: Response): Promise<void> {
+        try {
+            const { groupId } = req.params;
+            if (!groupId) {
+                res.status(400).send({ message: 'The parameter groupId is missing' });
+                return;
+            }
+            const result = await groupService.getGroup(groupId);
+            res.status(200).send(result);
+        } catch (err) {
+            res.status(400).send({ message: err });
+        }
+    }
+
+    @App.delete('/:groupId')
+    async deleteGroup(req: Request, res: Response): Promise<void> {
+        try {
+            const { groupId } = req.params;
+            console.log(groupId);
+            if (!groupId) {
+                res.status(400).send({ message: 'The parameter groupId is missing' });
+                return;
+            }
+            await groupService.deleteGroup(groupId);
+            res.status(200).send({ message: 'Ok' });
+        } catch (err) {
+            console.log(err);
+            res.status(400).send({ message: err });
+        }
+    }
+
 }
 
 export default new GroupController();

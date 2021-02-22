@@ -281,6 +281,27 @@ class GroupService implements EventObserver {
         };
     }
 
+    async deleteGroup(groupId: string) {
+        const g = await databaseForwarder.db?.get<DBGroup>(`SELECT * FROM ${GroupTableName} WHERE entityId = '${groupId}'`);
+        if (!g) {
+            throw new Error(`There are no group with id : ${groupId}`);
+        }
+        await this.deleteGroupFromHa(groupId);
+        await this.deleteGroupFromDb(groupId);
+    }
+
+    private async deleteGroupFromDb(groupId: string) {
+        try {
+            await databaseForwarder.db?.run('BEGIN TRANSACTION');
+            await databaseForwarder.db?.run(`DELETE FROM ${InsideGroupTableName} WHERE groupEntityId = '${groupId}'`);
+            await databaseForwarder.db?.run(`DELETE FROM ${GroupTableName} WHERE entityId = '${groupId}'`);
+            await databaseForwarder.db?.run('COMMIT');
+        } catch (err) {
+            await databaseForwarder.db?.run('ROLLBACK');
+            throw err;
+        }
+    }
+
 }
 
 export default new GroupService();
