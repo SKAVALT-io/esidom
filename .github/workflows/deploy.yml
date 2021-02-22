@@ -17,8 +17,8 @@ jobs:
       matrix:
         node-version: [12.x]
     steps:
-    - run: mkdir -p dist_folder
     - uses: actions/checkout@v2
+    - run: mkdir -p dist_folder
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v1
       with:
@@ -48,12 +48,12 @@ jobs:
       matrix:
         node-version: [12.x]
     steps:
-    - run: mkdir -p build_folder
     - uses: actions/checkout@v2
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version }}
+    - run: mkdir -p build_folder
     - run: npm ci
     - run: npm run build --if-present
     - run: mv build build_folder
