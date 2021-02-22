@@ -28,7 +28,18 @@ jobs:
         echo "user=${{ secrets.HA_USER }}" >> .env
         echo "password=${{ secrets.HA_PASSWORD }}" >> .env
     - run: npm run build --if-present
-    - run: tar cvzf dist ../dist.tar.gz
+    - uses: actions/checkout@v2
+    - name: Copy necessary building files to server
+      uses: appleboy/scp-action@master
+      with:
+        host: ${{ secrets.DEPLOY_HOST }}
+        username: ${{ secrets.DEPLOY_USER }}
+        password: ${{ secrets.DEPLOY_PASSWORD }}
+        command_timeout: 30m
+        port: 22222
+        strip_components: 1
+        source: "dist/*,.env,package*.json"
+        target: "esidom_autoDeploy/server"
 
 
   buildClient:
@@ -47,15 +58,25 @@ jobs:
         node-version: ${{ matrix.node-version }}
     - run: npm ci
     - run: npm run build --if-present
-    - run: tar cvzf build ../build.tar.gz
+    - uses: actions/checkout@v2
+    - name: Copy necessary building files to server
+      uses: appleboy/scp-action@master
+      with:
+        host: ${{ secrets.DEPLOY_HOST }}
+        username: ${{ secrets.DEPLOY_USER }}
+        password: ${{ secrets.DEPLOY_PASSWORD }}
+        command_timeout: 30m
+        port: 22222
+        strip_components: 1
+        source: "build/*,package*.json"
+        target: "esidom_autoDeploy/client"
 
-  copyFiles:
+  copyBuildFiles:
     needs: [buildServer, buildClient]
     runs-on: ubuntu-latest
     steps:
-      - run: ls -la
       - uses: actions/checkout@v2
-      - name: Copy necessary files to server
+      - name: Copy Dockerfile and scripts to server
         uses: appleboy/scp-action@master
         with:
           host: ${{ secrets.DEPLOY_HOST }}
@@ -64,7 +85,7 @@ jobs:
           command_timeout: 30m
           port: 22222
           strip_components: 1
-          source: "dist.tar.gz,build.tar.gz,server/.env,server/package*.json,client/build/*,client/package*.json,Dockerfile,docker_run.sh,run_all.sh"
+          source: "Dockerfile,docker_run.sh,run_all.sh"
           target: "esidom_autoDeploy"
 
 
