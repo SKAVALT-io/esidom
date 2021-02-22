@@ -15,7 +15,7 @@
     $: isOn = entity.state === 'on';
     // $: srcImg = isOn ? 'door-open.png' : 'door-close.png';
 
-    function updateState(data: BinarySensorEntity) {
+    function updateState(data: SensorEntity) {
         console.log('new ws', data);
         entity = data;
     }
