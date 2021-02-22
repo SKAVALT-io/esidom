@@ -1,7 +1,7 @@
 export function
-debounce<T = unknown, R = unknown>(func: (...args: T[]) => R, timeout = 300): (args?: T) => void {
+debounce<T = unknown, R = unknown>(func: (...args: T[]) => R, timeout = 300): (args: T) => void {
     let timer: NodeJS.Timeout;
-    return (...args: any[]) => {
+    return (...args: T[]) => {
         const next = () => func(...args);
         if (timer) {
             clearTimeout(timer);

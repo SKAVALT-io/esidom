@@ -11,17 +11,19 @@
     // Because color picker emits a signal at start, and we don't want it
     let first = true;
 
-    const colorCallback = debounce((rgba: any) => {
-        // console.log(rgba.detail);
-        const { r, g, b } = rgba.detail;
-        if (first) {
-            first = false;
-        } else {
-            dispatch('valuechange', {
-                rgb_color: [r, g, b],
-            });
+    const colorCallback = debounce(
+        (rgb: { detail: { r: number; g: number; b: number } }) => {
+            // console.log(rgba.detail);
+            const { r, g, b } = rgb.detail;
+            if (first) {
+                first = false;
+            } else {
+                dispatch('valuechange', {
+                    rgb_color: [r, g, b],
+                });
+            }
         }
-    });
+    );
 
     const dispatch = createEventDispatcher();
     const HEXA = rgbToHex(r, g, b);
