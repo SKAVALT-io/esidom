@@ -35,7 +35,7 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         name: dist
-        path: dist_folder
+        path: server/dist_folder
         if-no-files-found: error
 
 
@@ -61,7 +61,7 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         name: build
-        path: build_folder/
+        path: client/build_folder/
         if-no-files-found: error
 
   copyBuildFiles:
