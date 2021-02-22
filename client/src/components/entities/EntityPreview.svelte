@@ -1,6 +1,7 @@
 <script>
     import type { Entity } from '../../../types/entityType';
     import Tooltip from '../UI/utils/Tooltip.svelte';
+    import { tr } from '../../utils/i18nHelper';
 
     /* import { link } from 'svelte-spa-router';
     If we use:link in <a>, we can't middle click it (= open in new tab)
@@ -56,7 +57,7 @@
         <div class="row-span-2 text-white">
             {#if !isError}
                 <slot name="sensor">PLACEHOLDER</slot>
-            {:else}Data unavailable{/if}
+            {:else}{tr('devices.dataUnavailable')}{/if}
         </div>
     </div>
 </div>

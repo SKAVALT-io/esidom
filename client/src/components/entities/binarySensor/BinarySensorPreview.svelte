@@ -3,7 +3,7 @@
 
     import type { BinarySensorEntity } from '../../../../types/entities/binarySensorEntity';
     import { socketManager } from '../../../managers/socketManager';
-
+    import { tr } from '../../../utils/i18nHelper';
     import EntityPreview from '../EntityPreview.svelte';
 
     export let entity: BinarySensorEntity;
@@ -37,5 +37,5 @@
     <!-- Image -->
     <img slot="img" src={srcImg} alt="" />
     <!-- Data -->
-    <div slot="sensor">Etat: {isOn ? 'ouvert' : 'fermé'}</div>
+    <div slot="sensor">{tr('devices.state')} : {isOn ? 'ouvert' : 'fermé'}</div>
 </EntityPreview>

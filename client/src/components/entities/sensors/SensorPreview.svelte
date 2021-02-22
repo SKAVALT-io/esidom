@@ -3,6 +3,7 @@
     import type { SensorEntity } from '../../../../types/entities/sensorEntity';
 
     import { socketManager } from '../../../managers/socketManager';
+    import { tr } from '../../../utils/i18nHelper';
 
     import EntityPreview from '../EntityPreview.svelte';
 
@@ -38,7 +39,8 @@
     <img slot="img" src={srcImg} alt="" />
     <!-- Data -->
     <div slot="sensor">
-        Etat:
+        {tr('devices.state')}
+        :
         {entity.state + (entity.attributes.unit_of_measurement ?? '')}
     </div>
 </EntityPreview>

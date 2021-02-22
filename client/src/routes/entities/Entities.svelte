@@ -11,6 +11,7 @@
     import RoundedButton from '../../components/UI/buttons/RoundedButton.svelte';
     import DeviceContainer from '../../components/UI/container/DeviceContainer.svelte';
     import EntityService, { actualDomains } from '../../services/entityService';
+    import { tr } from '../../utils/i18nHelper';
 
     let isPairDeviceOpen = false;
     async function pair(event) {
@@ -57,10 +58,13 @@
 <!-- Div containing all devices -->
 <div id="test">
     {#await loadEntities()}
-        Loading entities ...
+        {tr('devices.loading')}
     {:then values}
         {#each Object.entries(values).sort() as [domain, entities] (domain)}
-            <DeviceContainer title={domain} iconPath="favicon.png">
+            <DeviceContainer
+                title={tr('devices.' + domain)}
+                iconPath="favicon.png"
+            >
                 {#each entities as entity}
                     <svelte:component
                         this={getCompByDomain(entity.id)}
