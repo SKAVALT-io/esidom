@@ -91,7 +91,7 @@ jobs:
 
   deployApp:
 #    if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.pull_request.merged == true)
-    needs: copyFiles
+    needs: copyBuildFiles
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
