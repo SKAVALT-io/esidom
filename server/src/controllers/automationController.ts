@@ -32,7 +32,7 @@ class AutomationController {
 
     @App.post('')
     createAutomation(req: Request, res: Response): void {
-        const { automation }: {automation: Automation } = req.body;
+        const automation: Automation = req.body;
         automationService.createAutomation(automation)
             .then((result) => {
                 console.log('RESULT', result);

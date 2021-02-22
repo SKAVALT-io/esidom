@@ -2,8 +2,7 @@
     import { createEventDispatcher } from 'svelte';
 
     import { HsvPicker } from 'svelte-color-picker';
-    import { rgbToHex } from '../../../../services/entities/lightService';
-    import { debounce } from '../../../../utils/functions';
+    import { debounce, rgbToHex } from '../../../../utils/functions';
 
     export let value: [number, number, number];
     let [r, g, b] = value;

@@ -4,23 +4,11 @@
     import { socketManager } from '../../managers/socketManager';
     import LoadingAnimation from '../animations/LoadingAnimation.svelte';
     import CancelButton from '../UI/buttons/CancelButton.svelte';
-    import config from '../../config/config';
+    import { launchPair } from '../../services/pairingService';
 
     const dispatch = createEventDispatcher();
 
     let timeout: NodeJS.Timeout;
-
-    /* request to start the pairing procedure */
-    async function pair() {
-        const headers = new Headers();
-        headers.set('Content-Type', 'application/json');
-        await fetch(`${config.BASE_URL}/device`, {
-            headers,
-            method: 'POST',
-        }).then((x) => {
-            console.log('Pair request status: ', x.status);
-        });
-    }
 
     /* enter this function if timeout is reached*/
     function failureDevicePaired() {
@@ -36,7 +24,8 @@
 
     /*when creating the component, we launch the pairing procedure and listen to the responses from the back*/
     onMount(async () => {
-        await pair();
+        /* request to start the pairing procedure */
+        await launchPair();
         socketManager.registerPairListener(
             'device_created',
             successDevicePaired
