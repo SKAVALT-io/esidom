@@ -81,7 +81,8 @@ class DeviceService implements EventObserver {
                 service: 'publish',
                 service_data: {
                     topic: 'zigbee2mqtt/bridge/request/permit_join',
-                    payload_template: '"{"value": true}"',
+                    // payload_template: '"{"value": true}"',
+                    payload_template: 'true',
                 },
             });
         } catch (err) {
