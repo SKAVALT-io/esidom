@@ -33,7 +33,7 @@ class DeviceController {
     @App.post('')
     async postDevice(req: Request, res: Response) {
         try {
-            await deviceService.pairdevice();
+            await deviceService.pairDevice();
             res.status(200).send({ message: 'pairing mode enabled' });
         } catch (err) {
             res.status(500).send({ message: err });

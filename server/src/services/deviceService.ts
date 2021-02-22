@@ -68,7 +68,7 @@ class DeviceService implements EventObserver {
         return devices.find((d: Device) => d.id === id);
     }
 
-    async pairdevice(): Promise<any> {
+    async pairDevice(): Promise<any> {
         try {
             await httpForwarder.post<any>('/api/services/zwave/add_node', null);
         } catch (err) {
@@ -81,8 +81,7 @@ class DeviceService implements EventObserver {
                 service: 'publish',
                 service_data: {
                     topic: 'zigbee2mqtt/bridge/request/permit_join',
-                    // payload_template: '"{"value": true}"',
-                    payload_template: 'true',
+                    payload_template: '{"value": true, "time": 120}', // timeout of 120s according front app
                 },
             });
         } catch (err) {
