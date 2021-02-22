@@ -60,7 +60,7 @@ jobs:
           password: ${{ secrets.DEPLOY_PASSWORD }}
           command_timeout: 30m
           port: 22222
-          source: "server/dist,server/.env,server/package.json,server/package-lock.json,client/build,client/package.json,client/package-lock.json,Dockerfile,docker_run.sh,run_all.sh"
+          source: "server/dist/*,server/.env,server/package*.json,client/build/*,client/package*.json,Dockerfile,docker_run.sh,run_all.sh"
           target: "esidom_autoDeploy"
 
 
