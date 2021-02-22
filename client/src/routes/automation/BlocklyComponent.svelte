@@ -145,5 +145,3 @@
         <slot />
     </xml>
 </div>
-
-<!-- blocklyScrollbarHandle -->
