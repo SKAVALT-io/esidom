@@ -28,6 +28,7 @@ jobs:
         echo "user=${{ secrets.HA_USER }}" >> .env
         echo "password=${{ secrets.HA_PASSWORD }}" >> .env
     - run: npm run build --if-present
+    - run: tar cvzf dist ../dist.tar.gz
 
 
   buildClient:
@@ -46,6 +47,7 @@ jobs:
         node-version: ${{ matrix.node-version }}
     - run: npm ci
     - run: npm run build --if-present
+    - run: tar cvzf build ../build.tar.gz
 
   copyFiles:
     needs: [buildServer, buildClient]
@@ -62,7 +64,7 @@ jobs:
           command_timeout: 30m
           port: 22222
           strip_components: 1
-          source: "server/dist/*,server/.env,server/package*.json,client/build/*,client/package*.json,Dockerfile,docker_run.sh,run_all.sh"
+          source: "dist.tar.gz,build.tar.gz,server/.env,server/package*.json,client/build/*,client/package*.json,Dockerfile,docker_run.sh,run_all.sh"
           target: "esidom_autoDeploy"
 
 
