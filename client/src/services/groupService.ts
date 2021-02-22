@@ -24,4 +24,15 @@ export default class GroupService {
             .then((res) => res.json())
             .catch((err) => console.log(err));
     }
+
+    static async deleteGroup(group: Group): Promise<Group> {
+        const headers = new Headers();
+        headers.set('Content-Type', 'application/json');
+        return fetch(`${config.BASE_URL}/group/${group.groupId}`, {
+            headers,
+            method: 'DELETE',
+        })
+            .then((res) => res.json())
+            .catch((err) => console.log(err));
+    }
 }
