@@ -32,8 +32,7 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         name: dist
-        path: |
-          dist/*
+        path: ~/server/dist/*
 
 
   buildClient:
@@ -56,9 +55,8 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         name: build
-        path: |
-          build/*
-    - run: ls -al
+        path: ~/client/build/*
+    - run: ls -al build/
     - run: pwd
 
   copyBuildFiles:
