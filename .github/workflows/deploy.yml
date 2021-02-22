@@ -18,7 +18,7 @@ jobs:
         node-version: [12.x]
     steps:
     - uses: actions/checkout@v2
-    - run: mkdir -p server
+    - run: mkdir -p artifact/server
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v1
       with:
@@ -30,15 +30,15 @@ jobs:
         echo "password=${{ secrets.HA_PASSWORD }}" >> .env
     - run: npm run build --if-present
     - run: |
-        mv dist server
-        mv package*.json server
-        mv src server
+        mv dist artifact/server
+        mv package*.json artifact/server
+        mv src artifact/server
     - name: Archive production artifacts
       uses: actions/upload-artifact@v2
       with:
         name: esidom_app
         path: |
-          server/server
+          server/artifact
         if-no-files-found: error
 
 
@@ -56,18 +56,18 @@ jobs:
       uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version }}
-    - run: mkdir -p client
+    - run: mkdir -p artifact/client
     - run: npm ci
     - run: npm run build --if-present
     - run: |
-        mv build client
-        mv package*.json client
+        mv build artifact/client
+        mv package*.json artifact/client
     - name: Archive production artifacts
       uses: actions/upload-artifact@v2
       with:
         name: esidom_app
         path: |
-          client/client
+          client/artifact
         if-no-files-found: error
 
   copyBuildFiles:
