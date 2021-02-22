@@ -58,6 +58,8 @@ jobs:
         name: build
         path: |
           build/*
+    - run: ls -al
+    - run: pwd
 
   copyBuildFiles:
     needs: [buildServer, buildClient]
