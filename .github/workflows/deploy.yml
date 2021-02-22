@@ -17,6 +17,7 @@ jobs:
       matrix:
         node-version: [12.x]
     steps:
+    - run: mkdir dist_folder
     - uses: actions/checkout@v2
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v1
@@ -28,11 +29,13 @@ jobs:
         echo "user=${{ secrets.HA_USER }}" >> .env
         echo "password=${{ secrets.HA_PASSWORD }}" >> .env
     - run: npm run build --if-present
+    - run: mv dist dist_folder
     - name: Archive production artifacts
       uses: actions/upload-artifact@v2
       with:
         name: dist
-        path: ~/server/dist/*
+        path: dist_folder
+        if-no-files-found: error
 
 
   buildClient:
@@ -44,6 +47,7 @@ jobs:
       matrix:
         node-version: [12.x]
     steps:
+    - run: mkdir build_folder
     - uses: actions/checkout@v2
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v1
@@ -51,13 +55,13 @@ jobs:
         node-version: ${{ matrix.node-version }}
     - run: npm ci
     - run: npm run build --if-present
+    - run: mv build build_folder
     - name: Archive production artifacts
       uses: actions/upload-artifact@v2
       with:
         name: build
-        path: ~/client/build/*
-    - run: ls -al build/
-    - run: pwd
+        path: build_folder/
+        if-no-files-found: error
 
   copyBuildFiles:
     needs: [buildServer, buildClient]
