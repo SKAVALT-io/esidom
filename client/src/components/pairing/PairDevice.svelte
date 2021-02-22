@@ -1,24 +1,34 @@
 <script>
     import { onDestroy } from 'svelte';
     import { tr } from '../../utils/i18nHelper';
-    import InstructionPage from './InstructionsPage.svelte';
-    import StartPairingPage from './StartPairingPage.svelte';
     import { step } from './PairingStore.svelte';
+    import InstructionsPage from './InstructionsPage.svelte';
+    import StartPairingPage from './StartPairingPage.svelte';
     import FailurePairingPage from './FailurePairingPage.svelte';
     import SuccessPairingPage from './SuccessPairingPage.svelte';
     import FinishPairingPage from './FinishPairingPage.svelte';
 
-    // const steps = [
-    //     '1_Request',
-    //     '2_Start_Pairing',
-    //     '3_Pairing_Success',
-    //     '3b_Pairing_Fail',
-    // ];
+    /*map which associates a component with a string*/
+    const steps = new Map([
+        ['InstructionPage', InstructionsPage],
+        ['StartPairingPage', StartPairingPage],
+        ['SuccessPairingPage', SuccessPairingPage],
+        ['FailurePairingPage', FailurePairingPage],
+        ['FinishPairingPage', FinishPairingPage],
+    ]);
 
+    /*Current component view*/
+    let viewportComponent: unknown;
     let currentStep = '';
 
+    function updateViewportComponent() {
+        viewportComponent = steps.get(currentStep);
+    }
+
+    /*subscription to the stored variable / updated view at each step change*/
     const unsubscribe = step.subscribe((value) => {
         currentStep = value;
+        updateViewportComponent();
     });
 
     /* use to unsubscribe when the component is unmounted */
@@ -33,17 +43,9 @@
         <h1 class="uppercase mb-2 text-xl font-semibold text-center">
             {tr('menu.pairing')}
         </h1>
-        {#if currentStep === 'InstructionPage'}
-            <InstructionPage on:cancel />
-        {:else if currentStep === 'StartPairingPage'}
-            <StartPairingPage on:cancel />
-        {:else if currentStep === 'SuccessPairingPage'}
-            <SuccessPairingPage />
-        {:else if currentStep === 'FailurePairingPage'}
-            <FailurePairingPage on:cancel />
-        {:else if currentStep === 'FinishPairingPage'}
-            <FinishPairingPage on:cancel />
-        {/if}
+        <div id="viewport" on:outroend={updateViewportComponent}>
+            <svelte:component this={viewportComponent} on:cancel />
+        </div>
     </div>
 </div>
 

@@ -1,21 +1,17 @@
 <script>
     import { tr } from '../../utils/i18nHelper';
+    import { step, Device } from './PairingStore.svelte';
     import BorderedButton from '../UI/buttons/BorderedButton.svelte';
-    import CancelButton from '../UI/buttons/CancelButton.svelte';
-    import OutlineButton from '../UI/buttons/OutlineButton.svelte';
-    import { step, reset, device } from './PairingStore.svelte';
 
-    const deviceName = device?.model;
+    const isValidInput = false;
 
-    let isValidInput = false;
-
-    function validateName() {
-        if (deviceName.length === 0) {
-            // TODO CHECK IF THE NAME HAS ALREADY REGISTERED
-            isValidInput = false;
-        }
-        isValidInput = true;
-    }
+    // function validateName() {
+    //     if (deviceName.length === 0) {
+    //         // TODO CHECK IF THE NAME HAS ALREADY REGISTERED
+    //         isValidInput = false;
+    //     }
+    //     isValidInput = true;
+    // }
 
     function finish() {
         step.update(() => 'FinishPairingPage');
@@ -25,7 +21,7 @@
 <div class="flex flex-col space-y-4 ml-10 mr-10 justify-center items-center">
     <p class="max-w-lg md:max-w-xl">
         Equipement trouvé :
-        {deviceName}
+        {Device.data.model}
         <br />
         Veuillez nommer votre équipement :
         <br />

@@ -1,26 +1,42 @@
 <script>
     import { createEventDispatcher, onMount, onDestroy } from 'svelte';
+    import { step, reset, Device } from './PairingStore.svelte';
+    import { socketManager } from '../../managers/socketManager';
     import LoadingAnimation from '../animations/LoadingAnimation.svelte';
     import CancelButton from '../UI/buttons/CancelButton.svelte';
-    import { step, reset, device } from './PairingStore.svelte';
-
-    import { socketManager } from '../../managers/socketManager';
+    import config from '../../config/config';
 
     const dispatch = createEventDispatcher();
 
     let timeout: NodeJS.Timeout;
 
+    /* request to start the pairing procedure */
+    async function pair() {
+        const headers = new Headers();
+        headers.set('Content-Type', 'application/json');
+        await fetch(`${config.BASE_URL}/device`, {
+            headers,
+            method: 'POST',
+        }).then((x) => {
+            console.log('Pair request status: ', x.status);
+        });
+    }
+
+    /* enter this function if timeout is reached*/
     function failureDevicePaired() {
         step.update(() => 'FailurePairingPage');
     }
 
+    /*enter this function if the pairing is successful*/
     function successDevicePaired(data) {
-        device = data;
-        console.log('M.....', data);
+        Device.data = data;
+        console.log('Device founded : ', data);
         step.update(() => 'SuccessPairingPage');
     }
 
-    onMount(() => {
+    /*when creating the component, we launch the pairing procedure and listen to the responses from the back*/
+    onMount(async () => {
+        await pair();
         socketManager.registerPairListener(
             'device_created',
             successDevicePaired
@@ -29,6 +45,7 @@
         timeout = setTimeout(failureDevicePaired, 120000);
     });
 
+    /*when the component is destroyed, we stop the timeout and delete the listener on which we were listening*/
     onDestroy(() => {
         clearTimeout(timeout);
         socketManager.removeListener('device_created', successDevicePaired);
