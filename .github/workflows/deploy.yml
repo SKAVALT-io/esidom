@@ -5,11 +5,68 @@ on:
   #  branches: [ develop ]
   #  types: [ closed ]
   push:
-    branches: [ develop ]
+    branches: [ feature/docker_without_complilation ]
 
 jobs:
+   buildServer:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./server
+    strategy:
+      matrix:
+        node-version: [12.x]
+    steps:
+    - uses: actions/checkout@v2
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v1
+      with:
+        node-version: ${{ matrix.node-version }}
+    - run: npm ci
+    - run: |
+        echo "baseUrl=${{ secrets.HA_HOST }}" > .env
+        echo "user=${{ secrets.HA_USER }}" >> .env
+        echo "password=${{ secrets.HA_PASSWORD }}" >> .env
+    - run: npm run build --if-present
+
+
+    buildClient:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./client
+    strategy:
+      matrix:
+        node-version: [12.x]
+    steps:
+    - uses: actions/checkout@v2
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v1
+      with:
+        node-version: ${{ matrix.node-version }}
+    - run: npm ci
+    - run: npm run build --if-present
+
+  copyFiles:
+    needs: [buildServer, buildClient]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Copy necessary files to server
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.DEPLOY_HOST }}
+          username: ${{ secrets.DEPLOY_USER }}
+          password: ${{ secrets.DEPLOY_PASSWORD }}
+          command_timeout: 30m
+          port: 22222
+          source: "server/dist,server/.env,server/package.json,server/package-lock.json,client/build,client/package.json,client/package-lock.json,Dockerfile,docker_run.sh,run_all.sh"
+          target: "esidom_autoDeploy"
+
+
   deployApp:
 #    if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.pull_request.merged == true)
+    needs: copyFiles
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -22,7 +79,6 @@ jobs:
           command_timeout: 30m
           port: 22222
           script: |
-            cd esidom
-            git pull
+            cd esidom_autoDeploy
             chmod u+x docker_run.sh
             ./docker_run.sh "${{ secrets.HA_HOST }}" "${{ secrets.HA_USER }}" "${{ secrets.HA_PASSWORD }}" 
