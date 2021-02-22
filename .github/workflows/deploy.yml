@@ -28,6 +28,7 @@ jobs:
         echo "user=${{ secrets.HA_USER }}" >> .env
         echo "password=${{ secrets.HA_PASSWORD }}" >> .env
     - run: npm run build --if-present
+    - run: ls -la
 
 
   buildClient:
@@ -46,6 +47,7 @@ jobs:
         node-version: ${{ matrix.node-version }}
     - run: npm ci
     - run: npm run build --if-present
+    - run: ls -la
 
   copyFiles:
     needs: [buildServer, buildClient]
