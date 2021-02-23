@@ -72,7 +72,7 @@
             size={8}
             on:click={handleTrigger}
         />
-        <Tooltip text="Déclencher" position="right" show={showTriggerTip} />
+        <!-- <Tooltip text="Déclencher" position="top" show={showTriggerTip} /> -->
     </div>
     <div
         id="edit_button"
@@ -82,7 +82,7 @@
         on:mouseleave={() => (showEditTip = false)}
         on:mouseenter={() => (showEditTip = true)}
     >
-        <Tooltip text={'Editer'} position="top" show={showEditTip} />
+        <!-- <Tooltip text={'Editer'} position="top" show={showEditTip} /> -->
         <RoundedButton
             size={8}
             on:click={handleEdit}
