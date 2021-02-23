@@ -23,10 +23,9 @@
 
     function handleToggle() {
         checked = !checked;
-        AutomationService.toggleAutomation(
-            automation.id,
-            checked ? 'on' : 'off'
-        );
+        AutomationService.toggleAutomation(automation.id, {
+            state: checked ? 'on' : 'off',
+        });
     }
 
     function handleEdit() {

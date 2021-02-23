@@ -6,7 +6,7 @@ export default class AutomationService {
         return http.get('/automation');
     }
 
-    static async toggleAutomation(id: string, state: 'on' | 'off'): Promise<void> {
+    static async toggleAutomation(id: string, state: { state: 'on' | 'off' }): Promise<void> {
         return http.patch(`/automation/${id}`, state);
     }
 
