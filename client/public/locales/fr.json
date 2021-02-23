@@ -11,7 +11,8 @@
     "home": "accueil",
     "automations": "routines",
     "blockly": "blockly",
-    "pairing": "appairage"
+    "pairing": "appairage",
+    "groups": "groupes"
   },
   "devices": {
     "lights": "lampes",
