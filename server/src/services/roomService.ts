@@ -49,12 +49,7 @@ class RoomService {
 
     async getRoomById(roomId: string): Promise<Room | undefined> {
         const rooms: Room[] = await this.getRooms();
-        console.log(roomId);
-        const room = rooms.find((r: Room) => r.roomId === roomId);
-        if (!room) {
-            throw new Error(NO_SUCH_ID(roomId));
-        }
-        return room;
+        return rooms.find((r: Room) => r.roomId === roomId);
     }
 
     private async updateRoomDevice(deviceId: string, areaId: string): Promise<any> {

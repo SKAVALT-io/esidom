@@ -30,7 +30,7 @@ class RoomController {
             .then((room) => send(res, 200, room));
     }
 
-    @App.get('/:roomId')
+    @App.get('/:areaId')
     async getRoom(req: Request, res: Response)
     : Promise<Response<Room> | Response<{error:string}>> {
         const { areaId } = req.params;
@@ -41,6 +41,7 @@ class RoomController {
                 if (room) {
                     return send(res, 200, room);
                 }
+                console.log(NO_SUCH_ID(areaId));
                 return send(res, 404, { error: NO_SUCH_ID(areaId) });
             });
     }
