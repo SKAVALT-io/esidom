@@ -9,6 +9,7 @@ import {
 import { logger, normalizeEntityId } from '../utils';
 
 const GROUP_IMPLICIT_IDENTIFIER = 'imp';
+const ALL_PREFIX = 'all';
 
 class GroupService implements EventObserver {
 
@@ -39,6 +40,7 @@ class GroupService implements EventObserver {
     onDeviceRemoved(_id: string): void {
         // To avoid search recreate all implicit group
         this.generateImplicitGroup();
+        // Search for empty group
     }
 
     async onAreaUpdated(roomId: string): Promise<void> {
@@ -121,7 +123,7 @@ class GroupService implements EventObserver {
         await this.checkDataGroupToCreate(entities, entitiesFull);
 
         // Create group in Home Assistant
-        await this.createGroupInHa({
+        const res:any = await this.createGroupInHa({
             object_id: groupEntityId,
             name,
             entities: entities.join(','),
@@ -133,6 +135,8 @@ class GroupService implements EventObserver {
             groupId: groupEntityId,
             name,
             entities: entitiesFull,
+            implicit: false,
+            state: res.state,
         };
 
         return group;
@@ -239,7 +243,7 @@ class GroupService implements EventObserver {
         if (roomId) {
             return `${GROUP_IMPLICIT_IDENTIFIER}_${roomId}_${type}`;
         }
-        return `${GROUP_IMPLICIT_IDENTIFIER}_all_${type}`;
+        return `${GROUP_IMPLICIT_IDENTIFIER}_${ALL_PREFIX}_${type}`;
     }
 
     /**
@@ -248,8 +252,10 @@ class GroupService implements EventObserver {
      */
     private async deleteImplicitGroupForOneRoom(roomId: string): Promise<void> {
         const groups = await this.getGroups();
-        const roomGroups = groups.filter((group) => group.groupId.startsWith('imp') && group.groupId.includes(roomId));
-        // console.log(roomGroups);
+        const roomGroups = groups.filter(
+            (group) => group.implicit && group.room && group.room.roomId === roomId,
+        );
+        console.log(roomGroups);
         roomGroups.forEach((g: Group) => {
             this.deleteGroupFromHa(g.groupId);
         });
@@ -267,6 +273,8 @@ class GroupService implements EventObserver {
      * Convert an entity to a group
      * @param e ?
      */
+    // group implicit schema => imp_all_type or imp_roomId_type
+    // roomId can be in different part => room_of_bob
     private async convertEntityToGroup(e: HaStateResponse): Promise<Group> {
         if (!e.attributes.entity_id) {
             throw new Error('Cant convert entity to group');
@@ -274,10 +282,28 @@ class GroupService implements EventObserver {
         const entities: Entity[] = await Promise.all(
             e.attributes.entity_id.map((v: string) => entityService.getEntityById(v)),
         );
+        const groupId = e.entity_id.split('.')[1];
+        let implicit = false;
+        // eslint-disable-next-line no-undef-init
+        let room;
+        let type;
+        if (groupId.startsWith('imp')) {
+            implicit = true;
+            const tab = groupId.split('_');
+            const r = tab[1];
+            if (r !== ALL_PREFIX) {
+                room = await roomService.getRoomById(tab.slice(1, tab.length - 1).join('_'));
+            }
+            type = tab[tab.length - 1];
+        }
         return {
             groupId: e.entity_id.split('.')[1],
             name: e.attributes.friendly_name,
             entities,
+            implicit,
+            room,
+            type,
+            state: e.state,
         };
     }
 
