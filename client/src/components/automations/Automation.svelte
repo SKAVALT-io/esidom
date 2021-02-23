@@ -7,10 +7,16 @@
     import ToggleButton from '../UI/buttons/ToggleButton.svelte';
     import { socketManager } from '../../managers/socketManager';
     import Tooltip from '../UI/utils/Tooltip.svelte';
+    import Modal from '../UI/modal/Modal.svelte';
+    import { tr } from '../../utils/i18nHelper';
+    import CancelButton from '../UI/buttons/CancelButton.svelte';
+    import { text } from 'svelte/internal';
+    import OutlineButton from '../UI/buttons/OutlineButton.svelte';
 
     export let automation: AutomationPreview;
 
     $: checked = automation.state === 'on';
+    let isConfirmDeleteOpen = false;
 
     let showTriggerTip: boolean = false;
     let showEditTip: boolean = false;
@@ -29,6 +35,10 @@
 
     function handleTrigger() {
         AutomationService.triggerAutomation(automation.id);
+    }
+
+    function handleDelete() {
+        AutomationService.deleteAutomation(automation.id);
     }
 
     function automationUpdatedHandler(data: any) {
@@ -53,7 +63,7 @@
 
 <div
     id="automation"
-    class="rounded-lg items-center text-center grid grid-cols-8 px-1 py-4"
+    class="rounded-lg items-center text-center grid grid-cols-9 px-1 py-4"
 >
     <div class="col-span-1">
         <ToggleButton on:change={handleToggle} bind:checked />
@@ -89,6 +99,32 @@
             iconPath="icons/button/edit.svg"
         />
     </div>
+    <div id="delete_button" class="col-span-1">
+        <RoundedButton
+            size={8}
+            on:click={() => (isConfirmDeleteOpen = true)}
+            iconPath="icons/button/trash.svg"
+        />
+    </div>
+    {#if isConfirmDeleteOpen}
+        <div id="confirm_modal" class="z-10">
+            <Modal bind:isOpen={isConfirmDeleteOpen}>
+                <div slot="content">
+                    <p>{tr('automations.confirmDelete')}</p>
+                    <br />
+                    <div id="confirm_cancel">
+                        <CancelButton
+                            on:click={() => (isConfirmDeleteOpen = false)}
+                        />
+                        <OutlineButton
+                            text={tr('buttons.confirm')}
+                            on:click={handleDelete}
+                        />
+                    </div>
+                </div>
+            </Modal>
+        </div>
+    {/if}
 </div>
 
 <style>
