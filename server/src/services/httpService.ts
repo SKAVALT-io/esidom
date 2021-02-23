@@ -1,5 +1,5 @@
 import FormData from 'form-data';
-import { HaAutomation } from '../types/haTypes';
+import { HaAutomation, HaGroupSet } from '../types/haTypes';
 import httpForwarder from '../forwarders/httpForwarder';
 
 class HttpService {
@@ -44,6 +44,20 @@ class HttpService {
             bodyFormData,
             { headers: { ...bodyFormData.getHeaders() } },
         );
+    }
+
+    async enableZWavePairing(): Promise<any> {
+        return httpForwarder.post<any>('/api/services/zwave/add_node', null);
+    }
+
+    async postGroup(group: HaGroupSet): Promise<any> {
+        return httpForwarder
+            .post('/api/services/group/set', group);
+    }
+
+    async getApiStatus(): Promise<any> {
+        return httpForwarder
+            .get('/api', { timeout: 10000 });
     }
 
 }

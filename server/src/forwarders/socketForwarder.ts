@@ -162,7 +162,7 @@ class SocketForwarder {
         console.log(`received WS event : ${eventType}`);
         const eventData: any = data?.event?.data;
         if (eventType === 'device_registry_updated') {
-            this.handleDeviceRegistryUpdated(id, eventData, eventType);
+            this.handleDeviceRegistryUpdated(eventData, eventType);
         }
         if (eventType === 'state_changed') {
             this.handleStateChanged(eventData);
@@ -197,7 +197,7 @@ class SocketForwarder {
         this.io.emit(event, data);
     }
 
-    private handleDeviceRegistryUpdated(socketId: number, eventData: any, eventType: string) {
+    private handleDeviceRegistryUpdated(eventData: any, eventType: string) {
         console.log(eventData);
         switch (eventData?.action) {
         case 'create':

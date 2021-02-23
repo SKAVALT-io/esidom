@@ -1,6 +1,5 @@
 import { DBGroup, InsideGroup } from '../types/dbTypes';
 import databaseForwarder from '../forwarders/databaseForwarder';
-import httpForwarder from '../forwarders/httpForwarder';
 import { Group } from '../types/group';
 import { HaDumbType, HaGroupSet, HaStateResponse } from '../types/haTypes';
 import entityService from './entityService';
@@ -12,6 +11,7 @@ import deviceService from './deviceService';
 import { Room } from '../types/room';
 import { Device } from '../types/device';
 import socketService from './socketService';
+import httpService from './httpService';
 
 const GroupImplicitIdentifier = 'imp';
 
@@ -70,7 +70,7 @@ class GroupService implements EventObserver {
                     };
 
                     // if group is already created in HA, the request return [] with status 200
-                    return httpForwarder.post('/api/services/group/set', haGroup);
+                    return httpService.postGroup(haGroup);
                 })),
         );
     }
@@ -124,8 +124,8 @@ class GroupService implements EventObserver {
         }
     }
 
-    private async createGroupInHa(group: HaGroupSet) {
-        return httpForwarder.post('/api/services/group/set', group);
+    private async createGroupInHa(group: HaGroupSet): Promise<any> {
+        return httpService.postGroup(group);
     }
 
     private normalizeEntityId(name: string): string {

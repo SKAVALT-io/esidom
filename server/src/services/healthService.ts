@@ -1,11 +1,9 @@
-import httpForwarder from '../forwarders/httpForwarder';
-import socketForwarder from '../forwarders/socketForwarder';
-import { HaStateResponse } from '../types/haTypes';
+import httpService from './httpService';
 
 class HealthService {
 
-    async getHealth() {
-        return httpForwarder.get('/api', { timeout: 10000 });
+    async getHealth(): Promise<any> {
+        return httpService.getApiStatus();
     }
 
 }

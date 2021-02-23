@@ -18,7 +18,8 @@ class EntityService implements EventObserver {
                 }
                 socketForwarder.emitSocket('entity_updated', updated);
             })
-            .catch((err) => socketForwarder.emitSocket('entity_updated', { error: err.message }));
+            .catch((err) => socketForwarder
+                .emitSocket('entity_updated', { error: err.message }));
     }
 
     async getEntities(): Promise<Entity[]> {

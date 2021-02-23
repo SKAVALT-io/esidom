@@ -59,7 +59,7 @@ class RoomController {
         }
 
         return roomService.deleteRoom(roomId)
-            .then(() => send(res, 200, { message: 'Room successful deleted' }))
+            .then(() => send(res, 200, { message: 'Room successfully deleted' }))
             .catch((err: any) => send(res, 400, {
                 error: `Error while deleting room ${roomId}: ${err.message}`,
             }));

@@ -7,6 +7,7 @@ import {
     HaEntity,
     HaRoom,
     HaRoomDetail,
+    HaSearchDeviceResponse,
     HaService,
     HaStateResponse,
 } from '../types/haTypes';
@@ -75,6 +76,14 @@ class SocketService {
             type: 'config/device_registry/update',
             device_id: deviceId,
             area_id: areaId,
+        });
+    }
+
+    async searchDeviceById(id: string): Promise<HaSearchDeviceResponse> {
+        return socketForwarder.forward<HaSearchDeviceResponse>({
+            type: 'search/related',
+            item_type: 'device',
+            item_id: id,
         });
     }
 

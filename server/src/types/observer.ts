@@ -1,5 +1,4 @@
 /* eslint-disable no-unused-vars */
-import { HaEntityUpdated } from './haTypes';
 
 export interface EventObserver {
     onAuthOk?: () => void;

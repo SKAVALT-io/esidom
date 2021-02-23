@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import automationService from '../services/automationService';
 import App from '../app';
 import { Automation, AutomationPreview } from '../types/automation';
-import { send, sendf } from '../utils/functions';
+import { NO_SUCH_ID, send, sendf } from '../utils/functions';
 import { HaDumbType } from '../types/haTypes';
 
 @App.rest('/automation')
@@ -21,7 +21,7 @@ class AutomationController {
         return automationService.getAutomationById(id)
             .then((automation: Automation | undefined) => {
                 if (!automation) {
-                    return send(res, 404, { error: `No automation with such id: ${id}` });
+                    return send(res, 404, { error: NO_SUCH_ID(id) });
                 }
                 return send(res, 200, automation);
             });

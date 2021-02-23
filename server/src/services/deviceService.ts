@@ -1,16 +1,15 @@
 import { EventObserver } from '../types/observer';
-import httpForwarder from '../forwarders/httpForwarder';
 import socketForwarder from '../forwarders/socketForwarder';
 import { Device } from '../types/device';
 import {
     HaDevice,
-    HaDumbEnum,
     HaEntity,
     HaSearchDeviceResponse,
     HaStateResponse,
 } from '../types/haTypes';
 import entityService from './entityService';
 import socketService from './socketService';
+import httpService from './httpService';
 
 class DeviceService implements EventObserver {
 
@@ -19,11 +18,7 @@ class DeviceService implements EventObserver {
     }
 
     onDeviceRegistryUpdated(deviceId: string): void {
-        socketForwarder.forward<HaSearchDeviceResponse>({
-            type: 'search/related',
-            item_type: 'device',
-            item_id: deviceId,
-        })
+        socketService.searchDeviceById(deviceId)
             .then((device: HaSearchDeviceResponse) => {
                 socketService.listDeviceRegistry()
                     .then((haDevices: HaDevice[]) => {
@@ -74,24 +69,22 @@ class DeviceService implements EventObserver {
     }
 
     async pairdevice() {
-        try {
-            await httpForwarder.post<any>('/api/services/zwave/add_node', null);
-        } catch (err) {
-            console.log(err);
+        await httpService.enableZWavePairing()
+            .catch((err) => {
+                console.log(err.message);
+                throw err;
+            });
+        await socketService.callService(
+            'mqtt',
+            'publish',
+            {
+                topic: 'zigbee2mqtt/bridge/request/permit_join',
+                payload_template: 'true',
+            },
+        ).catch((err) => {
+            console.log(err.message);
             throw err;
-        }
-        try {
-            await socketService.callService(
-                'mqtt',
-                'publish', {
-                    topic: 'zigbee2mqtt/bridge/request/permit_join',
-                    payload_template: 'true',
-                },
-            );
-        } catch (err) {
-            console.log(err);
-            throw err;
-        }
+        });
     }
 
 }

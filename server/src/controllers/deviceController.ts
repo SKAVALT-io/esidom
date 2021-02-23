@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import deviceService from '../services/deviceService';
 import App from '../app';
 import { Device } from '../types/device';
-import { send, sendf } from '../utils/functions';
+import { NO_SUCH_ID, send, sendf } from '../utils/functions';
 
 @App.rest('/device')
 class DeviceController {
@@ -20,7 +20,7 @@ class DeviceController {
         return deviceService.getDeviceById(deviceId)
             .then((device: Device | undefined) => {
                 if (!device) {
-                    return send(res, 404, { error: `No device with such id: ${deviceId}` });
+                    return send(res, 404, { error: NO_SUCH_ID(deviceId) });
                 }
                 return send(res, 200, device);
             });

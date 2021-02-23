@@ -1,4 +1,3 @@
-import FormData from 'form-data';
 import { Request, Response } from 'express';
 import socketForwarder from '../forwarders/socketForwarder';
 import httpForwarder from '../forwarders/httpForwarder';

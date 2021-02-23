@@ -3,6 +3,7 @@ import socketService from './socketService';
 import { Room } from '../types/room';
 import { HaRoom, HaRoomDetail } from '../types/haTypes';
 import deviceService from './deviceService';
+import { NO_SUCH_ID } from '../utils/functions';
 
 class RoomService {
 
@@ -51,7 +52,7 @@ class RoomService {
         console.log(roomId);
         const room = rooms.find((r: Room) => r.roomId === roomId);
         if (!room) {
-            throw new Error(`There are no rooms with this id : ${roomId}`);
+            throw new Error(NO_SUCH_ID(roomId));
         }
         return room;
     }
