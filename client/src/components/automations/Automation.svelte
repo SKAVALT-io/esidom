@@ -6,10 +6,14 @@
     import RoundedButton from '../UI/buttons/RoundedButton.svelte';
     import ToggleButton from '../UI/buttons/ToggleButton.svelte';
     import { socketManager } from '../../managers/socketManager';
+    import Tooltip from '../UI/utils/Tooltip.svelte';
 
     export let automation: AutomationPreview;
 
     $: checked = automation.state === 'on';
+
+    let showTriggerTip: boolean = false;
+    let showEditTip: boolean = false;
 
     function handleToggle() {
         checked = !checked;
@@ -55,14 +59,30 @@
         <ToggleButton on:change={handleToggle} bind:checked />
     </div>
     <div class="content-center col-span-5">{automation.name}</div>
-    <div class="col-span-1">
+    <div
+        id="trigger_button"
+        class="col-span-1"
+        on:touchstart={() => (showTriggerTip = true)}
+        on:touchend={() => (showTriggerTip = false)}
+        on:mouseleave={() => (showTriggerTip = false)}
+        on:mouseenter={() => (showTriggerTip = true)}
+    >
         <RoundedButton
             iconPath="icons/button/trigger.svg"
             size={8}
             on:click={handleTrigger}
         />
+        <Tooltip text="Déclencher" position="right" show={showTriggerTip} />
     </div>
-    <div class="col-span-1">
+    <div
+        id="edit_button"
+        class="col-span-1"
+        on:touchstart={() => (showEditTip = true)}
+        on:touchend={() => (showEditTip = false)}
+        on:mouseleave={() => (showEditTip = false)}
+        on:mouseenter={() => (showEditTip = true)}
+    >
+        <Tooltip text={'Editer'} position="top" show={showEditTip} />
         <RoundedButton
             size={8}
             on:click={handleEdit}

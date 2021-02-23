@@ -1,8 +1,9 @@
 import socketForwarder from '../forwarders/socketForwarder';
-import { HaAutomation, HaStateResponse } from '../types/haTypes';
+import { HaAutomation, HaDumbType, HaStateResponse } from '../types/haTypes';
 import httpForwarder from '../forwarders/httpForwarder';
 import { Automation, AutomationPreview } from '../types/automation';
 import { EventObserver } from '../types/observer';
+import socketService from './socketService';
 
 // HA needs the automation id to find an automation, but the client
 // will make its request using the entity_id of the automation
@@ -19,7 +20,10 @@ class AutomationService implements EventObserver {
 
     onAutomationUpdated(data: string) {
         this.getAutomationById(data)
-            .then((updated: Automation) => {
+            .then((updated: Automation | undefined) => {
+                if (!updated) {
+                    return;
+                }
                 const updatedPreview: AutomationPreview = {
                     id: updated.id,
                     name: updated.name,
@@ -31,8 +35,7 @@ class AutomationService implements EventObserver {
     }
 
     async getAutomations(): Promise<AutomationPreview[]> {
-        const states: HaStateResponse[] = await socketForwarder
-            .forward({ type: 'get_states' });
+        const states: HaStateResponse[] = await socketService.getStates();
         return states
             .filter((s: HaStateResponse) => s.entity_id
                 .split('.')[0] === 'automation' && s.attributes.id !== undefined) // TODO: validate that id != undefined will not skip valid automation
@@ -43,8 +46,12 @@ class AutomationService implements EventObserver {
             }));
     }
 
-    async getAutomationById(entityId: string): Promise<Automation> {
-        const automation: AutomationPreviewWithId = await this.getAutomationWithId(entityId);
+    async getAutomationById(entityId: string): Promise<Automation | undefined> {
+        const automation: AutomationPreviewWithId | undefined = await this
+            .getAutomationWithId(entityId);
+        if (!automation) {
+            return undefined;
+        }
         return httpForwarder.get<HaAutomation>(`/api/config/automation/config/${automation?.automationId}`)
             .then((auto: HaAutomation) => ({
                 id: automation.id,
@@ -55,26 +62,22 @@ class AutomationService implements EventObserver {
                 action: auto.action,
                 condition: auto.condition,
                 mode: auto.mode,
-            }))
-            .catch((err) => { throw err; });
+            }));
     }
 
-    async getAutomationPreviewById(id: string): Promise<AutomationPreview> {
+    async getAutomationPreviewById(id: string): Promise<AutomationPreview | undefined> {
         const automations: AutomationPreview[] = await this.getAutomations();
         const automation: AutomationPreview | undefined = automations
             .find((a: AutomationPreview) => a.id === id);
-        if (!automation) {
-            throw new Error(`No automation with id ${id}`);
-        }
         return automation;
     }
 
-    private async getAutomationWithId(entityId: string): Promise<AutomationPreviewWithId> {
-        const a: HaStateResponse | undefined = (await socketForwarder
-            .forward<HaStateResponse[]>({ type: 'get_states' })
+    private async getAutomationWithId(entityId: string)
+    : Promise<AutomationPreviewWithId | undefined> {
+        const a: HaStateResponse | undefined = (await socketService.getStates()
         ).find((s: HaStateResponse) => s.entity_id === entityId);
-        if (a === undefined) {
-            throw new Error(`No automation with id ${entityId}`);
+        if (!a) {
+            return undefined;
         }
         return {
             automationId: a.attributes.id,
@@ -84,15 +87,10 @@ class AutomationService implements EventObserver {
         };
     }
 
-    async toggleAutomationById(id: string, state: 'on' | 'off'): Promise<void> {
+    async toggleAutomationById(id: string, state: 'on' | 'off'): Promise<HaDumbType> {
         const service = state === 'on' ? 'turn_on' : 'turn_off';
         const data = { entity_id: id };
-        await socketForwarder.forward<any>({
-            type: 'call_service',
-            domain: 'automation',
-            service,
-            service_data: data,
-        });
+        return socketService.callService('automation', service, data);
     }
 
     async createAutomation(automation: Automation) {
@@ -110,14 +108,9 @@ class AutomationService implements EventObserver {
         return result;
     }
 
-    async triggerAutomation(id: string) {
+    async triggerAutomation(id: string): Promise<HaDumbType> {
         const data = { entity_id: id };
-        await socketForwarder.forward({
-            type: 'call_service',
-            domain: 'automation',
-            service: 'trigger',
-            service_data: data,
-        });
+        return socketService.callService('automation', 'trigger', data);
     }
 
 }

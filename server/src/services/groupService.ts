@@ -12,8 +12,6 @@ import deviceService from './deviceService';
 import { Room } from '../types/room';
 import { Device } from '../types/device';
 
-const GroupTableName = 'HAGroup';
-const InsideGroupTableName = 'InsideGroup';
 const GroupImplicitIdentifier = 'imp';
 
 class GroupService implements EventObserver {
@@ -26,14 +24,18 @@ class GroupService implements EventObserver {
         this.initGroupHa();
     }
 
-    onDeviceRegistryUpdated() {
+    onDeviceRegistryUpdated(data: string) {
         // To avoid search recreate all implicit group
         this.generateImplicitGroup();
     }
 
     async onAreaUpdated(roomId: string) {
         console.log('GPService : this.onAreaUpdated');
-        this.generateImplicitGroupForOneRoom(await roomService.getRoomById(roomId));
+        const room: Room | undefined = await roomService.getRoomById(roomId);
+        if (!room) {
+            return;
+        }
+        this.generateImplicitGroupForOneRoom(room);
     }
 
     onAreaRemoved(roomId: string) {
@@ -41,39 +43,44 @@ class GroupService implements EventObserver {
         this.deleteImplicitGroupForOneRoom(roomId);
     }
 
-    async initGroupHa() {
+    private async initGroupHa() {
         await this.loadGroupFromDb();
         await this.generateImplicitGroup();
     }
 
-    private async loadGroupFromDb() {
+    private async loadGroupFromDb(): Promise<void> {
         // Get all group
-        const res = await databaseForwarder.db?.all<DBGroup[]>(`SELECT * FROM ${GroupTableName}`).catch((err) => {
-            console.log(err);
-        });
-        if (res === undefined) {
+        const res = await databaseForwarder.selectAllGroups()
+            .catch((err: any) => {
+                console.log(err);
+                throw new Error('Unexpected database error');
+            });
+        if (!res) {
             return;
         }
-        // For each group
-        res.forEach(async (g: DBGroup) => {
-            const entities = await databaseForwarder.db?.all<InsideGroup[]>(`SELECT * FROM ${InsideGroupTableName} WHERE groupEntityId = '${g.entityId}'`);
-            if (entities === undefined) {
-                return;
-            }
-            const haGroup: HaGroupSet = {
-                object_id: g.entityId,
-                name: g.name,
-                entities: entities.map((value: InsideGroup) => value.entityId).join(','),
-            };
-            // if group is already created in HA, the request return [] with status 200
-            httpForwarder.post('/api/services/group/set', haGroup).catch((err) => { console.log(JSON.stringify(err)); });
-        });
+        await Promise.all(
+            res.map((g: DBGroup) => databaseForwarder.selectInsideGroupsByEntityId(g.entityId)
+                .then((entities: InsideGroup[]) => {
+                    if (!entities) {
+                        return new Promise<void>((r) => r());
+                    }
+
+                    const haGroup: HaGroupSet = {
+                        object_id: g.entityId,
+                        name: g.name,
+                        entities: entities.map((value: InsideGroup) => value.entityId).join(','),
+                    };
+
+                    // if group is already created in HA, the request return [] with status 200
+                    return httpForwarder.post('/api/services/group/set', haGroup);
+                })),
+        );
     }
 
     async createGroup(name:string, entities: string[]): Promise<Group> {
         const groupEntityId = this.normalizeEntityId(name);
         // Test if group exist
-        const g = await databaseForwarder.db?.get<DBGroup>(`SELECT * FROM ${GroupTableName} WHERE entityId = '${groupEntityId}'`);
+        const g = await databaseForwarder.selectGroupsByEntityId(groupEntityId);
         if (g !== undefined) {
             throw new Error('Group already exist');
         }
@@ -98,23 +105,13 @@ class GroupService implements EventObserver {
         return group;
     }
 
-    private async insertGroupIntoDb(groupId: string, name: string, entities: string[]) {
-        try {
-            await databaseForwarder.db?.run('BEGIN TRANSACTION');
-            await databaseForwarder.db?.run(`INSERT INTO ${GroupTableName} (entityId, name) VALUES ('${groupId}','${name}')`);
-            await Promise.all(
-                entities.map(async (entityId: string) => databaseForwarder.db?.run(`INSERT INTO ${InsideGroupTableName} (entityId, groupEntityId) VALUES ('${entityId}','${groupId}')`)),
-            );
-            await databaseForwarder.db?.run('COMMIT');
-        } catch (err) {
-            await databaseForwarder.db?.run('ROLLBACK');
-            throw err;
-        }
-
+    private async insertGroupIntoDb(groupId: string, name: string, entities: string[])
+    :Promise<void> {
+        await databaseForwarder.insertGroup(groupId, name, entities);
     }
 
     private checkDataGroupToCreate(entities: string[], entitiesFull: Entity[]) {
-        if (entitiesFull === undefined) {
+        if (!entitiesFull) {
             throw new Error('All entities not found in HA');
         }
 
@@ -139,17 +136,24 @@ class GroupService implements EventObserver {
 
     async getGroups(): Promise<Group[]> {
         const res: HaStateResponse[] = await socketForwarder.forward({ type: 'get_states' });
-        return Promise.all(res.filter((val) => val.entity_id.startsWith('group')).map((v) => this.convertEntityToGroup(v)));
+        return Promise.all(
+            res
+                .filter((val) => val.entity_id.startsWith('group'))
+                .map((v) => this.convertEntityToGroup(v)),
+        );
     }
 
-    async generateImplicitGroup():Promise<void> {
+    private async generateImplicitGroup():Promise<void> {
         // Generate implicit group per room
         const rooms = await roomService.getRooms();
         await Promise.all(rooms.map((r) => this.generateImplicitGroupForOneRoom(r)));
 
         // Generate implicit group for all devices
         const devices: Device[] = await deviceService.getDevices();
-        const entities = devices.flatMap((d: Device) => d.entities.filter((entity: Entity) => entity.id.startsWith('switch') || entity.id.startsWith('light')).map((entity) => entity.id));
+        const entities = devices
+            .flatMap((d: Device) => d.entities
+                .filter((entity: Entity) => entity.id.startsWith('switch') || entity.id.startsWith('light'))
+                .map((entity) => entity.id));
         if (!entities || entities.length === 0) {
             return;
         }
@@ -162,9 +166,10 @@ class GroupService implements EventObserver {
 
     }
 
-    async generateImplicitGroupForOneRoom(r: Room) {
+    private async generateImplicitGroupForOneRoom(r: Room) {
         const entities = r.devices
-            .flatMap((x) => x.entities.filter((entity) => entity.id.startsWith('switch') || entity.id.startsWith('light')))
+            .flatMap((x) => x.entities
+                .filter((entity) => entity.id.startsWith('switch') || entity.id.startsWith('light')))
             .map((entity) => entity.id);
         // console.log(entities);
         if (!entities || entities.length === 0) {
@@ -184,7 +189,7 @@ class GroupService implements EventObserver {
         return `${GroupImplicitIdentifier}_all_${type}`;
     }
 
-    async deleteImplicitGroupForOneRoom(roomId: string) {
+    private async deleteImplicitGroupForOneRoom(roomId: string) {
         const groups = await this.getGroups();
         const roomGroups = groups.filter((group) => group.groupId.startsWith('imp') && group.groupId.includes(roomId));
         console.log(roomGroups);

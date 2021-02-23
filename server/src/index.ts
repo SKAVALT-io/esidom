@@ -1,6 +1,8 @@
 import { Request, Response } from 'express';
 import { config } from 'dotenv';
-import axios, { AxiosResponse } from 'axios';
+import axios from 'axios';
+import { open } from 'sqlite';
+import sqlite3 from 'sqlite3';
 import App from './app';
 import deviceController from './controllers/deviceController';
 import authController from './controllers/authController';
@@ -10,6 +12,8 @@ import automationController from './controllers/automationController';
 import groupController from './controllers/groupController';
 import userController from './controllers/userController';
 import serviceController from './controllers/serviceController';
+import healthController from './controllers/healthController';
+import databaseForwarder from './forwarders/databaseForwarder';
 
 config(); // Dot env config
 
@@ -24,13 +28,22 @@ App.http.listen(port, async () => {
     console.log(`App is listening on port ${port} !`);
 });
 
+const initDb = async () => {
+    const db = await open({
+        filename: './src/db/database.db',
+        driver: sqlite3.Database,
+    });
+    databaseForwarder.setDb(db);
+};
+initDb();
+
 const doAuth = async () => {
-    const { status } = await axios
-        .get(`http://localhost:${port}/auth`) as AxiosResponse<any>;
-    if (status !== 200) {
-        throw new Error('Unable to authenticate server to HA');
+    try {
+        await axios.get(`http://localhost:${port}/auth`);
+        console.log('Server authenticated to HA !');
+    } catch (err) {
+        console.log(`ERR(${err.response.status}): ${err.response.statusText}`);
     }
-    console.log('Server authenticated to HA !');
 };
 doAuth();
 
@@ -38,5 +51,6 @@ doAuth();
 [
     deviceController, authController, entityController,
     roomController, automationController, groupController,
-    userController, serviceController,
+    userController, serviceController, healthController,
+    databaseForwarder,
 ].forEach(() => {});

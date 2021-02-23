@@ -6,14 +6,18 @@ import config from '../config/config';
 
 class AuthService {
 
-    async doAuth(req: Request, res: Response) {
+    async doAuth(req: Request, res: Response): Promise<Response<{ token: string }>> {
         const baseUrl = req.params.baseUrl || `http://${config.baseUrl}`;
         const username = req.params.username || config.username;
         const password = req.params.password || config.password;
-        const accessToken = await AuthService.auth(baseUrl, username, password);
-        socketForwarder.initSocket(accessToken);
-        httpForwarder.setToken(accessToken);
-        res.status(200).send({ token: accessToken });
+        try {
+            const accessToken = await AuthService.auth(baseUrl, username, password);
+            socketForwarder.initSocket(accessToken);
+            httpForwarder.setToken(accessToken);
+            return res.status(200).send({ token: accessToken });
+        } catch (err) {
+            return res.sendStatus(401);
+        }
     }
 
     static async auth(baseUrl: string, username: string, password: string): Promise<string> {

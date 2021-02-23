@@ -2,80 +2,61 @@ import { Request, Response } from 'express';
 import entityService from '../services/entityService';
 import App from '../app';
 import { Entity } from '../types/entity';
+import { send, sendf } from '../utils/functions';
+
+const NO_SUCH_ID = (id: string): string => `No entity with such id: ${id}`;
 
 @App.rest('/entity')
 class EntityController {
 
     @App.get('')
-    async getEntities(req: Request, res: Response): Promise<void> {
-        try {
-            const { type } = req.query;
-            const entities: Entity[] = await entityService.getEntities();
-            const result = type === undefined
-                ? entities
-                : entities.filter((e: Entity) => e.type === type);
-            const code = result ? 200 : 404;
-            const data = result ?? { message: 'No entities yet' };
-            res.status(code).send(data);
-        } catch (err) {
-            res.status(404).send({ message: err.message });
-        }
+    async getEntities(req: Request, res: Response): Promise<Response<Entity[]>> {
+        const { type } = req.query;
+        return entityService.getEntities()
+            .then((entities: Entity[]) => {
+                const data: Entity[] = type === undefined
+                    ? entities
+                    : entities.filter((e: Entity) => e.type === type);
+                return send(res, 200, data);
+            });
     }
 
     @App.get('/types')
-    async getEntitiesType(req: Request, res: Response): Promise<void> {
-        try {
-            const result = await entityService.getTypes();
-            // TODO: filter unwanted types ? (like 'person' or 'automation' etc)
-            const code = result ? 200 : 404;
-            const data = result ?? { message: 'No entities yet' };
-            res.status(code).send(data);
-        } catch (err) {
-            res.status(404).send({ message: err.message });
-        }
+    async getEntitiesType(_req: Request, res: Response): Promise<Response<string[]>> {
+        return entityService.getTypes()
+            .then(sendf(res, 200));
     }
 
     @App.get('/:id')
-    async getEntityById(req: Request, res: Response): Promise<void> {
-        try {
-            const { id } = req.params;
-            const result: Entity | undefined = await entityService.getEntityById(id);
-            const code: number = result ? 200 : 404;
-            const data: Entity | any = result || { message: 'No entity with such id' };
-            res.status(code).send(data);
-        } catch (err) {
-            res.status(404).send({ message: err.message });
-        }
+    async getEntityById(req: Request, res: Response)
+    : Promise<Response<Entity> | Response<{ error: string}>> {
+        const { id } = req.params;
+        return entityService.getEntityById(id)
+            .then((entity: Entity | undefined) => (entity
+                ? send(res, 200, entity)
+                : send(res, 404, { error: NO_SUCH_ID(id) })));
     }
 
     @App.put('/:id')
-    async updateEntityState(req: Request, res: Response): Promise<void> {
-        try {
-            const { id } = req.params;
-            const { service, serviceData } = req.body;
-            console.log(`${id} ${service} ${serviceData}`);
-            const result: Entity | undefined = await entityService
-                .updateEntityState(id, service, serviceData);
-            const code = result ? 200 : 404;
-            const data = result ?? { message: 'No entities with such id' };
-            res.status(code).send(data);
-        } catch (err) {
-            res.status(404).send(err.message);
-        }
+    async updateEntityState(req: Request, res: Response)
+    : Promise<Response<Entity> | Response<{error:string}>> {
+        const { id } = req.params;
+        const { service, serviceData } = req.body;
+        return entityService.updateEntityState(id, service, serviceData)
+            .then((entity: Entity | undefined) => (entity
+                ? send(res, 200, entity)
+                : send(res, 404, { error: NO_SUCH_ID(id) })));
     }
 
     @App.patch('/:id')
-    async toggleEntity(req: Request, res: Response): Promise<void> {
-        try {
-            const { id } = req.params;
-            const { enable } = req.body;
-            const result = await entityService.toggleEntity(id, enable);
-            const code = result ? 200 : 404;
-            const data = result ?? { message: 'No entity with such id' };
-            res.status(code).send(data);
-        } catch (err) {
-            res.status(404).send({ message: err.message });
-        }
+    async toggleEntity(req: Request, res: Response)
+    : Promise<Response<Entity> | Response<{error:string}>> {
+        const { id } = req.params;
+        const { enable } = req.body;
+        return entityService.toggleEntity(id, enable)
+            .then((entity: Entity | undefined) => (entity
+                ? send(res, 200, entity)
+                : send(res, 404, { error: NO_SUCH_ID(id) })));
     }
 
 }

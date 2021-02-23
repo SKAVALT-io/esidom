@@ -6,8 +6,8 @@ import authService from '../services/authService';
 class AuthController {
 
     @App.get('')
-    async doAuth(req: Request, res: Response) {
-        authService.doAuth(req, res);
+    async doAuth(req: Request, res: Response): Promise<Response<{token: string}>> {
+        return authService.doAuth(req, res);
     }
 
 }

@@ -103,3 +103,22 @@ export interface HaSearchDeviceResponse {
     entity: string[];
     automation: string[];
 }
+
+export interface HaSocketError {
+    code: string;
+    message: string
+}
+
+export interface HaSocketResult {
+    [x: string]: any;
+}
+
+export interface HaDumbType {
+    context: {
+        id: string;
+        parent_id: string | null;
+        user_id: string;
+    };
+}
+
+export type HaDumbEnum = { entity_id: string } | { topic: string, payload_template: 'true' | 'false' };

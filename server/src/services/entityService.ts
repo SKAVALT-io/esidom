@@ -2,6 +2,7 @@ import { EventObserver } from '../types/observer';
 import socketForwarder from '../forwarders/socketForwarder';
 import { Entity } from '../types/entity';
 import { HaEntity, HaStateResponse } from '../types/haTypes';
+import socketService from './socketService';
 
 class EntityService implements EventObserver {
 
@@ -11,18 +12,18 @@ class EntityService implements EventObserver {
 
     onEntityUpdated(data: string) {
         this.getEntityById(data)
-            .then((updated: Entity) => {
+            .then((updated: Entity | undefined) => {
+                if (!updated) {
+                    throw new Error(`Unable to retrieve updated entity: ${data}`);
+                }
                 socketForwarder.emitSocket('entity_updated', updated);
             })
-            .catch((err) => console.log(err.message));
+            .catch((err) => socketForwarder.emitSocket('entity_updated', { error: err.message }));
     }
 
     async getEntities(): Promise<Entity[]> {
-        const entities: HaEntity[] = await socketForwarder
-            .forward({ type: 'config/entity_registry/list' });
-        const states: HaStateResponse[] = await socketForwarder
-            .forward({ type: 'get_states' });
-
+        const entities: HaEntity[] = await socketService.listEntityRegistry();
+        const states: HaStateResponse[] = await socketService.getStates();
         return states.map((e: HaStateResponse) => {
             const entityState = entities.find((ent: HaEntity) => ent.entity_id === e.entity_id);
             const { attributes } = e ?? {};
@@ -59,45 +60,38 @@ class EntityService implements EventObserver {
             });
     }
 
-    async getEntityById(id: string): Promise<Entity> {
+    async getEntityById(id: string): Promise<Entity | undefined> {
         const entities = await this.getEntities();
         const result: Entity | undefined = entities
             .find((e: Entity) => e.id === id);
-        if (result === undefined) {
-            throw new Error(`No entity with id ${id}`);
-        }
         return result;
     }
 
-    async updateEntityState(id: string, service: string, serviceData: any = {}) {
+    // Returns undefined because HA doesnt send back the updated entity
+    async updateEntityState(id: string, service: string, serviceData: any = {})
+    : Promise<Entity | undefined> {
         const splitted: string[] = service.split('.');
-        const res = await socketForwarder.forward<any>({
-            type: 'call_service',
-            domain: splitted[0],
-            service: splitted[1],
-            service_data: { entity_id: id, ...serviceData },
+        if (splitted.length < 2) {
+            throw new Error(`Syntax error in provided service: ${service}`);
+        }
+        await socketService.callService(splitted[0], splitted[1], {
+            entity_id: id,
+            ...serviceData,
         });
-        return res;
+        return this.getEntityById(id);
     }
 
-    async toggleEntity(id: string, enable: boolean): Promise<Entity> {
+    async toggleEntity(id: string, enable: boolean): Promise<Entity | undefined> {
         const entity: Entity | undefined = await this.getEntityById(id);
-        if (entity === undefined) {
-            throw new Error('No entity with such id');
+        if (!entity) {
+            return undefined;
         }
-        const body = {
-            type: 'config/entity_registry/update',
-            entity_id: entity.id,
-            name: entity.name,
-            disabled_by: (enable) ? null : 'user',
-        };
-        const haEnt: any = await socketForwarder.forward(body);
+        const haEnt: any = await socketService.updateEntity(entity.id, entity.name, enable);
         return this.getEntityById(haEnt?.entity_entry.entity_id);
     }
 
     async getTypes(): Promise<string[]> {
-        const states: HaStateResponse[] = await socketForwarder
-            .forward({ type: 'get_states' });
+        const states: HaStateResponse[] = await socketService.getStates();
         const types: string[] = states
             .map((s: HaStateResponse) => s.entity_id.split('.')[0])
             .filter((val, i, array) => array.indexOf(val) === i);

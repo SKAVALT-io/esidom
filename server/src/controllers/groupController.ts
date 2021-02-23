@@ -1,34 +1,31 @@
 import { Request, Response } from 'express';
 import groupService from '../services/groupService';
 import App from '../app';
+import { Group } from '../types/group';
+import { send, sendf } from '../utils/functions';
 
+const MISSING_PARAM = (name: string): string => `Missing parameter ${name}`;
 @App.rest('/group')
 class GroupController {
 
     @App.get('')
-    async getGroups(req: Request, res: Response): Promise<void> {
-        const result = await groupService.getGroups();
-        res.status(200).send(result);
-        console.log(this);
+    async getGroups(_req: Request, res: Response): Promise<Response<Group[]>> {
+        return groupService.getGroups()
+            .then(sendf(res, 200));
     }
 
     @App.post('')
-    async createGroup(req: Request, res: Response): Promise<void> {
+    async createGroup(req: Request, res: Response)
+    : Promise<Response<{error: string}> | Response<Group>> {
         const { name, entities } = req.body;
         if (!name) {
-            res.status(400).send({ message: 'The parameter name is missing' });
-            return;
+            return send(res, 404, { error: MISSING_PARAM('name') });
         }
-        if (entities === undefined || entities.length === 0) {
-            res.status(400).send({ message: 'The parameter entities is missing' });
-            return;
+        if (!entities || entities.length === 0) {
+            return send(res, 404, { error: MISSING_PARAM('entities') });
         }
-        try {
-            const result = await groupService.createGroup(name, entities);
-            res.status(200).send(result);
-        } catch (err: any) {
-            res.status(400).send({ message: err.message ? err.message : err });
-        }
+        return groupService.createGroup(name, entities)
+            .then(sendf<Group>(res, 200));
     }
 
 }

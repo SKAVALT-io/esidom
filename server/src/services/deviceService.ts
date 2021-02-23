@@ -4,11 +4,13 @@ import socketForwarder from '../forwarders/socketForwarder';
 import { Device } from '../types/device';
 import {
     HaDevice,
+    HaDumbEnum,
     HaEntity,
     HaSearchDeviceResponse,
     HaStateResponse,
 } from '../types/haTypes';
 import entityService from './entityService';
+import socketService from './socketService';
 
 class DeviceService implements EventObserver {
 
@@ -23,11 +25,15 @@ class DeviceService implements EventObserver {
             item_id: deviceId,
         })
             .then((device: HaSearchDeviceResponse) => {
-                socketForwarder.forward<HaDevice[]>({ type: 'config/device_registry/list' })
+                socketService.listDeviceRegistry()
                     .then((haDevices: HaDevice[]) => {
                         const data = haDevices
-                            .filter((d: HaDevice) => d.config_entries
-                                .includes(device.config_entry[0]))
+                            .filter((d: HaDevice) => d
+                                // TODO: it may not be the correct device,
+                                // because we filter on the config_entry attribute,
+                                // and multiple devices can share a similar config_entry.
+                                .config_entries.sort().toString()
+                                === device.config_entry.sort().toString()) // VALIDATE THIS WORKS
                             .map((d: HaDevice) => ({
                                 id: d.id,
                                 name: d.name,
@@ -37,16 +43,15 @@ class DeviceService implements EventObserver {
                             }))[0];
                         console.log('DEVICE CREATED : ', data);
                         socketForwarder.emitSocket('device_created', data);
-                    })
-                    .catch((err) => console.log(err));
+                    });
             })
-            .catch((err) => console.log(err));
+            .catch((err) => socketForwarder.emitSocket('device_created', { error: err.message }));
     }
 
     async getDevices(): Promise<Device[]> {
-        const devices: HaDevice[] = await socketForwarder.forward({ type: 'config/device_registry/list' });
-        const entities: HaEntity[] = await socketForwarder.forward({ type: 'config/entity_registry/list' });
-        const states: HaStateResponse[] = await socketForwarder.forward({ type: 'get_states' });
+        const devices: HaDevice[] = await socketService.listDeviceRegistry();
+        const entities: HaEntity[] = await socketService.listEntityRegistry();
+        const states: HaStateResponse[] = await socketService.getStates();
         return devices.map((d: HaDevice) => {
             const device: Device = {
                 id: d.id,
@@ -63,30 +68,29 @@ class DeviceService implements EventObserver {
         });
     }
 
-    async getDeviceById(id: string) {
+    async getDeviceById(id: string): Promise<Device | undefined> {
         const devices: Device[] = await this.getDevices();
         return devices.find((d: Device) => d.id === id);
     }
 
-    async pairdevice(): Promise<any> {
+    async pairdevice() {
         try {
             await httpForwarder.post<any>('/api/services/zwave/add_node', null);
         } catch (err) {
             console.log(err);
+            throw err;
         }
         try {
-            await socketForwarder.forward({
-                type: 'call_service',
-                domain: 'mqtt',
-                service: 'publish',
-                service_data: {
+            await socketService.callService(
+                'mqtt',
+                'publish', {
                     topic: 'zigbee2mqtt/bridge/request/permit_join',
-                    // payload_template: '"{"value": true}"',
                     payload_template: 'true',
                 },
-            });
+            );
         } catch (err) {
             console.log(err);
+            throw err;
         }
     }
 

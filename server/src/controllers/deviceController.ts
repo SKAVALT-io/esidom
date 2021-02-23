@@ -1,43 +1,35 @@
 import { Request, Response } from 'express';
 import deviceService from '../services/deviceService';
 import App from '../app';
+import { Device } from '../types/device';
+import { send, sendf } from '../utils/functions';
 
 @App.rest('/device')
 class DeviceController {
 
     @App.get('')
-    async getDevices(req: Request, res: Response): Promise<void> {
-        try {
-            const result = await deviceService.getDevices();
-            const code = result ? 200 : 404;
-            const data = result ?? { message: 'No device yet :(' };
-            res.status(code).send(data);
-        } catch (err) {
-            res.status(404).send({ message: err.message });
-        }
+    async getDevices(_req: Request, res: Response): Promise<Response<Device[]>> {
+        return deviceService.getDevices()
+            .then(sendf(res, 200));
     }
 
     @App.get('/:deviceId')
-    async getDevice(req: Request, res: Response): Promise<void> {
-        try {
-            const { deviceId } = req.params;
-            const result = await deviceService.getDeviceById(deviceId);
-            const code = result ? 200 : 404;
-            const data = result ?? { message: `No device with id ${deviceId}` };
-            res.status(code).send(data);
-        } catch (err) {
-            res.status(404).send({ message: err.message });
-        }
+    async getDevice(req: Request, res: Response)
+    : Promise<Response<Device> | Response<{ error: string }>> {
+        const { deviceId } = req.params;
+        return deviceService.getDeviceById(deviceId)
+            .then((device: Device | undefined) => {
+                if (!device) {
+                    return send(res, 404, { error: `No device with such id: ${deviceId}` });
+                }
+                return send(res, 200, device);
+            });
     }
 
     @App.post('')
-    async postDevice(req: Request, res: Response) {
-        try {
-            await deviceService.pairdevice();
-            res.status(200).send({ message: 'pairing mode enabled' });
-        } catch (err) {
-            res.status(500).send({ message: err });
-        }
+    async postDevice(_req: Request, res: Response): Promise<Response<{ message: string }>> {
+        return deviceService.pairdevice()
+            .then(() => send(res, 200, { message: 'pairing mode enabled' }));
     }
 
 }
