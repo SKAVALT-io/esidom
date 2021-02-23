@@ -1,7 +1,12 @@
 /* eslint-disable camelcase */
 import socketIo from 'socket.io';
 import WebSocket from 'ws';
-import { HaEntityUpdated, HaSocketResult, HaSocketError } from '../types/haTypes';
+import {
+    HaEntityStateChanged,
+    HaSocketResult,
+    HaSocketError,
+    HaEntityUpdated,
+} from '../types/haTypes';
 import App from '../app';
 import config from '../config/config';
 import { EventObserver, Event } from '../types/observer';
@@ -68,6 +73,10 @@ class SocketForwarder {
                     observer.onEntityUpdated?.(data);
                 } else if (event === 'automationUpdated') {
                     observer.onAutomationUpdated?.(data);
+                } else if (event === 'automationRemoved') {
+                    observer.onAutomationRemoved?.(data);
+                } else if (event === 'automationCreated') {
+                    observer.onAutomationCreated?.(data);
                 } else if (event === 'deviceRegistryUpdated') {
                     observer.onDeviceRegistryUpdated?.(data);
                 } else if (event === 'entityRegistryUpdated') {
@@ -154,12 +163,11 @@ class SocketForwarder {
     }
 
     async handleSocketEvent(data: HaSocket): Promise<void> {
-        const { id } = data;
         const eventType: string | undefined = data?.event?.event_type ?? data?.event?.type;
         if (!eventType) {
             return;
         }
-        console.log(`received WS event : ${eventType}`);
+        console.log(`received WS event : ${eventType}`, data);
         const eventData: any = data?.event?.data;
         if (eventType === 'device_registry_updated') {
             this.handleDeviceRegistryUpdated(eventData, eventType);
@@ -169,6 +177,9 @@ class SocketForwarder {
         }
         if (eventType === 'area_registry_updated') {
             this.handleAreaRegistryUpdated(eventData);
+        }
+        if (eventType === 'entity_registry_updated') {
+            this.handleEntityRegistryUpdated(eventData);
         }
     }
 
@@ -215,7 +226,7 @@ class SocketForwarder {
     }
 
     private handleStateChanged(eventData: any) {
-        const ent: HaEntityUpdated = eventData;
+        const ent: HaEntityStateChanged = eventData;
         if (ent.entity_id.startsWith('automation')) {
             this.notifyObservers('automationUpdated', ent.entity_id);
         } else {
@@ -228,6 +239,23 @@ class SocketForwarder {
             this.notifyObservers('areaRemoved', eventData?.area_id);
         } else if (eventData?.action === 'update') {
             this.notifyObservers('areaUpdated', eventData?.area_id);
+        }
+    }
+
+    private handleEntityRegistryUpdated(eventData: any) {
+        const updated: HaEntityUpdated = eventData;
+        if (updated.action === 'remove') {
+            if (updated.entity_id.startsWith('automation')) {
+                this.notifyObservers('automationRemoved', updated.entity_id);
+            } else {
+                this.notifyObservers('entityRegistryUpdated', updated.entity_id);
+            }
+        } else if (updated.action === 'create') {
+            if (updated.entity_id.startsWith('automation')) {
+                this.notifyObservers('automationCreated', updated.entity_id);
+            } else {
+                this.notifyObservers('entityRegistryUpdated', updated.entity_id);
+            }
         }
     }
 

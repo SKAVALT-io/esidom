@@ -56,7 +56,8 @@ class AutomationController {
     async deleteAutomation(req: Request, res: Response): Promise<Response<any>> {
         const { id } = req.params;
         return automationService.deleteAutomation(id)
-            .then(() => send(res, 200));
+            .then(() => send(res, 200))
+            .catch((err) => send(res, 400, { error: err.message }));
     }
 
 }

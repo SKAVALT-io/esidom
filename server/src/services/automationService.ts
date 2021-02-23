@@ -35,6 +35,22 @@ class AutomationService implements EventObserver {
                 .emitSocket('entity_updated', { error: err.message }));
     }
 
+    onAutomationRemoved(id: string) {
+        socketForwarder.emitSocket('automation_removed', { id });
+    }
+
+    async onAutomationCreated(id: string) {
+        const automation: AutomationPreview | undefined = await this
+            .getAutomationPreviewById(id);
+        if (!automation) { // wait for HA to finish initializing automation
+            setTimeout(() => {
+                this.onAutomationCreated(id);
+            }, 2000);
+        } else {
+            socketForwarder.emitSocket('automation_created', automation);
+        }
+    }
+
     async getAutomations(): Promise<AutomationPreview[]> {
         const states: HaStateResponse[] = await socketService.getStates();
         return states

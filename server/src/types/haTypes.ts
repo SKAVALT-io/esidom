@@ -82,7 +82,7 @@ export interface HaService {
     }
 }
 
-export interface HaEntityUpdated {
+export interface HaEntityStateChanged {
     entity_id: string;
     old_state: HaStateResponse;
     new_state: HaStateResponse;
@@ -119,6 +119,11 @@ export interface HaDumbType {
         parent_id: string | null;
         user_id: string;
     };
+}
+
+export interface HaEntityUpdated {
+    action: string;
+    entity_id: string;
 }
 
 export type HaDumbEnum = { entity_id: string } | { topic: string, payload_template: 'true' | 'false' } | { object_id: string };
