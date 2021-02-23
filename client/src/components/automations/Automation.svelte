@@ -47,7 +47,7 @@
     }
 
     onMount(async () => {
-        socketManager.registerListener(
+        socketManager.registerListenerById(
             'entity_updated',
             automation.id,
             automationUpdatedHandler
