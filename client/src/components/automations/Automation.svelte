@@ -39,6 +39,7 @@
 
     function handleDelete() {
         AutomationService.deleteAutomation(automation.id);
+        isConfirmDeleteOpen = false;
     }
 
     function automationUpdatedHandler(data: any) {
