@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { onMount } from 'svelte';
+    import { onDestroy, onMount } from 'svelte';
     import type { AutomationPreview } from '../../../types/automationType';
     import { tr } from '../../utils/i18nHelper';
 
@@ -10,6 +10,7 @@
     import RoundedButton from '../../components/UI/buttons/RoundedButton.svelte';
     import { push } from 'svelte-spa-router';
     import LoadingAnimation from '../../components/animations/LoadingAnimation.svelte';
+    import { socketManager } from '../../managers/socketManager';
 
     let automations: AutomationPreview[] = [];
     let searchValue = '';
@@ -43,6 +44,51 @@
     async function getAutomations() {
         automations = await AutomationService.getAutomations();
     }
+
+    function automationDeletedHandler(data: { id: string }) {
+        const { id: automationId } = data;
+        console.log(`automation ${automationId} deleted`);
+        automations = automations.filter(
+            (a: AutomationPreview) => a.id !== automationId
+        );
+        filterAutomations('');
+    }
+
+    function automationCreatedHandler(data: AutomationPreview) {
+        const index = automations.findIndex((a) => a.id === data.id);
+        if (index === -1) {
+            automations = [...automations, data];
+        } else {
+            automations = [
+                ...automations.filter((a) => a.id !== data.id),
+                data,
+            ];
+        }
+        console.log(`automation ${data.id} created`);
+        filterAutomations('');
+    }
+
+    onMount(() => {
+        socketManager.registerGlobalListener(
+            'automation_removed',
+            automationDeletedHandler
+        );
+        socketManager.registerGlobalListener(
+            'automation_created',
+            automationCreatedHandler
+        );
+    });
+
+    onDestroy(() => {
+        socketManager.removeListener(
+            'automation_removed',
+            automationDeletedHandler
+        );
+        socketManager.removeListener(
+            'automation_created',
+            automationCreatedHandler
+        );
+    });
 </script>
 
 <div
