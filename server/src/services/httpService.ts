@@ -60,6 +60,11 @@ class HttpService {
             .get('/api', { timeout: 10000 });
     }
 
+    async deleteAutomation(id: string): Promise<any> {
+        return httpForwarder
+            .delete(`/api/config/automation/config/${id}`);
+    }
+
 }
 
 export default new HttpService();

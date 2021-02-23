@@ -52,6 +52,13 @@ class AutomationController {
             .then(sendf(res, 200));
     }
 
+    @App.delete('/:id')
+    async deleteAutomation(req: Request, res: Response): Promise<Response<any>> {
+        const { id } = req.params;
+        return automationService.deleteAutomation(id)
+            .then(() => send(res, 200));
+    }
+
 }
 
 export default new AutomationController();

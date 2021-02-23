@@ -112,6 +112,10 @@ class AutomationService implements EventObserver {
         return socketService.callService('automation', 'trigger', data);
     }
 
+    async deleteAutomation(id: string): Promise<any> {
+        return httpService.deleteAutomation(id);
+    }
+
 }
 
 export default new AutomationService();
