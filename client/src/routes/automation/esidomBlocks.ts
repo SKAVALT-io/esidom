@@ -25,6 +25,7 @@ export type BlocksDefinitions = {
     esidom_automation: BlockFunctions;
     binary_trigger: BlockFunctions;
     time_trigger: BlockFunctions;
+    sun_trigger: BlockFunctions;
     time_condition: BlockFunctions;
     sun_condition: BlockFunctions;
     time_condition_hour: BlockFunctions;
@@ -158,35 +159,73 @@ export type BlocksDefinitions = {
         },
     };
 
-    // block.sun_trigger = {
-    //     init() {
-    //         this.jsonInit?.(
-    //             type: 'sun_trigger',
-    //             message0: 'Quand le soleil se %1',
-    //             args0: [
-    //                 {
-    //                     type: 'field_dropdown',
-    //                     name: 'Sun',
-    //                     options: [
-    //                         [
-    //                             'levé',
-    //                             'above_horizon',
-    //                         ],
-    //                         [
-    //                             'couché',
-    //                             'below_horizon',
-    //                         ],
-    //                     ],
-    //                 },
-    //             ],
-    //             previousStatement: 'Condition',
-    //             nextStatement: 'Condition',
-    //             colour: COLORS.HUE_YELLOW,
-    //             tooltip: '',
-    //             helpUrl: '',
-    //         );
-    //     },
-    // };
+    block.sun_trigger = {
+        init() {
+            this.jsonInit?.(
+                {
+                    type: 'sun_trigger',
+                    message0: '%1 h %2 m %3 s %4 le %5 du soleil',
+                    args0: [
+                        {
+                            type: 'field_number',
+                            name: 'Hour',
+                            value: 0,
+                            min: 0,
+                            max: 23,
+                        },
+                        {
+                            type: 'field_number',
+                            name: 'Minute',
+                            value: 0,
+                            min: 0,
+                            max: 59,
+                        },
+                        {
+                            type: 'field_number',
+                            name: 'Second',
+                            value: 0,
+                            min: 0,
+                            max: 59,
+                        },
+                        {
+                            type: 'field_dropdown',
+                            name: 'Before_after',
+                            options: [
+                                [
+                                    'avant',
+                                    '-',
+                                ],
+                                [
+                                    'après',
+                                    '+',
+                                ],
+                            ],
+                        },
+                        {
+                            type: 'field_dropdown',
+                            name: 'Sun',
+                            options: [
+                                [
+                                    'lever',
+                                    'sunrise',
+                                ],
+                                [
+                                    'coucher',
+                                    'sunset',
+                                ],
+                            ],
+                        },
+                    ],
+                    previousStatement: 'Trigger',
+                    nextStatement: 'Trigger',
+                    colour: COLORS.HUE_GREEN,
+                    tooltip: '',
+                    helpUrl: '',
+                },
+            );
+        },
+    };
+
     /**
      * Catégorie Condition
      */
@@ -359,11 +398,11 @@ export type BlocksDefinitions = {
                             name: 'Sun',
                             options: [
                                 [
-                                    'levé',
+                                    'lever',
                                     'sunrise',
                                 ],
                                 [
-                                    'couché',
+                                    'coucher',
                                     'sunset',
                                 ],
                             ],

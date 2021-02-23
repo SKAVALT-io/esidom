@@ -52,6 +52,27 @@ const esidomBlockGenerator: EsidomBlockGenerator = {
             `;
             return xml;
         },
+        sun(blocklyJSON: BlocklyJSON): string {
+            const offSet = blocklyJSON.offset?.split(':');
+            const offSetHour = offSet?.[0];
+            const hours = offSetHour?.substring(1);
+
+            const minutes = offSet?.[1];
+            const seconds = offSet?.[2];
+
+            const beforeAfter = offSetHour?.substring(0, 1);
+            const sun = blocklyJSON.event;
+
+            return `
+                <block type="sun_trigger">
+                <field name="Hour">${hours}</field>
+                <field name="Minute">${minutes}</field>
+                <field name="Second">${seconds}</field>
+                <field name="Before_after">${beforeAfter}</field>
+                <field name="Sun">${sun}</field>
+                </block>
+            `;
+        },
     },
     condition: {
         time(blocklyJSON: BlocklyJSON): string {

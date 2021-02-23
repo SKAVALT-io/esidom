@@ -13,6 +13,7 @@
         <category name="Déclencheurs" colour={COLORS.HUE_GREEN}>
             <block type="binary_trigger" />
             <block type="time_trigger" />
+            <block type="sun_trigger" />
         </category>
         <category name="Conditions" colour={COLORS.HUE_YELLOW}>
             <block type="binary_condition" />

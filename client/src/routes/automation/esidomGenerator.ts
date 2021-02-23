@@ -51,6 +51,8 @@ export interface BlocklyJSON {
     rgb_color?: string;
     alias?: string;
     after_offset?: string;
+    offset?: string;
+    event?: string
     conditions?: BlocklyJSON[];
 }
 
@@ -63,6 +65,7 @@ export type BlocksGenerator = {
     esidom_automation: (blk: Block) => void;
     binary_trigger: (blk: Block) => void;
     time_trigger: (blk: Block) => void;
+    sun_trigger: (blk: Block) => void;
     time_condition: (blk: Block) => void;
     sun_condition: (blk: Block) => void;
     time_condition_hour: (blk: Block) => void;
@@ -150,6 +153,24 @@ export type BlocksGenerator = {
             json.from = 'off';
             json.to = 'on';
         }
+
+        return JSON.stringify(json);
+    };
+
+    block.sun_trigger = (blk: Block) => {
+        const number_hour = blk.getFieldValue('Hour');
+        const number_minute = blk.getFieldValue('Minute');
+        const number_second = blk.getFieldValue('Second');
+
+        const dropdown_before_after = blk.getFieldValue('Before_after');
+
+        const dropdown_sun = blk.getFieldValue('Sun');
+
+        const json: BlocklyJSON = {};
+
+        json.platform = 'sun';
+        json.event = dropdown_sun;
+        json.offset = `${dropdown_before_after}${number_hour}:${number_minute}:${number_second}`;
 
         return JSON.stringify(json);
     };
