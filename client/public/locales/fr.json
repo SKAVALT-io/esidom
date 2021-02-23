@@ -82,6 +82,13 @@
   },
   "groups": {
     "myGroups": "Mes groupes",
+    "implicitGroup" : {
+        "name" : "Groupes implicit",
+        "cat": {
+            "switchlight": "Lampes et prises "
+        },
+        "of": "de la pièce"
+    },
     "search": "Rechercher ...",
     "sortBy": {
         "title": "Trier par",
