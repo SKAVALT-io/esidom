@@ -104,6 +104,20 @@ class EntityService implements EventObserver {
         return types;
     }
 
+    async updateEntity(id: string, name: string) {
+        const entity: Entity | undefined = await this.getEntityById(id);
+        if (entity === undefined) {
+            throw new Error('No entity with such id');
+        }
+        const body = {
+            type: 'config/entity_registry/update',
+            entity_id: entity.id,
+            name,
+        };
+        await socketForwarder.forward(body);
+        return this.getEntityById(id);
+    }
+
 }
 
 export default new EntityService();

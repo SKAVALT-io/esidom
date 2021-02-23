@@ -64,6 +64,14 @@ class EntityController {
         }
     }
 
+    @App.patch('/update/:id')
+    async updateEntity(req: Request, res: Response): Promise<Response<Entity>> {
+        const { id } = req.params;
+        const { name } = req.body;
+        return entityService.updateEntity(id, name)
+            .then((entity: Entity) => res.status(200).send(entity));
+    }
+
     @App.patch('/:id')
     async toggleEntity(req: Request, res: Response): Promise<void> {
         try {
