@@ -1,17 +1,22 @@
 {
-    "home": {
-        "welcome": "Hello World",
-        "coucou": "Yo people :D"
+  "home": {
+    "welcome": "Hello World",
+    "coucou": "Yo people :D"
+  },
+  "automations": {
+    "myAutomations": "My Automations",
+    "search": "Search...",
+    "sortBy": {
+      "title": "Sort by",
+      "options": {
+        "name": "Name",
+        "state": "State"
+      }
     },
-    "automations": {
-        "myAutomations": "My Automations",
-        "search": "Search...",
-        "sortBy": {
-            "title": "Sort by",
-            "options": {
-                "name": "Name",
-                "state": "State"
-            }
-        }
+    "confirmDelete": "Are you sure you want to delete this automation ?",
+    "buttons": {
+        "cancel": "Cancel"
     }
+
+  }
 }
