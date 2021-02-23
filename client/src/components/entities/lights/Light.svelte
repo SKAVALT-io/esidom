@@ -31,7 +31,7 @@
     lightPropMap.set('color_temp', ColorTemperaturePicker);
 
     onMount(() => {
-        socketManager.registerListener(
+        socketManager.registerListenerById(
             'entity_updated',
             entityId,
             updateLightState
