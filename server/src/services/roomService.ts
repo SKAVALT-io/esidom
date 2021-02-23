@@ -1,5 +1,4 @@
 import { Device } from '../types/device';
-import socketForwarder from '../forwarders/socketForwarder';
 import socketService from './socketService';
 import { Room } from '../types/room';
 import { HaRoom, HaRoomDetail } from '../types/haTypes';
@@ -8,7 +7,6 @@ import deviceService from './deviceService';
 class RoomService {
 
     async getRooms(): Promise<Room[]> {
-        
         const haRooms: HaRoom[] = await socketService.getRooms();
         return Promise.all(haRooms.map((r: HaRoom) => {
             const room: Room = {
@@ -33,7 +31,7 @@ class RoomService {
     }
 
     private async injectAutomationsDevicesIntoRoomObject(room: Room): Promise<Room> {
-        const haRoom: HaRoomDetail = socketService.searchRoomById(room.roomId);
+        const haRoom: HaRoomDetail = await socketService.searchRoomById(room.roomId);
         if (haRoom.device !== undefined) {
             const devices = (await Promise.all(
                 haRoom.device.map(async (id: string) => deviceService.getDeviceById(id)),
@@ -59,7 +57,7 @@ class RoomService {
     }
 
     private async updateRoomDevice(deviceId: string, areaId: string): Promise<any> {
-        return socketForwarder.forward({ type: 'config/device_registry/update', device_id: deviceId, area_id: areaId });
+        return socketService.addRoomToDevice(deviceId, areaId);
     }
 
 }

@@ -121,4 +121,4 @@ export interface HaDumbType {
     };
 }
 
-export type HaDumbEnum = { entity_id: string } | { topic: string, payload_template: 'true' | 'false' };
+export type HaDumbEnum = { entity_id: string } | { topic: string, payload_template: 'true' | 'false' } | { object_id: string };

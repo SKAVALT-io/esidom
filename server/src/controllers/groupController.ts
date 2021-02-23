@@ -2,9 +2,8 @@ import { Request, Response } from 'express';
 import groupService from '../services/groupService';
 import App from '../app';
 import { Group } from '../types/group';
-import { send, sendf } from '../utils/functions';
+import { send, sendf, MISSING_PARAM } from '../utils/functions';
 
-const MISSING_PARAM = (name: string): string => `Missing parameter ${name}`;
 @App.rest('/group')
 class GroupController {
 

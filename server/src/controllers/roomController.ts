@@ -2,59 +2,67 @@ import { Request, Response } from 'express';
 import roomService from '../services/roomService';
 import App from '../app';
 import { Room } from '../types/room';
+import {
+    send,
+    sendf,
+    MISSING_PARAM,
+    NO_SUCH_ID,
+} from '../utils/functions';
 
 @App.rest('/room')
 class RoomController {
 
     @App.get('')
-    async getRooms(_req: Request, res: Response): Promise<Response<Room[]>> {
+    async getRooms(_req: Request, res: Response)
+    : Promise<Response<Room[]>> {
         return roomService.getRooms()
-            .then((rooms) => res.status(200).send(rooms))
-            // Remove this catch ?
-            .catch((err) => res.status(404).send({ error: err.message }));
+            .then(sendf(res, 200));
     }
 
     @App.post('')
-    async createRoom(req: Request, res: Response): Promise<Response<Room>> {
-        const { name } = req.body as {name: string};
+    async createRoom(req: Request, res: Response)
+    : Promise<Response<Room> | Response<{error:string}>> {
+        const { name } = req.body;
         if (!name) {
-            return res.status(400).send({ error: 'The parameter name is missing' });
+            return send(res, 400, { error: MISSING_PARAM(('name')) });
         }
-
         return roomService.createRoom(name)
-            .then((room) => res.status(200).send(room));
+            .then((room) => send(res, 200, room));
     }
 
     @App.get('/:roomId')
-    async getRoom(req: Request, res: Response): Promise<any> {
-        const { areaId } = req.params as { areaId: string };
+    async getRoom(req: Request, res: Response)
+    : Promise<Response<Room> | Response<{error:string}>> {
+        const { areaId } = req.params;
 
         return roomService
             .getRoomById(areaId)
             .then((room) => {
                 if (room) {
-                    return res.status(200).send(room);
+                    return send(res, 200, room);
                 }
-                return res.status(404).send({ error: 'No room with such id' });
+                return send(res, 404, { error: NO_SUCH_ID(areaId) });
             });
     }
 
     @App.put('/:roomId')
-    async updateRoom(req: Request, res: Response): Promise<Response<{message: string}>> {
-        return res.status(200).send({ message: 'TODO' });
+    async updateRoom(_req: Request, res: Response): Promise<Response<{message: string}>> {
+        return send(res, 200, { message: 'TODO' });
     }
 
     @App.delete('/:roomId')
-    async deleteRoom(req: Request, res: Response): Promise<void> {
-        const { roomId } = req.params as { roomId: string};
-        
+    async deleteRoom(req: Request, res: Response)
+    : Promise<Response<{message: string}> | Response<{error:string}>> {
+        const { roomId } = req.params;
         if (!roomId) {
-            return res.status(400).send({ message: 'The parameter roomId is missing' });
+            return send(res, 400, { error: MISSING_PARAM('roomId') });
         }
 
         return roomService.deleteRoom(roomId)
             .then(() => send(res, 200, { message: 'Room successful deleted' }))
-            .catch((err: any) => send(res, 400, { error: 'Error while deleting room' }));
+            .catch((err: any) => send(res, 400, {
+                error: `Error while deleting room ${roomId}: ${err.message}`,
+            }));
     }
 
 }

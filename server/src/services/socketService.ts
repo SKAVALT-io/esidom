@@ -70,6 +70,14 @@ class SocketService {
         });
     }
 
+    async addRoomToDevice(deviceId: string, areaId: string): Promise<any> {
+        return socketForwarder.forward({
+            type: 'config/device_registry/update',
+            device_id: deviceId,
+            area_id: areaId,
+        });
+    }
+
 }
 
 export default new SocketService();

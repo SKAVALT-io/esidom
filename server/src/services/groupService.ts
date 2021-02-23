@@ -2,7 +2,7 @@ import { DBGroup, InsideGroup } from '../types/dbTypes';
 import databaseForwarder from '../forwarders/databaseForwarder';
 import httpForwarder from '../forwarders/httpForwarder';
 import { Group } from '../types/group';
-import { HaGroupSet, HaStateResponse } from '../types/haTypes';
+import { HaDumbType, HaGroupSet, HaStateResponse } from '../types/haTypes';
 import entityService from './entityService';
 import roomService from './roomService';
 import { Entity } from '../types/entity';
@@ -11,6 +11,7 @@ import { EventObserver } from '../types/observer';
 import deviceService from './deviceService';
 import { Room } from '../types/room';
 import { Device } from '../types/device';
+import socketService from './socketService';
 
 const GroupImplicitIdentifier = 'imp';
 
@@ -55,9 +56,6 @@ class GroupService implements EventObserver {
                 console.log(err);
                 throw new Error('Unexpected database error');
             });
-        if (!res) {
-            return;
-        }
         await Promise.all(
             res.map((g: DBGroup) => databaseForwarder.selectInsideGroupsByEntityId(g.entityId)
                 .then((entities: InsideGroup[]) => {
@@ -135,7 +133,7 @@ class GroupService implements EventObserver {
     }
 
     async getGroups(): Promise<Group[]> {
-        const res: HaStateResponse[] = await socketForwarder.forward({ type: 'get_states' });
+        const res: HaStateResponse[] = await socketService.getStates();
         return Promise.all(
             res
                 .filter((val) => val.entity_id.startsWith('group'))
@@ -198,13 +196,8 @@ class GroupService implements EventObserver {
         });
     }
 
-    private deleteGroupFromHa(groupId: string) {
-        return socketForwarder.forward({
-            type: 'call_service',
-            domain: 'group',
-            service: 'remove',
-            service_data: { object_id: groupId },
-        });
+    private deleteGroupFromHa(groupId: string): Promise<HaDumbType> {
+        return socketService.callService('group', 'remove', { object_id: groupId });
     }
 
     private async convertEntityToGroup(e: HaStateResponse): Promise<Group> {

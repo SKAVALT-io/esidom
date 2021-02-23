@@ -3,6 +3,7 @@ import { Request, Response } from 'express';
 import socketForwarder from '../forwarders/socketForwarder';
 import httpForwarder from '../forwarders/httpForwarder';
 import config from '../config/config';
+import httpService from './httpService';
 
 class AuthService {
 
@@ -21,30 +22,10 @@ class AuthService {
     }
 
     static async auth(baseUrl: string, username: string, password: string): Promise<string> {
-        let res: any = await httpForwarder.post('/auth/login_flow', {
-            client_id: `${baseUrl}/`,
-            handler: ['homeassistant', null],
-            redirect_uri: `${baseUrl}/?auth_callback=1`,
-        });
+        let res: any = await httpService.postLoginFlow(baseUrl);
         const flowId = res.flow_id;
-        res = await httpForwarder.post(
-            `/auth/login_flow/${flowId}`,
-            {
-                username,
-                password,
-                client_id: `${baseUrl}/`,
-            },
-        );
-        const resultData: string = res.result;
-        const bodyFormData: FormData = new FormData();
-        bodyFormData.append('code', resultData);
-        bodyFormData.append('client_id', `${baseUrl}/`);
-        bodyFormData.append('grant_type', 'authorization_code');
-        res = await httpForwarder.post(
-            '/auth/token',
-            bodyFormData,
-            { headers: { ...bodyFormData.getHeaders() } },
-        );
+        res = await httpService.postFlowId(flowId, username, password, baseUrl);
+        res = await httpService.postAuthToken(res.result, baseUrl);
         const accessToken: string = res.access_token;
         return accessToken;
     }

@@ -4,6 +4,7 @@ import httpForwarder from '../forwarders/httpForwarder';
 import { Automation, AutomationPreview } from '../types/automation';
 import { EventObserver } from '../types/observer';
 import socketService from './socketService';
+import httpService from './httpService';
 
 // HA needs the automation id to find an automation, but the client
 // will make its request using the entity_id of the automation
@@ -31,14 +32,15 @@ class AutomationService implements EventObserver {
                 };
                 socketForwarder.emitSocket('entity_updated', updatedPreview);
             })
-            .catch((err) => console.log(err.message));
+            .catch((err) => socketForwarder
+                .emitSocket('entity_updated', { error: err.message }));
     }
 
     async getAutomations(): Promise<AutomationPreview[]> {
         const states: HaStateResponse[] = await socketService.getStates();
         return states
             .filter((s: HaStateResponse) => s.entity_id
-                .split('.')[0] === 'automation' && s.attributes.id !== undefined) // TODO: validate that id != undefined will not skip valid automation
+                .split('.')[0] === 'automation' && s.attributes.id !== undefined)
             .map((automation: HaStateResponse) => ({
                 id: automation.entity_id,
                 name: automation.attributes.friendly_name,
@@ -52,7 +54,7 @@ class AutomationService implements EventObserver {
         if (!automation) {
             return undefined;
         }
-        return httpForwarder.get<HaAutomation>(`/api/config/automation/config/${automation?.automationId}`)
+        return httpService.getAutomationById(automation.automationId)
             .then((auto: HaAutomation) => ({
                 id: automation.id,
                 name: auto.alias,
@@ -93,7 +95,7 @@ class AutomationService implements EventObserver {
         return socketService.callService('automation', service, data);
     }
 
-    async createAutomation(automation: Automation) {
+    async createAutomation(automation: Automation): Promise<{ result?: string, message?: string}> {
         const haAut: HaAutomation = {
             id: automation.id,
             alias: automation.name,
@@ -103,9 +105,7 @@ class AutomationService implements EventObserver {
             condition: automation.condition,
             action: automation.action,
         };
-        const result: { result?: string, message?: string} = await httpForwarder
-            .post(`/api/config/automation/config/${haAut.id}`, haAut);
-        return result;
+        return httpService.postAutomation(haAut);
     }
 
     async triggerAutomation(id: string): Promise<HaDumbType> {

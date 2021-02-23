@@ -2,9 +2,7 @@ import { Request, Response } from 'express';
 import entityService from '../services/entityService';
 import App from '../app';
 import { Entity } from '../types/entity';
-import { send, sendf } from '../utils/functions';
-
-const NO_SUCH_ID = (id: string): string => `No entity with such id: ${id}`;
+import { send, sendf, NO_SUCH_ID } from '../utils/functions';
 
 @App.rest('/entity')
 class EntityController {

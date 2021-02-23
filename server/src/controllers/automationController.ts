@@ -46,7 +46,7 @@ class AutomationController {
     }
 
     @App.post('/:id')
-    async triggerAutomation(req: Request, res: Response): Promise<Response<unknown>> {
+    async triggerAutomation(req: Request, res: Response): Promise<Response<HaDumbType>> {
         const { id } = req.params;
         return automationService.triggerAutomation(id)
             .then(sendf(res, 200));
