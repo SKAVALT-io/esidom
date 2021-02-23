@@ -69,46 +69,46 @@ const esidomBlockGenerator: EsidomBlockGenerator = {
                 return xml;
             } if (!keys.includes('weekday') && keys.includes('after') && keys.includes('before')) {
                 const start = blocklyJSON.after?.split(':');
-                const hourStart = start?.[0];
+                const hoursStart = start?.[0];
                 const minutesStart = start?.[1];
-                const secondStart = start?.[2];
+                const secondsStart = start?.[2];
 
                 const end = blocklyJSON.before?.split(':');
-                const hourEnd = end?.[0];
+                const hoursEnd = end?.[0];
                 const minutesEnd = end?.[1];
-                const secondEnd = end?.[2];
+                const secondsEnd = end?.[2];
 
                 xml += `
                     <block type="time_condition_hour">
-                        <field name="Hour_start">${hourStart}</field>
+                        <field name="Hour_start">${hoursStart}</field>
                         <field name="Minute_start">${minutesStart}</field>
-                        <field name="Second_start">${secondStart}</field>
-                        <field name="Hour_end">${hourEnd}</field>
+                        <field name="Second_start">${secondsStart}</field>
+                        <field name="Hour_end">${hoursEnd}</field>
                         <field name="Minute_end">${minutesEnd}</field>
-                        <field name="Second_end">${secondEnd}</field>
+                        <field name="Second_end">${secondsEnd}</field>
                     </block>
                 `;
             } else if (keys.includes('weekday') && keys.includes('after') && keys.includes('before')) {
                 const start = blocklyJSON.after?.split(':');
-                const hourStart = start?.[0];
+                const hoursStart = start?.[0];
                 const minutesStart = start?.[1];
-                const secondStart = start?.[2];
+                const secondsStart = start?.[2];
 
                 const end = blocklyJSON.before?.split(':');
-                const hourEnd = end?.[0];
+                const hoursEnd = end?.[0];
                 const minutesEnd = end?.[1];
-                const secondEnd = end?.[2];
+                const secondsEnd = end?.[2];
 
                 const { weekday } = blocklyJSON;
 
                 xml += `
                     <block type="time_condition">
-                        <field name="Hour_start">${hourStart}</field>
+                        <field name="Hour_start">${hoursStart}</field>
                         <field name="Minute_start">${minutesStart}</field>
-                        <field name="Second_start">${secondStart}</field>
-                        <field name="Hour_end">${hourEnd}</field>
+                        <field name="Second_start">${secondsStart}</field>
+                        <field name="Hour_end">${hoursEnd}</field>
                         <field name="Minute_end">${minutesEnd}</field>
-                        <field name="Second_end">${secondEnd}</field>
+                        <field name="Second_end">${secondsEnd}</field>
                         ${weekday ? getWeekFields(weekday) : ''}
                     </block>
                 `;
@@ -120,14 +120,6 @@ const esidomBlockGenerator: EsidomBlockGenerator = {
             const service = blocklyJSON.entity_id;
             const { state } = blocklyJSON;
 
-            if (service === 'sun.sun') {
-                return `
-                <block type="sun_condition">
-                <field name="Sun">${state}</field>
-                </block>
-            `;
-            }
-
             return `
                 <block type="binary_condition">
                     <value name="Service">    
@@ -138,6 +130,54 @@ const esidomBlockGenerator: EsidomBlockGenerator = {
                 <field name="State">${state}</field>
                 </block>
             `;
+        },
+        sun(blocklyJSON: BlocklyJSON): string {
+            const offSet = blocklyJSON.after_offset?.split(':');
+            const offSetHour = offSet?.[0];
+            const hours = offSetHour?.substring(1);
+
+            const minutes = offSet?.[1];
+            const seconds = offSet?.[2];
+
+            const beforeAfter = offSetHour?.substring(0, 1);
+            const sun = blocklyJSON.after;
+
+            return `
+                <block type="sun_condition">
+                <field name="Hour">${hours}</field>
+                <field name="Minute">${minutes}</field>
+                <field name="Second">${seconds}</field>
+                <field name="Before_after">${beforeAfter}</field>
+                <field name="Sun">${sun}</field>
+                </block>
+            `;
+        },
+        or(blocklyJSON: BlocklyJSON): string {
+            const condition = blocklyJSON.conditions?.[0];
+
+            if (condition?.condition === 'sun') {
+                const offSet = condition.after_offset?.split(':');
+                const offSetHour = offSet?.[0];
+                const hours = offSetHour?.substring(1);
+
+                const minutes = offSet?.[1];
+                const seconds = offSet?.[2];
+
+                const beforeAfter = offSetHour?.substring(0, 1);
+                const sun = condition.after;
+
+                return `
+                    <block type="sun_condition">
+                    <field name="Hour">${hours}</field>
+                    <field name="Minute">${minutes}</field>
+                    <field name="Second">${seconds}</field>
+                    <field name="Before_after">${beforeAfter}</field>
+                    <field name="Sun">${sun}</field>
+                    </block>
+                `;
+            }
+
+            return '';
         },
     },
 };

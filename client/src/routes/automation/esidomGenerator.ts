@@ -50,6 +50,8 @@ export interface BlocklyJSON {
     state?: string;
     rgb_color?: string;
     alias?: string;
+    after_offset?: string;
+    conditions?: BlocklyJSON[];
 }
 
 export type EntityTypeEnum = 'binary_sensor' | 'person' | 'weather' | 'zwave' | 'sensor' | 'light' | 'automation' | 'switch' | 'media_player';
@@ -217,13 +219,35 @@ export type BlocksGenerator = {
     };
 
     block.sun_condition = (blk: Block) => {
-        const dropdown_sun_sun = blk.getFieldValue('Sun');
+        const number_hour = blk.getFieldValue('Hour');
+        const number_minute = blk.getFieldValue('Minute');
+        const number_second = blk.getFieldValue('Second');
+
+        const dropdown_before_after = blk.getFieldValue('Before_after');
+
+        const dropdown_sun = blk.getFieldValue('Sun');
 
         const json: BlocklyJSON = {};
-        json.condition = 'state';
-        json.entity_id = 'sun.sun';
-        json.state = dropdown_sun_sun;
 
+        if (dropdown_sun === 'sunrise') {
+            json.condition = 'sun';
+            json.after = dropdown_sun;
+            json.before = 'sunset';
+            json.after_offset = `${dropdown_before_after}${number_hour}:${number_minute}:${number_second}`;
+        } else if (dropdown_sun === 'sunset') {
+            json.condition = 'or';
+            json.conditions = [
+                {
+                    condition: 'sun',
+                    after: dropdown_sun,
+                    after_offset: `${dropdown_before_after}${number_hour}:${number_minute}:${number_second}`,
+                },
+                {
+                    condition: 'sun',
+                    before: 'sunrise',
+                },
+            ];
+        }
         return JSON.stringify(json);
     };
 

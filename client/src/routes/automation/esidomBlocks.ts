@@ -158,6 +158,35 @@ export type BlocksDefinitions = {
         },
     };
 
+    // block.sun_trigger = {
+    //     init() {
+    //         this.jsonInit?.(
+    //             type: 'sun_trigger',
+    //             message0: 'Quand le soleil se %1',
+    //             args0: [
+    //                 {
+    //                     type: 'field_dropdown',
+    //                     name: 'Sun',
+    //                     options: [
+    //                         [
+    //                             'levé',
+    //                             'above_horizon',
+    //                         ],
+    //                         [
+    //                             'couché',
+    //                             'below_horizon',
+    //                         ],
+    //                     ],
+    //                 },
+    //             ],
+    //             previousStatement: 'Condition',
+    //             nextStatement: 'Condition',
+    //             colour: COLORS.HUE_YELLOW,
+    //             tooltip: '',
+    //             helpUrl: '',
+    //         );
+    //     },
+    // };
     /**
      * Catégorie Condition
      */
@@ -288,19 +317,54 @@ export type BlocksDefinitions = {
             this.jsonInit?.(
                 {
                     type: 'sun_condition',
-                    message0: 'Si le soleil est %1',
+                    message0: '%1 h %2 m %3 s %4 le %5 du soleil',
                     args0: [
+                        {
+                            type: 'field_number',
+                            name: 'Hour',
+                            value: 0,
+                            min: 0,
+                            max: 23,
+                        },
+                        {
+                            type: 'field_number',
+                            name: 'Minute',
+                            value: 0,
+                            min: 0,
+                            max: 59,
+                        },
+                        {
+                            type: 'field_number',
+                            name: 'Second',
+                            value: 0,
+                            min: 0,
+                            max: 59,
+                        },
+                        {
+                            type: 'field_dropdown',
+                            name: 'Before_after',
+                            options: [
+                                [
+                                    'avant',
+                                    '-',
+                                ],
+                                [
+                                    'après',
+                                    '+',
+                                ],
+                            ],
+                        },
                         {
                             type: 'field_dropdown',
                             name: 'Sun',
                             options: [
                                 [
                                     'levé',
-                                    'above_horizon',
+                                    'sunrise',
                                 ],
                                 [
                                     'couché',
-                                    'below_horizon',
+                                    'sunset',
                                 ],
                             ],
                         },
