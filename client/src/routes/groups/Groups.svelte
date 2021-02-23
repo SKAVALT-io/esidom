@@ -12,9 +12,10 @@
 
     let isOpen = false;
     let currentGroup: Group = {
-        groupId: "init",
-        name: "Name of the group",
+        groupId: "",
+        name: "",
         entities: [],
+        implicit: false,
     };
     let flipSwitch = false;
 </script>
@@ -71,7 +72,7 @@
     <RoundedButton
         on:click={() => {
             isOpen = true;
-            currentGroup = { entities: [] };
+            currentGroup = { entities: [], implicit: false };
         }}
         iconPath="icons/button/plus.svg"
     />
