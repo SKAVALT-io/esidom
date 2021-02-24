@@ -95,7 +95,7 @@
     class="pt-2 flex justify-between relative right-0 top-0 mt-2 mr-2 ml-2 mx-auto text-white"
 >
     <h1 class="text-2xl">{tr('automations.myAutomations')}</h1>
-    <div class="fixed bottom-0 right-0 h-16 w-16">
+    <div class="fixed bottom-0 z-10 right-0 h-16 w-16">
         <RoundedButton
             on:click={() => {
                 push('/blockly');
