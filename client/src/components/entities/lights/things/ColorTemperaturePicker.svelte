@@ -15,7 +15,7 @@
     });
 </script>
 
-Color temperature:
+Color temperature :
 <input
     type="range"
     min="153"
