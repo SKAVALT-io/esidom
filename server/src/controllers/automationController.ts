@@ -1,62 +1,93 @@
 import { Request, Response } from 'express';
-import automationService from '../services/automationService';
 import App from '../app';
-import { Automation, AutomationPreview } from '../types/automation';
-import { NO_SUCH_ID, send, sendf } from '../utils/functions';
-import { HaDumbType } from '../types/haTypes';
+import { automationService } from '../services';
+import { Automation, AutomationPreview, HaDumbType } from '../types';
+import {
+    send, sendf, sendNoSuchId, Success, SuccessOrError,
+} from '../utils';
 
 @App.rest('/automation')
 class AutomationController {
 
+    /**
+     * Get all automations
+     * @returns all automations
+     */
     @App.get('')
-    async getAutomations(_req: Request, res: Response): Promise<Response<AutomationPreview[]>> {
-        return automationService.getAutomations()
+    async getAutomations(_req: Request, res: Response): Success<AutomationPreview[]> {
+        return automationService
+            .getAutomations()
             .then(sendf(res, 200));
     }
 
+    /**
+     * Get an automation by its id
+     * @pathParam `id` Id of the automation
+     * @returns the automation with the correct id, or an error
+     */
     @App.get('/:id')
-    async getAutomationById(req: Request, res: Response)
-    : Promise<Response<Automation> | Response<{ error: string }>> {
+    async getAutomationById(req: Request, res: Response): SuccessOrError<Automation> {
         const { id } = req.params;
-        return automationService.getAutomationById(id)
-            .then((automation: Automation | undefined) => {
+        return automationService
+            .getAutomationById(id)
+            .then((automation) => {
                 if (!automation) {
-                    return send(res, 404, { error: NO_SUCH_ID(id) });
+                    return sendNoSuchId(res, id);
                 }
                 return send(res, 200, automation);
             });
     }
 
+    /**
+     * Toggle an automation
+     */
     @App.patch('/:id')
-    async toggleAutomationById(req: Request, res: Response): Promise<Response<HaDumbType>> {
+    async toggleAutomationById(req: Request, res: Response): Success<HaDumbType> {
         const { id } = req.params;
         const { state } = req.body;
-        return automationService.toggleAutomationById(id, state)
+        return automationService
+            .toggleAutomationById(id, state)
             .then(sendf(res, 200));
     }
 
+    /**
+     * Create an automation
+     * @bodyParam `automation` the automation to create
+     * @returns ???
+     */
     @App.post('')
-    async createAutomation(req: Request, res: Response): Promise<Response<{
+    async createAutomation(req: Request, res: Response): Success<{
         result?: string | undefined;
         message?: string | undefined;
-    }>> {
+    }> {
         const automation: Automation = req.body;
-        return automationService.createAutomation(automation)
+        return automationService
+            .createAutomation(automation)
             .then(sendf(res, 200));
     }
 
+    /**
+     * Trigger an automation
+     * @pathParam `id` id of the automation to trigger
+     */
     @App.post('/:id')
-    async triggerAutomation(req: Request, res: Response): Promise<Response<HaDumbType>> {
+    async triggerAutomation(req: Request, res: Response): Success<HaDumbType> {
         const { id } = req.params;
-        return automationService.triggerAutomation(id)
+        return automationService
+            .triggerAutomation(id)
             .then(sendf(res, 200));
     }
 
+    /**
+     * Delete an automation
+     * @pathParam `id` id of the automation to trigger
+     */
     @App.delete('/:id')
-    async deleteAutomation(req: Request, res: Response): Promise<Response<any>> {
+    async deleteAutomation(req: Request, res: Response): SuccessOrError<unknown> {
         const { id } = req.params;
-        return automationService.deleteAutomation(id)
-            .then(() => send(res, 200))
+        return automationService
+            .deleteAutomation(id)
+            .then(sendf(res, 200))
             .catch((err) => send(res, 400, { error: err.message }));
     }
 

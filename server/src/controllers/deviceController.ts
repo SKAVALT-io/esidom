@@ -1,34 +1,51 @@
 import { Request, Response } from 'express';
-import deviceService from '../services/deviceService';
 import App from '../app';
-import { Device } from '../types/device';
-import { NO_SUCH_ID, send, sendf } from '../utils/functions';
+import { deviceService } from '../services';
+import { Device } from '../types';
+import {
+    send, sendf, sendNoSuchId, Success, SuccessMessage, SuccessOrError,
+} from '../utils';
 
 @App.rest('/device')
 class DeviceController {
 
+    /**
+     * Get all the devices
+     * @returns all the devices
+     */
     @App.get('')
-    async getDevices(_req: Request, res: Response): Promise<Response<Device[]>> {
-        return deviceService.getDevices()
+    async getDevices(_req: Request, res: Response): Success<Device[]> {
+        return deviceService
+            .getDevices()
             .then(sendf(res, 200));
     }
 
+    /**
+     * Get a device by its id
+     * @pathParam `id` Id of the device
+     * @returns the device with the correct id, or an error
+     */
     @App.get('/:deviceId')
-    async getDevice(req: Request, res: Response)
-    : Promise<Response<Device> | Response<{ error: string }>> {
+    async getDevice(req: Request, res: Response): SuccessOrError<Device> {
         const { deviceId } = req.params;
-        return deviceService.getDeviceById(deviceId)
-            .then((device: Device | undefined) => {
+        return deviceService
+            .getDeviceById(deviceId)
+            .then((device) => {
                 if (!device) {
-                    return send(res, 404, { error: NO_SUCH_ID(deviceId) });
+                    return sendNoSuchId(res, deviceId);
                 }
                 return send(res, 200, device);
             });
     }
 
+    /**
+     * Pair a new device
+     * @returns a message
+     */
     @App.post('')
-    async postDevice(_req: Request, res: Response): Promise<Response<{ message: string }>> {
-        return deviceService.pairdevice()
+    async postDevice(_req: Request, res: Response): SuccessMessage {
+        return deviceService
+            .pairDevice()
             .then(() => send(res, 200, { message: 'pairing mode enabled' }));
     }
 

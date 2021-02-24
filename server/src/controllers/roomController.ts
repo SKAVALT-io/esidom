@@ -1,66 +1,95 @@
 import { Request, Response } from 'express';
-import roomService from '../services/roomService';
 import App from '../app';
-import { Room } from '../types/room';
+import { roomService } from '../services';
+import { Room } from '../types';
 import {
+    NO_SUCH_ID,
     send,
     sendf,
-    MISSING_PARAM,
-    NO_SUCH_ID,
-} from '../utils/functions';
+    sendMessage,
+    sendMissingParam,
+    sendNoSuchId,
+    Success,
+    SuccessMessage,
+    SuccessMessageOrError,
+    SuccessOrError,
+} from '../utils';
 
 @App.rest('/room')
 class RoomController {
 
+    /**
+     * Get all the rooms
+     * @returns All the rooms
+     */
     @App.get('')
-    async getRooms(_req: Request, res: Response)
-    : Promise<Response<Room[]>> {
-        return roomService.getRooms()
+    async getRooms(_req: Request, res: Response): Success<Room[]> {
+        return roomService
+            .getRooms()
             .then(sendf(res, 200));
     }
 
+    /**
+     * Create a new room
+     * @bodyParam name The name of the new room to create
+     * @returns The newly created room, or an error
+     */
     @App.post('')
-    async createRoom(req: Request, res: Response)
-    : Promise<Response<Room> | Response<{error:string}>> {
+    async createRoom(req: Request, res: Response): SuccessOrError<Room> {
         const { name } = req.body;
         if (!name) {
-            return send(res, 400, { error: MISSING_PARAM(('name')) });
+            return sendMissingParam(res, 'name');
         }
-        return roomService.createRoom(name)
-            .then((room) => send(res, 200, room));
+        return roomService
+            .createRoom(name)
+            .then(sendf<Room>(res, 200));
     }
 
+    /**
+     * Get a room by its ID
+     * @pathParam areaId The id of the room
+     * @returns The room with the correct id, or an error
+     */
     @App.get('/:areaId')
-    async getRoom(req: Request, res: Response)
-    : Promise<Response<Room> | Response<{error:string}>> {
+    async getRoom(req: Request, res: Response): SuccessOrError<Room> {
         const { areaId } = req.params;
 
         return roomService
             .getRoomById(areaId)
             .then((room) => {
-                if (room) {
-                    return send(res, 200, room);
+                if (!room) {
+                    console.log(NO_SUCH_ID(areaId));
+                    return sendNoSuchId(res, areaId);
                 }
-                console.log(NO_SUCH_ID(areaId));
-                return send(res, 404, { error: NO_SUCH_ID(areaId) });
+                return send(res, 200, room);
             });
     }
 
+    /**
+     * Update a room
+     * @pathParam roomId The id of the room to update
+     * @returns A success message
+     */
     @App.put('/:roomId')
-    async updateRoom(_req: Request, res: Response): Promise<Response<{message: string}>> {
+    async updateRoom(_req: Request, res: Response): SuccessMessage {
         return send(res, 200, { message: 'TODO' });
     }
 
+    /**
+     * Delete a room
+     * @pathParam roomId The id of the room to delete
+     * @returns A success message or an error message
+     */
     @App.delete('/:roomId')
-    async deleteRoom(req: Request, res: Response)
-    : Promise<Response<{message: string}> | Response<{error:string}>> {
+    async deleteRoom(req: Request, res: Response): SuccessMessageOrError {
         const { roomId } = req.params;
         if (!roomId) {
-            return send(res, 400, { error: MISSING_PARAM('roomId') });
+            return sendMissingParam(res, 'roomId');
         }
 
-        return roomService.deleteRoom(roomId)
-            .then(() => send(res, 200, { message: 'Room successfully deleted' }))
+        return roomService
+            .deleteRoom(roomId)
+            .then(() => sendMessage(res, 200, 'Room successfully deleted'))
             .catch((err: any) => send(res, 400, {
                 error: `Error while deleting room ${roomId}: ${err.message}`,
             }));

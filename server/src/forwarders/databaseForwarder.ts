@@ -1,6 +1,6 @@
 import sqlite3 from 'sqlite3';
 import { Database } from 'sqlite';
-import { DBGroup, InsideGroup } from '../types/dbTypes';
+import { DBGroup, InsideGroup } from '../types';
 
 const GroupTableName = 'HAGroup';
 const InsideGroupTableName = 'InsideGroup';

@@ -1,29 +1,43 @@
 import { Request, Response } from 'express';
-import groupService from '../services/groupService';
 import App from '../app';
-import { Group } from '../types/group';
-import { send, sendf, MISSING_PARAM } from '../utils/functions';
+import { groupService } from '../services';
+import { Group } from '../types';
+import {
+    sendf, Success, SuccessOrError, sendMissingParam,
+} from '../utils';
 
 @App.rest('/group')
 class GroupController {
 
+    /**
+     * Get all the groups
+     * @returns All the groups
+     */
     @App.get('')
-    async getGroups(_req: Request, res: Response): Promise<Response<Group[]>> {
-        return groupService.getGroups()
+    async getGroups(_req: Request, res: Response): Success<Group[]> {
+        return groupService
+            .getGroups()
             .then(sendf(res, 200));
     }
 
+    /**
+     * Create a group
+     * @bodyParam name Name of the group
+     * @bodyParam entities Entities attached to this group
+     * @returns The newly created group, or an error
+     */
     @App.post('')
-    async createGroup(req: Request, res: Response)
-    : Promise<Response<{error: string}> | Response<Group>> {
+    async createGroup(req: Request, res: Response): SuccessOrError<Group> {
         const { name, entities } = req.body;
         if (!name) {
-            return send(res, 404, { error: MISSING_PARAM('name') });
+            return sendMissingParam(res, 'name');
         }
         if (!entities || entities.length === 0) {
-            return send(res, 404, { error: MISSING_PARAM('entities') });
+            return sendMissingParam(res, 'entities');
         }
-        return groupService.createGroup(name, entities)
+
+        return groupService
+            .createGroup(name, entities)
             .then(sendf<Group>(res, 200));
     }
 

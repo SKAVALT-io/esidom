@@ -1,15 +1,13 @@
-import { EventObserver } from '../types/observer';
-import socketForwarder from '../forwarders/socketForwarder';
-import { Device } from '../types/device';
+import { socketForwarder } from '../forwarders';
+import { entityService, socketService, httpService } from '.';
 import {
+    Device,
+    EventObserver,
     HaDevice,
     HaEntity,
     HaSearchDeviceResponse,
     HaStateResponse,
-} from '../types/haTypes';
-import entityService from './entityService';
-import socketService from './socketService';
-import httpService from './httpService';
+} from '../types';
 
 class DeviceService implements EventObserver {
 
@@ -17,6 +15,7 @@ class DeviceService implements EventObserver {
         socketForwarder.registerObserver(this);
     }
 
+    /* inherited from EventObserver */
     onDeviceRegistryUpdated(deviceId: string): void {
         socketService.searchDeviceById(deviceId)
             .then((device: HaSearchDeviceResponse) => {
@@ -43,6 +42,10 @@ class DeviceService implements EventObserver {
             .catch((err) => socketForwarder.emitSocket('device_created', { error: err.message }));
     }
 
+    /**
+     * Get all the devices
+     * @returns all the devices
+     */
     async getDevices(): Promise<Device[]> {
         const devices: HaDevice[] = await socketService.listDeviceRegistry();
         const entities: HaEntity[] = await socketService.listEntityRegistry();
@@ -63,27 +66,24 @@ class DeviceService implements EventObserver {
         });
     }
 
+    /**
+     * Get a device by its id
+     * @param id Id of the device
+     * @returns the device with the correct id, or undefined
+     */
     async getDeviceById(id: string): Promise<Device | undefined> {
         const devices: Device[] = await this.getDevices();
         return devices.find((d: Device) => d.id === id);
     }
 
-    async pairdevice() {
-        await httpService.enableZWavePairing()
-            .catch((err) => {
-                console.log(err.message);
-                throw err;
-            });
-        await socketService.callService(
-            'mqtt',
-            'publish',
-            {
-                topic: 'zigbee2mqtt/bridge/request/permit_join',
-                payload_template: 'true',
-            },
-        ).catch((err) => {
-            console.log(err.message);
-            throw err;
+    /**
+     * Pair a new device
+     */
+    async pairDevice(): Promise<void> {
+        await httpService.enableZWavePairing();
+        await socketService.callService('mqtt', 'publish', {
+            topic: 'zigbee2mqtt/bridge/request/permit_join',
+            payload_template: 'true',
         });
     }
 

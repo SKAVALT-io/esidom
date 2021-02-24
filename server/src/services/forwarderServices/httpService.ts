@@ -1,6 +1,6 @@
 import FormData from 'form-data';
-import { HaAutomation, HaGroupSet } from '../types/haTypes';
-import httpForwarder from '../forwarders/httpForwarder';
+import { HaAutomation, HaGroupSet } from '../../types';
+import { httpForwarder } from '../../forwarders';
 
 class HttpService {
 
@@ -14,7 +14,7 @@ class HttpService {
             .post(`/api/config/automation/config/${automation.id}`, automation);
     }
 
-    async postLoginFlow(baseUrl: string): Promise<any> {
+    async postLoginFlow(baseUrl: string): Promise<unknown> {
         return httpForwarder.post('/auth/login_flow', {
             client_id: `${baseUrl}/`,
             handler: ['homeassistant', null],
@@ -23,7 +23,7 @@ class HttpService {
     }
 
     async postFlowId(flowId: string, username: string, password: string, baseUrl: string)
-    : Promise<any> {
+    : Promise<unknown> {
         return httpForwarder.post(
             `/auth/login_flow/${flowId}`,
             {
@@ -34,7 +34,7 @@ class HttpService {
         );
     }
 
-    async postAuthToken(code: string, baseUrl: string): Promise<any> {
+    async postAuthToken(code: string, baseUrl: string): Promise<unknown> {
         const bodyFormData: FormData = new FormData();
         bodyFormData.append('code', code);
         bodyFormData.append('client_id', `${baseUrl}/`);
@@ -46,23 +46,25 @@ class HttpService {
         );
     }
 
-    async enableZWavePairing(): Promise<any> {
-        return httpForwarder.post<any>('/api/services/zwave/add_node', null);
+    async enableZWavePairing(): Promise<unknown> {
+        return httpForwarder.post('/api/services/zwave/add_node', null);
     }
 
-    async postGroup(group: HaGroupSet): Promise<any> {
-        return httpForwarder
-            .post('/api/services/group/set', group);
+    async postGroup(group: HaGroupSet): Promise<unknown> {
+        return httpForwarder.post('/api/services/group/set', group);
     }
 
-    async getApiStatus(): Promise<any> {
-        return httpForwarder
-            .get('/api', { timeout: 10000 });
+    async getApiStatus(): Promise<unknown> {
+        return httpForwarder.get('/api', { timeout: 10000 });
     }
 
     async deleteAutomation(id: string): Promise<any> {
         return httpForwarder
             .delete(`/api/config/automation/config/${id}`);
+    }
+
+    setToken(token: string): void {
+        httpForwarder.setToken(token);
     }
 
 }

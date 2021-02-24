@@ -1,12 +1,14 @@
-import { Device } from '../types/device';
-import socketService from './socketService';
-import { Room } from '../types/room';
-import { HaRoom, HaRoomDetail } from '../types/haTypes';
-import deviceService from './deviceService';
-import { NO_SUCH_ID } from '../utils/functions';
+import { socketService, deviceService } from '.';
+import {
+    Device, Room, HaRoom, HaRoomDetail,
+} from '../types';
 
 class RoomService {
 
+    /**
+     * Get all the rooms
+     * @returns All the rooms
+     */
     async getRooms(): Promise<Room[]> {
         const haRooms: HaRoom[] = await socketService.getRooms();
         return Promise.all(haRooms.map((r: HaRoom) => {
@@ -33,12 +35,14 @@ class RoomService {
 
     private async injectAutomationsDevicesIntoRoomObject(room: Room): Promise<Room> {
         const haRoom: HaRoomDetail = await socketService.searchRoomById(room.roomId);
-        if (haRoom.device !== undefined) {
-            const devices = (await Promise.all(
+        if (haRoom.device) {
+            const devices: Device[] = await Promise.all(
                 haRoom.device.map(async (id: string) => deviceService.getDeviceById(id)),
-            ));
-            room.devices.push(...devices.filter((x) => x !== undefined) as Device[]);
+            ).then((x) => x.filter((y): y is Device => y !== undefined));
+
+            room.devices.push(...devices);
         }
+
         // TODO inject automation
         return room;
     }

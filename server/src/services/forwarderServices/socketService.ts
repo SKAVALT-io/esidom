@@ -1,5 +1,4 @@
-/* eslint-disable camelcase */
-import socketForwarder from '../forwarders/socketForwarder';
+import { socketForwarder } from '../../forwarders';
 import {
     HaDevice,
     HaDumbEnum,
@@ -10,7 +9,7 @@ import {
     HaSearchDeviceResponse,
     HaService,
     HaStateResponse,
-} from '../types/haTypes';
+} from '../../types';
 
 class SocketService {
 
@@ -62,6 +61,7 @@ class SocketService {
             .forward<HaEntity[]>({ type: 'config/entity_registry/list' });
     }
 
+    // TODO: remove this any
     async updateEntity(id: string, name: string, enable: boolean): Promise<any> {
         return socketForwarder.forward({
             type: 'config/entity_registry/update',
@@ -71,7 +71,7 @@ class SocketService {
         });
     }
 
-    async addRoomToDevice(deviceId: string, areaId: string): Promise<any> {
+    async addRoomToDevice(deviceId: string, areaId: string): Promise<unknown> {
         return socketForwarder.forward({
             type: 'config/device_registry/update',
             device_id: deviceId,

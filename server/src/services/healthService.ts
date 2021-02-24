@@ -1,8 +1,8 @@
-import httpService from './httpService';
+import { httpService } from '.';
 
 class HealthService {
 
-    async getHealth(): Promise<any> {
+    async getHealth(): Promise<unknown> {
         return httpService.getApiStatus();
     }
 

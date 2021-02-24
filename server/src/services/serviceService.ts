@@ -1,7 +1,5 @@
-import { HaService } from '../types/haTypes';
-import { Service } from '../types/service';
-import entityService from './entityService';
-import socketService from './socketService';
+import { HaService, Service } from '../types';
+import { entityService, socketService } from '.';
 
 class ServiceService {
 

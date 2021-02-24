@@ -1,15 +1,16 @@
 /* eslint-disable camelcase */
 import socketIo from 'socket.io';
 import WebSocket from 'ws';
+import App from '../app';
 import {
+    EventObserver,
+    Event,
     HaEntityStateChanged,
     HaSocketResult,
     HaSocketError,
     HaEntityUpdated,
-} from '../types/haTypes';
-import App from '../app';
+} from '../types';
 import config from '../config/config';
-import { EventObserver, Event } from '../types/observer';
 
 type EventType = 'event_type' | 'type';
 
