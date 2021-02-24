@@ -1,50 +1,47 @@
 {
-    "home": {
-        "welcome": "Hello World",
-        "coucou": "Yo people :D"
+  "home": {
+    "welcome": "Hello World",
+    "coucou": "Yo people :D"
+  },
+  "menu": {
+    "devices": "devices",
+    "home": "home",
+    "automations": "automations",
+    "blockly": "blockly",
+    "pairing": "pairing"
+  },
+  "automations": {
+    "myAutomations": "My Automations",
+    "search": "Search...",
+    "sortBy": "Sort by"
+  },
+  "pairing": {
+    "instructions": {
+      "welcome": "Welcome to ESIDOM pairing mode.",
+      "advice": "Follow the following preparatory steps to pair your connected devices within your network:",
+      "advice1": "Prepare the device that you want to add within your network.",
+      "advice2": "Please read the instructions for your device to know the manipulation to be carried out during the pairing procedure to add your object.",
+      "ready": "When ready, click on the button",
+      "validate": "validate",
+      "start": "to start the pairing procedure."
     },
-    "menu": {
-        "devices": "devices",
-        "home": "home",
-        "automations": "automations",
-        "blockly": "blockly",
-        "pairing": "pairing"
+    "start": {
+      "information": "Please pair your object"
     },
-    "automations": {
-        "myAutomations": "My Automations",
-        "search": "Search...",
-        "sortBy": "Sort by"
+    "success": {
+      "deviceFound": "🎉 Congratulations! \nWe found the following equipment: {0}",
+      "deviceName": "An entity is something that it can be possible to interact with.\n\nThe names of the entities generated are not very meaningful, we advise you to rename them to find your way around better:",
+      "entitiesAttached": "This object has {0} associated entities, each representing a possibility of interaction with\n\nthe equipment (action on the object, reading a value, etc.)",
+      "instructions": "We advise you to rename them to help you!"
     },
-
-    "pairing": {
-        "instructions": {
-            "welcome": "Welcome to ESIDOM pairing mode.",
-            "advice" : "Follow the following preparatory steps to pair your connected devices within your network:",
-            "advice1": "Prepare the device that you want to add within your network.",
-            "advice2": "Please read the instructions for your device to know the manipulation to be carried out during the pairing procedure to add your object.",
-            "ready": "When ready, click on the button",
-            "validate":"validate",
-            "start": "to start the pairing procedure."
-        },
-        "start": {
-            "information":"Please pair your object"
-        },
-  
-        "success": {
-            "deviceFound": "Device(s) found 🎉",
-            "deviceName": "The names generated are not very meaningful, we advise you to rename your equipment (s):",
-            "warning": "(If you leave a field empty the default name will be kept)"
-        },
-  
-        "failure": {
-          "deviceNotFound": "We did not find your device 😟",
-          "followInstructions": "Make sure you have followed the steps for pairing your device.",
-          "retryPairingProcedure": "To restart the pairing procedure, click on the button",
-          "retry": "Retry"
-        },
-  
-        "finish":{
-            "congratulation": "Congratulations, the following equipment has been added to your network."
-        }
+    "failure": {
+      "deviceNotFound": "We did not find your device 😟",
+      "followInstructions": "Make sure you have followed the steps for pairing your device.",
+      "retryPairingProcedure": "To restart the pairing procedure, click on the button",
+      "retry": "Retry"
+    },
+    "finish": {
+      "congratulation": "Congratulations, the following equipment has been added to your network."
     }
+  }
 }

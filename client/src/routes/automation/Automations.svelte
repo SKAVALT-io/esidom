@@ -4,7 +4,7 @@
     import { tr } from '../../utils/i18nHelper';
 
     import Automation from '../../components/automations/Automation.svelte';
-    import SearchBar from '../../components/others/SearchBar.svelte';
+    import SearchBar from '../../components/UI/bar/SearchBar.svelte';
     import AutomationService from '../../services/automationService';
     import DropdownButton from '../../components/UI/buttons/DropdownButton.svelte';
     import RoundedButton from '../../components/UI/buttons/RoundedButton.svelte';

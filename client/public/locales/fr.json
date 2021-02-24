@@ -27,37 +27,35 @@
         "state": "Actives"
       }
     }
-},
+  },
   "pairing": {
-      "instructions": {
-          "welcome": "Bienvenue, dans le mode d'appairage de ESIDOM.",
-          "advice" : "Suivez les étapes préparatoires suivantes pour appairer vos appareils connectés au sein de votre réseau :",
-          "advice1": "Préparez l'appareil que vous souhaitez ajouter au sein de votre réseau.",
-          "advice2": "Veuillez lire la notice de votre appareil pour connaitre la manipulation à réaliser durant la procédure d'appairage pour ajouter votre objet.",
-          "ready": "Une fois prêt, cliquez sur le bouton",
-          "validate":"valider",
-          "start": "pour lancer la procédure d'appairage."
-      },
-      "start": {
-          "information":"Veuillez appairer votre objet"
-      },
-
-      "success": {
-          "deviceFound": "equipement(s) trouvé(s) 🎉",
-          "deviceName": "Les noms générés ne sont pas très parlant, nous vous conseillons de renommer votre(vos) équipement(s) :",
-          "warning": "(Si vous laissez un champ vide le nom par defaut sera conservé)"
-      },
-
-      "failure": {
-        "deviceNotFound": "Nous n'avons pas trouvé votre équipement 😟",
-        "followInstructions": "Assurez-vous d'avoir bien suivi les étapes d'appairage de votre équipement.",
-        "retryPairingProcedure": "Pour relancer la procédure d'appairage, cliquez sur le bouton",
-        "retry": "Réassayer"
-      },
-
-      "finish":{
-          "congratulation": "Félicitation, les équipements suivants ont bien été rajoutés au sein de votre réseau."
-      }
+    "instructions": {
+      "welcome": "Bienvenue, dans le mode d'appairage de ESIDOM.",
+      "advice": "Suivez les étapes préparatoires suivantes pour appairer vos appareils connectés au sein de votre réseau :",
+      "advice1": "Préparez l'appareil que vous souhaitez ajouter au sein de votre réseau.",
+      "advice2": "Veuillez lire la notice de votre appareil pour connaitre la manipulation à réaliser durant la procédure d'appairage pour ajouter votre objet.",
+      "ready": "Une fois prêt, cliquez sur le bouton",
+      "validate": "valider",
+      "start": "pour lancer la procédure d'appairage."
+    },
+    "start": {
+      "information": "Veuillez appairer votre objet"
+    },
+    "success": {
+      "deviceFound": "🎉 Félicitations ! Nous  avons trouvé l'équipement suivant : {0}",
+      "entitiesAttached": "Cet objet possède {0} entités associées, représentant chacune une possibilité d'interaction avec \nl'équipement (action sur l'objet, lecture d'une valeur, etc)",
+      "deviceName": "Une entité est quelque chose avec lequel où il peut être possible d'intéragir.\nLes noms des entités générés ne sont pas très parlant, nous vous conseillons de les renommer pour mieux vous y retrouver:",
+      "instructions": "Nous vous conseillons de les renommer pour vous aider !"
+    },
+    "failure": {
+      "deviceNotFound": "Nous n'avons pas trouvé votre équipement 😟",
+      "followInstructions": "Assurez-vous d'avoir bien suivi les étapes d'appairage de votre équipement.",
+      "retryPairingProcedure": "Pour relancer la procédure d'appairage, cliquez sur le bouton",
+      "retry": "Réassayer"
+    },
+    "finish": {
+      "congratulation": "Félicitation, les équipements suivants ont bien été rajoutés au sein de votre réseau."
+    }
   },
   "blockly": {
     "loading": "Chargement de Blockly...",
