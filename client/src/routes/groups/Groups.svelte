@@ -73,7 +73,10 @@
 
 <Modal bind:isOpen>
     <div slot="content">
-        <GroupDetail bind:currentGroup />
+        <GroupDetail
+            bind:currentGroup
+            on:update={async () => (groups = await GroupService.getGroup())}
+        />
     </div>
 </Modal>
 <div class="fixed bottom-0 right-0 h-16 w-16">

@@ -41,6 +41,22 @@ class GroupController {
             .then(sendf<Group>(res, 200));
     }
 
+    @App.put('/:groupId')
+    async updateGroup(req: Request, res: Response): Promise<void> {
+        const group: Group = req.body;
+        if (!group) {
+            res.status(400).send({ message: 'The group is missing' });
+            return;
+        }
+        console.log(group);
+        try {
+            await groupService.updateGroup(group);
+            res.status(200).send({ message: 'OK' });
+        } catch (err: any) {
+            res.status(400).send({ message: err.message ? err.message : err });
+        }
+    }
+
     @App.get('/:groupId')
     async getGroup(req: Request, res: Response): Promise<void> {
         try {

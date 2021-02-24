@@ -1,6 +1,5 @@
 <script lang="ts">
-    import { push } from "svelte-spa-router";
-    import { onDestroy, onMount } from "svelte";
+    import { createEventDispatcher, onMount } from "svelte";
 
     import RoundedButton from "../UI/buttons/RoundedButton.svelte";
     import ToggleButton from "../UI/buttons/ToggleButton.svelte";
@@ -15,6 +14,7 @@
     import GroupService from "../../services/groupService";
 
     export let currentGroup: Group;
+    const dispatch = createEventDispatcher();
 </script>
 
 <div>
@@ -61,14 +61,13 @@
                                         return e.id === entity.id;
                                     })}
                                     on:click={(val) => {
+                                        console.log(val.target.checked);
                                         if (val.target.checked) {
                                             currentGroup.entities.push(entity);
                                         } else {
-                                            const index = currentGroup.entities.indexOf(entity);
-                                            if (index > -1) {
-                                                currentGroup.entities = currentGroup.entities.splice(index, 1);
-                                            }
+                                            currentGroup.entities = currentGroup.entities.filter((e) => e.id !== entity.id);
                                         }
+                                        console.log(currentGroup.entities);
                                     }}
                                 />
                                 <span
@@ -82,7 +81,11 @@
         </div>
         <div class="flex flex-col mb-4">
             <SaveButton
-                on:click={() => GroupService.createGroup(currentGroup)}
+                on:click={() => {
+                    console.log(currentGroup.entities);
+                    currentGroup.groupId ? GroupService.updateGroup(currentGroup) : GroupService.createGroup(currentGroup);
+                    dispatch('update');
+                }}
             />
         </div>
     </form>

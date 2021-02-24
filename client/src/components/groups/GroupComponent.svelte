@@ -15,7 +15,7 @@
     let checked = group.state === "on";
 
     function handleToggle() {
-        checked = !checked;
+        // checked = !checked;
     }
     function groupUpdatedHandler(data: any) {
         checked = data?.state === "on";

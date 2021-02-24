@@ -123,7 +123,7 @@ class GroupService implements EventObserver {
         await this.checkDataGroupToCreate(entities, entitiesFull);
 
         // Create group in Home Assistant
-        const res:any = await this.createGroupInHa({
+        const res:any = await this.createOrUpdateGroupInHa({
             object_id: groupEntityId,
             name,
             entities: entities.join(','),
@@ -170,6 +170,10 @@ class GroupService implements EventObserver {
         });
     }
 
+    private async createOrUpdateGroupInHa(group: HaGroupSet) {
+        return httpForwarder.post('/api/services/group/set', group);
+    }
+
     /**
      * Create a new group in HA
      * @param group The HA group
@@ -210,8 +214,8 @@ class GroupService implements EventObserver {
             return;
         }
 
-        const groupName = 'All switch and light';
-        await this.createGroupInHa({
+        const nameGroup = 'All switch and light';
+        await this.createOrUpdateGroupInHa({
             object_id: this.normalizeImplicitGroupName('switchlight'),
             name: groupName,
             entities: entities.join(','),
@@ -227,7 +231,7 @@ class GroupService implements EventObserver {
         if (!entities || entities.length === 0) {
             return Promise.resolve();
         }
-        return this.createGroupInHa({
+        return this.createOrUpdateGroupInHa({
             object_id: this.normalizeImplicitGroupName('switchlight', r.roomId),
             name: `Light and switch of ${r.name}`,
             entities: entities.join(','),
@@ -326,6 +330,56 @@ class GroupService implements EventObserver {
             await databaseForwarder.db?.run('ROLLBACK');
             throw err;
         }
+    }
+
+    async updateGroup(group: Group) {
+        if (group.implicit) {
+            throw Error('Can\'t update groupe implicit with this method !');
+        }
+        const oldGroup = await this.getGroup(group.groupId);
+        const oldEntitiesString = oldGroup.entities.map((e) => e.id);
+        const newEntitiesString = group.entities.map((e) => e.id);
+        const nameChange = oldGroup.name === group.name;
+        // eslint-disable-next-line max-len
+        const entitiesChange = oldEntitiesString === newEntitiesString;
+        if (!nameChange || !entitiesChange) {
+            console.log('Change');
+            await this.createOrUpdateGroupInHa({
+                object_id: group.groupId,
+                name: group.name,
+                entities: newEntitiesString.join(','),
+            });
+            if (!entitiesChange) {
+                const requests: string[] = [];
+                for (let i = 0; i < oldEntitiesString.length; i++) {
+                    const entityId = oldEntitiesString[i];
+                    if (!newEntitiesString.includes(entityId)) {
+                        requests.push(`DELETE FROM ${InsideGroupTableName} WHERE entityId = '${entityId}'`);
+                    }
+                }
+                for (let i = 0; i < newEntitiesString.length; i++) {
+                    const entityId = newEntitiesString[i];
+                    if (!oldEntitiesString.includes(entityId)) {
+                        requests.push(`INSERT INTO ${InsideGroupTableName} (entityId, groupEntityId) VALUES ('${entityId}','${group.groupId}')`);
+                    }
+                }
+                console.log(requests);
+                try {
+                    await databaseForwarder.db?.run('BEGIN TRANSACTION');
+                    // eslint-disable-next-line max-len
+                    await Promise.all(requests.map((request) => databaseForwarder.db?.run(request)));
+                    await databaseForwarder.db?.run('COMMIT');
+                } catch (err) {
+                    await databaseForwarder.db?.run('ROLLBACK');
+                    throw err;
+                }
+
+            }
+            if (!nameChange) {
+                await databaseForwarder.db?.run(`UPDATE ${GroupTableName} SET name = '${group.name}' WHERE entityId = '${group.groupId}'`);
+            }
+        }
+
     }
 
 }
