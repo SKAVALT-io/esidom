@@ -78,7 +78,7 @@ export type BlocksDefinitions = {
         init() {
             this.jsonInit?.(
                 {
-                    type: 'block_type',
+                    type: 'binary_trigger',
                     message0: 'Quand le capteur %1 passe à %2',
                     args0: [
                         {
@@ -116,7 +116,7 @@ export type BlocksDefinitions = {
         init() {
             this.jsonInit?.(
                 {
-                    type: 'time',
+                    type: 'time_trigger',
                     message0: '%1 h %2 %3 m %4 %5 s',
                     args0: [
                         {
@@ -287,7 +287,7 @@ export type BlocksDefinitions = {
         init() {
             this.jsonInit?.(
                 {
-                    type: 'sun_state',
+                    type: 'sun_condition',
                     message0: 'Lorsque le soleil se %1',
                     args0: [
                         {
@@ -318,7 +318,7 @@ export type BlocksDefinitions = {
     block.time_condition_hour = {
         init() {
             this.jsonInit?.({
-                type: 'time_condition_2',
+                type: 'time_condition_hour',
                 lastDummyAlign0: 'RIGHT',
                 message0: 'Début : %1 h %2 m %3 s %4 Fin : %5 h %6 m %7 s',
                 args0: [
@@ -382,7 +382,7 @@ export type BlocksDefinitions = {
         init() {
             this.jsonInit?.(
                 {
-                    type: 'week_condition',
+                    type: 'time_condition_week',
                     message0: '%1 lundi %2 %3 mardi %4 %5 mercredi %6 %7 jeudi %8 %9 vendredi %10 %11 samedi %12 %13 dimanche',
                     args0: [
                         {
@@ -454,7 +454,7 @@ export type BlocksDefinitions = {
         init() {
             this.jsonInit?.(
                 {
-                    type: 'block_type',
+                    type: 'binary_condition',
                     message0: 'Si le capteur %1 est à %2',
                     args0: [
                         {
@@ -499,7 +499,7 @@ export type BlocksDefinitions = {
         init() {
             this.jsonInit?.(
                 {
-                    type: 'attribut_color',
+                    type: 'color_picker',
                     message0: 'Couleur : %1',
                     args0: [
                         {
