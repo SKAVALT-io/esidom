@@ -76,8 +76,7 @@ class SocketForwarder {
                 break;
             case 'areaUpdated':
                 if (data) {
-                    // It's a trick to wait for all the entities of an device to be loaded
-                    setTimeout(() => observer.onAreaUpdated?.(data), 500);
+                    observer.onAreaUpdated?.(data);
                 }
                 break;
             case 'areaRemoved':
