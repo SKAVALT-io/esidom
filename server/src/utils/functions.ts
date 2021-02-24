@@ -1,7 +1,10 @@
 import { Response } from 'express';
+import { Logger } from 'tslog';
 
 export const MISSING_PARAM = (name: string): string => `Missing parameter ${name}`;
 export const NO_SUCH_ID = (id: string | number): string => `No entity with such id: ${id}`;
+
+export const logger: Logger = new Logger({ name: 'middleLogger' });
 
 /**
  * Use this to be able to type res.send() in express
@@ -27,10 +30,12 @@ export function sendMessage(res: Response, status: number, message: string)
 }
 
 export function sendMissingParam(res: Response, name: string) {
+    logger.trace(`Request lacks a path parameter: '${name}'`);
     return send(res, 400, { error: MISSING_PARAM(name) });
 }
 
 export function sendNoSuchId(res: Response, id: number | string) {
+    logger.trace(`Can't find object with such id: ${id}`);
     return send(res, 404, { error: NO_SUCH_ID(id) });
 }
 
