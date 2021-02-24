@@ -15,12 +15,14 @@
     });
 </script>
 
-Color temperature :
-<input
-    type="range"
-    min="153"
-    max="500"
-    bind:value
-    on:change={tempColorChangeHandler}
-/>
-{value.toFixed(0)}°?
+<div class="w-inherit">
+    <p>Color temperature : {value.toFixed(0)}°?</p>
+    <input
+        type="range"
+        min="153"
+        max="500"
+        bind:value
+        on:change={tempColorChangeHandler}
+        class="w-inherit"
+    />
+</div>
