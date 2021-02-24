@@ -28,7 +28,7 @@
             <span
                 class="flex flex-col justify-center text-center text-blue-300"
             >
-                {entity},
+                {entity}
             </span>
         {/each}
         {tr('pairing.finish.congratulationFollowing')}

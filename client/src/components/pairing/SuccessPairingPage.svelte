@@ -12,13 +12,18 @@
         newName: '',
     }));
 
+    function switchPage() {
+        step.update(() => 'FinishPairingPage');
+    }
+
     function changeName() {
         entitiesNames.forEach(async (entity) => {
             if (entity.newName.length !== 0) {
-                EntityService.patchEntityName(entity.id, entity.newName);
+                await EntityService.patchEntityName(entity.id, entity.newName);
             }
         });
-        step.update(() => 'FinishPairingPage');
+        // It's a trick to wait for the name changes to be taken into consideration
+        setTimeout(switchPage, 200);
     }
 </script>
 
