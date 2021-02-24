@@ -71,9 +71,15 @@
     "loadingError": "Erreur : Blockly n'a pas pu charger à cause d'un problème avec le serveur.",
     "convertBlock": "Enregistrer la routine !",
     "unknownAction": "Action inconnue",
+    "unknownAttribute": "Attribut inconnu",
     "unknownName": "Nom inconnu",
     "automationName": "Nom",
-    "automationDesc": "Description"
+    "automationDesc": "Description",
+    "included": "comprise",
+    "notIncluded": "non comprise",
+    "greater": "au dessus",
+    "lower": "en dessous",
+    "noAttribute": "pas d'attribut"
   },
   "buttons": {
     "cancel": "Annuler",

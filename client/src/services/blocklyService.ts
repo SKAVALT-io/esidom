@@ -14,6 +14,7 @@ import type { Automation } from '../../types/automationType';
 import type { EsidomBlockType } from '../../types/esidomBlockType';
 import EsidomBlockGenerator from '../routes/automation/esidomBlockGenerator';
 import { tr } from '../utils/i18nHelper';
+import type { EntityWithAttributes } from '../../types/entityWithAttributesTypes';
 
 interface Type {
     name: EntityTypeEnum;
@@ -66,7 +67,7 @@ export default class BlocklyService {
         this.workspace = workspace;
     }
 
-    convertToBlock(name = 'test', description = 'test description', id?: string): Automation {
+    convertToBlock(name: string, description: string, id?: string): Automation {
         const code = esidomGenerator.workspaceToCode(this.workspace);
 
         try {
@@ -74,7 +75,7 @@ export default class BlocklyService {
             const automation: Automation = {
                 id: id ?? `automation.${name.toLowerCase().replace(/ /g, '_')}`,
                 name,
-                description,
+                description: description ?? '',
                 action: automationTmp.action ?? [],
                 condition: automationTmp.condition ?? [],
                 trigger: automationTmp.trigger ?? [],
@@ -110,13 +111,182 @@ export default class BlocklyService {
         const services = await EntityService.getServices();
 
         // We create the object_action Block
-        this.createEntities(entities, services);
+        this.createObjectAction(entities, services);
         // We create all the object Blocks
         this.createObjects(entities);
+        // We create the numeric_state_condition Block
+        this.createNumericStateCondition((entities as Entity<string[]>[]));
     }
 
-    static createEntities(entities: Entity<unknown>[], services: Service[]): void {
-        const entityWithServices: EntityWithServices[] = [];
+    static createNumericStateCondition(entities: Entity<string[]>[]): void {
+        const entityWithAttributesMap = new Map<string, EntityWithAttributes>();
+
+        entities.forEach((entity: Entity<string[]>) => {
+            entityWithAttributesMap.set(entity.id, {
+                id: entity.id,
+                name: entity.name,
+                attributes: Object.keys(entity.attributes),
+            });
+        });
+
+        const values = Array.from(entityWithAttributesMap.values());
+        const tmpDropdown1 = values.map((
+            entity: EntityWithAttributes,
+        ) => {
+            if (entity.name === null || entity.name === '') {
+                entity.name = tr('blockly.unknownName');
+            }
+            return [entity.name, entity.id];
+        });
+
+        const dropdown1 = tmpDropdown1.length > 0 ? tmpDropdown1 : [[tr('blockly.unknownName'), tr('blockly.unknownName')]];
+        const dropdown2 = values[0]
+            .attributes.map((attribute: string) => [attribute, attribute])
+            ?? [[tr('blockly.unknownAttribute'), tr('blockly.unknownAttribute')]];
+
+        dropdown2.unshift([tr('blockly.noAttribute'), 'noAttribute']);
+
+        const dropdown3 = [
+            [tr('blockly.included'), 'included'],
+            [tr('blockly.notIncluded'), 'notIncluded'],
+            [tr('blockly.greater'), 'greater'],
+            [tr('blockly.lower'), 'lower'],
+        ];
+
+        const block = Blockly.Blocks as unknown as BlocksDefinitions;
+        block.numeric_state_condition = {
+            init() {
+                this.jsonInit?.(
+                    {
+                        type: 'numeric_state_condition',
+                        message0: 'Si %1 et son attribut %2 %3 a une valeur %4 %5 entre %6 et %7 %8',
+                        args0: [
+                            {
+                                type: 'field_dropdown',
+                                name: 'Entities',
+                                options: dropdown1,
+                            },
+                            {
+                                type: 'field_dropdown',
+                                name: 'Attributes',
+                                options: dropdown2,
+                            },
+                            {
+                                type: 'input_dummy',
+                                name: 'entities',
+                            },
+                            {
+                                type: 'field_dropdown',
+                                name: 'Included',
+                                options: dropdown3,
+                            },
+                            {
+                                type: 'input_dummy',
+                                name: 'included',
+                            },
+                            {
+                                type: 'field_number',
+                                name: 'Minimum',
+                                value: 0,
+                            },
+                            {
+                                type: 'field_number',
+                                name: 'Maximum',
+                                value: 0,
+                            },
+                            {
+                                type: 'input_dummy',
+                                name: 'condition',
+                            },
+                        ],
+                        inputsInline: false,
+                        previousStatement: 'Condition',
+                        nextStatement: 'Condition',
+                        colour: COLORS.HUE_YELLOW,
+                        tooltip: 'Après avoir fourni un capteur numérique, indiquez les valeurs minimum et maximum entre lesquelles le bloc doit/ne doit pas réagir',
+                        helpUrl: '',
+                        mutator: 'numeric_static_condition_esidom_mutator',
+                    },
+                );
+            },
+        };
+
+        const NUMERIC_STATE_CONDITION_MUTATOR_MIXIN = {
+
+            mutationToDom(): HTMLElement {
+                const container = document.createElement('mutation');
+                const entitiesInput: string = (this as EsidomBlockType).getFieldValue('Entities');
+                container.setAttribute('numeric_state_condition_entities_input', entitiesInput);
+                return container;
+            },
+
+            domToMutation(xmlElement: HTMLElement): void {
+                const attribute = xmlElement.getAttribute('numeric_state_condition_entities_input');
+                const entityId = attribute != null ? attribute : '';
+                this.numericStateConditionUpdateAttribute(entityId);
+            },
+
+            numericStateConditionUpdateAttribute(entityId: string): void {
+                const newDropdown = entityWithAttributesMap.get(entityId)
+                    ?.attributes.map((attribute: string) => [attribute, attribute])
+                    ?? [[tr('blockly.unknownAttribute'), tr('blockly.unknownAttribute')]];
+
+                newDropdown.unshift([tr('blockly.noAttribute'), 'noAttribute']);
+
+                const attInput = (this as EsidomBlockType).getInput?.('entities');
+                attInput.removeField('Attributes', true);
+                attInput.appendField(new Blockly.FieldDropdown(newDropdown), 'Attributes');
+            },
+
+            numericStateConditionUpdateCondition(option: string): void {
+                const includedField = (this as EsidomBlockType).getFieldValue('Included');
+
+                if (
+                    (option === 'included' || option === 'notIncluded')
+                    && (includedField !== 'included' && includedField !== 'notIncluded')
+                ) {
+                    (this as EsidomBlockType).removeInput('condition', true);
+                    (this as EsidomBlockType).appendDummyInput('condition')
+                        .appendField('entre')
+                        .appendField(new Blockly.FieldNumber(0), 'Minimum')
+                        .appendField('et')
+                        .appendField(new Blockly.FieldNumber(0), 'Maximum');
+                } else if (option === 'greater') {
+                    (this as EsidomBlockType).removeInput('condition', true);
+                    (this as EsidomBlockType).appendDummyInput('condition')
+                        .appendField('de')
+                        .appendField(new Blockly.FieldNumber(0), 'Minimum');
+                } else if (option === 'lower') {
+                    (this as EsidomBlockType).removeInput('condition', true);
+                    (this as EsidomBlockType).appendDummyInput('condition')
+                        .appendField('de')
+                        .appendField(new Blockly.FieldNumber(0), 'Maximum');
+                }
+            },
+
+        };
+
+        const NUMERIC_STATE_CONDITION_MUTATION_EXTENSION = function mutate(this: EsidomBlockType) {
+            this.getField('Included').setValidator((option: string) => {
+                this.numericStateConditionUpdateCondition(option);
+            });
+
+            this.getField('Entities').setValidator((option: string) => {
+                this.numericStateConditionUpdateAttribute(option);
+            });
+        };
+
+        try {
+            Blockly.Extensions.registerMutator('numeric_static_condition_esidom_mutator',
+                NUMERIC_STATE_CONDITION_MUTATOR_MIXIN,
+                NUMERIC_STATE_CONDITION_MUTATION_EXTENSION);
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    static createObjectAction(entities: Entity<unknown>[], services: Service[]): void {
+        const entityWithServicesLst: EntityWithServices[] = [];
 
         entities.forEach((entity: Entity<unknown>) => {
             const tmpServices: string[] = services
@@ -124,7 +294,7 @@ export default class BlocklyService {
                 .map((service: Service) => service.name);
 
             if (tmpServices.length > 0) {
-                entityWithServices.push({
+                entityWithServicesLst.push({
                     id: entity.id,
                     name: entity.name,
                     services: tmpServices,
@@ -136,17 +306,17 @@ export default class BlocklyService {
         // Create object_action Block
         block.object_action = {
             init() {
-                const tmpDropdown1 = entityWithServices.map((
+                const tmpDropdown1 = entityWithServicesLst.map((
                     entity: EntityWithServices,
                     index: number,
                 ) => {
                     if (entity.name === null || entity.name === '') {
-                        entity.name = tr(('blockly.unknownName'));
+                        entity.name = tr('blockly.unknownName');
                     }
                     return [entity.name, `${index.toString()}:${entity.id}:${entity.name}`];
                 });
 
-                const dropdown1 = tmpDropdown1.length > 0 ? tmpDropdown1 : [[tr(('blockly.unknownName')), tr(('blockly.unknownName'))]];
+                const dropdown1 = tmpDropdown1.length > 0 ? tmpDropdown1 : [[tr('blockly.unknownName'), tr('blockly.unknownName')]];
 
                 this.jsonInit?.(
                     {
@@ -188,9 +358,9 @@ export default class BlocklyService {
             },
 
             objectActionUpdateShape(index: number): void {
-                const newDropdown = entityWithServices[index]
+                const newDropdown = entityWithServicesLst[index]
                     ?.services.map((service: string) => [service.split('.')[1], service])
-                    ?? [[tr(('blockly.unknownAction')), tr(('blockly.unknownAction'))]];
+                    ?? [[tr('blockly.unknownAction'), tr('blockly.unknownAction')]];
 
                 (this as EsidomBlockType).removeInput?.('services', true);
                 (this as EsidomBlockType).appendDummyInput?.('services')
@@ -224,7 +394,7 @@ export default class BlocklyService {
             const typeName = type.name;
             const options: string[][] = entities
                 .filter((entity: Entity<unknown>) => entity.type === typeName)
-                .map((entity: Entity<unknown>) => [entity.name === '' ? tr(('blockly.unknownName')) : entity.name, entity.id]);
+                .map((entity: Entity<unknown>) => [entity.name === '' ? tr('blockly.unknownName') : entity.name, entity.id]);
 
             const blocklyObjects = new BlocklyObjects(
                 typeName,
@@ -233,7 +403,7 @@ export default class BlocklyService {
                 parseInt(COLORS.HUE_RED, 10),
             );
 
-            blocklyObjects.addOptions(options.length !== 0 ? options : [[tr(('blockly.unknownName')), tr(('blockly.unknownName'))]]);
+            blocklyObjects.addOptions(options.length !== 0 ? options : [[tr('blockly.unknownName'), tr('blockly.unknownName')]]);
             const objectBlock: ObjectBlock = blocklyObjects.getJson();
 
             // Create object Block

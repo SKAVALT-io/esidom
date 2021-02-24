@@ -31,6 +31,7 @@ export type BlocksDefinitions = {
     time_condition_hour: BlockFunctions;
     time_condition_week: BlockFunctions;
     binary_condition: BlockFunctions;
+    numeric_state_condition: BlockFunctions;
     action: BlockFunctions;
     color_picker: BlockFunctions;
     color_rgb: BlockFunctions;

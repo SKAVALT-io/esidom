@@ -1,3 +1,4 @@
+import { Block } from 'blockly';
 import type { BlocklyJSON } from './esidomGenerator';
 
 interface BlockGenerator {
@@ -194,6 +195,64 @@ const esidomBlockGenerator: EsidomBlockGenerator = {
                     <field name="Second">${seconds}</field>
                     <field name="Before_after">${beforeAfter}</field>
                     <field name="Sun">${sun}</field>
+                    </block>
+                `;
+            }
+            if (condition?.condition === 'numeric_state') {
+                const entity = condition.entity_id;
+                const { attribute } = condition;
+                const { below } = condition;
+                const above = blocklyJSON.conditions?.[1].above;
+
+                return `
+                    <block type="numeric_state_condition">
+                    <field name="Entities">${entity}</field>
+                    <field name="Attributes">${attribute ?? 'noAttribute'}</field>
+                    <field name="Included">notIncluded</field>
+                    <field name="Minimum">${below}</field>
+                    <field name="Maximum">${above}</field>
+                    </block>
+                `;
+            }
+            return '';
+        },
+        numeric_state(blocklyJSON: BlocklyJSON): string {
+            const entity = blocklyJSON.entity_id;
+            const { attribute } = blocklyJSON;
+            const { above } = blocklyJSON;
+            const { below } = blocklyJSON;
+
+            console.log(above);
+            console.log(below);
+            console.log('hello');
+            if (above !== undefined && below !== undefined) {
+                return `
+                    <block type="numeric_state_condition">
+                    <field name="Entities">${entity}</field>
+                    <field name="Attributes">${attribute ?? 'noAttribute'}</field>
+                    <field name="Included">included</field>
+                    <field name="Minimum">${above}</field>
+                    <field name="Maximum">${below}</field>
+                    </block>
+                `;
+            }
+            if (above !== undefined && below === undefined) {
+                return `
+                    <block type="numeric_state_condition">
+                    <field name="Entities">${entity}</field>
+                    <field name="Attributes">${attribute ?? 'noAttribute'}</field>
+                    <field name="Included">greater</field>
+                    <field name="Maximum">${above}</field>
+                    </block>
+                `;
+            }
+            if (above === undefined && below !== undefined) {
+                return `
+                    <block type="numeric_state_condition">
+                    <field name="Entities">${entity}</field>
+                    <field name="Attributes">${attribute ?? 'noAttribute'}</field>
+                    <field name="Included">lower</field>
+                    <field name="Minimum">${below}</field>
                     </block>
                 `;
             }

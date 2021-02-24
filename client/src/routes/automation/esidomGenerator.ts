@@ -52,7 +52,10 @@ export interface BlocklyJSON {
     alias?: string;
     after_offset?: string;
     offset?: string;
-    event?: string
+    event?: string;
+    above?: string;
+    below?: string;
+    attribute?: string;
     conditions?: BlocklyJSON[];
 }
 
@@ -71,6 +74,7 @@ export type BlocksGenerator = {
     time_condition_hour: (blk: Block) => void;
     time_condition_week: (blk: Block) => void;
     binary_condition: (blk: Block) => void;
+    numeric_state_condition: (blk: Block) => void;
     action: (blk: Block) => void;
     color_picker: (blk: Block) => void;
     color_rgb: (blk: Block) => void;
@@ -269,6 +273,60 @@ export type BlocksGenerator = {
                 },
             ];
         }
+        return JSON.stringify(json);
+    };
+
+    block.numeric_state_condition = (blk: Block) => {
+        const dropdown_entities = blk.getFieldValue('Entities');
+        const dropdown_attributes = blk.getFieldValue('Attributes');
+        const dropdown_included = blk.getFieldValue('Included');
+
+        const number_min = blk.getFieldValue('Minimum');
+        const number_max = blk.getFieldValue('Maximum');
+
+        const json: BlocklyJSON = {};
+
+        console.log(dropdown_entities);
+        if (dropdown_included === 'included') {
+            json.condition = 'numeric_state';
+            json.entity_id = dropdown_entities;
+            json.above = number_min;
+            json.below = number_max;
+            if (dropdown_attributes !== 'noAttribute') {
+                json.attribute = dropdown_attributes;
+            }
+        } else if (dropdown_included === 'notIncluded') {
+            json.condition = 'or';
+            json.conditions = [
+                {
+                    condition: 'numeric_state',
+                    entity_id: dropdown_entities,
+                    below: number_min,
+                    attribute: dropdown_attributes !== 'noAttribute' ? dropdown_attributes : '',
+                },
+                {
+                    condition: 'numeric_state',
+                    entity_id: dropdown_entities,
+                    above: number_max,
+                    attribute: dropdown_attributes !== 'noAttribute' ? dropdown_attributes : '',
+                },
+            ];
+        } else if (dropdown_included === 'greater') {
+            json.condition = 'numeric_state';
+            json.entity_id = dropdown_entities;
+            json.above = number_min;
+            if (dropdown_attributes !== 'noAttribute') {
+                json.attribute = dropdown_attributes;
+            }
+        } else if (dropdown_included === 'lower') {
+            json.condition = 'numeric_state';
+            json.entity_id = dropdown_entities;
+            json.below = number_max;
+            if (dropdown_attributes !== 'noAttribute') {
+                json.attribute = dropdown_attributes;
+            }
+        }
+
         return JSON.stringify(json);
     };
 

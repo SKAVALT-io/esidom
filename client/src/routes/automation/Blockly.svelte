@@ -21,6 +21,9 @@
             <block type="time_condition_hour" />
             <block type="time_condition_week" />
             <block type="sun_condition" />
+            <block type="numeric_state_condition">
+                <mutation numeric_state_condition_entities_input="" />
+            </block>
         </category>
         <category name="Actions" colour={COLORS.HUE_ORANGE}>
             <block type="object_action">
