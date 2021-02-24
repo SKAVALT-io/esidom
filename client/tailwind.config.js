@@ -754,6 +754,7 @@ module.exports = {
             screen: '100vw',
             min: 'min-content',
             max: 'max-content',
+            inherit: 'inherit',
         }),
         zIndex: {
             auto: 'auto',
