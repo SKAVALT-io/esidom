@@ -4,7 +4,6 @@ import { roomService } from '../services';
 import { Room } from '../types';
 import {
     logger,
-    NO_SUCH_ID,
     send,
     sendf,
     sendMessage,
