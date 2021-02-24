@@ -32,8 +32,10 @@ class AutomationService implements EventObserver {
                 };
                 socketForwarder.emitSocket('entity_updated', updatedPreview);
             })
-            .catch((err) => socketForwarder
-                .emitSocket('entity_updated', { error: err.message }));
+            .catch((err) => {
+                socketForwarder
+                    .emitSocket('entity_updated', { error: err.message });
+            });
     }
 
     onAutomationRemoved(id: string) {
@@ -119,7 +121,7 @@ class AutomationService implements EventObserver {
                     id: a.entity_id,
                     name: a.attributes.friendly_name,
                     state: a.state,
-                } as AutomationPreviewWithId;
+                };
             });
     }
 

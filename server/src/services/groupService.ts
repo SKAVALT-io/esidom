@@ -6,7 +6,7 @@ import {
     Room, Group, DBGroup, InsideGroup, Entity, EventObserver,
     Device, HaDumbType, HaGroupSet, HaStateResponse,
 } from '../types';
-import { normalizeEntityId } from '../utils';
+import { logger, normalizeEntityId } from '../utils';
 
 const GROUP_IMPLICIT_IDENTIFIER = 'imp';
 
@@ -61,7 +61,7 @@ class GroupService implements EventObserver {
         const res = await databaseForwarder
             .selectAllGroups()
             .catch((err: any) => {
-                console.log(err);
+                logger.error(err);
                 throw new Error('Unexpected database error');
             });
 
@@ -99,7 +99,7 @@ class GroupService implements EventObserver {
         // Test if group exist, and if not, throw an error
         const g = await databaseForwarder.selectGroupsByEntityId(groupEntityId);
         if (g !== undefined) {
-            throw new Error('Group already exist');
+            throw new Error(`Group ${groupEntityId} already exist`);
         }
 
         // Get list of entity with full detail and check the data
@@ -194,10 +194,10 @@ class GroupService implements EventObserver {
             return;
         }
 
-        const nameGroup = 'All switch and light';
+        const groupName = 'All switch and light';
         await this.createGroupInHa({
             object_id: this.normalizeImplicitGroupName('switchlight'),
-            name: nameGroup,
+            name: groupName,
             entities: entities.join(','),
         });
     }

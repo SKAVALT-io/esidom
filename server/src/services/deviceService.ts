@@ -35,7 +35,6 @@ class DeviceService implements EventObserver {
                                 entities: device.entity,
                                 automation: device.automation,
                             }))[0];
-                        console.log('DEVICE CREATED : ', data);
                         socketForwarder.emitSocket('device_created', data);
                     });
             })

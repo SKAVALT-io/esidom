@@ -3,6 +3,7 @@ import { socketService } from '.';
 import {
     EventObserver, Entity, HaEntity, HaStateResponse,
 } from '../types';
+import { logger } from '../utils';
 
 class EntityService implements EventObserver {
 
@@ -15,7 +16,9 @@ class EntityService implements EventObserver {
         this.getEntityById(data)
             .then((updated: Entity | undefined) => {
                 if (!updated) {
-                    throw new Error(`Unable to retrieve updated entity: ${data}`);
+                    const error = `Unable to retrieve updated entity: ${data}`;
+                    logger.error(error);
+                    throw new Error(error);
                 }
                 socketForwarder.emitSocket('entity_updated', updated);
             })
@@ -48,7 +51,7 @@ class EntityService implements EventObserver {
      * Filter entities by their associated device
      * @param id device id
      * @param entities list of entities to be filtered
-     * @param states ??
+     * @param states result of a get_states WS request
      * @returns Array of filtered entities
      */
     filterEntitiesByDevice(id: string, entities: HaEntity[], states: HaStateResponse[]): Entity[] {

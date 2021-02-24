@@ -208,6 +208,7 @@ class SocketForwarder {
     }
 
     emitSocket<T>(event: string, data: T): void {
+        logger.debug(`Emit ${event} socket with data: ${data}`);
         this.io.emit(event, data);
     }
 
