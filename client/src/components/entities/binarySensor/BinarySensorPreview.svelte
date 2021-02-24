@@ -35,7 +35,12 @@
 
 <EntityPreview isError={false} {entity}>
     <!-- Image -->
-    <img slot="img" src={srcImg} alt="" />
+    <img
+        slot="img"
+        src={srcImg}
+        alt=""
+        class="h-inherit max-w-full max-h-full"
+    />
     <!-- Data -->
     <div slot="sensor">{tr('devices.state')} : {isOn ? 'ouvert' : 'fermé'}</div>
 </EntityPreview>

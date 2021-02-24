@@ -23,10 +23,10 @@
 <div id="all" class="grid grid-cols-5 max-w-lg max-h-32" class:error={isError}>
     <div
         id="img"
-        class="col-span-2 rounded-xl rounded-r-none flex items-center px-4 h-inherit"
+        class="col-span-2 rounded-xl rounded-r-none flex items-center p-4 h-inherit"
     >
         {#if !isError}
-            <slot name="img">
+            <slot name="img" class="text">
                 <img
                     class="object-scale-down"
                     alt=""
@@ -38,7 +38,7 @@
     <!-- flex items-center px-3 py-8 -->
     <div
         id="data"
-        class="col-span-3 rounded-xl rounded-l-none grid grid-rows-5 items-center text-center"
+        class="col-span-3 rounded-xl rounded-l-none grid grid-rows-5 items-center text-center h-inherit"
     >
         <div
             class="row-span-3 relative"

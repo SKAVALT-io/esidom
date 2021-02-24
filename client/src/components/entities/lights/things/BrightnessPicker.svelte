@@ -28,4 +28,5 @@
     max="255"
     bind:value
     on:change={brightnessChangeHandler}
+    class="w-full"
 />

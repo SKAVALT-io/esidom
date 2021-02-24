@@ -49,9 +49,15 @@
 
 <EntityPreview isError={false} {entity}>
     <!-- Image -->
-    <img slot="img" src={srcLamp} alt="" on:click={switchLight} />
+    <img
+        slot="img"
+        src={srcLamp}
+        alt=""
+        on:click={switchLight}
+        class="h-inherit max-w-full max-h-full"
+    />
     <!-- Data -->
-    <div slot="sensor">
+    <div slot="sensor" class="px-2">
         {#if isOn}
             <BrightnessPicker
                 value={entity.attributes.brightness}
