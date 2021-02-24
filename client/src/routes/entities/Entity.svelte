@@ -3,6 +3,7 @@
     import { pop } from 'svelte-spa-router';
     import BinarySensor from '../../components/entities/binarySensor/BinarySensor.svelte';
     import Light from '../../components/entities/lights/Light.svelte';
+    import OutlineButton from '../../components/UI/buttons/OutlineButton.svelte';
 
     export let params: { id: string };
     const { id } = params;
@@ -17,17 +18,13 @@
     }
 </script>
 
-<button
-    on:click={pop}
-    class="border-white border-2 hover:bg-blue-800 text-white font-bold py-2 px-4 rounded"
->Retour</button>
+<div class="px-8">
+    <OutlineButton text="Retour" on:click={pop} />
 
-<br />
-{#if mapTypeToComp.has(domain)}
-    <svelte:component this={getCompByType(id)} {...{ entityId: id }} />
-{:else}
-    <h1>No adapter for this type of entity: {domain}</h1>
-{/if}
-
-<style>
-</style>
+    <br />
+    {#if mapTypeToComp.has(domain)}
+        <svelte:component this={getCompByType(id)} {...{ entityId: id }} />
+    {:else}
+        <h1>No adapter for this type of entity: {domain}</h1>
+    {/if}
+</div>

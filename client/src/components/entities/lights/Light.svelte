@@ -62,36 +62,18 @@
 {#await loadLight()}
     Loading data...
 {:then}
-    <div id="content" class="px-8">
-        <div id="title">
-            <!-- <button
-                on:click={pop}
-                class="border-white border-2 hover:bg-blue-800 text-white font-bold py-2 px-4 rounded"
-            >Retour</button> -->
-            <h1 class="text-4xl text-center py-6">{light.name}</h1>
-        </div>
-
+    <div id="title">
+        <h1 class="text-4xl text-center py-6">{light.name}</h1>
+    </div>
+    <div id="content" class="flex flex-col md:flex-row justify-center">
         <div
             id="info"
-            class="relative grid grid-cols-12 gap-4 p-4 uppercase bg-esidomlight w-full md:w-4/6 md:left-1/6 max-w-5xl"
+            class="relative grid grid-cols-12 gap-4 p-4 uppercase bg-esidomlight w-full md:w-1/2 md:max-w-xl md:order-last"
         >
             <div class="col-span-full text-center font-semibold text-xl">
                 Informations
             </div>
 
-            <!-- <div
-                class="col-span-6 row-start-2 text-center"
-                on:click={() => switchLamp(entityId, !isOn)}
-            >
-                <button
-                    on:click={pop}
-                    class="border-white border-2 hover:bg-blue-800 text-white font-bold py-2 px-4 rounded"
-                >{isOn ? 'Éteindre' : 'Allumer'}</button>
-                <ToggleButton
-                    on:change={() => switchLamp(entityId, !isOn)}
-                    bind:{isOn}
-                />
-            </div> -->
             <div class="col-span-3 row-start-3 text-right">Nom :</div>
             <div class="col-span-9 row-start-3">{light.name}</div>
             <div class="col-span-3 row-start-4 text-right">Type :</div>
@@ -101,19 +83,19 @@
             <div class="col-span-3 row-start-5">
                 <ToggleButton
                     on:change={() => switchLamp(entityId, !isOn)}
-                    bind:isOn
+                    bind:checked={isOn}
                 />
             </div>
         </div>
 
         <div
             id="attributes"
-            class="relative grid grid-cols-1 gap-4 p-4 w-full md:w-4/6 md:left-1/6 max-w-5xl"
+            class="relative grid grid-cols-1 gap-4 pt-4 w-full md:pr-4 md:w-1/2 md:max-w-xl"
         >
             {#if isOn}
                 {#each Object.entries(light.attributes) as [key, value] (key)}
                     {#if lightPropMap.has(key)}
-                        <div class="text-center">
+                        <div class="text-center w-full">
                             <!-- {key}:{value} -->
                             <svelte:component
                                 this={lightPropMap.get(key)}
