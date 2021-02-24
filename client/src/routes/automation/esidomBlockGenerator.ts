@@ -222,9 +222,6 @@ const esidomBlockGenerator: EsidomBlockGenerator = {
             const { above } = blocklyJSON;
             const { below } = blocklyJSON;
 
-            console.log(above);
-            console.log(below);
-            console.log('hello');
             if (above !== undefined && below !== undefined) {
                 return `
                     <block type="numeric_state_condition">

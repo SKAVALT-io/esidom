@@ -286,7 +286,6 @@ export type BlocksGenerator = {
 
         const json: BlocklyJSON = {};
 
-        console.log(dropdown_entities);
         if (dropdown_included === 'included') {
             json.condition = 'numeric_state';
             json.entity_id = dropdown_entities;
