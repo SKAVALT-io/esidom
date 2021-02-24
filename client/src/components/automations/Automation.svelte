@@ -82,7 +82,11 @@
             size={8}
             on:click={handleTrigger}
         />
-        <Tooltip text="Déclencher" position="top" show={showTriggerTip} />
+        <Tooltip
+            text={tr('automations.buttons.trigger')}
+            position="top"
+            show={showTriggerTip}
+        />
     </div>
     <div
         id="edit_button"
@@ -92,7 +96,11 @@
         on:mouseleave={() => (showEditTip = false)}
         on:mouseenter={() => (showEditTip = true)}
     >
-        <Tooltip text={'Éditer'} position="top" show={showEditTip} />
+        <Tooltip
+            text={tr('automations.buttons.edit')}
+            position="top"
+            show={showEditTip}
+        />
         <RoundedButton
             size={8}
             on:click={handleEdit}
@@ -107,7 +115,11 @@
         on:mouseleave={() => (showDeleteTip = false)}
         on:mouseenter={() => (showDeleteTip = true)}
     >
-        <Tooltip text={'Supprimer'} position="top" show={showDeleteTip} />
+        <Tooltip
+            text={tr('automations.buttons.delete')}
+            position="top"
+            show={showDeleteTip}
+        />
         <RoundedButton
             size={8}
             on:click={() => (isConfirmDeleteOpen = true)}

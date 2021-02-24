@@ -15,8 +15,13 @@
     },
     "confirmDelete": "Are you sure you want to delete this automation ?",
     "buttons": {
-        "cancel": "Cancel"
+        "edit": "Edit",
+        "delete": "Delete",
+        "trigger": "Trigger"
     }
-
+  },
+  "buttons": {
+    "cancel": "Cancel",
+    "confirm": "Confirm"
   }
 }

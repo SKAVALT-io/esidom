@@ -27,7 +27,12 @@
         "state": "Actives"
       }
     },
-    "confirmDelete": "Voulez-vous vraiment supprimer cette routine ?"
+    "confirmDelete": "Voulez-vous vraiment supprimer cette routine ?",
+    "buttons": {
+      "edit": "Éditer",
+      "delete": "Supprimer",
+      "trigger": "Déclencher"
+    }
   },
   "pairing": {
     "instructions": {
