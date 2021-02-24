@@ -31,7 +31,7 @@ App.http.listen(port, async () => {
 
 const initDb = async () => {
     const db = await open({
-        filename: './src/db/database.db',
+        filename: './database.db',
         driver: sqlite3.Database,
     });
     databaseForwarder.setDb(db);
@@ -54,5 +54,4 @@ doAuth();
     deviceController, authController, entityController,
     roomController, automationController, groupController,
     userController, serviceController, healthController,
-    databaseForwarder,
 ].forEach(() => {});

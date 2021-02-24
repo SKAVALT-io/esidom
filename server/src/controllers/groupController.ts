@@ -1,9 +1,10 @@
 import { Request, Response } from 'express';
 import App from '../app';
 import { groupService } from '../services';
-import { Group } from '../types';
+import { Entity, Group } from '../types';
 import {
     sendf, Success, SuccessOrError, sendMissingParam,
+    sendMessage, send, SuccessMessageOrError, sendNoSuchId,
 } from '../utils';
 
 @App.rest('/group')
@@ -28,7 +29,7 @@ class GroupController {
      */
     @App.post('')
     async createGroup(req: Request, res: Response): SuccessOrError<Group> {
-        const { name, entities } = req.body;
+        const { name, entities } = req.body as {name: string, entities: Entity[]};
         if (!name) {
             return sendMissingParam(res, 'name');
         }
@@ -37,56 +38,46 @@ class GroupController {
         }
 
         return groupService
-            .createGroup(name, entities)
+            .createGroup(name, entities.map((e) => e.id))
             .then(sendf<Group>(res, 200));
     }
 
     @App.put('/:groupId')
-    async updateGroup(req: Request, res: Response): Promise<void> {
+    async updateGroup(req: Request, res: Response): SuccessMessageOrError {
         const group: Group = req.body;
         if (!group) {
-            res.status(400).send({ message: 'The group is missing' });
-            return;
+            return sendMissingParam(res, 'group');
         }
-        console.log(group);
-        try {
-            await groupService.updateGroup(group);
-            res.status(200).send({ message: 'OK' });
-        } catch (err: any) {
-            res.status(400).send({ message: err.message ? err.message : err });
-        }
+        return groupService.updateGroup(group)
+            .then(() => sendMessage(res, 200, 'OK'))
+            .catch((err) => send(res, 400, { error: err.message }));
+
     }
 
     @App.get('/:groupId')
-    async getGroup(req: Request, res: Response): Promise<void> {
-        try {
-            const { groupId } = req.params;
-            if (!groupId) {
-                res.status(400).send({ message: 'The parameter groupId is missing' });
-                return;
-            }
-            const result = await groupService.getGroup(groupId);
-            res.status(200).send(result);
-        } catch (err) {
-            res.status(400).send({ message: err });
+    async getGroup(req: Request, res: Response): SuccessOrError<Group> {
+        const { groupId } = req.params;
+        if (!groupId) {
+            return sendMissingParam(res, 'groupId');
         }
+        return groupService.getGroup(groupId)
+            .then((group: Group | undefined) => (group
+                ? send(res, 200, group)
+                : sendNoSuchId(res, groupId)
+            ));
     }
 
     @App.delete('/:groupId')
-    async deleteGroup(req: Request, res: Response): Promise<void> {
-        try {
-            const { groupId } = req.params;
-            console.log(groupId);
-            if (!groupId) {
-                res.status(400).send({ message: 'The parameter groupId is missing' });
-                return;
-            }
-            await groupService.deleteGroup(groupId);
-            res.status(200).send({ message: 'Ok' });
-        } catch (err) {
-            console.log(err);
-            res.status(400).send({ message: err });
+    async deleteGroup(req: Request, res: Response): SuccessMessageOrError {
+        const { groupId } = req.params;
+        if (!groupId) {
+            return sendMissingParam(res, 'groupId');
         }
+        return groupService.deleteGroup(groupId)
+            .then((success) => (success
+                ? sendMessage(res, 200, 'OK')
+                : sendNoSuchId(res, groupId)
+            ));
     }
 
 }

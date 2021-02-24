@@ -10,6 +10,7 @@
     import { tr } from "../../utils/i18nHelper";
     import { socketManager } from "../../managers/socketManager";
     import EntityService from "../../services/entityService";
+    import type { Entity } from "../../../types/entityType";
 
     export let group: Group;
     let checked = group.state === "on";
@@ -25,7 +26,7 @@
         if (!group.groupId) {
             return;
         }
-        socketManager.registerListener(
+        socketManager.registerListenerById<Entity<any>>(
             "entity_updated",
             `group.${group.groupId}`,
             groupUpdatedHandler

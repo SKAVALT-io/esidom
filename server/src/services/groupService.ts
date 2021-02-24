@@ -170,15 +170,11 @@ class GroupService implements EventObserver {
         });
     }
 
-    private async createOrUpdateGroupInHa(group: HaGroupSet) {
-        return httpForwarder.post('/api/services/group/set', group);
-    }
-
     /**
-     * Create a new group in HA
+     * Create a new or update group in HA
      * @param group The HA group
      */
-    private async createGroupInHa(group: HaGroupSet): Promise<unknown> {
+    private async createOrUpdateGroupInHa(group: HaGroupSet): Promise<unknown> {
         return httpService.postGroup(group);
     }
 
@@ -194,6 +190,19 @@ class GroupService implements EventObserver {
                     .filter((val) => val.entity_id.startsWith('group'))
                     .map((v) => this.convertEntityToGroup(v)),
             ));
+    }
+
+    /**
+     * Get group by id
+     * @param groupId id of the group
+     * @returns group with the matching id or undefined
+     */
+    async getGroup(groupId: string): Promise<Group | undefined> {
+        const group = (await this.getGroups()).find((g: Group) => g.groupId === groupId);
+        if (group) {
+            return group;
+        }
+        return undefined;
     }
 
     /**
@@ -311,74 +320,42 @@ class GroupService implements EventObserver {
         };
     }
 
-    async deleteGroup(groupId: string) {
-        const g = await databaseForwarder.db?.get<DBGroup>(`SELECT * FROM ${GroupTableName} WHERE entityId = '${groupId}'`);
+    async deleteGroup(groupId: string): Promise<boolean> {
+        const g = await databaseForwarder.selectGroupsByEntityId(groupId);
         if (!g) {
-            throw new Error(`There are no group with id : ${groupId}`);
+            return false;
         }
         await this.deleteGroupFromHa(groupId);
         await this.deleteGroupFromDb(groupId);
+        return true;
     }
 
-    private async deleteGroupFromDb(groupId: string) {
-        try {
-            await databaseForwarder.db?.run('BEGIN TRANSACTION');
-            await databaseForwarder.db?.run(`DELETE FROM ${InsideGroupTableName} WHERE groupEntityId = '${groupId}'`);
-            await databaseForwarder.db?.run(`DELETE FROM ${GroupTableName} WHERE entityId = '${groupId}'`);
-            await databaseForwarder.db?.run('COMMIT');
-        } catch (err) {
-            await databaseForwarder.db?.run('ROLLBACK');
-            throw err;
-        }
+    private async deleteGroupFromDb(groupId: string): Promise<void> {
+        await databaseForwarder.deleteGroup(groupId);
     }
 
-    async updateGroup(group: Group) {
+    async updateGroup(group: Group): Promise<boolean> {
         if (group.implicit) {
             throw Error('Can\'t update groupe implicit with this method !');
         }
         const oldGroup = await this.getGroup(group.groupId);
+        if (!oldGroup) {
+            return false;
+        }
         const oldEntitiesString = oldGroup.entities.map((e) => e.id);
         const newEntitiesString = group.entities.map((e) => e.id);
-        const nameChange = oldGroup.name === group.name;
+        const nameChanged = oldGroup.name === group.name;
         // eslint-disable-next-line max-len
-        const entitiesChange = oldEntitiesString === newEntitiesString;
-        if (!nameChange || !entitiesChange) {
-            console.log('Change');
+        const entitiesChanged = oldEntitiesString === newEntitiesString;
+        if (!nameChanged || !entitiesChanged) {
             await this.createOrUpdateGroupInHa({
                 object_id: group.groupId,
                 name: group.name,
                 entities: newEntitiesString.join(','),
             });
-            if (!entitiesChange) {
-                const requests: string[] = [];
-                for (let i = 0; i < oldEntitiesString.length; i++) {
-                    const entityId = oldEntitiesString[i];
-                    if (!newEntitiesString.includes(entityId)) {
-                        requests.push(`DELETE FROM ${InsideGroupTableName} WHERE entityId = '${entityId}'`);
-                    }
-                }
-                for (let i = 0; i < newEntitiesString.length; i++) {
-                    const entityId = newEntitiesString[i];
-                    if (!oldEntitiesString.includes(entityId)) {
-                        requests.push(`INSERT INTO ${InsideGroupTableName} (entityId, groupEntityId) VALUES ('${entityId}','${group.groupId}')`);
-                    }
-                }
-                console.log(requests);
-                try {
-                    await databaseForwarder.db?.run('BEGIN TRANSACTION');
-                    // eslint-disable-next-line max-len
-                    await Promise.all(requests.map((request) => databaseForwarder.db?.run(request)));
-                    await databaseForwarder.db?.run('COMMIT');
-                } catch (err) {
-                    await databaseForwarder.db?.run('ROLLBACK');
-                    throw err;
-                }
-
-            }
-            if (!nameChange) {
-                await databaseForwarder.db?.run(`UPDATE ${GroupTableName} SET name = '${group.name}' WHERE entityId = '${group.groupId}'`);
-            }
+            databaseForwarder.updateGroup(oldGroup, group, entitiesChanged, nameChanged);
         }
+        return true;
 
     }
 
