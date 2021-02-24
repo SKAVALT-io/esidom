@@ -3,10 +3,7 @@ import config from '../config/config';
 
 class HttpForwarder {
 
-    private token: string = '';
-
     setToken(token: string) {
-        this.token = token;
         axios.interceptors.request.use((conf) => ({
             ...conf,
             headers: {

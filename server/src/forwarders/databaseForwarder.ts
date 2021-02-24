@@ -1,6 +1,7 @@
 import sqlite3 from 'sqlite3';
 import { Database } from 'sqlite';
 import { DBGroup, InsideGroup } from '../types';
+import { logger } from '../utils';
 
 const GroupTableName = 'HAGroup';
 const InsideGroupTableName = 'InsideGroup';
@@ -41,6 +42,7 @@ class DatabaseForwarder {
             await this.db.run('COMMIT');
         } catch (err) {
             await this.db.run('ROLLBACK');
+            logger.error(`Unexpected error while inserting group into database : ${err}`);
             throw err;
         }
     }
