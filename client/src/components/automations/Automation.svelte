@@ -11,6 +11,7 @@
     import { tr } from '../../utils/i18nHelper';
     import CancelButton from '../UI/buttons/CancelButton.svelte';
     import OutlineButton from '../UI/buttons/OutlineButton.svelte';
+    import BorderedButton from '../UI/buttons/BorderedButton.svelte';
 
     export let automation: AutomationPreview;
 
@@ -136,7 +137,7 @@
                         <CancelButton
                             on:click={() => (isConfirmDeleteOpen = false)}
                         />
-                        <OutlineButton
+                        <BorderedButton
                             text={tr('buttons.confirm')}
                             on:click={handleDelete}
                         />
