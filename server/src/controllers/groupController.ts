@@ -1,34 +1,44 @@
 import { Request, Response } from 'express';
-import groupService from '../services/groupService';
 import App from '../app';
+import { groupService } from '../services';
+import { Group } from '../types';
+import {
+    sendf, Success, SuccessOrError, sendMissingParam,
+} from '../utils';
 
 @App.rest('/group')
 class GroupController {
 
+    /**
+     * Get all the groups
+     * @returns All the groups
+     */
     @App.get('')
-    async getGroups(req: Request, res: Response): Promise<void> {
-        const result = await groupService.getGroups();
-        res.status(200).send(result);
-        console.log(this);
+    async getGroups(_req: Request, res: Response): Success<Group[]> {
+        return groupService
+            .getGroups()
+            .then(sendf(res, 200));
     }
 
+    /**
+     * Create a group
+     * @bodyParam name Name of the group
+     * @bodyParam entities Entities attached to this group
+     * @returns The newly created group, or an error
+     */
     @App.post('')
-    async createGroup(req: Request, res: Response): Promise<void> {
+    async createGroup(req: Request, res: Response): SuccessOrError<Group> {
         const { name, entities } = req.body;
         if (!name) {
-            res.status(400).send({ message: 'The parameter name is missing' });
-            return;
+            return sendMissingParam(res, 'name');
         }
-        if (entities === undefined || entities.length === 0) {
-            res.status(400).send({ message: 'The parameter entities is missing' });
-            return;
+        if (!entities || entities.length === 0) {
+            return sendMissingParam(res, 'entities');
         }
-        try {
-            const result = await groupService.createGroup(name, entities);
-            res.status(200).send(result);
-        } catch (err: any) {
-            res.status(400).send({ message: err.message ? err.message : err });
-        }
+
+        return groupService
+            .createGroup(name, entities)
+            .then(sendf<Group>(res, 200));
     }
 
 }

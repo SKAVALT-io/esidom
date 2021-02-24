@@ -138,7 +138,10 @@
 <div class="pr-4">
     {#await entityPromise}
         <p>{tr('blockly.loading')}</p>
-        <LoadingAnimation />
+        <div id="loader" class="flex items-center justify-center">
+            <LoadingAnimation />
+        </div>
+
         <div
             id="blocklyDivHideAwait"
             class="absolute bg-esidom z-100 w-full h-vh-80"

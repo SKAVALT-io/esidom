@@ -7,7 +7,7 @@ export default class AutomationService {
     }
 
     static async toggleAutomation(id: string, state: 'on' | 'off'): Promise<void> {
-        return http.patch(`/automation/${id}`, state);
+        return http.patch(`/automation/${id}`, { state });
     }
 
     static async triggerAutomation(id: string): Promise<void> {
@@ -20,5 +20,9 @@ export default class AutomationService {
 
     static async postAutomation(automation: Automation): Promise<void> {
         return http.post('/automation', automation);
+    }
+
+    static async deleteAutomation(id: string): Promise<void> {
+        return http.delete(`/automation/${id}`);
     }
 }

@@ -26,7 +26,8 @@
         "name": "Noms",
         "state": "Actives"
       }
-    }
+    },
+    "confirmDelete": "Voulez-vous vraiment supprimer cette routine ?"
   },
   "pairing": {
     "instructions": {
@@ -65,5 +66,9 @@
     "unknownName": "Nom inconnu",
     "automationName": "Nom",
     "automationDesc": "Description"
+  },
+  "buttons": {
+    "cancel": "Annuler",
+    "confirm": "Valider"
   }
 }

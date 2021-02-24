@@ -22,7 +22,11 @@
         entity = data;
     }
 
-    socketManager.registerListener('entity_updated', entityId, updateEntity);
+    socketManager.registerListenerById(
+        'entity_updated',
+        entityId,
+        updateEntity
+    );
 
     onDestroy(() => {
         socketManager.removeListener('entity_updated', updateEntity);

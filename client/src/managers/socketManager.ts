@@ -24,7 +24,7 @@ class SocketManager {
         console.log('Connected to WS');
     }
 
-    registerListener<T>(name: string, id: string, func: (data: EntityDataChanged<T>) => void) {
+    registerListenerById<T>(name: string, id: string, func: (data: EntityDataChanged<T>) => void) {
         this.socket.on(name, (data: EntityDataChanged<T>) => {
             // console.log(data);
             // console.log(data.id, id);
@@ -34,7 +34,7 @@ class SocketManager {
         });
     }
 
-    registerPairListener(name: string, func: (data: any) => void) {
+    registerGlobalListener(name: string, func: (data: any) => void) {
         this.socket.on(name, (data: any) => {
             // console.log(data.id, id);
             func(data);

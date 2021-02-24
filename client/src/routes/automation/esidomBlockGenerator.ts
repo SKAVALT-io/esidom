@@ -116,6 +116,21 @@ const esidomBlockGenerator: EsidomBlockGenerator = {
 
             return xml;
         },
+        state(blocklyJSON: BlocklyJSON): string {
+            const service = blocklyJSON.entity_id;
+            const { state } = blocklyJSON;
+
+            return `
+                <block type="binary_condition">
+                    <value name="Service">    
+                    <block type="binary_sensor">
+                        <field name="Object">${service}</field>
+                    </block>
+                    </value>
+                <field name="State">${state}</field>
+                </block>
+            `;
+        },
     },
 };
 
