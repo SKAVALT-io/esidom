@@ -43,7 +43,7 @@
       },
 
       "success": {
-          "deviceFound": "Equipement(s) trouvé(s) 🎉",
+          "deviceFound": "equipement(s) trouvé(s) 🎉",
           "deviceName": "Les noms générés ne sont pas très parlant, nous vous conseillons de renommer votre(vos) équipement(s) :",
           "warning": "(Si vous laissez un champ vide le nom par defaut sera conservé)"
       },
