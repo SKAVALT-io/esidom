@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import App from '../app';
 import { authService } from '../services';
-import { send, SuccessOrError } from '../utils';
+import { logger, send, SuccessOrError } from '../utils';
 import config from '../config/config';
 
 @App.rest('/auth')
@@ -19,7 +19,10 @@ class AuthController {
         return authService
             .doAuth(baseUrl, username, password)
             .then((token) => send(res, 200, { token }))
-            .catch(() => send(res, 401, { error: 'Unauthorized' }));
+            .catch((err) => {
+                logger.error(`Unable to authenticated to HA: ${err}`);
+                return send(res, 401, { error: 'Unauthorized' });
+            });
     }
 
 }

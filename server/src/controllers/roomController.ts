@@ -3,6 +3,7 @@ import App from '../app';
 import { roomService } from '../services';
 import { Room } from '../types';
 import {
+    logger,
     NO_SUCH_ID,
     send,
     sendf,
@@ -58,7 +59,6 @@ class RoomController {
             .getRoomById(areaId)
             .then((room) => {
                 if (!room) {
-                    console.log(NO_SUCH_ID(areaId));
                     return sendNoSuchId(res, areaId);
                 }
                 return send(res, 200, room);
@@ -86,13 +86,14 @@ class RoomController {
         if (!roomId) {
             return sendMissingParam(res, 'roomId');
         }
-
         return roomService
             .deleteRoom(roomId)
             .then(() => sendMessage(res, 200, 'Room successfully deleted'))
-            .catch((err: any) => send(res, 400, {
-                error: `Error while deleting room ${roomId}: ${err.message}`,
-            }));
+            .catch((err: any) => {
+                const message = `Error while deleting room ${roomId}: ${err.message}`;
+                logger.error(message);
+                return send(res, 400, { error: message });
+            });
     }
 
 }

@@ -14,18 +14,19 @@ import userController from './controllers/userController';
 import serviceController from './controllers/serviceController';
 import healthController from './controllers/healthController';
 import databaseForwarder from './forwarders/databaseForwarder';
+import { logger } from './utils';
 
 config(); // Dot env config
 
 App.init();
 
-App.app.get('/', (req: Request, res: Response) => {
+App.app.get('/', (_req: Request, res: Response) => {
     res.status(200).send('Server up and running!');
 });
 
 const port: number = 3000;
 App.http.listen(port, async () => {
-    console.log(`App is listening on port ${port} !`);
+    logger.info(`Server is listening on port ${port} !`);
 });
 
 const initDb = async () => {
@@ -34,15 +35,16 @@ const initDb = async () => {
         driver: sqlite3.Database,
     });
     databaseForwarder.setDb(db);
+    logger.info('Database initialized !');
 };
 initDb();
 
 const doAuth = async () => {
     try {
         await axios.get(`http://localhost:${port}/auth`);
-        console.log('Server authenticated to HA !');
+        logger.info('Server authenticated to HA !');
     } catch (err) {
-        console.log(`ERR(${err.response.status}): ${err.response.statusText}`);
+        logger.error(`ERR(${err.response.status}): ${err.response.statusText}`);
     }
 };
 doAuth();
