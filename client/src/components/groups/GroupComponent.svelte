@@ -11,12 +11,18 @@
     import { socketManager } from "../../managers/socketManager";
     import EntityService from "../../services/entityService";
     import type { Entity } from "../../../types/entityType";
+    import {
+        toggle
+    } from '../../services/entities/generalService';
 
     export let group: Group;
     let checked = group.state === "on";
 
     function handleToggle() {
-        // checked = !checked;
+        if (!group.groupId){
+            return;
+        }
+        toggle(`group.${group.groupId}`);
     }
     function groupUpdatedHandler(data: any) {
         checked = data?.state === "on";
