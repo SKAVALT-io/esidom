@@ -9,6 +9,7 @@
     import RoundedButton from "../../components/UI/buttons/RoundedButton.svelte";
     import SearchBar from "../../components/others/SearchBar.svelte";
     import { tr } from "../../utils/i18nHelper";
+    import { onMount } from "svelte";
 
     let isOpen = false;
     let currentGroup: Group = {
@@ -18,6 +19,13 @@
         implicit: false,
     };
     let flipSwitch = false;
+    let isLoad = true;
+    let groups: Group[];
+    let searchPattern: string = "";
+    onMount(async () => {
+        groups = await GroupService.getGroup();
+        isLoad = false;
+    });
 </script>
 
 <div
@@ -34,22 +42,24 @@
         <SearchBar
             debounce={300}
             on:type={(e) => {
-                console.log(e);
+                searchPattern = e.detail;
             }}
-            on:clear={(e) => console.log(e)}
+            on:clear={(e) => {
+                searchPattern = '';
+            }}
         />
     </div>
 </div>
-{#await GroupService.getGroup()}
+{#if isLoad}
     <div class="loader">
         <LoadingAnimation />
     </div>
-{:then groups}
+{:else}
     <div
         id="group"
         class="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mr-2 ml-2 mt-2"
     >
-        {#each groups as group}
+        {#each searchPattern === '' ? groups : groups.filter((g) => g.name && g.name.includes(searchPattern)) as group}
             <GroupComponent
                 {group}
                 on:click={() => {
@@ -59,9 +69,7 @@
             />
         {/each}
     </div>
-{:catch error}
-    <p style="color: red">{error.message}</p>
-{/await}
+{/if}
 
 <Modal bind:isOpen>
     <div slot="content">

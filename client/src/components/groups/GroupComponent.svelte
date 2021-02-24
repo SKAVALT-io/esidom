@@ -49,7 +49,7 @@
             [{tr('groups.implicitGroup.name')}]
             {tr(`groups.implicitGroup.cat.${group.type}`)}
             {#if group.room}
-                {tr('groups.implicitGroup.of') + group.room.name}
+                {tr('groups.implicitGroup.of') + ' ' + group.room.name}
             {/if}
         {:else}{group.name}{/if}
     </div>
