@@ -27,13 +27,13 @@
     </button>
     <ul class="dropdown-menu z-10 absolute hidden text-gray-700 pt-1">
         {#each dropDownOptions as option, i}
-            <li
+            <button
                 id={`option${i}`}
                 on:click={() => dispatch('click', i)}
                 class="block w-full cursor-pointer bg-gray-100 text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-200 hover:text-gray-900 focus:outline-none focus:bg-gray-100 focus:text-gray-900"
             >
                 {option}
-            </li>
+            </button>
         {/each}
     </ul>
 </div>
