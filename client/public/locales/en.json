@@ -17,7 +17,8 @@
     "buttons": {
         "edit": "Edit",
         "delete": "Delete",
-        "trigger": "Trigger"
+        "trigger": "Trigger",
+        "create": "Create an automation"
     }
   },
   "buttons": {

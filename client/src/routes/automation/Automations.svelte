@@ -11,7 +11,9 @@
     import { push } from 'svelte-spa-router';
     import LoadingAnimation from '../../components/animations/LoadingAnimation.svelte';
     import { socketManager } from '../../managers/socketManager';
+    import Tooltip from '../../components/UI/utils/Tooltip.svelte';
 
+    let showCreateTip = false;
     let automations: AutomationPreview[] = [];
     let searchValue = '';
     $: filteredAutomations = filterAutomations(searchValue);
@@ -95,7 +97,18 @@
     class="pt-2 flex justify-between relative right-0 top-0 mt-2 mr-2 ml-2 mx-auto text-white"
 >
     <h1 class="text-2xl">{tr('automations.myAutomations')}</h1>
-    <div class="fixed bottom-0 z-10 right-0 h-16 w-16">
+    <div
+        class="fixed bottom-0 z-10 right-0 h-16 w-16"
+        on:touchstart={() => (showCreateTip = true)}
+        on:touchend={() => (showCreateTip = false)}
+        on:mouseleave={() => (showCreateTip = false)}
+        on:mouseenter={() => (showCreateTip = true)}
+    >
+        <Tooltip
+            text={tr('automations.buttons.create')}
+            position="left"
+            show={showCreateTip}
+        />
         <RoundedButton
             on:click={() => {
                 push('/blockly');

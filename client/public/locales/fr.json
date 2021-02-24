@@ -31,7 +31,8 @@
     "buttons": {
       "edit": "Éditer",
       "delete": "Supprimer",
-      "trigger": "Déclencher"
+      "trigger": "Déclencher",
+      "create": "Créer une routine"
     }
   },
   "pairing": {
