@@ -26,8 +26,11 @@ class DeviceService implements EventObserver {
                 socketForwarder.forward<HaDevice[]>({ type: 'config/device_registry/list' })
                     .then((haDevices: HaDevice[]) => {
                         const data = haDevices
-                            .filter((d: HaDevice) => d.config_entries
-                                .includes(device.config_entry[0]))
+                            // .filter((d: HaDevice) => d.config_entries
+                            //     .includes(device.config_entry[0]))
+                            .filter((d: HaDevice) => d
+                                .config_entries.sort().toString()
+                            === device.config_entry.sort().toString()) // VALIDATE THIS WORKS
                             .map((d: HaDevice) => ({
                                 id: d.id,
                                 name: d.name,
