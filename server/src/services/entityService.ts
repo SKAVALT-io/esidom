@@ -38,11 +38,11 @@ class EntityService implements EventObserver {
                         // eslint-disable-next-line no-param-reassign
                         this.retrieveAndEmit(id, event, nbRec++);
                     }, 2000);
-                    return;
+                } else {
+                    const error = `Unable to retrieve updated entity: ${id}`;
+                    logger.error(error);
+                    throw new Error(error);
                 }
-                const error = `Unable to retrieve updated entity: ${id}`;
-                logger.error(error);
-                throw new Error(error);
             })
             .catch((err) => socketForwarder
                 .emitSocket(event, { error: err.message }));
