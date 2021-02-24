@@ -35,7 +35,7 @@
     }
 
     onMount(() => {
-        socketManager.registerListener(
+        socketManager.registerListenerById(
             'entity_updated',
             entity.id,
             updateLightState

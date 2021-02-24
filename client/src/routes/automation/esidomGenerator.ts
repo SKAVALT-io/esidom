@@ -247,7 +247,7 @@ export type BlocksGenerator = {
 
         json.alias = dropdown_entities;
         json.entity_id = entity_id;
-        json.service = dropdown_services;
+        json.service = dropdown_services ?? '';
         return JSON.stringify(json);
     };
 

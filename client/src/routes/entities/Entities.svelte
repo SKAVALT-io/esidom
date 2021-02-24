@@ -11,6 +11,7 @@
     import RoundedButton from '../../components/UI/buttons/RoundedButton.svelte';
     import DeviceContainer from '../../components/UI/container/DeviceContainer.svelte';
     import EntityService, { actualDomains } from '../../services/entityService';
+    import LoadingAnimation from '../../components/animations/LoadingAnimation.svelte';
 
     let isPairDeviceOpen = false;
 
@@ -43,7 +44,9 @@
 <!-- Div containing all devices -->
 <div id="test">
     {#await loadEntities()}
-        Loading entities ...
+        <div id="loader" class="flex items-center justify-center">
+            <LoadingAnimation />
+        </div>
     {:then values}
         {#each Object.entries(values).sort() as [domain, entities] (domain)}
             <DeviceContainer title={domain} iconPath="favicon.png">
@@ -56,6 +59,8 @@
             </DeviceContainer>
             <br />
         {/each}
+    {:catch err}
+        <p class="text-red-800">{err.message}</p>
     {/await}
 
     <!-- The + button to add device -->

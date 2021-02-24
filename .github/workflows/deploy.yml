@@ -8,8 +8,106 @@ on:
     branches: [ develop ]
 
 jobs:
+  buildServer:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./server
+    strategy:
+      matrix:
+        node-version: [12.x]
+    steps:
+    - uses: actions/checkout@v2
+    - run: mkdir -p artifact/server
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v1
+      with:
+        node-version: ${{ matrix.node-version }}
+    - run: npm ci
+    - run: |
+        echo "baseUrl=${{ secrets.HA_HOST }}" > .env
+        echo "user=${{ secrets.HA_USER }}" >> .env
+        echo "password=${{ secrets.HA_PASSWORD }}" >> .env
+    - run: npm run build --if-present
+    - run: |
+        mv dist artifact/server
+        mv package*.json artifact/server
+        mv src artifact/server
+    - name: Archive production artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        name: esidom_app
+        path: |
+          server/artifact
+        if-no-files-found: error
+
+
+  buildClient:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./client
+    strategy:
+      matrix:
+        node-version: [12.x]
+    steps:
+    - uses: actions/checkout@v2
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v1
+      with:
+        node-version: ${{ matrix.node-version }}
+    - run: mkdir -p artifact/client
+    - run: npm ci
+    - run: npm run build --if-present
+    - run: |
+        mv build artifact/client
+        mv package*.json artifact/client
+    - name: Archive production artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        name: esidom_app
+        path: |
+          client/artifact
+        if-no-files-found: error
+
+  copyBuildFiles:
+    needs: [buildServer, buildClient]
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Archive production artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        name: esidom_app
+        path: |
+          Dockerfile
+          docker_run.sh
+          run_all.sh
+        if-no-files-found: error
+
+    - run: mkdir artifact
+    - uses: actions/download-artifact@v2
+      with:
+        name: esidom_app
+        path: artifact
+
+
+    - name: Copy Dockerfile and scripts to server
+      uses: appleboy/scp-action@master
+      with:
+        host: ${{ secrets.DEPLOY_HOST }}
+        username: ${{ secrets.DEPLOY_USER }}
+        password: ${{ secrets.DEPLOY_PASSWORD }}
+        command_timeout: 30m
+        port: 22222
+        strip_components: 1
+        source: "artifact/*"
+        target: "esidom_autoDeploy"
+
+
   deployApp:
 #    if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.pull_request.merged == true)
+    needs: copyBuildFiles
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -22,7 +120,6 @@ jobs:
           command_timeout: 30m
           port: 22222
           script: |
-            cd esidom
-            git pull
+            cd esidom_autoDeploy
             chmod u+x docker_run.sh
             ./docker_run.sh "${{ secrets.HA_HOST }}" "${{ secrets.HA_USER }}" "${{ secrets.HA_PASSWORD }}" 

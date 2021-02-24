@@ -21,4 +21,8 @@ export default class AutomationService {
     static async postAutomation(automation: Automation): Promise<void> {
         return http.post('/automation', automation);
     }
+
+    static async deleteAutomation(id: string): Promise<void> {
+        return http.delete(`/automation/${id}`);
+    }
 }

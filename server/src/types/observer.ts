@@ -1,14 +1,15 @@
 /* eslint-disable no-unused-vars */
-import { HaEntityUpdated } from './haTypes';
 
 export interface EventObserver {
     onAuthOk?: () => void;
-    onEntityUpdated?: (data: string) => void;
-    onAutomationUpdated?: (data: string) => void;
+    onEntityUpdated?: (id: string) => void;
+    onAutomationUpdated?: (id: string) => void;
+    onAutomationRemoved?: (id: string) => void;
+    onAutomationCreated?: (id: string) => void;
     onEntityRegistryUpdated?: () => void;
     onDeviceRegistryUpdated?: (data: string) => void;
     onAreaUpdated?: (roomId: string) => void;
     onAreaRemoved?: (roomId: string) => void;
 }
 
-export type Event = 'authOk' | 'entityUpdated' | 'automationUpdated' | 'entityRegistryUpdated' | 'deviceRegistryUpdated' | 'areaUpdated' | 'areaRemoved';
+export type Event = 'authOk' | 'entityUpdated' | 'automationUpdated' | 'automationCreated' | 'automationRemoved' | 'entityRegistryUpdated' | 'deviceRegistryUpdated' | 'areaUpdated' | 'areaRemoved';

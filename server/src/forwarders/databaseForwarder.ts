@@ -1,27 +1,48 @@
-import { Request, Response } from 'express';
 import sqlite3 from 'sqlite3';
-import { open, Database } from 'sqlite';
+import { Database } from 'sqlite';
+import { DBGroup, InsideGroup } from '../types';
+
+const GroupTableName = 'HAGroup';
+const InsideGroupTableName = 'InsideGroup';
 
 class DatabaseForwarder {
 
-    db: Database<sqlite3.Database, sqlite3.Statement> | undefined;
+    private db!: Database<sqlite3.Database, sqlite3.Statement>;
 
     constructor() {
         sqlite3.verbose();
-        open({
-            filename: './src/db/database.db',
-            driver: sqlite3.Database,
-        }).then((db) => {
-            this.db = db;
-        }).catch((err) => {
-            console.log(err);
-        });
     }
 
-    // eslint-disable-next-line no-unused-vars
-    forward(request: Request, response: Response): Promise<any> {
-        // eslint-disable-next-line no-unused-vars
-        return new Promise((res, rej) => {});
+    setDb(db: Database<sqlite3.Database, sqlite3.Statement>) {
+        this.db = db;
+    }
+
+    async selectAllGroups(): Promise<DBGroup[]> {
+        return this.db?.all<DBGroup[]>(`SELECT * FROM ${GroupTableName}`);
+    }
+
+    async selectInsideGroupsByEntityId(entityId: string): Promise<InsideGroup[]> {
+        return this.db
+            .all<InsideGroup[]>(`SELECT * FROM ${InsideGroupTableName} WHERE groupEntityId = '${entityId}'`);
+    }
+
+    async selectGroupsByEntityId(entityId: string): Promise<DBGroup | undefined> {
+        return this.db.get<DBGroup>(`SELECT * FROM ${GroupTableName} WHERE entityId = '${entityId}'`);
+    }
+
+    async insertGroup(groupId: string, name: string, entities: string[]): Promise<void> {
+        try {
+            await this.db.run('BEGIN TRANSACTION');
+            await this.db.run(`INSERT INTO ${GroupTableName} (entityId, name) VALUES ('${groupId}','${name}')`);
+            await Promise.all(
+                entities.map(async (entityId: string) => this.db
+                    .run(`INSERT INTO ${InsideGroupTableName} (entityId, groupEntityId) VALUES ('${entityId}','${groupId}')`)),
+            );
+            await this.db.run('COMMIT');
+        } catch (err) {
+            await this.db.run('ROLLBACK');
+            throw err;
+        }
     }
 
 }

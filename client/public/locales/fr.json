@@ -26,18 +26,19 @@
         "name": "Noms",
         "state": "Actives"
       }
-    }
-},
+    },
+    "confirmDelete": "Voulez-vous vraiment supprimer cette routine ?"
+  },
   "pairing": {
-      "instructions": {
-          "welcome": "Bienvenue, dans le mode d'appairage de ESIDOM.",
-          "advice" : "Suivez les étapes préparatoires suivantes pour appairer vos appareils connectés au sein de votre réseau :",
-          "advice1": "Préparez l'appareil que vous souhaitez ajouter au sein de votre réseau.",
-          "advice2": "Veuillez lire la notice de votre appareil pour connaitre la manipulation à réaliser durant la procédure d'appairage pour ajouter votre objet.",
-          "ready": "Une fois prêt, cliquez sur le bouton",
-          "validate":"valider",
-          "start": "pour lancer la procédure d'appairage."
-      }
+    "instructions": {
+      "welcome": "Bienvenue, dans le mode d'appairage de ESIDOM.",
+      "advice": "Suivez les étapes préparatoires suivantes pour appairer vos appareils connectés au sein de votre réseau :",
+      "advice1": "Préparez l'appareil que vous souhaitez ajouter au sein de votre réseau.",
+      "advice2": "Veuillez lire la notice de votre appareil pour connaitre la manipulation à réaliser durant la procédure d'appairage pour ajouter votre objet.",
+      "ready": "Une fois prêt, cliquez sur le bouton",
+      "validate": "valider",
+      "start": "pour lancer la procédure d'appairage."
+    }
   },
   "blockly": {
     "loading": "Chargement de Blockly...",
@@ -47,5 +48,9 @@
     "unknownName": "Nom inconnu",
     "automationName": "Nom",
     "automationDesc": "Description"
+  },
+  "buttons": {
+    "cancel": "Annuler",
+    "confirm": "Valider"
   }
 }
