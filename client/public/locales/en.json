@@ -31,8 +31,9 @@
         },
   
         "success": {
-            "deviceFound": "Device found:",
-            "deviceName": "Please name your device:"
+            "deviceFound": "Device(s) found 🎉",
+            "deviceName": "The names generated are not very meaningful, we advise you to rename your equipment (s):",
+            "warning": "(If you leave a field empty the default name will be kept)"
         },
   
         "failure": {
@@ -43,8 +44,7 @@
         },
   
         "finish":{
-            "congratulation": "Congratulations, your device",
-            "congratulationFollowing": "has been added to your network."
+            "congratulation": "Congratulations, the following equipment has been added to your network."
         }
     }
 }

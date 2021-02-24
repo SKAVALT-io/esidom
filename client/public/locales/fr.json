@@ -43,8 +43,9 @@
       },
 
       "success": {
-          "deviceFound": "Equipement trouvé :",
-          "deviceName": "Veuillez nommer votre équipement :"
+          "deviceFound": "Equipement(s) trouvé(s) 🎉",
+          "deviceName": "Les noms générés ne sont pas très parlant, nous vous conseillons de renommer votre(vos) équipement(s) :",
+          "warning": "(Si vous laissez un champ vide le nom par defaut sera conservé)"
       },
 
       "failure": {
@@ -55,8 +56,7 @@
       },
 
       "finish":{
-          "congratulation": "Félicitation, votre appareil",
-          "congratulationFollowing": "a bien été rajouté au sein de votre réseau."
+          "congratulation": "Félicitation, les équipements suivants ont bien été rajoutés au sein de votre réseau."
       }
   },
   "blockly": {

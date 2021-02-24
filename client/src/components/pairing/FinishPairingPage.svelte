@@ -6,6 +6,7 @@
     import { getEntity } from '../../services/entityService';
 
     const dispatch = createEventDispatcher();
+    // eslint-disable-next-line ParseError
     let entitiesNames: string[] = [];
 
     onMount(() => {
@@ -22,17 +23,15 @@
 </script>
 
 <div class="flex flex-col space-y-3 ml-10 mr-10 justify-center items-center">
-    <p class="max-w-lg md:max-w-xl">
-        {tr('pairing.finish.congratulation')}
+    <p class="max-w-xl md:max-w-2xl">{tr('pairing.finish.congratulation')}</p>
+    <div
+        class="max-w-xl md:max-w-2xl grid grid-cols-1 gap-2 justify-center text-center"
+    >
         {#each entitiesNames as entity}
-            <span
-                class="flex flex-col justify-center text-center text-blue-300"
-            >
-                {entity}
-            </span>
+            <span class="text-lg text-blue-300">{entity} </span>
         {/each}
-        {tr('pairing.finish.congratulationFollowing')}
-    </p>
+    </div>
+
     <OutlineButton
         text="Fermer"
         on:click={() => {

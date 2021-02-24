@@ -29,13 +29,16 @@
 
 <div class="flex flex-col space-y-4 ml-10 mr-10 justify-center items-center">
     <p class="max-w-lg md:max-w-xl">
+        <span class="text-blue-300"> {entities.length} </span>
         {tr('pairing.success.deviceFound')}
         <br />
         {tr('pairing.success.deviceName')}
+        <br />
+        {tr('pairing.success.warning')}
     </p>
-    <div class="max-h-64 w-max overflow-y-auto">
+    <div class="max-h-64 w-full max-w-lg md:max-w-xl overflow-y-auto">
         {#each entitiesNames as { id, newName }}
-            <div class="">
+            <div class="mb-4">
                 <label
                     class="block text-grey-darker text-md font-bold mb-2 "
                     for="name"
