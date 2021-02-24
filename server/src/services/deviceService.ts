@@ -8,6 +8,7 @@ import {
     HaSearchDeviceResponse,
     HaStateResponse,
 } from '../types';
+import { logger } from '../utils';
 
 class DeviceService implements EventObserver {
 
@@ -15,9 +16,9 @@ class DeviceService implements EventObserver {
         socketForwarder.registerObserver(this);
     }
 
-    /* inherited from EventObserver */
-    onDeviceRegistryUpdated(deviceId: string): void {
-        socketService.searchDeviceById(deviceId)
+    /* Start inherited from EventObserver */
+    onDeviceCreated(id: string): void {
+        socketService.searchDeviceById(id)
             .then((device: HaSearchDeviceResponse) => {
                 socketService.listDeviceRegistry()
                     .then((haDevices: HaDevice[]) => {
@@ -35,11 +36,20 @@ class DeviceService implements EventObserver {
                                 entities: device.entity,
                                 automation: device.automation,
                             }))[0];
-                        socketForwarder.emitSocket('device_created', data);
+                        socketForwarder.emitSocket('deviceCreated', data);
                     });
             })
-            .catch((err) => socketForwarder.emitSocket('device_created', { error: err.message }));
+            .catch((err) => socketForwarder.emitSocket('deviceCreated', { error: err.message }));
     }
+
+    onDeviceUpdated(id: string): void {
+        logger.warn(`Received event 'device ${id} updated', but forwarding to the client is not implemented yet`);
+    }
+
+    onDeviceRemoved(id: string): void {
+        logger.warn(`Received event 'device ${id} removed', but forwarding to the client is not implemented yet`);
+    }
+    /* End inherited from EventObserver */
 
     /**
      * Get all the devices

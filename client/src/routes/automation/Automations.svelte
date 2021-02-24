@@ -70,22 +70,22 @@
 
     onMount(() => {
         socketManager.registerGlobalListener(
-            'automation_removed',
+            'automationRemoved',
             automationDeletedHandler
         );
         socketManager.registerGlobalListener(
-            'automation_created',
+            'automationCreated',
             automationCreatedHandler
         );
     });
 
     onDestroy(() => {
         socketManager.removeListener(
-            'automation_removed',
+            'automationRemoved',
             automationDeletedHandler
         );
         socketManager.removeListener(
-            'automation_created',
+            'automationCreated',
             automationCreatedHandler
         );
     });

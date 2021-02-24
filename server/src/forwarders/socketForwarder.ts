@@ -73,16 +73,25 @@ class SocketForwarder {
             } else if (data) {
                 if (event === 'entityUpdated') {
                     observer.onEntityUpdated?.(data);
+                } else if (event === 'entityCreated') {
+                    observer.onEntityCreated?.(data);
+                } else if (event === 'entityRemoved') {
+                    observer.onEntityRemoved?.(data);
+
+                } else if (event === 'deviceUpdated') {
+                    observer.onDeviceUpdated?.(data);
+                } else if (event === 'deviceRemoved') {
+                    observer.onDeviceRemoved?.(data);
+                } else if (event === 'deviceCreated') {
+                    observer.onDeviceCreated?.(data);
+
                 } else if (event === 'automationUpdated') {
                     observer.onAutomationUpdated?.(data);
                 } else if (event === 'automationRemoved') {
                     observer.onAutomationRemoved?.(data);
                 } else if (event === 'automationCreated') {
                     observer.onAutomationCreated?.(data);
-                } else if (event === 'deviceRegistryUpdated') {
-                    observer.onDeviceRegistryUpdated?.(data);
-                } else if (event === 'entityRegistryUpdated') {
-                    observer.onEntityRegistryUpdated?.();
+
                 } else if (event === 'areaUpdated') {
                     observer.onAreaUpdated?.(data);
                 } else if (event === 'areaRemoved') {
@@ -207,7 +216,7 @@ class SocketForwarder {
         return this.getSocketResponse<T>(data);
     }
 
-    emitSocket<T>(event: string, data: T): void {
+    emitSocket<T>(event: Event, data: T): void {
         logger.debug(`Emit ${event} socket with data:`, data);
         this.io.emit(event, data);
     }
@@ -215,13 +224,13 @@ class SocketForwarder {
     private handleDeviceRegistryUpdated(eventData: any, eventType: string) {
         switch (eventData?.action) {
         case 'create':
-            this.notifyObservers('deviceRegistryUpdated', eventData.device_id);
+            this.notifyObservers('deviceCreated', eventData.device_id);
             return;
         case 'remove':
-            this.io.emit('device_removed', eventData);
+            this.notifyObservers('deviceRemoved', eventData);
             return;
         case 'update':
-            this.notifyObservers('deviceRegistryUpdated');
+            this.notifyObservers('deviceUpdated');
             return;
         default:
             logger.error(`Unknown event ${eventType}`);
@@ -251,13 +260,13 @@ class SocketForwarder {
             if (updated.entity_id.startsWith('automation')) {
                 this.notifyObservers('automationRemoved', updated.entity_id);
             } else {
-                this.notifyObservers('entityRegistryUpdated', updated.entity_id);
+                this.notifyObservers('entityRemoved', updated.entity_id);
             }
         } else if (updated.action === 'create') {
             if (updated.entity_id.startsWith('automation')) {
                 this.notifyObservers('automationCreated', updated.entity_id);
             } else {
-                this.notifyObservers('entityRegistryUpdated', updated.entity_id);
+                this.notifyObservers('entityCreated', updated.entity_id);
             }
         }
     }

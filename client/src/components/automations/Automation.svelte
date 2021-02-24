@@ -41,13 +41,13 @@
         isConfirmDeleteOpen = false;
     }
 
-    function automationUpdatedHandler(data: any) {
+    function automationUpdatedHandler(data: AutomationPreview) {
         automation = data;
     }
 
     onMount(async () => {
-        socketManager.registerListenerById(
-            'entity_updated',
+        socketManager.registerListenerById<AutomationPreview>(
+            'automationUpdated',
             automation.id,
             automationUpdatedHandler
         );
@@ -55,7 +55,7 @@
 
     onDestroy(() => {
         socketManager.removeListener(
-            'entity_updated',
+            'automationUpdated',
             automationUpdatedHandler
         );
     });

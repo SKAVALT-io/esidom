@@ -16,7 +16,7 @@
     }
 
     /*enter this function if the pairing is successful*/
-    function successDevicePaired(data) {
+    function successDevicePaired(data: any) {
         Device.data = data;
         console.log('Device founded : ', data);
         step.update(() => 'SuccessPairingPage');
@@ -26,8 +26,8 @@
     onMount(async () => {
         /* request to start the pairing procedure */
         await launchPair();
-        socketManager.registerPairListener(
-            'device_created',
+        socketManager.registerGlobalListener(
+            'deviceCreated',
             successDevicePaired
         );
         // Wait 120s an object was paired otherwise we go into the failure page
@@ -37,7 +37,7 @@
     /*when the component is destroyed, we stop the timeout and delete the listener on which we were listening*/
     onDestroy(() => {
         clearTimeout(timeout);
-        socketManager.removeListener('device_created', successDevicePaired);
+        socketManager.removeListener('deviceCreated', successDevicePaired);
     });
 </script>
 

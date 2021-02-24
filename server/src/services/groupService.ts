@@ -24,7 +24,19 @@ class GroupService implements EventObserver {
     }
 
     // eslint-disable-next-line no-unused-vars
-    onDeviceRegistryUpdated(data: string): void {
+    onDeviceCreated(_id: string): void {
+        // To avoid search recreate all implicit group
+        this.generateImplicitGroup();
+    }
+
+    // eslint-disable-next-line no-unused-vars
+    onDeviceUpdated(_id: string): void {
+        // To avoid search recreate all implicit group
+        this.generateImplicitGroup();
+    }
+
+    // eslint-disable-next-line no-unused-vars
+    onDeviceRemoved(_id: string): void {
         // To avoid search recreate all implicit group
         this.generateImplicitGroup();
     }

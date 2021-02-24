@@ -32,7 +32,7 @@
 
     onMount(() => {
         socketManager.registerListenerById(
-            'entity_updated',
+            'entityUpdated',
             entityId,
             updateLightState
         );
@@ -49,7 +49,7 @@
     }
 
     onDestroy(() => {
-        socketManager.removeListener('entity_updated', updateLightState);
+        socketManager.removeListener('entityUpdated', updateLightState);
     });
 
     const undetected: string[] = [];

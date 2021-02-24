@@ -1,7 +1,8 @@
 import { socketForwarder } from '../forwarders';
 import { socketService } from '.';
 import {
-    EventObserver, Entity, HaEntity, HaStateResponse,
+    EventObserver, Event, Entity, HaEntity, HaStateResponse,
+    MAX_RETRIEVE_ATTEMPTS,
 } from '../types';
 import { logger } from '../utils';
 
@@ -11,20 +12,43 @@ class EntityService implements EventObserver {
         socketForwarder.registerObserver(this);
     }
 
-    /* Inherited from EventObserver */
-    onEntityUpdated(data: string): void {
-        this.getEntityById(data)
+    /* Start inherited from EventObserver */
+    onEntityUpdated(id: string): void {
+        this.retrieveAndEmit(id, 'entityUpdated');
+    }
+
+    onEntityCreated(id: string): void {
+        this.retrieveAndEmit(id, 'entityCreated');
+    }
+
+    /**
+     * Retrieves the entity matching the given entityId and send it via websocket
+     * @param entityId id of the entity to retrieve
+     * @param event kind of weksocket event to send on
+     */
+    private retrieveAndEmit(id: string, event: Event, nbRec: number = 0): void {
+        this.getEntityById(id)
             .then((updated: Entity | undefined) => {
-                if (!updated) {
-                    const error = `Unable to retrieve updated entity: ${data}`;
-                    logger.error(error);
-                    throw new Error(error);
+                if (updated) {
+                    socketForwarder.emitSocket(event, updated);
+                    return;
                 }
-                socketForwarder.emitSocket('entity_updated', updated);
+                if (event === 'entityCreated' && nbRec < MAX_RETRIEVE_ATTEMPTS) {
+                    setTimeout(() => {
+                        // eslint-disable-next-line no-param-reassign
+                        this.retrieveAndEmit(id, event, nbRec++);
+                    }, 2000);
+                    return;
+                }
+                const error = `Unable to retrieve updated entity: ${id}`;
+                logger.error(error);
+                throw new Error(error);
             })
             .catch((err) => socketForwarder
-                .emitSocket('entity_updated', { error: err.message }));
+                .emitSocket(event, { error: err.message }));
     }
+
+    /* End inherited from EventObserver */
 
     /**
      * Get all entities from HA
