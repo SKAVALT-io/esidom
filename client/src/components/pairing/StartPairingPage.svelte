@@ -1,11 +1,11 @@
 <script>
     import { createEventDispatcher, onMount, onDestroy } from 'svelte';
-    import { step, reset, Device } from './PairingStore.svelte';
+    import { step, reset, DeviceFound } from './PairingStore.svelte';
     import { socketManager } from '../../managers/socketManager';
     import { tr } from '../../utils/i18nHelper';
     import LoadingAnimation from '../animations/LoadingAnimation.svelte';
     import CancelButton from '../UI/buttons/CancelButton.svelte';
-    import { launchPair } from '../../services/pairingService';
+    import DeviceService from '../../services/deviceService';
 
     const dispatch = createEventDispatcher();
 
@@ -18,7 +18,7 @@
 
     /*enter this function if the pairing is successful*/
     function successDevicePaired(data) {
-        Device.data = data;
+        DeviceFound.data = data;
         console.log('Device founded : ', data);
         step.update(() => 'SuccessPairingPage');
     }
@@ -26,7 +26,7 @@
     /*when creating the component, we launch the pairing procedure and listen to the responses from the back*/
     onMount(async () => {
         /* request to start the pairing procedure */
-        await launchPair();
+        await DeviceService.launchPair();
         socketManager.registerPairListener(
             'device_created',
             successDevicePaired
