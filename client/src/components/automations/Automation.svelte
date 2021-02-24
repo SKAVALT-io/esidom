@@ -10,7 +10,6 @@
     import Modal from '../UI/modal/Modal.svelte';
     import { tr } from '../../utils/i18nHelper';
     import CancelButton from '../UI/buttons/CancelButton.svelte';
-    import { text } from 'svelte/internal';
     import OutlineButton from '../UI/buttons/OutlineButton.svelte';
 
     export let automation: AutomationPreview;
@@ -18,8 +17,9 @@
     $: checked = automation.state === 'on';
     let isConfirmDeleteOpen = false;
 
-    let showTriggerTip: boolean = false;
-    let showEditTip: boolean = false;
+    let showTriggerTip = false;
+    let showEditTip = false;
+    let showDeleteTip = false;
 
     function handleToggle() {
         checked = !checked;
@@ -71,7 +71,7 @@
     <div class="content-center col-span-5">{automation.name}</div>
     <div
         id="trigger_button"
-        class="col-span-1"
+        class="col-span-1 relative"
         on:touchstart={() => (showTriggerTip = true)}
         on:touchend={() => (showTriggerTip = false)}
         on:mouseleave={() => (showTriggerTip = false)}
@@ -82,24 +82,32 @@
             size={8}
             on:click={handleTrigger}
         />
-        <!-- <Tooltip text="Déclencher" position="top" show={showTriggerTip} /> -->
+        <Tooltip text="Déclencher" position="top" show={showTriggerTip} />
     </div>
     <div
         id="edit_button"
-        class="col-span-1"
+        class="col-span-1 relative"
         on:touchstart={() => (showEditTip = true)}
         on:touchend={() => (showEditTip = false)}
         on:mouseleave={() => (showEditTip = false)}
         on:mouseenter={() => (showEditTip = true)}
     >
-        <!-- <Tooltip text={'Editer'} position="top" show={showEditTip} /> -->
+        <Tooltip text={'Éditer'} position="top" show={showEditTip} />
         <RoundedButton
             size={8}
             on:click={handleEdit}
             iconPath="icons/button/edit.svg"
         />
     </div>
-    <div id="delete_button" class="col-span-1">
+    <div
+        id="delete_button"
+        class="col-span-1 relative"
+        on:touchstart={() => (showDeleteTip = true)}
+        on:touchend={() => (showDeleteTip = false)}
+        on:mouseleave={() => (showDeleteTip = false)}
+        on:mouseenter={() => (showDeleteTip = true)}
+    >
+        <Tooltip text={'Supprimer'} position="top" show={showDeleteTip} />
         <RoundedButton
             size={8}
             on:click={() => (isConfirmDeleteOpen = true)}
