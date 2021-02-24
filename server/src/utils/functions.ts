@@ -4,7 +4,7 @@ import { Logger } from 'tslog';
 export const MISSING_PARAM = (name: string): string => `Missing parameter ${name}`;
 export const NO_SUCH_ID = (id: string | number): string => `No entity with such id: ${id}`;
 
-export const logger: Logger = new Logger({ name: 'middleLogger', minLevel: 'trace' });
+export const logger: Logger = new Logger({ minLevel: 'trace' });
 
 /**
  * Use this to be able to type res.send() in express
