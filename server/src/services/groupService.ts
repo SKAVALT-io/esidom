@@ -246,7 +246,7 @@ class GroupService implements EventObserver {
         const nameGroup = 'All switch and light';
         await this.createOrUpdateGroupInHa({
             object_id: this.normalizeImplicitGroupName('switchlight'),
-            name: groupName,
+            name: nameGroup,
             entities: entities.join(','),
         });
     }

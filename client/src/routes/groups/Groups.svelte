@@ -7,7 +7,7 @@
     import LoadingAnimation from "../../components/animations/LoadingAnimation.svelte";
     import DropdownButton from "../../components/UI/buttons/DropdownButton.svelte";
     import RoundedButton from "../../components/UI/buttons/RoundedButton.svelte";
-    import SearchBar from "../../components/others/SearchBar.svelte";
+    import SearchBar from "../../components/UI/bar/SearchBar.svelte";
     import { tr } from "../../utils/i18nHelper";
     import { onMount, onDestroy } from "svelte";
     import { socketManager } from "../../managers/socketManager";
