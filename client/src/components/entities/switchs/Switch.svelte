@@ -3,7 +3,9 @@
     import type { SwitchEntity } from '../../../../types/entities/switchEntity';
 
     import { socketManager } from '../../../managers/socketManager';
-    import { getEntity } from '../../../services/entityService';
+    import EntityService, { getEntity } from '../../../services/entityService';
+    import { tr } from '../../../utils/i18nHelper';
+    import EditableDiv from '../../UI/utils/EditableDiv.svelte';
 
     export let entityId: string;
     let entity: SwitchEntity;
@@ -23,14 +25,26 @@
     onDestroy(() => {
         socketManager.removeListener('entityUpdated', updateEntity);
     });
+
+    async function changeName(e: CustomEvent<boolean>): Promise<void> {
+        if (e.detail) {
+            await EntityService.patchEntityName(entityId, entity.name);
+        }
+    }
 </script>
 
 {#await loadEntity()}
-    Loading data...
+    {tr('entities.menu.loading')}
 {:then l}
     <div>
         <div id="title">
-            <h1 class="text-4xl text-center py-6">{entity.name}</h1>
+            <h1 class="text-4xl text-center py-6">
+                <EditableDiv
+                    bind:value={entity.name}
+                    placeholder={tr('entities.menu.enterEntityName')}
+                    on:edition={changeName}
+                />
+            </h1>
         </div>
 
         <div id="content" class="flex flex-row justify-center">

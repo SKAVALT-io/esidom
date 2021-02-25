@@ -42,5 +42,9 @@
         class="h-inherit max-w-full max-h-full object-contain"
     />
     <!-- Data -->
-    <div slot="sensor">{tr('devices.state')} : {isOn ? 'ouvert' : 'fermé'}</div>
+    <div slot="sensor">
+        {tr('devices.state')}
+        :
+        {isOn ? tr('entities.binarySensor.on') : tr('entities.binarySensor.off')}
+    </div>
 </EntityPreview>
