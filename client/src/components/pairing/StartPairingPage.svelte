@@ -24,10 +24,10 @@
     }
 
     /*when creating the component, we launch the pairing procedure and listen to the responses from the back*/
-    onMount(async () => {
+    onMount(() => {
         /* request to start the pairing procedure */
-        await DeviceService.launchPair();
-        socketManager.registerPairListener(
+        DeviceService.launchPair();
+        socketManager.registerGlobalListener(
             'device_created',
             successDevicePaired
         );

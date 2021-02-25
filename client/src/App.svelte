@@ -15,7 +15,6 @@
     import Navbar from './components/UI/bar/Navbar.svelte';
     import { socketManager } from './managers/socketManager';
     import Sidebar from './components/UI/bar/Sidebar.svelte';
-    import InputBar from './components/UI/bar/InputBar.svelte';
 
     // Configure the app routes
     const routes = {
