@@ -76,7 +76,8 @@
   },
   "placeholder": {
       "password": "Mot de passe",
-      "newPassword": "Nouveau mot de passe"
+      "newPassword": "Nouveau mot de passe",
+      "confirmation": "Confirmer le mot de passe"
   },
   "modal": {
       "registerPassword": "Verrouillez l'application avec un mot de passe"

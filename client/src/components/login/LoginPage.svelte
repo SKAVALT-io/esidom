@@ -1,8 +1,8 @@
 <script>
-    import InputBar from '../UI/bar/InputBar.svelte';
     import UserService from '../../services/userService';
     import toastService from '../../utils/toast';
     import { tr } from '../../utils/i18nHelper';
+    import InputPasswordBar from '../UI/bar/InputPasswordBar.svelte';
 
     let password = '';
 
@@ -14,6 +14,16 @@
                 toastService.toast('Mot de passe incorrect');
             }
         });
+    }
+
+    function handleKeyPressed(e: KeyboardEvent) {
+        switch (e.key.toLowerCase()) {
+            case 'enter': // ENTER
+                unlock();
+                break;
+            default:
+                break;
+        }
     }
 </script>
 
@@ -27,9 +37,11 @@
                 {tr('app.name')}
             </h2>
         </div>
-        <InputBar
+        <InputPasswordBar
             placeholder={tr('placeholder.password')}
             required={true}
+            autofocus={true}
+            on:keydown={handleKeyPressed}
             bind:input={password}
         />
         <div>

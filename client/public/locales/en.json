@@ -70,7 +70,8 @@
   },
   "placeholder": {
     "password": "Password",
-    "newPassword": "New Password"
+    "newPassword": "New Password",
+    "confirmation": "Confirm password"
   },
   "modal": {
     "registerPassword": "Lock the application with a password"
