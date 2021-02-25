@@ -13,6 +13,7 @@
     import { socketManager } from '../../../managers/socketManager';
     import type { LightEntity } from '../../../../types/entities/lightEntity';
     import { getEntity } from '../../../services/entityService';
+    import { tr } from '../../../utils/i18nHelper';
 
     import ToggleButton from '../../UI/buttons/ToggleButton.svelte';
 
@@ -70,11 +71,17 @@
                 Informations
             </div>
 
-            <div class="col-span-3 row-start-2 text-right">Nom :</div>
+            <div class="col-span-3 row-start-2 text-right">
+                {tr('entities.menu.name')}
+            </div>
             <div class="col-span-9 row-start-2">{light.name}</div>
-            <div class="col-span-3 row-start-3 text-right">Type :</div>
+            <div class="col-span-3 row-start-3 text-right">
+                {tr('entities.menu.type')}
+            </div>
             <div class="col-span-9 row-start-3">{light.type}</div>
-            <div class="col-span-3 row-start-4 text-right">Etat :</div>
+            <div class="col-span-3 row-start-4 text-right">
+                {tr('entities.menu.state')}
+            </div>
             <div class="col-span-3 row-start-4">{light.state}</div>
             <div class="col-span-3 row-start-4">
                 <ToggleButton
@@ -102,7 +109,7 @@
                     {/if}
                 {/each}
             {:else}
-                Allumez l'appareil si vous souhaitez configurer la lampe.
+                {tr('entities.light.turnTheLightOn')}
             {/if}
         </div>
     </div>

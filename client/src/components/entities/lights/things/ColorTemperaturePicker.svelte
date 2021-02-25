@@ -1,6 +1,4 @@
 <script>
-    import { devices } from 'puppeteer';
-
     import { createEventDispatcher } from 'svelte';
 
     import { debounce } from '../../../../utils/functions';

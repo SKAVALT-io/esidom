@@ -212,5 +212,16 @@
     "createGroup": "Nouveau group",
     "groupName": "Nom du groupe",
     "groupEntities": "Equipement dans le groupe"
+  },
+  "entities": {
+    "menu": {
+      "name": "Nom :",
+      "type": "Type :",
+      "state": "Etat :",
+      "informations": "Informations"
+    },
+    "light": {
+      "turnTheLightOn": "Allumez l'appareil si vous souhaitez configurer la lampe."
+    }
   }
 }

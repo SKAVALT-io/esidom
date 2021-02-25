@@ -1,9 +1,9 @@
 <script>
     import { onDestroy, SvelteComponent } from 'svelte';
     import type { SensorEntity } from '../../../../types/entities/sensorEntity';
-
     import { socketManager } from '../../../managers/socketManager';
     import { getEntity } from '../../../services/entityService';
+    import { tr } from '../../../utils/i18nHelper';
 
     export let entityId: string;
     let entity: SensorEntity;
@@ -39,14 +39,20 @@
                 class="relative grid grid-cols-12 gap-4 py-4 uppercase bg-esidomlight w-full justify-center md:w-2/3 md:max-w-xl"
             >
                 <div class="col-span-full text-center font-semibold text-xl">
-                    Informations
+                    {tr('entities.menu.informations')}
                 </div>
 
-                <div class="col-span-3 row-start-2 text-right">Nom :</div>
+                <div class="col-span-3 row-start-2 text-right">
+                    {tr('entities.menu.name')}
+                </div>
                 <div class="col-span-9 row-start-2">{entity.name}</div>
-                <div class="col-span-3 row-start-3 text-right">Type :</div>
+                <div class="col-span-3 row-start-3 text-right">
+                    {tr('entities.menu.type')}
+                </div>
                 <div class="col-span-9 row-start-3">{entity.type}</div>
-                <div class="col-span-3 row-start-4 text-right">Etat :</div>
+                <div class="col-span-3 row-start-4 text-right">
+                    {tr('entities.menu.state')}
+                </div>
                 <div class="col-span-9 row-start-4">
                     {entity.state + (entity.attributes.unit_of_measurement ?? '')}
                 </div>

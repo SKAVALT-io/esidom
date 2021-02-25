@@ -11,8 +11,8 @@
 
     import RoundedButton from '../../components/UI/buttons/RoundedButton.svelte';
     import DeviceContainer from '../../components/UI/container/DeviceContainer.svelte';
-    import EntityService, { actualDomains } from '../../services/entityService';
-  
+    import EntityService from '../../services/entityService';
+
     import { tr } from '../../utils/i18nHelper';
     import LoadingAnimation from '../../components/animations/LoadingAnimation.svelte';
 
