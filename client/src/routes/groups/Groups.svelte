@@ -3,7 +3,7 @@
     import GroupComponent from "../../components/groups/GroupComponent.svelte";
     import Modal from "../../components/UI/modal/Modal.svelte";
     import GroupDetail from "../../components/groups/GroupDetail.svelte";
-    import type { Group } from "../../../types/groupType";
+    import type { Group, NewGroup } from "../../../types/groupType";
     import LoadingAnimation from "../../components/animations/LoadingAnimation.svelte";
     import DropdownButton from "../../components/UI/buttons/DropdownButton.svelte";
     import RoundedButton from "../../components/UI/buttons/RoundedButton.svelte";
@@ -13,26 +13,31 @@
     import { socketManager } from "../../managers/socketManager";
 
     let isOpen = false;
-    let currentGroup: Group = {
-        groupId: "",
-        name: "",
-        entities: [],
-        implicit: false,
-    };
-    let flipSwitch = false;
+    let currentGroup: Group;
     let isLoad = true;
     let groups: Group[];
     let searchPattern: string = "";
+    const mapSortBy: Map<string,any> = new Map();
+
+    let flipSwitch = false;
+    let selectedSortOption = 0;
+    const comparators = [
+        [
+            (a: Group, b: Group) => 
+                a.name.toLowerCase() > b.name.toLowerCase() ? -1 : 1,
+            (a: Group, b: Group) =>
+                a.name.toLowerCase() < b.name.toLowerCase() ? -1 : 1,
+        ],
+    ];
+    $: comparator = comparators[selectedSortOption][flipSwitch ? 0 : 1];
 
     function groupDeletedHandler(data: any) {
-        console.log(data);
         const { id } = data;
         groups = groups.filter((g) => id !== `group.${ g.groupId}`);
     }
 
     function groupCreatedHandler(data: any) {
         const newGroup: Group = data;
-        console.log(newGroup);
         groups.push(newGroup);
 
     }
@@ -41,29 +46,34 @@
         groups = await GroupService.getGroup();
         isLoad = false;
         socketManager.registerGlobalListener(
-            'group_removed',
+            'groupRemoved',
            groupDeletedHandler
         );
         socketManager.registerGlobalListener(
-            'group_created',
+            'groupCreated',
             groupCreatedHandler
         );
+        
         
     });
     
 
     onDestroy(() => {
         socketManager.removeListener(
-            'group_removed',
+            'groupRemoved',
             groupDeletedHandler
         );
         
         socketManager.removeListener(
-            'group_created',
+            'groupCreated',
             groupCreatedHandler
         );
         
     });
+
+    function closeFunction() {
+        isOpen = false;
+    }
 
 </script>
 
@@ -98,7 +108,7 @@
         id="group"
         class="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mr-2 ml-2 mt-2"
     >
-        {#each searchPattern === '' ? groups : groups.filter((g) => g.name && g.name.includes(searchPattern)) as group}
+        {#each (searchPattern === '' ? groups : groups.filter((g) => g.name && g.name.toLowerCase().includes(searchPattern.toLowerCase()))).sort(comparator) as group}
             <GroupComponent
                 {group}
                 on:click={() => {
@@ -114,7 +124,7 @@
     <div slot="content">
         <GroupDetail
             bind:currentGroup
-            on:update={async () => (groups = await GroupService.getGroup())}
+            {closeFunction}
         />
     </div>
 </Modal>
@@ -122,7 +132,7 @@
     <RoundedButton
         on:click={() => {
             isOpen = true;
-            currentGroup = { entities: [], implicit: false };
+            currentGroup = {groupId:'', state: '', name: '', entities: [], implicit: false };
         }}
         iconPath="icons/button/plus.svg"
     />

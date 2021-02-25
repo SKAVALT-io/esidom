@@ -48,7 +48,7 @@ class GroupService implements EventObserver {
         if (!group) {
             return;
         }
-        socketForwarder.emitSocket('group_created', group);
+        socketForwarder.emitSocket('groupCreated', group);
     }
 
     async onGroupUpdated(groupId: string) {
@@ -56,11 +56,11 @@ class GroupService implements EventObserver {
         if (!group) {
             return;
         }
-        socketForwarder.emitSocket('group_updated', group);
+        socketForwarder.emitSocket('groupUpdated', group);
     }
 
     onGroupRemoved(groupId: string) {
-        socketForwarder.emitSocket('group_removed', { id: groupId });
+        socketForwarder.emitSocket('groupRemoved', { id: groupId });
     }
 
     async onAreaUpdated(roomId: string): Promise<void> {

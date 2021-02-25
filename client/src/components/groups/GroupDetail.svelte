@@ -3,7 +3,7 @@
 
     import RoundedButton from "../UI/buttons/RoundedButton.svelte";
     import ToggleButton from "../UI/buttons/ToggleButton.svelte";
-    import type { Group } from "../../../types/groupType";
+    import type { Group, NewGroup } from "../../../types/groupType";
     import Modal from "../../components/UI/modal/Modal.svelte";
     import SaveButton from "../UI/buttons/SaveButton.svelte";
     import { each } from "svelte/internal";
@@ -14,6 +14,7 @@
     import GroupService from "../../services/groupService";
 
     export let currentGroup: Group;
+    export let closeFunction: () => void;
     const dispatch = createEventDispatcher();
 </script>
 
@@ -21,7 +22,7 @@
     <h1
         class=" block w-full text-center text-grey-darkest mb-6 font-bold text-3xl"
     >
-        {currentGroup.groupId ? currentGroup.name : tr('groups.createGroup')}
+        {currentGroup.groupId !== '' ? currentGroup.name : tr('groups.createGroup')}
     </h1>
     <form class="mb-4">
         <div class="flex flex-col mb-4">
@@ -30,6 +31,7 @@
                 for="Name"
             >{tr('groups.groupName')}</label>
             <input
+                required
                 type="text"
                 name="Name"
                 id="Name"
@@ -61,7 +63,6 @@
                                         return e.id === entity.id;
                                     })}
                                     on:click={(val) => {
-                                        console.log(val.target.checked);
                                         if (val.target.checked) {
                                             currentGroup.entities.push(entity);
                                         } else {
@@ -82,9 +83,8 @@
         <div class="flex flex-col mb-4">
             <SaveButton
                 on:click={() => {
-                    console.log(currentGroup.entities);
-                    currentGroup.groupId ? GroupService.updateGroup(currentGroup) : GroupService.createGroup(currentGroup);
-                    dispatch('update');
+                    currentGroup.groupId !== '' ? GroupService.updateGroup(currentGroup) : GroupService.createGroup(currentGroup);
+                    closeFunction?.();
                 }}
             />
         </div>

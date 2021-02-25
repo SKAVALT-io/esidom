@@ -32,15 +32,7 @@
     function groupUpdatedHandler(data: any) {
         if (data.groupId && data.groupId === group.groupId){
             group = data;
-            updateGroupNameIfIsImplicit();  
-        }
-    }
-    function updateGroupNameIfIsImplicit(){
-        if (group.implicit){
-            group.name = '[' + tr('groups.implicitGroup.name') + '] ' + tr(`groups.implicitGroup.cat.${group.type}`);
-            if(group.room) {
-                group.name += tr('groups.implicitGroup.of') + ' ' + group.room.name;
-            }
+            group = GroupService.updateGroupNameIfIsImplicit(group);  
         }
     }
 
@@ -48,21 +40,18 @@
         if (!group.groupId) {
             return;
         }
-        console.log(group);
-        updateGroupNameIfIsImplicit();
-        console.log(group);
         socketManager.registerListenerById<Entity<any>>(
-            "entity_updated",
+            "entityUpdated",
             `group.${group.groupId}`,
             groupEntityUpdatedHandler
         );
-        socketManager.registerGlobalListener("group_updated", groupUpdatedHandler);
+        socketManager.registerGlobalListener("groupUpdated", groupUpdatedHandler);
 
     });
 
     onDestroy(() => {
-        socketManager.removeListener("entity_updated", groupEntityUpdatedHandler);
-        socketManager.removeListener("group_updated", groupUpdatedHandler);
+        socketManager.removeListener("entityUpdated", groupEntityUpdatedHandler);
+        socketManager.removeListener("groupUpdated", groupUpdatedHandler);
     });
 
 </script>
