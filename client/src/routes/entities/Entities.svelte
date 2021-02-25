@@ -7,6 +7,7 @@
     import PlaceholderPreview from '../../components/entities/PlaceholderPreview.svelte';
     import PairDevice from '../../components/pairing/PairDevice.svelte';
     import SensorPreview from '../../components/entities/sensors/SensorPreview.svelte';
+    import SwitchPreview from '../../components/entities/switchs/SwitchPreview.svelte';
 
     import RoundedButton from '../../components/UI/buttons/RoundedButton.svelte';
     import DeviceContainer from '../../components/UI/container/DeviceContainer.svelte';
@@ -33,6 +34,7 @@
     mapDomainToComp.set('light', LightPreview);
     mapDomainToComp.set('binary_sensor', BinarySensorPreview);
     mapDomainToComp.set('sensor', SensorPreview);
+    mapDomainToComp.set('switch', SwitchPreview);
 
     function getCompByDomain(entityId: string): typeof SvelteComponent {
         const domain = entityId.split('.')[0];
@@ -56,7 +58,7 @@
 </script>
 
 <!-- Div containing all devices -->
-<div id="test" class="pr-6 xl:pr-10">
+<div id="test" class="pr-6 xl:pr-10 mb-20">
     {#await loadEntities()}
         {tr('devices.loading')}
     {:then values}

@@ -12,7 +12,7 @@
     // Is it on or off
     let isOn: boolean;
     // The src for the icon
-    let srcImg: string;
+    let srcImg = 'sensor.png';
     $: isOn = entity.state === 'on';
     // $: srcImg = isOn ? 'door-open.png' : 'door-close.png';
 
@@ -36,7 +36,12 @@
 
 <EntityPreview isError={false} {entity}>
     <!-- Image -->
-    <img slot="img" src={srcImg} alt="" />
+    <img
+        slot="img"
+        src={srcImg}
+        alt=""
+        class="h-inherit max-w-full max-h-full object-contain"
+    />
     <!-- Data -->
     <div slot="sensor">
         {tr('devices.state')}

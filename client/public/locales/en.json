@@ -1,19 +1,20 @@
 {
-    "home": {
-        "welcome": "Hello World",
-        "coucou": "Yo people :D"
-    },
-    "automations": {
-        "myAutomations": "My Automations",
-        "search": "Search...",
-        "sortBy": "Sort by"
-    },
-    "devices": {
-        "binary_sensor": "Binary sensor",
-        "light": "Light",
-        "sensor": "Sensor",
-        "switch": "Switch",
-        "loading": "Loading entitites...",
-        "dataUnavailable": "Data unavailable"
-    }
+  "home": {
+    "welcome": "Hello World",
+    "coucou": "Yo people :D"
+  },
+  "automations": {
+    "myAutomations": "My Automations",
+    "search": "Search...",
+    "sortBy": "Sort by"
+  },
+  "devices": {
+    "binary_sensor": "Binary sensor",
+    "light": "Light",
+    "sensor": "Sensor",
+    "switch": "Switch",
+    "loading": "Loading entitites...",
+    "dataUnavailable": "Data unavailable",
+    "state": "State"
+  }
 }
