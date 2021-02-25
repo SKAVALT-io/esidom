@@ -209,10 +209,8 @@ class SocketForwarder {
                 this.errorsMap.set(id, rej);
                 this.socket?.send(JSON.stringify(req));
             }),
-            new Promise<T>((_resolve, reject) => {
-                setTimeout(() => {
-                    reject(new Error('Timed out.'));
-                }, SOCKET_TIMEOUT);
+            new Promise<T>(() => {
+                setTimeout(() => { throw new Error('Timed out.'); }, SOCKET_TIMEOUT);
             }),
         ]);
     }
