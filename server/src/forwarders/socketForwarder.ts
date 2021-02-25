@@ -251,7 +251,7 @@ class SocketForwarder {
             let event: Event;
             if (ent.old_state !== null && ent.new_state !== null) {
                 event = 'groupUpdated';
-            } else if (!ent.old_state === null && ent.new_state !== null) {
+            } else if (ent.old_state === null && ent.new_state !== null) {
                 event = 'groupCreated';
             } else {
                 event = 'groupRemoved';

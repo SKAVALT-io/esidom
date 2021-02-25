@@ -44,7 +44,7 @@ class GroupService implements EventObserver {
     }
 
     async onGroupCreated(groupId: string) {
-        const group: Group | undefined = await this.getGroup(groupId);
+        const group: Group | undefined = await this.getGroup(groupId.split('.')[1]);
         if (!group) {
             return;
         }
@@ -52,7 +52,7 @@ class GroupService implements EventObserver {
     }
 
     async onGroupUpdated(groupId: string) {
-        const group: Group | undefined = await this.getGroup(groupId);
+        const group: Group | undefined = await this.getGroup(groupId.split('.')[1]);
         if (!group) {
             return;
         }

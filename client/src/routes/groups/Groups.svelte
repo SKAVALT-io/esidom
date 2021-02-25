@@ -32,13 +32,15 @@
     $: comparator = comparators[selectedSortOption][flipSwitch ? 0 : 1];
 
     function groupDeletedHandler(data: any) {
+        console.log(data);
         const { id } = data;
         groups = groups.filter((g) => id !== `group.${ g.groupId}`);
     }
 
     function groupCreatedHandler(data: any) {
+        console.log(data);
         const newGroup: Group = data;
-        groups.push(newGroup);
+        groups = [... groups, newGroup];
 
     }
     
@@ -46,13 +48,14 @@
         groups = await GroupService.getGroup();
         isLoad = false;
         socketManager.registerGlobalListener(
-            'groupRemoved',
-           groupDeletedHandler
-        );
-        socketManager.registerGlobalListener(
             'groupCreated',
             groupCreatedHandler
         );
+        socketManager.registerGlobalListener(
+            'groupRemoved',
+           groupDeletedHandler
+        );
+        
         
         
     });
