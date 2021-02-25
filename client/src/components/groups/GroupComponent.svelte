@@ -47,7 +47,9 @@
 
 <div
     id="group"
-    class="rounded-lg items-center text-center grid grid-cols-10 px-1 py-4"
+    class="rounded-lg items-center text-center grid px-1 py-4"
+    class:grid-cols-10={!group.implicit}
+    class:grid-cols-8={group.implicit}
 >
     <div class="col-span-1">
         <ToggleButton on:change={handleToggle} bind:checked />
