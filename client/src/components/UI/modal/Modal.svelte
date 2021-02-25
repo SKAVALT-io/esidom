@@ -8,7 +8,7 @@
 
 {#if isOpen}
     <div
-        class="modal rounded shadow-lg fixed top-0 left-0 w-full h-screen flex justify-center items-center"
+        class="modal rounded shadow-lg fixed top-0 left-0 w-full h-screen flex justify-center items-center z-110"
     >
         <div class="backdrop" on:click={close} />
         <div class="content-wrapper">

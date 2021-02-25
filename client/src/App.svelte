@@ -19,6 +19,7 @@
     import UserService from './services/userService';
     import toastService from './utils/toast';
     import LoginPage from './components/login/LoginPage.svelte';
+    import DisconnectModal from './components/login/DisconnectModal.svelte';
 
     // Configure the app routes
     const routes = {
@@ -33,7 +34,9 @@
     };
 
     /* Open/Close sidebar from navbar */
-    let open = false;
+    let openSidebar = false;
+
+    let openDisconnectModal = false;
 
     // Configure and init i18n
     addMessages('fr', fr);
@@ -47,12 +50,6 @@
     // Initiate the socket
     socketManager.connect();
 
-    async function lockFront(): Promise<void> {
-        await UserService.lockFront(prompt('Mot de pass') ?? '').then(() =>
-            window.location.reload()
-        );
-    }
-
     async function isLocked(): Promise<boolean> {
         return UserService.isLocked();
     }
@@ -60,6 +57,7 @@
 
 <main>
     <Toast />
+    <DisconnectModal bind:open={openDisconnectModal} />
 
     {#await isLocked() then locked}
         {#if locked}
@@ -69,9 +67,9 @@
                 <div class="header">
                     <Navbar
                         on:press={() => {
-                            open = !open;
+                            openSidebar = !openSidebar;
                         }}
-                        on:disconnect={lockFront}
+                        on:disconnect={() => (openDisconnectModal = true)}
                     />
                 </div>
             </div>
@@ -80,14 +78,14 @@
                 class="flex flex-row space-x-4 sm:space-x-20 overflow-y-auto h-screen"
             >
                 <div class="sidenav fixed z-100">
-                    <Sidebar bind:open />
+                    <Sidebar bind:open={openSidebar} />
                 </div>
                 <div class="main-content w-full mt-6">
                     <Router {routes} />
                 </div>
             </div>
         {/if}
-    {/await}
+    {/await}/>
 </main>
 
 <style lang="scss">
