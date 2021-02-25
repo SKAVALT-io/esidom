@@ -66,7 +66,7 @@
         >
             <Tooltip
                 text={tr('groups.buttons.edit')}
-                position="left"
+                position="top"
                 show={showEditTip}
             />
             <RoundedButton size={8} on:click iconPath="icons/button/edit.svg" />
@@ -80,7 +80,7 @@
         >
             <Tooltip
                 text={tr('groups.buttons.delete')}
-                position="left"
+                position="top"
                 show={showDeleteTip}
             />
             <RoundedButton
