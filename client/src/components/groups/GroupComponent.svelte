@@ -11,28 +11,22 @@
     import { socketManager } from "../../managers/socketManager";
     import EntityService from "../../services/entityService";
     import type { Entity } from "../../../types/entityType";
-    import {
-        toggle
-    } from '../../services/entities/generalService';
 
     export let group: Group;
     let checked = group.state === "on";
 
     function handleToggle() {
         console.log(group.groupId);
-        if (!group.groupId){
+        if (!group.groupId) {
             return;
         }
-        toggle(`group.${group.groupId}`);
-    }
-    
-    function groupEntityUpdatedHandler(data: any) {
-        checked = data?.state === "on";
+        EntityService.toggle(`group.${group.groupId}`);
     }
     function groupUpdatedHandler(data: any) {
-        if (data.groupId && data.groupId === group.groupId){
+        if (data.groupId && data.groupId === group.groupId) {
             group = data;
-            group = GroupService.updateGroupNameIfIsImplicit(group);  
+            checked = data?.state === "on";
+            group = GroupService.updateGroupNameIfIsImplicit(group);
         }
     }
 
@@ -40,20 +34,15 @@
         if (!group.groupId) {
             return;
         }
-        socketManager.registerListenerById<Entity<any>>(
-            "entityUpdated",
-            `group.${group.groupId}`,
-            groupEntityUpdatedHandler
+        socketManager.registerGlobalListener(
+            "groupUpdated",
+            groupUpdatedHandler
         );
-        socketManager.registerGlobalListener("groupUpdated", groupUpdatedHandler);
-
     });
 
     onDestroy(() => {
-        socketManager.removeListener("entityUpdated", groupEntityUpdatedHandler);
         socketManager.removeListener("groupUpdated", groupUpdatedHandler);
     });
-
 </script>
 
 <div
@@ -63,9 +52,7 @@
     <div class="col-span-1">
         <ToggleButton on:change={handleToggle} bind:checked />
     </div>
-    <div class="flex justify-center items-center col-span-7">
-        {group.name}
-    </div>
+    <div class="flex justify-center items-center col-span-7">{group.name}</div>
     {#if !group.implicit}
         <div class="col-span-1 relative">
             <RoundedButton size={8} on:click iconPath="icons/button/edit.svg" />

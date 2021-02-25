@@ -1,4 +1,4 @@
-import type { Group, NewGroup } from '../../types/groupType';
+import type { Group } from '../../types/groupType';
 import config from '../config/config';
 import HttpHelper from '../utils/HttpHelper';
 import { tr } from '../utils/i18nHelper';
@@ -10,7 +10,7 @@ export default class GroupService {
         return groups.map((g) => this.updateGroupNameIfIsImplicit(g));
     }
 
-    static async createGroup(group: NewGroup): Promise<Group> {
+    static async createGroup(group: Group): Promise<Group> {
         return HttpHelper.post('/group', group);
     }
 

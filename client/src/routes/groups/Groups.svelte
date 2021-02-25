@@ -3,7 +3,7 @@
     import GroupComponent from "../../components/groups/GroupComponent.svelte";
     import Modal from "../../components/UI/modal/Modal.svelte";
     import GroupDetail from "../../components/groups/GroupDetail.svelte";
-    import type { Group, NewGroup } from "../../../types/groupType";
+    import type { Group } from "../../../types/groupType";
     import LoadingAnimation from "../../components/animations/LoadingAnimation.svelte";
     import DropdownButton from "../../components/UI/buttons/DropdownButton.svelte";
     import RoundedButton from "../../components/UI/buttons/RoundedButton.svelte";
@@ -17,13 +17,12 @@
     let isLoad = true;
     let groups: Group[];
     let searchPattern: string = "";
-    const mapSortBy: Map<string,any> = new Map();
 
     let flipSwitch = false;
     let selectedSortOption = 0;
     const comparators = [
         [
-            (a: Group, b: Group) => 
+            (a: Group, b: Group) =>
                 a.name.toLowerCase() > b.name.toLowerCase() ? -1 : 1,
             (a: Group, b: Group) =>
                 a.name.toLowerCase() < b.name.toLowerCase() ? -1 : 1,
@@ -34,50 +33,37 @@
     function groupDeletedHandler(data: any) {
         console.log(data);
         const { id } = data;
-        groups = groups.filter((g) => id !== `group.${ g.groupId}`);
+        groups = groups.filter((g) => id !== `group.${g.groupId}`);
     }
 
     function groupCreatedHandler(data: any) {
         console.log(data);
         const newGroup: Group = data;
-        groups = [... groups, newGroup];
-
+        groups = [...groups, newGroup];
     }
-    
+
     onMount(async () => {
         groups = await GroupService.getGroup();
         isLoad = false;
         socketManager.registerGlobalListener(
-            'groupCreated',
+            "groupCreated",
             groupCreatedHandler
         );
         socketManager.registerGlobalListener(
-            'groupRemoved',
-           groupDeletedHandler
-        );
-        
-        
-        
-    });
-    
-
-    onDestroy(() => {
-        socketManager.removeListener(
-            'groupRemoved',
+            "groupRemoved",
             groupDeletedHandler
         );
-        
-        socketManager.removeListener(
-            'groupCreated',
-            groupCreatedHandler
-        );
-        
+    });
+
+    onDestroy(() => {
+        socketManager.removeListener("groupRemoved", groupDeletedHandler);
+
+        socketManager.removeListener("groupCreated", groupCreatedHandler);
     });
 
     function closeFunction() {
         isOpen = false;
     }
-
 </script>
 
 <div
@@ -108,7 +94,9 @@
     </div>
 </div>
 {#if isLoad}
-    <div class="loader">
+    <div
+        class="fixed top-0 left-0 w-full h-screen flex justify-center items-center"
+    >
         <LoadingAnimation />
     </div>
 {:else}
@@ -116,7 +104,11 @@
         id="group"
         class="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mr-2 ml-2 mt-2"
     >
-        {#each (searchPattern === '' ? groups : groups.filter((g) => g.name && g.name.toLowerCase().includes(searchPattern.toLowerCase()))).sort(comparator) as group}
+        {#each (searchPattern === '' ? groups : groups.filter((g) => g.name && g.name
+                          .toLowerCase()
+                          .includes(
+                              searchPattern.toLowerCase()
+                          ))).sort(comparator) as group}
             <GroupComponent
                 {group}
                 on:click={() => {
@@ -130,32 +122,15 @@
 
 <Modal bind:isOpen>
     <div slot="content">
-        <GroupDetail
-            bind:currentGroup
-            {closeFunction}
-        />
+        <GroupDetail bind:currentGroup {closeFunction} />
     </div>
 </Modal>
 <div class="fixed bottom-0 right-0 h-16 w-16">
     <RoundedButton
         on:click={() => {
             isOpen = true;
-            currentGroup = {groupId:'', state: '', name: '', entities: [], implicit: false };
+            currentGroup = { groupId: '', state: '', name: '', entities: [], implicit: false };
         }}
         iconPath="icons/button/plus.svg"
     />
 </div>
-
-<style>
-    .loader {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100vh;
-
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
-</style>

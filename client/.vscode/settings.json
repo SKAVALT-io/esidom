@@ -6,6 +6,7 @@
     "editor.codeActionsOnSave": {
         "source.fixAll": true
     },
+    "editor.formatOnSave": true,
     // Svelte for VS Code
     "[svelte]": {
         "editor.defaultFormatter": "svelte.svelte-vscode"
@@ -37,4 +38,5 @@
         "(?:\\$[_t]|tr)\\([\\'\"`]({key})[\\'\"`]"
     ],
     "i18n-ally.keystyle": "nested",
+    "typescript.preferences.quoteStyle": "single",
 }

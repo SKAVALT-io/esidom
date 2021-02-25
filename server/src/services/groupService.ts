@@ -218,11 +218,7 @@ class GroupService implements EventObserver {
      * @returns group with the matching id or undefined
      */
     async getGroup(groupId: string): Promise<Group | undefined> {
-        const group = (await this.getGroups()).find((g: Group) => g.groupId === groupId);
-        if (group) {
-            return group;
-        }
-        return undefined;
+        return (await this.getGroups()).find((g: Group) => g.groupId === groupId);
     }
 
     /**
@@ -243,10 +239,10 @@ class GroupService implements EventObserver {
             return;
         }
 
-        const nameGroup = 'All switch and light';
+        const groupName = 'All switch and light';
         await this.createOrUpdateGroupInHa({
             object_id: this.normalizeImplicitGroupName('switchlight'),
-            name: nameGroup,
+            name: groupName,
             entities: entities.join(','),
         });
     }
@@ -317,9 +313,8 @@ class GroupService implements EventObserver {
         );
         const groupId = e.entity_id.split('.')[1];
         let implicit = false;
-        // eslint-disable-next-line no-undef-init
-        let room;
-        let type;
+        let room: Room | undefined;
+        let type: string | undefined;
         if (groupId.startsWith('imp')) {
             implicit = true;
             const tab = groupId.split('_');
@@ -365,7 +360,6 @@ class GroupService implements EventObserver {
         const oldEntitiesString = oldGroup.entities.map((e) => e.id);
         const newEntitiesString = group.entities.map((e) => e.id);
         const nameChanged = oldGroup.name === group.name;
-        // eslint-disable-next-line max-len
         const entitiesChanged = oldEntitiesString === newEntitiesString;
         if (!nameChanged || !entitiesChanged) {
             await this.createOrUpdateGroupInHa({
@@ -373,7 +367,7 @@ class GroupService implements EventObserver {
                 name: group.name,
                 entities: newEntitiesString.join(','),
             });
-            databaseForwarder.updateGroup(oldGroup, group, entitiesChanged, nameChanged);
+            await databaseForwarder.updateGroup(oldGroup, group, entitiesChanged, nameChanged);
         }
         return true;
 

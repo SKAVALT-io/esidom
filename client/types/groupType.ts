@@ -10,8 +10,3 @@ export interface Group {
     room?: Room;
     type?:string;
 }
-
-export interface NewGroup {
-    name?: string;
-    entities: Entity<any>[];
-}

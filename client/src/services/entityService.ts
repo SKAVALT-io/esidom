@@ -29,9 +29,27 @@ export default class EntityService {
         return http.patch(`/entity/update/${id}`, { name });
     }
 
-    static async getOnlyEquipmentEntity():Promise<Entity<any>[]> {
+    static async getLightAndSwitchEntity():Promise<Entity<any>[]> {
         const lights = await EntityService.getEntities('light');
         const switchs = await EntityService.getEntities('switch');
         return lights.concat(switchs);
+    }
+
+    static async turnOn(id: string): Promise<unknown> {
+        return http.put(`/entity/${id}`, {
+            service: 'homeassistant.turn_on',
+        });
+    }
+
+    static async toggle(id: string): Promise<unknown> {
+        return http.put(`/entity/${id}`, {
+            service: 'homeassistant.toggle',
+        });
+    }
+
+    static async turnOff(id: string): Promise<unknown> {
+        return http.put(`/entity/${id}`, {
+            service: 'homeassistant.turn_off',
+        });
     }
 }

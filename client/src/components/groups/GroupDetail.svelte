@@ -3,7 +3,7 @@
 
     import RoundedButton from "../UI/buttons/RoundedButton.svelte";
     import ToggleButton from "../UI/buttons/ToggleButton.svelte";
-    import type { Group, NewGroup } from "../../../types/groupType";
+    import type { Group } from "../../../types/groupType";
     import Modal from "../../components/UI/modal/Modal.svelte";
     import SaveButton from "../UI/buttons/SaveButton.svelte";
     import { each } from "svelte/internal";
@@ -48,7 +48,7 @@
             >{tr('groups.groupEntities')}</label>
 
             <div class="mt-2">
-                {#await EntityService.getOnlyEquipmentEntity()}
+                {#await EntityService.getLightAndSwitchEntity()}
                     <div class="loader">
                         <LoadingAnimation />
                     </div>
