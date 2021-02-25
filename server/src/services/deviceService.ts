@@ -20,8 +20,8 @@ class DeviceService implements EventObserver {
     onDeviceCreated(id: string): void {
         setTimeout(() => {
             socketService.searchDeviceById(id)
-                .then((device: HaSearchDeviceResponse) => {
-                    socketService.listDeviceRegistry()
+                .then(async (device: HaSearchDeviceResponse) => {
+                    await socketService.listDeviceRegistry()
                         .then((haDevices: HaDevice[]) => {
                             const data = haDevices
                                 .filter((d: HaDevice) => d

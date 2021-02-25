@@ -1,9 +1,7 @@
 <script lang="ts">
     import Router from 'svelte-spa-router';
 
-    import {
-        addMessages, init, getLocaleFromNavigator,
-} from 'svelte-i18n';
+    import { addMessages, init, getLocaleFromNavigator } from 'svelte-i18n';
 
     import fr from 'locales/fr.json';
     import en from 'locales/en.json';

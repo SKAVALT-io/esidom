@@ -25,7 +25,7 @@
     "state": "Etat",
     "loading": "Chargement des équipements...",
     "dataUnavailable": "Informations indisponibles",
-    "colorTemperature": "Température"
+    "colorTemperature": "Température de couleur"
   },
   "automations": {
     "myAutomations": "Mes Routines",
@@ -71,10 +71,10 @@
       "deviceNotFound": "Nous n'avons pas trouvé votre équipement 😟",
       "followInstructions": "Assurez-vous d'avoir bien suivi les étapes d'appairage de votre équipement.",
       "retryPairingProcedure": "Pour relancer la procédure d'appairage, cliquez sur le bouton",
-      "retry": "Réassayer"
+      "retry": "Réessayer"
     },
     "finish": {
-      "congratulation": "Félicitation, les équipements suivants ont bien été rajoutés au sein de votre réseau."
+      "congratulation": "Félicitations, les équipements suivants ont bien été rajoutés au sein de votre réseau."
     }
   },
   "blockly": {
@@ -209,16 +209,22 @@
         "name": "Noms"
       }
     },
-    "createGroup": "Nouveau group",
+    "createGroup": "Nouveau groupe",
     "groupName": "Nom du groupe",
-    "groupEntities": "Equipement dans le groupe"
+    "groupEntities": "Equipement dans le groupe",
+    "buttons": {
+        "create": "Créer un groupe",
+        "edit": "Editer",
+        "delete": "Supprimer"
+    }
   },
   "entities": {
     "menu": {
       "name": "Nom :",
       "type": "Type :",
       "state": "Etat :",
-      "informations": "Informations"
+      "informations": "Informations",
+      "pair": "Appairer un équipement"
     },
     "light": {
       "turnTheLightOn": "Allumez l'appareil si vous souhaitez configurer la lampe."
