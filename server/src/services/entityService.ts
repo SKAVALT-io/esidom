@@ -154,6 +154,15 @@ class EntityService implements EventObserver {
             .then((states) => states.map((s) => s.entity_id.split('.')[0]));
     }
 
+    async updateEntity(id: string, name: string) {
+        const entity: Entity | undefined = await this.getEntityById(id);
+        if (entity === undefined) {
+            return undefined;
+        }
+        await socketService.updateEntity(entity.id, name);
+        return this.getEntityById(id);
+    }
+
 }
 
 export default new EntityService();

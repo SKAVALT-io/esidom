@@ -1,6 +1,6 @@
 <script lang="ts">
     import { createEventDispatcher, onMount, afterUpdate } from 'svelte';
-    import { tr } from '../../utils/i18nHelper';
+    import { tr } from '../../../utils/i18nHelper';
 
     export let value = '';
     export let debounce = 0;

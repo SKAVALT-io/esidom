@@ -12,9 +12,9 @@
     import Automations from './routes/automation/Automations.svelte';
     import Entity from './routes/entities/Entity.svelte';
 
-    import Navbar from './components/others/Navbar.svelte';
+    import Navbar from './components/UI/bar/Navbar.svelte';
     import { socketManager } from './managers/socketManager';
-    import Sidebar from './components/others/Sidebar.svelte';
+    import Sidebar from './components/UI/bar/Sidebar.svelte';
     import Toast from './Toast.svelte';
 
     // Configure the app routes

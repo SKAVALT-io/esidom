@@ -62,13 +62,17 @@ class SocketService {
     }
 
     // TODO: remove this any
-    async updateEntity(id: string, name: string, enable: boolean): Promise<any> {
-        return socketForwarder.forward({
+    async updateEntity(id: string, name: string, enable?: boolean): Promise<any> {
+        const body = {
             type: 'config/entity_registry/update',
             entity_id: id,
             name,
-            disabled_by: (enable) ? null : 'user',
-        });
+        // eslint-disable-next-line camelcase
+        } as {type: string, entity_id: string, name: string, disabled_by: string | null};
+        if (enable !== undefined) {
+            body.disabled_by = (enable) ? null : 'user';
+        }
+        return socketForwarder.forward(body);
     }
 
     async addRoomToDevice(deviceId: string, areaId: string): Promise<unknown> {

@@ -24,4 +24,8 @@ export default class EntityService {
     static async getServices(): Promise<Service[]> {
         return http.get('/service');
     }
+
+    static async patchEntityName(id:string, name: string): Promise<void> {
+        return http.patch(`/entity/update/${id}`, { name });
+    }
 }

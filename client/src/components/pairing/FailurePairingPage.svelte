@@ -1,9 +1,9 @@
 <script>
     import { createEventDispatcher } from 'svelte';
     import { tr } from '../../utils/i18nHelper';
+    import { step, reset } from './PairingStore.svelte';
     import BorderedButton from '../UI/buttons/BorderedButton.svelte';
     import CancelButton from '../UI/buttons/CancelButton.svelte';
-    import { step, reset } from './PairingStore.svelte';
 
     const dispatch = createEventDispatcher();
 
@@ -14,14 +14,15 @@
 
 <div class="flex flex-col space-y-3 ml-10 mr-10 justify-center items-center">
     <p class="max-w-lg md:max-w-xl">
-        Nous n'avons pas trouvé votre équipement 😟
+        {tr('pairing.failure.deviceNotFound')}
         <br />
-        Assurez-vous d'avoir bien suivi les étapes d'appairage de votre
-        équipement.
+        {tr('pairing.failure.followInstructions')}
         <br />
         <br />
-        Pour relancer la procédure d'appairge, cliquez sur le bouton
-        <span class="text-blue-300 capitalize">Réassayer</span>
+        {tr('pairing.failure.retryPairingProcedure')}
+        <span
+            class="text-blue-300 capitalize"
+        >{tr('pairing.failure.retry')}</span>
     </p>
     <div class="flex flex-row space-x-4">
         <CancelButton
@@ -30,6 +31,6 @@
                 reset();
             }}
         />
-        <BorderedButton text="Réassayer" on:click={retry} />
+        <BorderedButton text={tr('buttons.retry')} on:click={retry} />
     </div>
 </div>

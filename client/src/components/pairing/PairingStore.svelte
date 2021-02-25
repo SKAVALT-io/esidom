@@ -1,12 +1,13 @@
-<script context="module">
+<script lang="ts" context="module">
     import { writable } from 'svelte/store';
+    import type { Device } from '../../../types/deviceType';
 
     /* use to make page changes during the different pairing steps */
     export const step = writable('InstructionPage');
 
-    /*use to retrieve / share object pair*/
-    export class Device {
-        public static data: any;
+    /*use to retrieve / share object pair founded during the pairing operation*/
+    export class DeviceFound {
+        public static data: Device;
     }
 
     /*reset the pairing procedure*/
