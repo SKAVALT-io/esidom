@@ -83,11 +83,27 @@ class SocketService {
         });
     }
 
+    async deleteRoomToDevice(deviceId: string): Promise<unknown> {
+        return socketForwarder.forward({
+            type: 'config/device_registry/update',
+            device_id: deviceId,
+            area_id: null,
+        });
+    }
+
     async searchDeviceById(id: string): Promise<HaSearchDeviceResponse> {
         return socketForwarder.forward<HaSearchDeviceResponse>({
             type: 'search/related',
             item_type: 'device',
             item_id: id,
+        });
+    }
+
+    async updateRoomName(roomId: string, newName: string) {
+        return socketForwarder.forward<HaRoom>({
+            type: 'config/area_registry/update',
+            area_id: roomId,
+            name: newName,
         });
     }
 

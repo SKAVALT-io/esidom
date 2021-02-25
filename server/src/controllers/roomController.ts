@@ -70,8 +70,16 @@ class RoomController {
      * @returns A success message
      */
     @App.put('/:roomId')
-    async updateRoom(_req: Request, res: Response): SuccessMessage {
-        return send(res, 200, { message: 'TODO' });
+    async updateRoom(req: Request, res: Response): SuccessMessageOrError {
+        const room: Room = req.body;
+        if (!room) {
+            return sendMissingParam(res, 'room');
+        }
+        return roomService.updateRoom(room)
+            .then((success) => (success
+                ? sendMessage(res, 200, 'OK')
+                : sendNoSuchId(res, room.roomId)
+            ));
     }
 
     /**

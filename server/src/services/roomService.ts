@@ -51,13 +51,60 @@ class RoomService {
         return socketService.deleteRoom(roomId);
     }
 
+    /**
+     * Retrieve room by id
+     * @param roomId
+     */
     async getRoomById(roomId: string): Promise<Room | undefined> {
         const rooms: Room[] = await this.getRooms();
         return rooms.find((r: Room) => r.roomId === roomId);
     }
 
-    private async updateRoomDevice(deviceId: string, areaId: string): Promise<any> {
+    /**
+     * Add equipment assignment for a room
+     * @param groupId Id of the equipment to add room assignment
+     * @param areaId Id of the room for assignment
+     */
+    private async addRoomToDevice(deviceId: string, areaId: string): Promise<any> {
         return socketService.addRoomToDevice(deviceId, areaId);
+    }
+
+    /**
+     * Delete equipment assignment for a room
+     * @param groupId Id of the equipment to delete room assignment
+     */
+    private async deleteRoomToDevice(deviceId: string): Promise<any> {
+        return socketService.deleteRoomToDevice(deviceId);
+    }
+
+    /**
+     * Update room in HA
+     * @param room room with update information
+     */
+    async updateRoom(room: Room): Promise<boolean> {
+        const oldRoom = await this.getRoomById(room.roomId);
+        if (!oldRoom) {
+            return false;
+        }
+        const oldDevicesString = oldRoom.devices.map((d) => d.id);
+        const devicesString = room.devices.map((d) => d.id);
+
+        if (oldRoom.name !== room.name) {
+            await socketService.updateRoomName(room.roomId, room.name);
+        }
+        await Promise.all(oldDevicesString.map((deviceId) => (
+            !devicesString.includes(deviceId)
+                ? this.deleteRoomToDevice(deviceId)
+                : Promise.resolve()
+        )));
+
+        await Promise.all(devicesString.map((deviceId) => (
+            !oldDevicesString.includes(deviceId)
+                ? this.addRoomToDevice(deviceId, room.roomId)
+                : Promise.resolve()
+        )));
+
+        return true;
     }
 
 }
