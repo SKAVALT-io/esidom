@@ -65,7 +65,7 @@
         {#each Object.entries(values).sort() as [domain, entities] (domain)}
             <DeviceContainer
                 title={tr('devices.' + domain)}
-                iconPath="favicon.png"
+                iconPath="devices/{domain}.png"
             >
                 {#each entities as entity}
                     <svelte:component

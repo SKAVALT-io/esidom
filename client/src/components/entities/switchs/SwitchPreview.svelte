@@ -12,7 +12,7 @@
     // Is it on or off
     let isOn: boolean;
     // The src for the icon
-    let srcImg = 'prise.png';
+    let srcImg = 'devices/switch.png';
     $: isOn = entity.state === 'on';
 
     function updateState(data: SwitchEntity) {

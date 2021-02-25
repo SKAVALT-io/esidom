@@ -18,7 +18,7 @@
     // The src for the icon
     let srcLamp: string;
     $: isOn = entity.state === 'on';
-    $: srcLamp = isOn ? 'lampe-allumee.png' : 'lampe-eteinte.png';
+    $: srcLamp = isOn ? 'devices/lamp-on.png' : 'devices/lamp-off.png';
 
     function updateLightState(data: LightEntity) {
         console.log('new ws', data);

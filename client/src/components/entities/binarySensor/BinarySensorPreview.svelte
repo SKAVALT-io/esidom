@@ -13,7 +13,7 @@
     // The src for the icon
     let srcImg: string;
     $: isOn = entity.state === 'on';
-    $: srcImg = isOn ? 'door-open.png' : 'door-close.png';
+    $: srcImg = isOn ? 'devices/door-open.png' : 'devices/door-close.png';
 
     function updateState(data: BinarySensorEntity) {
         console.log('new ws', data);

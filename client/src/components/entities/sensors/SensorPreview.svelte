@@ -12,7 +12,7 @@
     // Is it on or off
     let isOn: boolean;
     // The src for the icon
-    let srcImg = 'sensor.png';
+    let srcImg = 'devices/sensor.png';
     $: isOn = entity.state === 'on';
     // $: srcImg = isOn ? 'door-open.png' : 'door-close.png';
 
