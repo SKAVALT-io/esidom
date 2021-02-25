@@ -6,7 +6,7 @@
 <div id="deviceContainer" class="flex flex-col">
     <div
         id="title"
-        class="h-auto w-max rounded-t-lg inline-flex items-center pr-3 pl-3 space-x-3"
+        class="h-auto w-max rounded-t-lg inline-flex items-center px-3 pt-2 space-x-3"
     >
         <img class="h-5 w-auto" src={iconPath} alt="icon" />
         <h1 class="text-white">{title}</h1>
