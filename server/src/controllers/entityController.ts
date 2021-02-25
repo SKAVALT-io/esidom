@@ -70,6 +70,22 @@ class EntityController {
     }
 
     /**
+     * Update entity name by its id
+     * @pathParam `id` id of the entity
+     * @bodyParam `name` string to define the new name of the entity
+     * @returns The updated entity, or an error
+     */
+    @App.patch('/update/:id')
+    async updateEntity(req: Request, res: Response): SuccessOrError<Entity> {
+        const { id } = req.params;
+        const { name } = req.body;
+        return entityService.updateEntity(id, name)
+            .then((entity) => (entity
+                ? send(res, 200, entity)
+                : sendNoSuchId(res, id)));
+    }
+
+    /**
      * Toggle an entity by its id
      * @pathParam `id` id of the entity
      * @bodyParam `enable` boolean to define it the entity should be enabled or disabled

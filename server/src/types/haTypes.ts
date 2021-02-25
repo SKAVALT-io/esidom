@@ -126,4 +126,4 @@ export interface HaEntityUpdated {
     entity_id: string;
 }
 
-export type HaDumbEnum = { entity_id: string } | { topic: string, payload_template: 'true' | 'false' } | { object_id: string };
+export type HaDumbEnum = { entity_id: string } | { topic: string, payload_template: ('true' | 'false') | string } | { object_id: string };

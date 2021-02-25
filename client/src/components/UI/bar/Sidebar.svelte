@@ -1,7 +1,7 @@
 <script lang="ts">
     import * as SPA from 'svelte-spa-router';
-    import { tr } from '../../utils/i18nHelper';
-    import { clickOutside } from '../../utils/functions';
+    import { tr } from '../../../utils/i18nHelper';
+    import { clickOutside } from '../../../utils/functions';
     export let open = false;
 
     let currentPageSelected = 'entities';
