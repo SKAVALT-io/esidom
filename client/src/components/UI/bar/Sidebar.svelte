@@ -21,7 +21,7 @@
 
     function handleClickOutside(event: any) {
         // In the navbar file the humburger menu id is 'hamburger', pay attention to any changes!
-        console.log('event : ' + event);
+        // console.log('event : ', event);
         if (event.detail.parentElement?.id !== 'hamburger') {
             open = false;
         }
