@@ -112,13 +112,20 @@ export default class BlocklyService {
 
         // We create the object_action Block
         this.createObjectAction(entities, services);
+
         // We create all the object Blocks
         this.createObjects(entities);
+
         // We create the numeric_state_condition Block
         this.createNumericStateCondition((entities as Entity<string[]>[]));
+
+        // We create the numeric_state_trigger Block
+        this.createNumericStateTrigger((entities as Entity<string[]>[]));
     }
 
-    static createNumericStateCondition(entities: Entity<string[]>[]): void {
+    static createNumericEntityWithAttributesMap(
+        entities: Entity<string[]>[],
+    ): Map<string, EntityWithAttributes> {
         const entityWithAttributesMap = new Map<string, EntityWithAttributes>();
 
         entities.forEach((entity: Entity<string[]>) => {
@@ -128,6 +135,14 @@ export default class BlocklyService {
                 attributes: Object.keys(entity.attributes),
             });
         });
+
+        return entityWithAttributesMap;
+    }
+
+    static createNumericDropdowns(
+        entityWithAttributesMap: Map<string, EntityWithAttributes>,
+    ): string[][][] {
+        const dropdowns = [];
 
         const values = Array.from(entityWithAttributesMap.values());
         const tmpDropdown1 = values.map((
@@ -153,75 +168,26 @@ export default class BlocklyService {
             [tr('blockly.blocks.numeric_state_condition.dropdown3.lower'), 'lower'],
         ];
 
-        const block = Blockly.Blocks as unknown as BlocksDefinitions;
-        block.numeric_state_condition = {
-            init() {
-                this.jsonInit?.(
-                    {
-                        type: 'numeric_state_condition',
-                        message0: tr('blockly.blocks.numeric_state_condition.message'),
-                        args0: [
-                            {
-                                type: 'field_dropdown',
-                                name: 'Entities',
-                                options: dropdown1,
-                            },
-                            {
-                                type: 'field_dropdown',
-                                name: 'Attributes',
-                                options: dropdown2,
-                            },
-                            {
-                                type: 'input_dummy',
-                                name: 'entities',
-                            },
-                            {
-                                type: 'field_dropdown',
-                                name: 'Included',
-                                options: dropdown3,
-                            },
-                            {
-                                type: 'input_dummy',
-                                name: 'included',
-                            },
-                            {
-                                type: 'field_number',
-                                name: 'Minimum',
-                                value: 0,
-                            },
-                            {
-                                type: 'field_number',
-                                name: 'Maximum',
-                                value: 0,
-                            },
-                            {
-                                type: 'input_dummy',
-                                name: 'condition',
-                            },
-                        ],
-                        inputsInline: false,
-                        previousStatement: 'Condition',
-                        nextStatement: 'Condition',
-                        colour: COLORS.HUE_YELLOW,
-                        tooltip: tr('blockly.blocks.numeric_state_condition.tooltip'),
-                        helpUrl: '',
-                        mutator: 'numeric_static_condition_esidom_mutator',
-                    },
-                );
-            },
-        };
+        dropdowns.push(dropdown1, dropdown2, dropdown3);
+        return dropdowns;
+    }
 
-        const NUMERIC_STATE_CONDITION_MUTATOR_MIXIN = {
+    static registerNumericMutator(
+        entityWithAttributesMap: Map<string, EntityWithAttributes>,
+        mutatorName: string,
+        inputName: string,
+    ):void {
+        const NUMERIC_STATE_MUTATOR_MIXIN = {
 
             mutationToDom(): HTMLElement {
                 const container = document.createElement('mutation');
                 const entitiesInput: string = (this as EsidomBlockType).getFieldValue('Entities');
-                container.setAttribute('numeric_state_condition_entities_input', entitiesInput);
+                container.setAttribute(inputName, entitiesInput);
                 return container;
             },
 
             domToMutation(xmlElement: HTMLElement): void {
-                const attribute = xmlElement.getAttribute('numeric_state_condition_entities_input');
+                const attribute = xmlElement.getAttribute(inputName);
                 const entityId = attribute != null ? attribute : '';
                 this.numericStateConditionUpdateAttribute(entityId);
             },
@@ -266,7 +232,7 @@ export default class BlocklyService {
 
         };
 
-        const NUMERIC_STATE_CONDITION_MUTATION_EXTENSION = function mutate(this: EsidomBlockType) {
+        const NUMERIC_STATE_MUTATOR_EXTENSION = function mutate(this: EsidomBlockType) {
             this.getField('Included').setValidator((option: string) => {
                 this.numericStateConditionUpdateCondition(option);
             });
@@ -277,12 +243,152 @@ export default class BlocklyService {
         };
 
         try {
-            Blockly.Extensions.registerMutator('numeric_static_condition_esidom_mutator',
-                NUMERIC_STATE_CONDITION_MUTATOR_MIXIN,
-                NUMERIC_STATE_CONDITION_MUTATION_EXTENSION);
+            Blockly.Extensions.registerMutator(
+                mutatorName,
+                NUMERIC_STATE_MUTATOR_MIXIN,
+                NUMERIC_STATE_MUTATOR_EXTENSION,
+            );
         } catch (error) {
             console.log(error);
         }
+    }
+
+    static createNumericStateTrigger(entities: Entity<string[]>[]): void {
+        const entityWithAttributesMap = this.createNumericEntityWithAttributesMap(entities);
+        const dropdowns = this.createNumericDropdowns(entityWithAttributesMap);
+
+        const block = Blockly.Blocks as unknown as BlocksDefinitions;
+        block.numeric_state_trigger = {
+            init() {
+                this.jsonInit?.(
+                    {
+                        type: 'numeric_state_trigger',
+                        message0: 'Si %1 et son attribut %2 %3 a une valeur %4 %5 entre %6 et %7 %8',
+                        args0: [
+                            {
+                                type: 'field_dropdown',
+                                name: 'Entities',
+                                options: dropdowns[0],
+                            },
+                            {
+                                type: 'field_dropdown',
+                                name: 'Attributes',
+                                options: dropdowns[1],
+                            },
+                            {
+                                type: 'input_dummy',
+                                name: 'entities',
+                            },
+                            {
+                                type: 'field_dropdown',
+                                name: 'Included',
+                                options: dropdowns[2],
+                            },
+                            {
+                                type: 'input_dummy',
+                                name: 'included',
+                            },
+                            {
+                                type: 'field_number',
+                                name: 'Minimum',
+                                value: 0,
+                            },
+                            {
+                                type: 'field_number',
+                                name: 'Maximum',
+                                value: 0,
+                            },
+                            {
+                                type: 'input_dummy',
+                                name: 'condition',
+                            },
+                        ],
+                        inputsInline: false,
+                        previousStatement: 'Trigger',
+                        nextStatement: 'Trigger',
+                        colour: COLORS.HUE_GREEN,
+                        tooltip: 'Après avoir fourni un choisi l\'objet et son attribut, indiquez les valeurs minimum et maximum entre lesquelles le bloc doit/ne doit pas réagir',
+                        helpUrl: '',
+                        mutator: 'numeric_static_trigger_esidom_mutator',
+                    },
+                );
+            },
+        };
+
+        this.registerNumericMutator(
+            entityWithAttributesMap,
+            'numeric_static_trigger_esidom_mutator',
+            'numeric_state_trigger_entities_input',
+        );
+    }
+
+    static createNumericStateCondition(entities: Entity<string[]>[]): void {
+        const entityWithAttributesMap = this.createNumericEntityWithAttributesMap(entities);
+        const dropdowns = this.createNumericDropdowns(entityWithAttributesMap);
+
+        const block = Blockly.Blocks as unknown as BlocksDefinitions;
+        block.numeric_state_condition = {
+            init() {
+                this.jsonInit?.(
+                    {
+                        type: 'numeric_state_condition',
+                        message0: tr('blockly.blocks.numeric_state_condition.message'),
+                        args0: [
+                            {
+                                type: 'field_dropdown',
+                                name: 'Entities',
+                                options: dropdowns[0],
+                            },
+                            {
+                                type: 'field_dropdown',
+                                name: 'Attributes',
+                                options: dropdowns[1],
+                            },
+                            {
+                                type: 'input_dummy',
+                                name: 'entities',
+                            },
+                            {
+                                type: 'field_dropdown',
+                                name: 'Included',
+                                options: dropdowns[2],
+                            },
+                            {
+                                type: 'input_dummy',
+                                name: 'included',
+                            },
+                            {
+                                type: 'field_number',
+                                name: 'Minimum',
+                                value: 0,
+                            },
+                            {
+                                type: 'field_number',
+                                name: 'Maximum',
+                                value: 0,
+                            },
+                            {
+                                type: 'input_dummy',
+                                name: 'condition',
+                            },
+                        ],
+                        inputsInline: false,
+                        previousStatement: 'Condition',
+                        nextStatement: 'Condition',
+                        colour: COLORS.HUE_YELLOW,
+                        tooltip: tr('blockly.blocks.numeric_state_condition.tooltip'),
+                        helpUrl: '',
+                        mutator: 'numeric_static_condition_esidom_mutator',
+                    },
+                );
+            },
+        };
+
+        this.registerNumericMutator(
+            entityWithAttributesMap,
+            'numeric_static_condition_esidom_mutator',
+            'numeric_state_condition_entities_input',
+        );
     }
 
     static createObjectAction(entities: Entity<unknown>[], services: Service[]): void {
@@ -372,7 +478,7 @@ export default class BlocklyService {
             },
         };
 
-        const OBJECT_ACTION_MUTATION_EXTENSION = function mutate(this: EsidomBlockType) {
+        const OBJECT_ACTION_MUTATOR_EXTENSION = function mutate(this: EsidomBlockType) {
             this.getField('Entities').setValidator((option: string) => {
                 const index: number = parseInt(option.split(':')[0], 10);
                 this.objectActionUpdateShape(index);
@@ -380,9 +486,11 @@ export default class BlocklyService {
         };
 
         try {
-            Blockly.Extensions.registerMutator('object_action_esidom_mutator',
+            Blockly.Extensions.registerMutator(
+                'object_action_esidom_mutator',
                 OBJECT_ACTION_MUTATOR_MIXIN,
-                OBJECT_ACTION_MUTATION_EXTENSION);
+                OBJECT_ACTION_MUTATOR_EXTENSION,
+            );
         } catch (error) {
             console.log(error);
         }

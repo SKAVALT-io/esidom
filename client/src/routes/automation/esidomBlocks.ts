@@ -27,6 +27,7 @@ export type BlocksDefinitions = {
     binary_trigger: BlockFunctions;
     time_trigger: BlockFunctions;
     sun_trigger: BlockFunctions;
+    numeric_state_trigger: BlockFunctions;
     time_condition: BlockFunctions;
     sun_condition: BlockFunctions;
     time_condition_hour: BlockFunctions;

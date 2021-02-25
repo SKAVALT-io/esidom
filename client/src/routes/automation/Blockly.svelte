@@ -14,6 +14,9 @@
             <block type="binary_trigger" />
             <block type="time_trigger" />
             <block type="sun_trigger" />
+            <block type="numeric_state_trigger">
+                <mutation numeric_state_trigger_entities_input="" />
+            </block>
         </category>
         <category name="Conditions" colour={COLORS.HUE_YELLOW}>
             <block type="binary_condition" />

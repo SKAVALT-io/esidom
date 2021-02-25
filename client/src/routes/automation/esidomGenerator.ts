@@ -69,6 +69,7 @@ export type BlocksGenerator = {
     binary_trigger: (blk: Block) => void;
     time_trigger: (blk: Block) => void;
     sun_trigger: (blk: Block) => void;
+    numeric_state_trigger: (blk: Block) => void;
     time_condition: (blk: Block) => void;
     sun_condition: (blk: Block) => void;
     time_condition_hour: (blk: Block) => void;
@@ -179,6 +180,57 @@ export type BlocksGenerator = {
         return JSON.stringify(json);
     };
 
+    block.numeric_state_trigger = (blk: Block) => {
+        const dropdown_entities = blk.getFieldValue('Entities');
+        const dropdown_attributes = blk.getFieldValue('Attributes');
+        const dropdown_included = blk.getFieldValue('Included');
+
+        const number_min = blk.getFieldValue('Minimum');
+        const number_max = blk.getFieldValue('Maximum');
+
+        const json: BlocklyJSON = {};
+
+        if (dropdown_included === 'included') {
+            json.platform = 'numeric_state';
+            json.entity_id = dropdown_entities;
+            json.above = number_min;
+            json.below = number_max;
+            if (dropdown_attributes !== 'noAttribute') {
+                json.attribute = dropdown_attributes;
+            }
+        } else if (dropdown_included === 'notIncluded') {
+            return `
+                {
+                    "platform": "numeric_state",
+                    "entity_id": "${dropdown_entities}",
+                    ${dropdown_attributes !== 'noAttribute' ? `"attribute": "${dropdown_attributes}",` : ''}
+                    "below": ${number_min}
+                },
+                {
+                    "platform": "numeric_state",
+                    "entity_id": "${dropdown_entities}",
+                    ${dropdown_attributes !== 'noAttribute' ? `"attribute": "${dropdown_attributes}",` : ''}
+                    "above": ${number_max}
+                }
+            `;
+        } else if (dropdown_included === 'greater') {
+            json.platform = 'numeric_state';
+            json.entity_id = dropdown_entities;
+            json.above = number_min;
+            if (dropdown_attributes !== 'noAttribute') {
+                json.attribute = dropdown_attributes;
+            }
+        } else if (dropdown_included === 'lower') {
+            json.platform = 'numeric_state';
+            json.entity_id = dropdown_entities;
+            json.below = number_max;
+            if (dropdown_attributes !== 'noAttribute') {
+                json.attribute = dropdown_attributes;
+            }
+        }
+
+        return JSON.stringify(json);
+    };
     /**
      * Catégorie Condition
      */

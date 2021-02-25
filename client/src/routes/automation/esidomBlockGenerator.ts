@@ -74,6 +74,46 @@ const esidomBlockGenerator: EsidomBlockGenerator = {
                 </block>
             `;
         },
+        numeric_state(blocklyJSON: BlocklyJSON): string {
+            const entity = blocklyJSON.entity_id;
+            const { attribute } = blocklyJSON;
+            const { below } = blocklyJSON;
+            const { above } = blocklyJSON;
+
+            if (above !== undefined && below !== undefined) {
+                return `
+                    <block type="numeric_state_trigger">
+                    <field name="Entities">${entity}</field>
+                    <field name="Attributes">${attribute ?? 'noAttribute'}</field>
+                    <field name="Included">included</field>
+                    <field name="Minimum">${above}</field>
+                    <field name="Maximum">${below}</field>
+                    </block>
+                `;
+            }
+            if (above !== undefined && below === undefined) {
+                return `
+                    <block type="numeric_state_trigger">
+                    <field name="Entities">${entity}</field>
+                    <field name="Attributes">${attribute ?? 'noAttribute'}</field>
+                    <field name="Included">greater</field>
+                    <field name="Minimum">${above}</field>
+                    </block>
+                `;
+            }
+            if (above === undefined && below !== undefined) {
+                return `
+                    <block type="numeric_state_trigger">
+                    <field name="Entities">${entity}</field>
+                    <field name="Attributes">${attribute ?? 'noAttribute'}</field>
+                    <field name="Included">lower</field>
+                    <field name="Maximum">${below}</field>
+                    </block>
+                `;
+            }
+
+            return '';
+        },
     },
     condition: {
         time(blocklyJSON: BlocklyJSON): string {
@@ -239,7 +279,7 @@ const esidomBlockGenerator: EsidomBlockGenerator = {
                     <field name="Entities">${entity}</field>
                     <field name="Attributes">${attribute ?? 'noAttribute'}</field>
                     <field name="Included">greater</field>
-                    <field name="Maximum">${above}</field>
+                    <field name="Minimum">${above}</field>
                     </block>
                 `;
             }
@@ -249,7 +289,7 @@ const esidomBlockGenerator: EsidomBlockGenerator = {
                     <field name="Entities">${entity}</field>
                     <field name="Attributes">${attribute ?? 'noAttribute'}</field>
                     <field name="Included">lower</field>
-                    <field name="Minimum">${below}</field>
+                    <field name="Maximum">${below}</field>
                     </block>
                 `;
             }
