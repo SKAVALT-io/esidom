@@ -30,7 +30,7 @@
         </category>
         <category name="Actions" colour={COLORS.HUE_ORANGE}>
             <block type="object_action">
-                <mutation entities_input="0" />
+                <mutation entities_input="" />
             </block>
         </category>
         <category name="Objets" colour={COLORS.HUE_RED}>

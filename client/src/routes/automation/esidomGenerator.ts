@@ -391,11 +391,9 @@ export type BlocksGenerator = {
 
         const json: BlocklyJSON = {};
 
-        const entity_id = dropdown_entities.split(':')[1];
+        json.entity_id = dropdown_entities;
+        json.service = dropdown_services;
 
-        json.alias = dropdown_entities;
-        json.entity_id = entity_id;
-        json.service = dropdown_services ?? '';
         return JSON.stringify(json);
     };
 

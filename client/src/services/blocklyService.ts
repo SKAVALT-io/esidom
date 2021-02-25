@@ -391,16 +391,16 @@ export default class BlocklyService {
         );
     }
 
-    static createObjectAction(entities: Entity<unknown>[], services: Service[]): void {
-        const entityWithServicesLst: EntityWithServices[] = [];
+    static createObjectAction(entities: Entity<string[]>[], services: Service[]): void {
+        const entityWithServicesMap = new Map<string, EntityWithServices>();
 
-        entities.forEach((entity: Entity<unknown>) => {
+        entities.forEach((entity: Entity<string[]>) => {
             const tmpServices: string[] = services
                 .filter((service: Service) => service.name.split('.')[0] === entity.type)
                 .map((service: Service) => service.name);
 
             if (tmpServices.length > 0) {
-                entityWithServicesLst.push({
+                entityWithServicesMap.set(entity.id, {
                     id: entity.id,
                     name: entity.name,
                     services: tmpServices,
@@ -412,17 +412,20 @@ export default class BlocklyService {
         // Create object_action Block
         block.object_action = {
             init() {
-                const tmpDropdown1 = entityWithServicesLst.map((
+                const values = Array.from(entityWithServicesMap.values());
+                const tmpDropdown1 = values.map((
                     entity: EntityWithServices,
-                    index: number,
                 ) => {
                     if (entity.name === null || entity.name === '') {
                         entity.name = tr('blockly.unknownName');
                     }
-                    return [entity.name, `${index.toString()}:${entity.id}:${entity.name}`];
+                    return [entity.name, entity.id];
                 });
 
                 const dropdown1 = tmpDropdown1.length > 0 ? tmpDropdown1 : [[tr('blockly.unknownName'), tr('blockly.unknownName')]];
+                const dropdown2 = values[0]
+                    .services.map((service: string) => [service.split('.')[1], service])
+                ?? [[tr('blockly.unknownAction'), tr('blockly.unknownAction')]];
 
                 this.jsonInit?.(
                     {
@@ -434,7 +437,19 @@ export default class BlocklyService {
                                 name: 'Entities',
                                 options: dropdown1,
                             },
-
+                            {
+                                type: 'input_dummy',
+                                name: 'entities',
+                            },
+                            {
+                                type: 'field_dropdown',
+                                name: 'Services',
+                                options: dropdown2,
+                            },
+                            {
+                                type: 'input_dummy',
+                                name: 'services',
+                            },
                         ],
                         inputsInline: false,
                         previousStatement: 'Action',
@@ -452,36 +467,31 @@ export default class BlocklyService {
 
             mutationToDom(): HTMLElement {
                 const container = document.createElement('mutation');
-                const entitiesInput: number = parseInt((this as EsidomBlockType).getFieldValue('Entities').split(':')[0], 10);
-                container.setAttribute('entities_input', entitiesInput.toString());
+                const entitiesInput: string = (this as EsidomBlockType).getFieldValue('Entities');
+                container.setAttribute('entities_input', entitiesInput);
                 return container;
             },
 
             domToMutation(xmlElement: HTMLElement): void {
                 const attribute = xmlElement.getAttribute('entities_input');
-                const index = attribute != null ? parseInt(attribute, 10) : 0;
-                this.objectActionUpdateShape(index);
+                const entityId = attribute != null ? attribute : '';
+                this.objectActionUpdateShape(entityId);
             },
 
-            objectActionUpdateShape(index: number): void {
-                const newDropdown = entityWithServicesLst[index]
+            objectActionUpdateShape(entityId: string): void {
+                const newDropdown = entityWithServicesMap.get(entityId)
                     ?.services.map((service: string) => [service.split('.')[1], service])
                     ?? [[tr('blockly.unknownAction'), tr('blockly.unknownAction')]];
 
-                (this as EsidomBlockType).removeInput?.('services', true);
-                (this as EsidomBlockType).appendDummyInput?.('services')
-                    .appendField?.('Action :')
-                    .appendField?.(
-                        new Blockly.FieldDropdown(newDropdown),
-                        'Services',
-                    );
+                const serviceInput = (this as EsidomBlockType).getInput?.('services');
+                serviceInput.removeField('Services', true);
+                serviceInput.appendField(new Blockly.FieldDropdown(newDropdown), 'Services');
             },
         };
 
         const OBJECT_ACTION_MUTATOR_EXTENSION = function mutate(this: EsidomBlockType) {
             this.getField('Entities').setValidator((option: string) => {
-                const index: number = parseInt(option.split(':')[0], 10);
-                this.objectActionUpdateShape(index);
+                this.objectActionUpdateShape(option);
             });
         };
 
@@ -551,13 +561,13 @@ export default class BlocklyService {
         });
 
         automation.action?.forEach((action) => {
-            const { alias } = action;
+            const entityId = action.entity_id;
             const { service } = action;
 
             xml += `
                 <value name="Action">
                 <block type="object_action">
-                    <field name="Entities">${alias}</field>
+                    <field name="Entities">${entityId}</field>
                     <field name="Services">${service}</field>
                 </block>
                 </value>
