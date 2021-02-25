@@ -120,13 +120,19 @@
     }
 
     async function handleSubmit() {
+        const creating = automationId === '';
+
         const automation = blocklyService.convertToBlock(
             automationName,
             automationDesc,
             automationId === '' ? undefined : automationId
         );
+        if (creating) {
+            await AutomationService.postAutomation(automation);
+        } else {
+            await AutomationService.patchAutomation(automation);
+        }
 
-        await AutomationService.postAutomation(automation);
         // Don't go if request fail.
         push('/automations');
     }

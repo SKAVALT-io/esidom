@@ -4,7 +4,7 @@ import { automationService } from '../services';
 import { Automation, AutomationPreview, HaDumbType } from '../types';
 import {
     logger,
-    send, sendf, sendNoSuchId, Success, SuccessOrError,
+    send, sendf, sendNoSuchId, Success, SuccessMessageOrError, SuccessOrError,
 } from '../utils';
 
 @App.rest('/automation')
@@ -91,6 +91,22 @@ class AutomationController {
             .then(sendf(res, 200))
             .catch((err) => {
                 logger.error(`Error while deleting automation ${id}: ${err}`);
+                return send(res, 400, { error: err.message });
+            });
+    }
+
+    /**
+     * Update an automation
+     * @bodyParam `automation` the updated automation
+     */
+    @App.put('')
+    async updateAutomation(req: Request, res: Response): SuccessMessageOrError {
+        const automation: Automation = req.body;
+        return automationService
+            .updateAutomation(automation)
+            .then(() => send(res, 200, { message: 'Ok' }))
+            .catch((err: any) => {
+                logger.error(`Error while updating automation ${automation.id}: ${err}`);
                 return send(res, 400, { error: err.message });
             });
     }

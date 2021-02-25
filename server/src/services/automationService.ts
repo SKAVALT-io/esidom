@@ -168,6 +168,19 @@ class AutomationService implements EventObserver {
         return httpService.deleteAutomation(id);
     }
 
+    async updateAutomation(automation: Automation): Promise<unknown> {
+        const haAut: HaAutomation = {
+            id: automation.id,
+            alias: automation.name,
+            mode: automation.mode,
+            description: automation.description,
+            trigger: automation.trigger,
+            condition: automation.condition,
+            action: automation.action,
+        };
+        return httpService.updateAutomation(haAut);
+    }
+
 }
 
 export default new AutomationService();

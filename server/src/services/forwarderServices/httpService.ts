@@ -14,6 +14,11 @@ class HttpService {
             .post(`/api/config/automation/config/${automation.id}`, automation);
     }
 
+    async updateAutomation(automation: HaAutomation): Promise<unknown> {
+        return httpForwarder
+            .patch(`/api/config/automation/config/${automation.id}`, automation);
+    }
+
     async postLoginFlow(baseUrl: string): Promise<unknown> {
         return httpForwarder.post('/auth/login_flow', {
             client_id: `${baseUrl}/`,

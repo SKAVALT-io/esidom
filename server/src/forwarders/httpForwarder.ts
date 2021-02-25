@@ -24,6 +24,10 @@ class HttpForwarder {
         return (await axios.delete(`http://${config.baseUrl}${url}`, conf)).data;
     }
 
+    async patch<T>(url: string, conf?: any): Promise<T> {
+        return (await axios.patch(`http://${config.baseUrl}${url}`, conf)).data;
+    }
+
 }
 
 export default new HttpForwarder();
