@@ -18,10 +18,10 @@
         entity = data;
     }
 
-    socketManager.registerListener('entity_updated', entityId, updateEntity);
+    socketManager.registerListenerById('entityUpdated', entityId, updateEntity);
 
     onDestroy(() => {
-        socketManager.removeListener('entity_updated', updateEntity);
+        socketManager.removeListener('entityUpdated', updateEntity);
     });
 </script>
 

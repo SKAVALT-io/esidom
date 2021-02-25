@@ -1,7 +1,10 @@
 <script>
+    import { devices } from 'puppeteer';
+
     import { createEventDispatcher } from 'svelte';
 
     import { debounce } from '../../../../utils/functions';
+    import { tr } from '../../../../utils/i18nHelper';
 
     // Color temperature value, between 153 and 500
     export let value: number;
@@ -16,7 +19,11 @@
 </script>
 
 <div class="w-inherit">
-    <p>Color temperature : {value.toFixed(0)}°?</p>
+    <p>
+        {tr('devices.colorTemperature')}
+        Color temperature :
+        {value.toFixed(0)}K°
+    </p>
     <input
         type="range"
         min="153"

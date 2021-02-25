@@ -1,7 +1,6 @@
 <script>
     import { onDestroy, SvelteComponent } from 'svelte';
     import { onMount } from 'svelte';
-    import { pop } from 'svelte-spa-router';
 
     import {
         switchLamp,

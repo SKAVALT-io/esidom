@@ -10,7 +10,8 @@
     "switch": "Switch",
     "loading": "Loading entitites...",
     "dataUnavailable": "Data unavailable",
-    "state": "State"
+    "state": "State",
+    "colorTemperature": "Color temperature"
   },
   "menu": {
     "devices": "devices",
@@ -61,10 +62,10 @@
     },
     "confirmDelete": "Are you sure you want to delete this automation ?",
     "buttons": {
-        "edit": "Edit",
-        "delete": "Delete",
-        "trigger": "Trigger",
-        "create": "Create an automation"
+      "edit": "Edit",
+      "delete": "Delete",
+      "trigger": "Trigger",
+      "create": "Create an automation"
     }
   },
   "buttons": {
