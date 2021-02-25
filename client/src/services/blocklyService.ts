@@ -18,45 +18,45 @@ import type { EntityWithAttributes } from '../../types/entityWithAttributesTypes
 
 interface Type {
     name: EntityTypeEnum;
-    friendlyName: string,
+    friendlyName: string
 }
 
 const TYPES: Type[] = [
     {
         name: 'binary_sensor',
-        friendlyName: tr('blockly.type.binarySensor'),
+        friendlyName: 'blockly.blocks.blocks_by_type.binarySensor',
     },
     {
         name: 'person',
-        friendlyName: tr('blockly.type.person'),
+        friendlyName: 'blockly.blocks.blocks_by_type.person',
     },
     {
         name: 'weather',
-        friendlyName: tr('blockly.type.weather'),
+        friendlyName: 'blockly.blocks.blocks_by_type.weather',
     },
     {
         name: 'zwave',
-        friendlyName: tr('blockly.type.zwave'),
+        friendlyName: 'blockly.blocks.blocks_by_type.zwave',
     },
     {
         name: 'sensor',
-        friendlyName: tr('blockly.type.sensor'),
+        friendlyName: 'blockly.blocks.blocks_by_type.sensor',
     },
     {
         name: 'light',
-        friendlyName: tr('blockly.type.light'),
+        friendlyName: 'blockly.blocks.blocks_by_type.light',
     },
     {
         name: 'automation',
-        friendlyName: tr('blockly.type.automation'),
+        friendlyName: 'blockly.blocks.blocks_by_type.automation',
     },
     {
         name: 'switch',
-        friendlyName: tr('blockly.type.switch'),
+        friendlyName: 'blockly.blocks.blocks_by_type.switch',
     },
     {
         name: 'media_player',
-        friendlyName: tr('blockly.type.mediaPlayer'),
+        friendlyName: 'blockly.blocks.blocks_by_type.mediaPlayer',
     },
 ];
 
@@ -147,10 +147,10 @@ export default class BlocklyService {
         dropdown2.unshift([tr('blockly.noAttribute'), 'noAttribute']);
 
         const dropdown3 = [
-            [tr('blockly.included'), 'included'],
-            [tr('blockly.notIncluded'), 'notIncluded'],
-            [tr('blockly.greater'), 'greater'],
-            [tr('blockly.lower'), 'lower'],
+            [tr('blockly.blocks.numeric_state_condition.dropdown3.included'), 'included'],
+            [tr('blockly.blocks.numeric_state_condition.dropdown3.notIncluded'), 'notIncluded'],
+            [tr('blockly.blocks.numeric_state_condition.dropdown3.greater'), 'greater'],
+            [tr('blockly.blocks.numeric_state_condition.dropdown3.lower'), 'lower'],
         ];
 
         const block = Blockly.Blocks as unknown as BlocksDefinitions;
@@ -159,7 +159,7 @@ export default class BlocklyService {
                 this.jsonInit?.(
                     {
                         type: 'numeric_state_condition',
-                        message0: "rien",
+                        message0: tr('blockly.blocks.numeric_state_condition.message'),
                         args0: [
                             {
                                 type: 'field_dropdown',
@@ -203,7 +203,7 @@ export default class BlocklyService {
                         previousStatement: 'Condition',
                         nextStatement: 'Condition',
                         colour: COLORS.HUE_YELLOW,
-                        tooltip: "",
+                        tooltip: tr('blockly.blocks.numeric_state_condition.tooltip'),
                         helpUrl: '',
                         mutator: 'numeric_static_condition_esidom_mutator',
                     },
@@ -321,7 +321,7 @@ export default class BlocklyService {
                 this.jsonInit?.(
                     {
                         type: 'object_action',
-                        message0: 'Objet : %1',
+                        message0: tr('blockly.blocks.object_action.message'),
                         args0: [
                             {
                                 type: 'field_dropdown',
@@ -334,7 +334,7 @@ export default class BlocklyService {
                         previousStatement: 'Action',
                         nextStatement: 'Action',
                         colour: COLORS.HUE_ORANGE,
-                        tooltip: '',
+                        tooltip: tr('blockly.blocks.object_action.tooltip'),
                         helpUrl: '',
                         mutator: 'object_action_esidom_mutator',
                     },
@@ -399,8 +399,9 @@ export default class BlocklyService {
             const blocklyObjects = new BlocklyObjects(
                 typeName,
                 typeName.charAt(0).toUpperCase() + typeName.slice(1),
-                type.friendlyName,
+                tr(type.friendlyName),
                 parseInt(COLORS.HUE_RED, 10),
+                tr('blockly.blocks.blocks_by_type.tooltip') + tr(type.friendlyName),
             );
 
             blocklyObjects.addOptions(options.length !== 0 ? options : [[tr('blockly.unknownName'), tr('blockly.unknownName')]]);
