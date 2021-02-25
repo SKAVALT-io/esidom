@@ -1,22 +1,22 @@
 <script lang="ts">
-    import GroupService from "../../services/groupService";
-    import GroupComponent from "../../components/groups/GroupComponent.svelte";
-    import Modal from "../../components/UI/modal/Modal.svelte";
-    import GroupDetail from "../../components/groups/GroupDetail.svelte";
-    import type { Group } from "../../../types/groupType";
-    import LoadingAnimation from "../../components/animations/LoadingAnimation.svelte";
-    import DropdownButton from "../../components/UI/buttons/DropdownButton.svelte";
-    import RoundedButton from "../../components/UI/buttons/RoundedButton.svelte";
-    import SearchBar from "../../components/UI/bar/SearchBar.svelte";
-    import { tr } from "../../utils/i18nHelper";
-    import { onMount, onDestroy } from "svelte";
-    import { socketManager } from "../../managers/socketManager";
+    import GroupService from '../../services/groupService';
+    import GroupComponent from '../../components/groups/GroupComponent.svelte';
+    import Modal from '../../components/UI/modal/Modal.svelte';
+    import GroupDetail from '../../components/groups/GroupDetail.svelte';
+    import type { Group } from '../../../types/groupType';
+    import LoadingAnimation from '../../components/animations/LoadingAnimation.svelte';
+    import DropdownButton from '../../components/UI/buttons/DropdownButton.svelte';
+    import RoundedButton from '../../components/UI/buttons/RoundedButton.svelte';
+    import SearchBar from '../../components/UI/bar/SearchBar.svelte';
+    import { tr } from '../../utils/i18nHelper';
+    import { onMount, onDestroy } from 'svelte';
+    import { socketManager } from '../../managers/socketManager';
 
     let isOpen = false;
     let currentGroup: Group;
     let isLoad = true;
     let groups: Group[];
-    let searchPattern: string = "";
+    let searchPattern: string = '';
 
     let flipSwitch = false;
     let selectedSortOption = 0;
@@ -36,9 +36,9 @@
         groups = groups.filter((g) => id !== `group.${g.groupId}`);
     }
 
-    function groupCreatedHandler(data: any) {
+    function groupCreatedHandler(data: Group) {
         console.log(data);
-        const newGroup: Group = data;
+        const newGroup = data;
         groups = [...groups, newGroup];
     }
 
@@ -46,19 +46,19 @@
         groups = await GroupService.getGroup();
         isLoad = false;
         socketManager.registerGlobalListener(
-            "groupCreated",
+            'groupCreated',
             groupCreatedHandler
         );
         socketManager.registerGlobalListener(
-            "groupRemoved",
+            'groupRemoved',
             groupDeletedHandler
         );
     });
 
     onDestroy(() => {
-        socketManager.removeListener("groupRemoved", groupDeletedHandler);
+        socketManager.removeListener('groupRemoved', groupDeletedHandler);
 
-        socketManager.removeListener("groupCreated", groupCreatedHandler);
+        socketManager.removeListener('groupCreated', groupCreatedHandler);
     });
 
     function closeFunction() {
