@@ -20,6 +20,7 @@
     import UserService from './services/userService';
     import LoginPage from './components/login/LoginPage.svelte';
     import DisconnectModal from './components/login/DisconnectModal.svelte';
+    import Rooms from './routes/room/Rooms.svelte';
 
     // Configure the app routes
     const routes = {
@@ -29,6 +30,7 @@
         '/blockly/:id': Blockly,
         '/automations': Automations,
         '/groups': Groups,
+        '/rooms': Rooms,
         // This is optional, but if present it must be the last
         '*': Entities,
     };
