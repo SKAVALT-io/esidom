@@ -211,14 +211,20 @@
     },
     "createGroup": "Nouveau groupe",
     "groupName": "Nom du groupe",
-    "groupEntities": "Equipement dans le groupe"
+    "groupEntities": "Equipement dans le groupe",
+    "buttons": {
+        "create": "Créer un groupe",
+        "edit": "Editer",
+        "delete": "Supprimer"
+    }
   },
   "entities": {
     "menu": {
       "name": "Nom :",
       "type": "Type :",
       "state": "Etat :",
-      "informations": "Informations"
+      "informations": "Informations",
+      "pair": "Appairer un équipement"
     },
     "light": {
       "turnTheLightOn": "Allumez l'appareil si vous souhaitez configurer la lampe."
