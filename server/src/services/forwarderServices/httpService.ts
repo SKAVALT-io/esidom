@@ -15,8 +15,7 @@ class HttpService {
     }
 
     async updateAutomation(automation: HaAutomation): Promise<unknown> {
-        return httpForwarder
-            .patch(`/api/config/automation/config/${automation.id}`, automation);
+        return this.postAutomation(automation);
     }
 
     async postLoginFlow(baseUrl: string): Promise<unknown> {
