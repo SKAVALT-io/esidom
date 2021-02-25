@@ -3,11 +3,6 @@
     "welcome": "Hello World",
     "coucou": "Yo people :D"
   },
-  "automations": {
-    "myAutomations": "My Automations",
-    "search": "Search...",
-    "sortBy": "Sort by"
-  },
   "devices": {
     "binary_sensor": "Binary sensor",
     "light": "Light",
@@ -16,5 +11,66 @@
     "loading": "Loading entitites...",
     "dataUnavailable": "Data unavailable",
     "state": "State"
+  },
+  "menu": {
+    "devices": "devices",
+    "home": "home",
+    "automations": "automations",
+    "blockly": "blockly",
+    "pairing": "pairing"
+  },
+  "pairing": {
+    "instructions": {
+      "welcome": "Welcome to ESIDOM pairing mode.",
+      "advice": "Follow the following preparatory steps to pair your connected devices within your network:",
+      "advice1": "Prepare the device that you want to add within your network.",
+      "advice2": "Please read the instructions for your device to know the manipulation to be carried out during the pairing procedure to add your object.",
+      "ready": "Once ready, click on the {0} button to start the pairing procedure."
+    },
+    "start": {
+      "information": "Please pair your object"
+    },
+    "success": {
+      "deviceFound": "🎉 Congratulations! We found the following equipment: {0}",
+      "deviceName": "An entity is something that it can be possible to interact with. The names of the entities generated are not very meaningful, we advise you to rename them to find your way around better:",
+      "entitiesAttached": "This object has {0} associated entities, each representing a possibility of interaction with\n\nthe equipment (action on the object, reading a value, etc.)",
+      "instructions": "We advise you to rename them to help you!",
+      "prefix": "Prefix (Mandatory)",
+      "prefixPlaceholder": "Device prefix",
+      "entity": "Entity {0} (Optional)"
+    },
+    "failure": {
+      "deviceNotFound": "We did not find your device 😟",
+      "followInstructions": "Make sure you have followed the steps for pairing your device.",
+      "retryPairingProcedure": "To restart the pairing procedure, click on the button",
+      "retry": "Retry"
+    },
+    "finish": {
+      "congratulation": "Congratulations, the following equipment has been added to your network."
+    }
+  },
+  "automations": {
+    "myAutomations": "My Automations",
+    "search": "Search...",
+    "sortBy": {
+      "title": "Sort by",
+      "options": {
+        "name": "Name",
+        "state": "State"
+      }
+    },
+    "confirmDelete": "Are you sure you want to delete this automation ?",
+    "buttons": {
+        "edit": "Edit",
+        "delete": "Delete",
+        "trigger": "Trigger",
+        "create": "Create an automation"
+    }
+  },
+  "buttons": {
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "retry": "Retry",
+    "close": "Quit"
   }
 }

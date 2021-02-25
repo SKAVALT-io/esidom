@@ -13,12 +13,17 @@
         <category name="Déclencheurs" colour={COLORS.HUE_GREEN}>
             <block type="binary_trigger" />
             <block type="time_trigger" />
+            <block type="sun_trigger" />
         </category>
         <category name="Conditions" colour={COLORS.HUE_YELLOW}>
             <block type="binary_condition" />
             <block type="time_condition" />
             <block type="time_condition_hour" />
             <block type="time_condition_week" />
+            <block type="sun_condition" />
+            <block type="numeric_state_condition">
+                <mutation numeric_state_condition_entities_input="" />
+            </block>
         </category>
         <category name="Actions" colour={COLORS.HUE_ORANGE}>
             <block type="object_action">
@@ -42,6 +47,3 @@
         </category>
     </BlocklyComponent>
 </div>
-
-<style>
-</style>

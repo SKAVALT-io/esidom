@@ -12,23 +12,11 @@
     import RoundedButton from '../../components/UI/buttons/RoundedButton.svelte';
     import DeviceContainer from '../../components/UI/container/DeviceContainer.svelte';
     import EntityService, { actualDomains } from '../../services/entityService';
+  
     import { tr } from '../../utils/i18nHelper';
+    import LoadingAnimation from '../../components/animations/LoadingAnimation.svelte';
 
     let isPairDeviceOpen = false;
-    async function pair(event) {
-        isPairDeviceOpen = true;
-        // TODO: PAIR
-        // const protocol = prompt('Protocol');
-        // const body = JSON.stringify({ protocol });
-        // const headers = new Headers();
-        // headers.set('Content-Type', 'application/json');
-        // await fetch('http://localhost:3000/device', {
-        //     headers,
-        //     method: 'POST',
-        //     body,
-        // }).then((x) => x.json());
-        // alert('✔️');
-    }
 
     const mapDomainToComp = new Map<string, typeof SvelteComponent>();
     mapDomainToComp.set('light', LightPreview);
@@ -60,7 +48,9 @@
 <!-- Div containing all devices -->
 <div id="test" class="pr-6 xl:pr-10 mb-20">
     {#await loadEntities()}
-        {tr('devices.loading')}
+        <div id="loader" class="flex items-center justify-center">
+            <LoadingAnimation />
+        </div>
     {:then values}
         {#each Object.entries(values).sort() as [domain, entities] (domain)}
             <DeviceContainer
@@ -76,6 +66,8 @@
             </DeviceContainer>
             <br />
         {/each}
+    {:catch err}
+        <p class="text-red-800">{err.message}</p>
     {/await}
 
     <!-- The + button to add device -->

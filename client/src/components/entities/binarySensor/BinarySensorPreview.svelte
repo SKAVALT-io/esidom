@@ -21,15 +21,15 @@
     }
 
     onMount(() => {
-        socketManager.registerListener(
-            'entity_updated',
+        socketManager.registerListenerById(
+            'entityUpdated',
             entity.id,
             updateState
         );
     });
 
     onDestroy(() => {
-        socketManager.removeListener('entity_updated', updateState);
+        socketManager.removeListener('entityUpdated', updateState);
     });
 </script>
 

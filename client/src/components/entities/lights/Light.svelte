@@ -34,8 +34,8 @@
     lightPropMap.set('color_temp', ColorTemperaturePicker);
 
     onMount(() => {
-        socketManager.registerListener(
-            'entity_updated',
+        socketManager.registerListenerById(
+            'entityUpdated',
             entityId,
             updateLightState
         );
@@ -52,7 +52,7 @@
     }
 
     onDestroy(() => {
-        socketManager.removeListener('entity_updated', updateLightState);
+        socketManager.removeListener('entityUpdated', updateLightState);
     });
 </script>
 

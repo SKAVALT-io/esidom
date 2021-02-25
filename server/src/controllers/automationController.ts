@@ -1,52 +1,114 @@
 import { Request, Response } from 'express';
-import automationService from '../services/automationService';
 import App from '../app';
-import { Automation, AutomationPreview } from '../types/automation';
+import { automationService } from '../services';
+import { Automation, AutomationPreview, HaDumbType } from '../types';
+import {
+    logger,
+    send, sendf, sendNoSuchId, Success, SuccessMessageOrError, SuccessOrError,
+} from '../utils';
 
 @App.rest('/automation')
 class AutomationController {
 
+    /**
+     * Get all automations
+     * @returns all automations
+     */
     @App.get('')
-    getAutomations(req: Request, res: Response): void {
-        automationService.getAutomations()
-            .then((automations: AutomationPreview[]) => res.status(200).send(automations))
-            .catch((err) => res.status(404).send({ message: err.message }));
+    async getAutomations(_req: Request, res: Response): Success<AutomationPreview[]> {
+        return automationService
+            .getAutomations()
+            .then(sendf(res, 200));
     }
 
+    /**
+     * Get an automation by its id
+     * @pathParam `id` Id of the automation
+     * @returns the automation with the correct id, or an error
+     */
     @App.get('/:id')
-    getAutomationById(req: Request, res: Response): void {
+    async getAutomationById(req: Request, res: Response): SuccessOrError<Automation> {
         const { id } = req.params;
-        automationService.getAutomationById(id)
-            .then((automation: Automation) => res.status(200).send(automation))
-            .catch((err) => res.status(404).send({ message: err.message }));
+        return automationService
+            .getAutomationById(id)
+            .then((automation) => {
+                if (!automation) {
+                    return sendNoSuchId(res, id);
+                }
+                return send(res, 200, automation);
+            });
     }
 
+    /**
+     * Update an automation
+     * @bodyParam `automation` the updated automation
+     */
+    @App.patch('')
+    async updateAutomation(req: Request, res: Response): SuccessMessageOrError {
+        const automation: Automation = req.body;
+        return automationService
+            .updateAutomation(automation)
+            .then(() => send(res, 200, { message: 'Ok' }))
+            .catch((err: any) => {
+                logger.error(`Error while updating automation ${automation.id}: ${err}`);
+                return send(res, 400, { error: err.message });
+            });
+    }
+
+    /**
+     * Toggle an automation
+     */
     @App.patch('/:id')
-    toggleAutomationById(req: Request, res: Response): void {
+    async toggleAutomationById(req: Request, res: Response): Success<HaDumbType> {
         const { id } = req.params;
         const { state } = req.body;
-        automationService.toggleAutomationById(id, state)
-            .then((result: void) => res.status(200).send(result))
-            .catch((err) => res.status(404).send({ message: err.message }));
+        return automationService
+            .toggleAutomationById(id, state)
+            .then(sendf(res, 200));
     }
 
+    /**
+     * Create an automation
+     * @bodyParam `automation` the automation to create
+     * @returns ???
+     */
     @App.post('')
-    createAutomation(req: Request, res: Response): void {
-        const { automation }: {automation: Automation } = req.body;
-        automationService.createAutomation(automation)
-            .then((result) => {
-                console.log('RESULT', result);
-                res.status(200).send(result);
-            })
-            .catch((err) => res.status(400).send({ message: err.message }));
+    async createAutomation(req: Request, res: Response): Success<{
+        result?: string | undefined;
+        message?: string | undefined;
+    }> {
+        const automation: Automation = req.body;
+        return automationService
+            .createAutomation(automation)
+            .then(sendf(res, 200));
     }
 
+    /**
+     * Trigger an automation
+     * @pathParam `id` id of the automation to trigger
+     */
     @App.post('/:id')
-    triggerAutomation(req: Request, res: Response): void {
+    async triggerAutomation(req: Request, res: Response): Success<HaDumbType> {
         const { id } = req.params;
-        automationService.triggerAutomation(id)
-            .then((result) => res.status(200).send(result))
-            .catch((err) => res.status(404).send({ message: err.message }));
+        return automationService
+            .triggerAutomation(id)
+            .then(sendf(res, 200));
+    }
+
+    /**
+     * Delete an automation
+     * @pathParam `id` id of the automation to trigger
+     */
+    @App.delete('/:id')
+    async deleteAutomation(req: Request, res: Response): SuccessOrError<unknown> {
+        const { id } = req.params;
+        return automationService
+            .deleteAutomation(id)
+            .then(sendf(res, 200))
+            .catch((err) => {
+                logger.error(`Error while deleting automation ${id}: ${err}`);
+                return send(res, 400, { error: err.message });
+            });
     }
 
 }

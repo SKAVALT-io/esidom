@@ -1,14 +1,21 @@
 import { Request, Response } from 'express';
-import serviceService from '../services/serviceService';
 import App from '../app';
+import { serviceService } from '../services';
+import { Service } from '../types';
+import { sendf, Success } from '../utils';
 
 @App.rest('/service')
 class ServiceController {
 
+    /**
+     * Get all services
+     * @returns All services
+     */
     @App.get('')
-    async getServices(req: Request, res: Response): Promise<void> {
-        const result = await serviceService.getServices();
-        res.status(200).send(result);
+    async getServices(_req: Request, res: Response): Success<Service[]> {
+        return serviceService
+            .getServices()
+            .then(sendf(res, 200));
     }
 
 }

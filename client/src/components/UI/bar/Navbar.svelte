@@ -1,9 +1,9 @@
 <script lang="ts">
     import { createEventDispatcher } from 'svelte';
 
-    import AccountSVG from '../svg_icons/AccountSVG.svelte';
-    import Clock from './Clock.svelte';
-    import { tr } from '../../utils/i18nHelper';
+    import Clock from '../../others/Clock.svelte';
+    import { tr } from '../../../utils/i18nHelper';
+    import AccountSvg from '../../svg_icons/AccountSVG.svelte';
 
     const dispatch = createEventDispatcher();
 </script>
@@ -38,7 +38,7 @@
             href="/#/"
             class="lg:inline-flex lg:w-auto w-full py-2 rounded text-gray-400 items-center justify-center hover:bg-gray-900 hover:text-white"
         >
-            <AccountSVG />
+            <AccountSvg />
         </a>
     </div>
 </nav>

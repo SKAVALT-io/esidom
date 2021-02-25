@@ -1,14 +1,29 @@
 /* eslint-disable no-unused-vars */
-import { HaEntityUpdated } from './haTypes';
 
 export interface EventObserver {
     onAuthOk?: () => void;
-    onEntityUpdated?: (data: string) => void;
-    onAutomationUpdated?: (data: string) => void;
-    onEntityRegistryUpdated?: () => void;
-    onDeviceRegistryUpdated?: (data: string) => void;
+    onDeviceUpdated?: (id: string) => void;
+    onDeviceRemoved?: (id: string) => void;
+    onDeviceCreated?: (id: string) => void;
+    onEntityUpdated?: (id: string) => void;
+    onEntityCreated?: (id: string) => void;
+    onEntityRemoved?: (id: string) => void;
+    onAutomationUpdated?: (id: string) => void;
+    onAutomationRemoved?: (id: string) => void;
+    onAutomationCreated?: (id: string) => void;
     onAreaUpdated?: (roomId: string) => void;
     onAreaRemoved?: (roomId: string) => void;
+    onGroupCreated?: (groupId: string) => void;
+    onGroupUpdated?: (groupId: string) => void;
+    onGroupRemoved?: (groupId: string) => void;
 }
 
-export type Event = 'authOk' | 'entityUpdated' | 'automationUpdated' | 'entityRegistryUpdated' | 'deviceRegistryUpdated' | 'areaUpdated' | 'areaRemoved';
+export type Event = 'authOk'
+                | 'deviceCreated' | 'deviceUpdated' | 'deviceRemoved'
+                | 'entityUpdated' | 'entityCreated' | 'entityRemoved'
+                | 'automationUpdated' | 'automationCreated' | 'automationRemoved'
+                | 'areaUpdated' | 'areaRemoved' | 'groupCreated' | 'groupUpdated' | 'groupRemoved';
+
+// number of times we should retry retrieving a newly created
+// entity before failing
+export const MAX_RETRIEVE_ATTEMPTS = 5;

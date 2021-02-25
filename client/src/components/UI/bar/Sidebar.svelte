@@ -1,7 +1,7 @@
 <script lang="ts">
     import * as SPA from 'svelte-spa-router';
-    import { tr } from '../../utils/i18nHelper';
-    import { clickOutside } from '../../utils/functions';
+    import { tr } from '../../../utils/i18nHelper';
+    import { clickOutside } from '../../../utils/functions';
     export let open = false;
 
     let currentPageSelected = 'entities';
@@ -80,6 +80,24 @@
                     alt={tr('menu.automations')}
                 />
                 <span class="link-text">{tr('menu.automations')}</span>
+            </a>
+        </li>
+        <li class="nav_item">
+            <a
+                href="/groups"
+                class="nav-link"
+                use:SPA.link
+                on:click={() => {
+                    pageLinkClicked('groups');
+                }}
+                class:selected={currentPageSelected === 'groups'}
+            >
+                <img
+                    class="link-svg"
+                    src="icons/sidebar/groups.svg"
+                    alt={tr('menu.groups')}
+                />
+                <span class="link-text">{tr('menu.groups')}</span>
             </a>
         </li>
     </ul>

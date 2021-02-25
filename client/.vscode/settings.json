@@ -38,4 +38,5 @@
         "(?:\\$[_t]|tr)\\([\\'\"`]({key})[\\'\"`]"
     ],
     "i18n-ally.keystyle": "nested",
+    "typescript.preferences.quoteStyle": "single",
 }

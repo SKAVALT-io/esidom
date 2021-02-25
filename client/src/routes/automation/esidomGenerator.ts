@@ -50,6 +50,13 @@ export interface BlocklyJSON {
     state?: string;
     rgb_color?: string;
     alias?: string;
+    after_offset?: string;
+    offset?: string;
+    event?: string;
+    above?: string;
+    below?: string;
+    attribute?: string;
+    conditions?: BlocklyJSON[];
 }
 
 export type EntityTypeEnum = 'binary_sensor' | 'person' | 'weather' | 'zwave' | 'sensor' | 'light' | 'automation' | 'switch' | 'media_player';
@@ -61,11 +68,13 @@ export type BlocksGenerator = {
     esidom_automation: (blk: Block) => void;
     binary_trigger: (blk: Block) => void;
     time_trigger: (blk: Block) => void;
+    sun_trigger: (blk: Block) => void;
     time_condition: (blk: Block) => void;
     sun_condition: (blk: Block) => void;
     time_condition_hour: (blk: Block) => void;
     time_condition_week: (blk: Block) => void;
     binary_condition: (blk: Block) => void;
+    numeric_state_condition: (blk: Block) => void;
     action: (blk: Block) => void;
     color_picker: (blk: Block) => void;
     color_rgb: (blk: Block) => void;
@@ -78,6 +87,10 @@ export type BlocksGenerator = {
     types.forEach((t: EntityTypeEnum) => {
         block[t] = (blk: Block) => [getDropdownChoice(blk), PRECEDENCE];
     });
+
+    /**
+     * Bloc ESIDOM
+     */
 
     block.esidom_automation = (blk: Block) => {
         const statements_trigger: string = esidomGenerator.statementToCode(blk, 'Trigger');
@@ -111,6 +124,10 @@ export type BlocksGenerator = {
         return JSON.stringify(json);
     };
 
+    /**
+     * Catégorie Déclencheur
+     */
+
     block.time_trigger = (blk: Block) => {
         const number_hour = blk.getFieldValue('Hour');
         const number_minute = blk.getFieldValue('Minute');
@@ -120,26 +137,6 @@ export type BlocksGenerator = {
 
         json.platform = 'time';
         json.at = `${number_hour}:${number_minute}:${number_second}`;
-
-        return JSON.stringify(json);
-    };
-
-    block.time_condition = (blk: Block) => {
-        const number_hour_debut = blk.getFieldValue('Hour_start');
-        const number_minute_debut = blk.getFieldValue('Minute_start');
-        const number_second_debut = blk.getFieldValue('Second_start');
-        const number_hour_end = blk.getFieldValue('Hour_end');
-        const number_minute_end = blk.getFieldValue('Minute_end');
-        const number_second_end = blk.getFieldValue('Second_end');
-
-        const json: BlocklyJSON = {};
-
-        const weekday = getWeekday(blk);
-
-        json.condition = 'time';
-        json.after = `${number_hour_debut}:${number_minute_debut}:${number_second_debut}`;
-        json.before = `${number_hour_end}:${number_minute_end}:${number_second_end}`;
-        json.weekday = weekday;
 
         return JSON.stringify(json);
     };
@@ -164,48 +161,44 @@ export type BlocksGenerator = {
         return JSON.stringify(json);
     };
 
-    block.sun_condition = (blk: Block) => {
-        const dropdown_sun_sun = blk.getFieldValue('Sun.sun');
+    block.sun_trigger = (blk: Block) => {
+        const number_hour = blk.getFieldValue('Hour');
+        const number_minute = blk.getFieldValue('Minute');
+        const number_second = blk.getFieldValue('Second');
+
+        const dropdown_before_after = blk.getFieldValue('Before_after');
+
+        const dropdown_sun = blk.getFieldValue('Sun');
 
         const json: BlocklyJSON = {};
-        json.condition = 'state';
-        json.entity_id = 'sun.sun';
-        json.state = dropdown_sun_sun;
+
+        json.platform = 'sun';
+        json.event = dropdown_sun;
+        json.offset = `${dropdown_before_after}${number_hour}:${number_minute}:${number_second}`;
 
         return JSON.stringify(json);
     };
 
-    block.binary_condition = (blk: Block) => {
-        const value_service = esidomGenerator.valueToCode(blk, 'Service', PRECEDENCE);
-        const dropdown_state = blk.getFieldValue('State');
+    /**
+     * Catégorie Condition
+     */
+
+    block.time_condition = (blk: Block) => {
+        const number_hour_debut = blk.getFieldValue('Hour_start');
+        const number_minute_debut = blk.getFieldValue('Minute_start');
+        const number_second_debut = blk.getFieldValue('Second_start');
+        const number_hour_end = blk.getFieldValue('Hour_end');
+        const number_minute_end = blk.getFieldValue('Minute_end');
+        const number_second_end = blk.getFieldValue('Second_end');
 
         const json: BlocklyJSON = {};
 
-        json.condition = 'state';
-        json.entity_id = value_service;
-        json.state = dropdown_state;
+        const weekday = getWeekday(blk);
 
-        return JSON.stringify(json);
-    };
-
-    block.color_picker = (blk: Block) => {
-        const color_value = blk.getFieldValue('Color');
-
-        const json: BlocklyJSON = {};
-
-        json.rgb_color = color_value;
-
-        return JSON.stringify(json);
-    };
-
-    block.color_rgb = (blk: Block) => {
-        const number_red = blk.getFieldValue('Red');
-        const number_green = blk.getFieldValue('Green');
-        const number_blue = blk.getFieldValue('Blue');
-        const color_value = `#${number_red.toString(16).padStart(2, '0')}${number_green.toString(16).padStart(2, '0')}${number_blue.toString(16).padStart(2, '0')}`;
-        const json: BlocklyJSON = {};
-
-        json.rgb_color = color_value;
+        json.condition = 'time';
+        json.after = `${number_hour_debut}:${number_minute_debut}:${number_second_debut}`;
+        json.before = `${number_hour_end}:${number_minute_end}:${number_second_end}`;
+        json.weekday = weekday;
 
         return JSON.stringify(json);
     };
@@ -237,6 +230,109 @@ export type BlocksGenerator = {
         return JSON.stringify(json);
     };
 
+    block.binary_condition = (blk: Block) => {
+        const value_service = esidomGenerator.valueToCode(blk, 'Service', PRECEDENCE);
+        const dropdown_state = blk.getFieldValue('State');
+
+        const json: BlocklyJSON = {};
+
+        json.condition = 'state';
+        json.entity_id = value_service;
+        json.state = dropdown_state;
+
+        return JSON.stringify(json);
+    };
+
+    block.sun_condition = (blk: Block) => {
+        const number_hour = blk.getFieldValue('Hour');
+        const number_minute = blk.getFieldValue('Minute');
+        const number_second = blk.getFieldValue('Second');
+
+        const dropdown_before_after = blk.getFieldValue('Before_after');
+
+        const dropdown_sun = blk.getFieldValue('Sun');
+
+        const json: BlocklyJSON = {};
+
+        if (dropdown_sun === 'sunrise') {
+            json.condition = 'sun';
+            json.after = dropdown_sun;
+            json.before = 'sunset';
+            json.after_offset = `${dropdown_before_after}${number_hour}:${number_minute}:${number_second}`;
+        } else if (dropdown_sun === 'sunset') {
+            json.condition = 'or';
+            json.conditions = [
+                {
+                    condition: 'sun',
+                    after: dropdown_sun,
+                    after_offset: `${dropdown_before_after}${number_hour}:${number_minute}:${number_second}`,
+                },
+                {
+                    condition: 'sun',
+                    before: 'sunrise',
+                },
+            ];
+        }
+        return JSON.stringify(json);
+    };
+
+    block.numeric_state_condition = (blk: Block) => {
+        const dropdown_entities = blk.getFieldValue('Entities');
+        const dropdown_attributes = blk.getFieldValue('Attributes');
+        const dropdown_included = blk.getFieldValue('Included');
+
+        const number_min = blk.getFieldValue('Minimum');
+        const number_max = blk.getFieldValue('Maximum');
+
+        const json: BlocklyJSON = {};
+
+        if (dropdown_included === 'included') {
+            json.condition = 'numeric_state';
+            json.entity_id = dropdown_entities;
+            json.above = number_min;
+            json.below = number_max;
+            if (dropdown_attributes !== 'noAttribute') {
+                json.attribute = dropdown_attributes;
+            }
+        } else if (dropdown_included === 'notIncluded') {
+            json.condition = 'or';
+            json.conditions = [
+                {
+                    condition: 'numeric_state',
+                    entity_id: dropdown_entities,
+                    below: number_min,
+                    attribute: dropdown_attributes !== 'noAttribute' ? dropdown_attributes : '',
+                },
+                {
+                    condition: 'numeric_state',
+                    entity_id: dropdown_entities,
+                    above: number_max,
+                    attribute: dropdown_attributes !== 'noAttribute' ? dropdown_attributes : '',
+                },
+            ];
+        } else if (dropdown_included === 'greater') {
+            json.condition = 'numeric_state';
+            json.entity_id = dropdown_entities;
+            json.above = number_min;
+            if (dropdown_attributes !== 'noAttribute') {
+                json.attribute = dropdown_attributes;
+            }
+        } else if (dropdown_included === 'lower') {
+            json.condition = 'numeric_state';
+            json.entity_id = dropdown_entities;
+            json.below = number_max;
+            if (dropdown_attributes !== 'noAttribute') {
+                json.attribute = dropdown_attributes;
+            }
+        }
+
+        return JSON.stringify(json);
+    };
+
+    /**
+     * Catégorie Action
+     */
+
     block.object_action = (blk: Block) => {
         const dropdown_entities = blk.getFieldValue('Entities');
         const dropdown_services = blk.getFieldValue('Services');
@@ -247,7 +343,33 @@ export type BlocksGenerator = {
 
         json.alias = dropdown_entities;
         json.entity_id = entity_id;
-        json.service = dropdown_services;
+        json.service = dropdown_services ?? '';
+        return JSON.stringify(json);
+    };
+
+    /**
+     * Catégorie Couleur
+     */
+
+    block.color_picker = (blk: Block) => {
+        const color_value = blk.getFieldValue('Color');
+
+        const json: BlocklyJSON = {};
+
+        json.rgb_color = color_value;
+
+        return JSON.stringify(json);
+    };
+
+    block.color_rgb = (blk: Block) => {
+        const number_red = blk.getFieldValue('Red');
+        const number_green = blk.getFieldValue('Green');
+        const number_blue = blk.getFieldValue('Blue');
+        const color_value = `#${number_red.toString(16).padStart(2, '0')}${number_green.toString(16).padStart(2, '0')}${number_blue.toString(16).padStart(2, '0')}`;
+        const json: BlocklyJSON = {};
+
+        json.rgb_color = color_value;
+
         return JSON.stringify(json);
     };
 
