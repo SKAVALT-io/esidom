@@ -69,6 +69,10 @@
     "name": "ESIDOM"
   },
   "placeholder": {
-    "password": "Password"
+    "password": "Password",
+    "newPassword": "New Password"
+  },
+  "modal": {
+    "registerPassword": "Lock the application with a password"
   }
 }

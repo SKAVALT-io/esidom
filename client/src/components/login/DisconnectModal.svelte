@@ -4,6 +4,7 @@
     import BorderedButton from '../UI/buttons/BorderedButton.svelte';
     import InputBar from '../UI/bar/InputBar.svelte';
     import UserService from '../../services/userService';
+    import { tr } from '../../utils/i18nHelper';
 
     let newPassword = '';
     let submitted = false;
@@ -22,10 +23,10 @@
 
 <Modal bind:isOpen={open}>
     <div slot="content">
-        <p class="max-w-sm">Vérrouillez, l'application avec un mot de passe</p>
+        <p class="max-w-sm">{tr('modal.registerPassword')}</p>
         <br />
         <InputBar
-            placeholder="Nouveau mot de passe"
+            placeholder={tr('placeholder.newPassword')}
             bind:submitted
             bind:input={newPassword}
             required={true}
@@ -38,7 +39,7 @@
                     submitted = false;
                 }}
             />
-            <BorderedButton text="Valider" on:click={lockFront} />
+            <BorderedButton text={tr('buttons.confirm')} on:click={lockFront} />
         </div>
     </div>
 </Modal>

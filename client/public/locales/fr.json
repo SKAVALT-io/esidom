@@ -75,7 +75,11 @@
     "automationDesc": "Description"
   },
   "placeholder": {
-      "password": "Mot de passe"
+      "password": "Mot de passe",
+      "newPassword": "Nouveau mot de passe"
+  },
+  "modal": {
+      "registerPassword": "Vérrouillez, l'application avec un mot de passe"
   },
   
   "buttons": {
