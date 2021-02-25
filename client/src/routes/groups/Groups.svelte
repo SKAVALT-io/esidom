@@ -86,7 +86,12 @@
             dropDownOptions={[tr('groups.sortBy.options.name')]}
             title={tr('groups.sortBy.title')}
             arrowUp={flipSwitch}
-            on:click={(e) => {}}
+            on:click={(e) => {
+                if (e.detail === selectedSortOption) {
+                    flipSwitch = !flipSwitch;
+                }
+                selectedSortOption = e.detail;
+            }}
         />
         <SearchBar
             debounce={300}
