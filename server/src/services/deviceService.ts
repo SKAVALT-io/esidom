@@ -84,7 +84,7 @@ class DeviceService implements EventObserver {
         await httpService.enableZWavePairing();
         await socketService.callService('mqtt', 'publish', {
             topic: 'zigbee2mqtt/bridge/request/permit_join',
-            payload_template: { value: true, time: 120 }, // timeout of 120s according front app
+            payload_template: '{"value": true, "time": 120}', // timeout of 120s according front app
         });
     }
 
