@@ -168,7 +168,8 @@ class EntityService implements EventObserver {
 
     private filterUnwantedEntities(entities: Entity[]): Entity[] {
         const UNWANTED_SUFFIXES = ['_power_status', '_update_available',
-            '_linkquality', '_update_state', 'power_management'];
+            '_linkquality', '_update_state', 'power_management', 'sourcenodeid',
+            '_power_on_behavior', '_alarm_level', '_alarm_type'];
         return entities.filter((e) => !UNWANTED_SUFFIXES.some((name) => e.id.endsWith(name)));
     }
 
