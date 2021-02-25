@@ -43,6 +43,26 @@ class GroupService implements EventObserver {
         // Search for empty group
     }
 
+    async onGroupCreated(groupId: string) {
+        const group: Group | undefined = await this.getGroup(groupId);
+        if (!group) {
+            return;
+        }
+        socketForwarder.emitSocket('group_created', group);
+    }
+
+    async onGroupUpdated(groupId: string) {
+        const group: Group | undefined = await this.getGroup(groupId);
+        if (!group) {
+            return;
+        }
+        socketForwarder.emitSocket('group_updated', group);
+    }
+
+    onGroupRemoved(groupId: string) {
+        socketForwarder.emitSocket('group_removed', { id: groupId });
+    }
+
     async onAreaUpdated(roomId: string): Promise<void> {
         // console.log('GPService : this.onAreaUpdated');
         const room: Room | undefined = await roomService.getRoomById(roomId);

@@ -9,7 +9,8 @@
     import RoundedButton from "../../components/UI/buttons/RoundedButton.svelte";
     import SearchBar from "../../components/others/SearchBar.svelte";
     import { tr } from "../../utils/i18nHelper";
-    import { onMount } from "svelte";
+    import { onMount, onDestroy } from "svelte";
+    import { socketManager } from "../../managers/socketManager";
 
     let isOpen = false;
     let currentGroup: Group = {
@@ -22,10 +23,48 @@
     let isLoad = true;
     let groups: Group[];
     let searchPattern: string = "";
+
+    function groupDeletedHandler(data: any) {
+        console.log(data);
+        const { id } = data;
+        groups = groups.filter((g) => id !== `group.${ g.groupId}`);
+    }
+
+    function groupCreatedHandler(data: any) {
+        const newGroup: Group = data;
+        console.log(newGroup);
+        groups.push(newGroup);
+
+    }
+    
     onMount(async () => {
         groups = await GroupService.getGroup();
         isLoad = false;
+        socketManager.registerGlobalListener(
+            'group_removed',
+           groupDeletedHandler
+        );
+        socketManager.registerGlobalListener(
+            'group_created',
+            groupCreatedHandler
+        );
+        
     });
+    
+
+    onDestroy(() => {
+        socketManager.removeListener(
+            'group_removed',
+            groupDeletedHandler
+        );
+        
+        socketManager.removeListener(
+            'group_created',
+            groupCreatedHandler
+        );
+        
+    });
+
 </script>
 
 <div

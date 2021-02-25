@@ -96,6 +96,12 @@ class SocketForwarder {
                     observer.onAreaUpdated?.(data);
                 } else if (event === 'areaRemoved') {
                     observer.onAreaRemoved?.(data);
+                } else if (event === 'groupCreated') {
+                    observer.onGroupCreated?.(data);
+                } else if (event === 'groupUpdated') {
+                    observer.onGroupUpdated?.(data);
+                } else if (event === 'groupRemoved') {
+                    observer.onGroupRemoved?.(data);
                 } else {
                     logger.error(`No such event ${event}`);
                 }
@@ -241,6 +247,17 @@ class SocketForwarder {
         const ent: HaEntityStateChanged = eventData;
         if (ent.entity_id.startsWith('automation')) {
             this.notifyObservers('automationUpdated', ent.entity_id);
+        } else if (ent.entity_id.startsWith('group')) {
+            let event: Event;
+            if (ent.old_state !== null && ent.new_state !== null) {
+                event = 'groupUpdated';
+            } else if (!ent.old_state === null && ent.new_state !== null) {
+                event = 'groupCreated';
+            } else {
+                event = 'groupRemoved';
+            }
+            console.log(event);
+            this.notifyObservers(event, ent.entity_id);
         } else {
             this.notifyObservers('entityUpdated', ent.entity_id);
         }

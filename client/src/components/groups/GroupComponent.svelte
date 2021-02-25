@@ -19,29 +19,52 @@
     let checked = group.state === "on";
 
     function handleToggle() {
+        console.log(group.groupId);
         if (!group.groupId){
             return;
         }
         toggle(`group.${group.groupId}`);
     }
-    function groupUpdatedHandler(data: any) {
+    
+    function groupEntityUpdatedHandler(data: any) {
         checked = data?.state === "on";
+    }
+    function groupUpdatedHandler(data: any) {
+        if (data.groupId && data.groupId === group.groupId){
+            group = data;
+            updateGroupNameIfIsImplicit();  
+        }
+    }
+    function updateGroupNameIfIsImplicit(){
+        if (group.implicit){
+            group.name = '[' + tr('groups.implicitGroup.name') + '] ' + tr(`groups.implicitGroup.cat.${group.type}`);
+            if(group.room) {
+                group.name += tr('groups.implicitGroup.of') + ' ' + group.room.name;
+            }
+        }
     }
 
     onMount(async () => {
         if (!group.groupId) {
             return;
         }
+        console.log(group);
+        updateGroupNameIfIsImplicit();
+        console.log(group);
         socketManager.registerListenerById<Entity<any>>(
             "entity_updated",
             `group.${group.groupId}`,
-            groupUpdatedHandler
+            groupEntityUpdatedHandler
         );
+        socketManager.registerGlobalListener("group_updated", groupUpdatedHandler);
+
     });
 
     onDestroy(() => {
-        socketManager.removeListener("entity_updated", groupUpdatedHandler);
+        socketManager.removeListener("entity_updated", groupEntityUpdatedHandler);
+        socketManager.removeListener("group_updated", groupUpdatedHandler);
     });
+
 </script>
 
 <div
@@ -52,13 +75,7 @@
         <ToggleButton on:change={handleToggle} bind:checked />
     </div>
     <div class="flex justify-center items-center col-span-7">
-        {#if group.implicit}
-            [{tr('groups.implicitGroup.name')}]
-            {tr(`groups.implicitGroup.cat.${group.type}`)}
-            {#if group.room}
-                {tr('groups.implicitGroup.of') + ' ' + group.room.name}
-            {/if}
-        {:else}{group.name}{/if}
+        {group.name}
     </div>
     {#if !group.implicit}
         <div class="col-span-1 relative">
