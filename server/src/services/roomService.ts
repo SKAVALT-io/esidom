@@ -1,9 +1,35 @@
+import { socketForwarder } from '../forwarders';
 import { socketService, deviceService } from '.';
 import {
-    Device, Room, HaRoom, HaRoomDetail,
+    Device, Room, HaRoom, HaRoomDetail, EventObserver,
 } from '../types';
 
-class RoomService {
+class RoomService implements EventObserver {
+
+    // Connect this services to the web socket flow
+    constructor() {
+        socketForwarder.registerObserver(this);
+    }
+
+    async onRoomCreated(roomId: string) {
+        const room: Room | undefined = await this.getRoomById(roomId);
+        if (!room) {
+            return;
+        }
+        socketForwarder.emitSocket('roomCreated', room);
+    }
+
+    async onRoomUpdated(roomId: string) {
+        const room: Room | undefined = await this.getRoomById(roomId);
+        if (!room) {
+            return;
+        }
+        socketForwarder.emitSocket('roomUpdated', room);
+    }
+
+    onRoomRemoved(roomId: string) {
+        socketForwarder.emitSocket('roomRemoved', { id: roomId });
+    }
 
     /**
      * Get all the rooms

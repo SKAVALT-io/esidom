@@ -33,6 +33,7 @@ class GroupService implements EventObserver {
     // eslint-disable-next-line no-unused-vars
     onDeviceUpdated(_id: string): void {
         // To avoid search recreate all implicit group
+        console.log(_id);
         this.generateImplicitGroup();
     }
 
@@ -63,7 +64,7 @@ class GroupService implements EventObserver {
         socketForwarder.emitSocket('groupRemoved', { id: groupId });
     }
 
-    async onAreaUpdated(roomId: string): Promise<void> {
+    async onRoomUpdated(roomId: string): Promise<void> {
         // console.log('GPService : this.onAreaUpdated');
         const room: Room | undefined = await roomService.getRoomById(roomId);
         if (!room) {
@@ -72,8 +73,7 @@ class GroupService implements EventObserver {
         this.generateImplicitGroupForOneRoom(room);
     }
 
-    onAreaRemoved(roomId: string): void {
-        // console.log('GPService : this.onAreaRemoved');
+    onRoomRemoved(roomId: string): void {
         this.deleteImplicitGroupForOneRoom(roomId);
     }
 

@@ -91,11 +91,12 @@ class SocketForwarder {
                     observer.onAutomationRemoved?.(data);
                 } else if (event === 'automationCreated') {
                     observer.onAutomationCreated?.(data);
-
-                } else if (event === 'areaUpdated') {
-                    observer.onAreaUpdated?.(data);
-                } else if (event === 'areaRemoved') {
-                    observer.onAreaRemoved?.(data);
+                } else if (event === 'roomCreated') {
+                    observer.onRoomCreated?.(data);
+                } else if (event === 'roomUpdated') {
+                    observer.onRoomUpdated?.(data);
+                } else if (event === 'roomRemoved') {
+                    observer.onRoomRemoved?.(data);
                 } else if (event === 'groupCreated') {
                     observer.onGroupCreated?.(data);
                 } else if (event === 'groupUpdated') {
@@ -265,9 +266,11 @@ class SocketForwarder {
 
     private handleAreaRegistryUpdated(eventData: any) {
         if (eventData?.action === 'remove') {
-            this.notifyObservers('areaRemoved', eventData?.area_id);
+            this.notifyObservers('roomRemoved', eventData?.area_id);
         } else if (eventData?.action === 'update') {
-            this.notifyObservers('areaUpdated', eventData?.area_id);
+            this.notifyObservers('roomUpdated', eventData?.area_id);
+        } else if (eventData?.action === 'create') {
+            this.notifyObservers('roomCreated', eventData?.area_id);
         }
     }
 

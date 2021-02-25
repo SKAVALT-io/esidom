@@ -33,7 +33,7 @@
     function roomDeletedHandler(data: any) {
         console.log(data);
         const { id } = data;
-        rooms = rooms.filter((g) => id !== `group.${g.roomId}`);
+        rooms = rooms.filter((r) => id !== `${r.roomId}`);
     }
 
     function roomCreatedHandler(data: Room) {
@@ -45,17 +45,14 @@
     onMount(async () => {
         rooms = await RoomService.getRooms();
         isLoad = false;
-        /*
-        socketManager.registerGlobalListener("roomCreated", roomCreatedHandler);
-        socketManager.registerGlobalListener("roomRemoved", roomDeletedHandler);
-        */
+
+        socketManager.registerGlobalListener('roomCreated', roomCreatedHandler);
+        socketManager.registerGlobalListener('roomRemoved', roomDeletedHandler);
     });
 
     onDestroy(() => {
-        /*
-        socketManager.removeListener("roomRemoved", roomDeletedHandler);
-        socketManager.removeListener("roomCreated", roomCreatedHandler);
-        */
+        socketManager.removeListener('roomRemoved', roomDeletedHandler);
+        socketManager.removeListener('roomCreated', roomCreatedHandler);
     });
 
     function closeFunction() {
