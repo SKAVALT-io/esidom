@@ -24,39 +24,39 @@ interface Type {
 const TYPES: Type[] = [
     {
         name: 'binary_sensor',
-        friendlyName: 'Capteur Binaire',
+        friendlyName: tr('blockly.type.binarySensor'),
     },
     {
         name: 'person',
-        friendlyName: 'Personne',
+        friendlyName: tr('blockly.type.person'),
     },
     {
         name: 'weather',
-        friendlyName: 'Météo',
+        friendlyName: tr('blockly.type.weather'),
     },
     {
         name: 'zwave',
-        friendlyName: 'Zwave',
+        friendlyName: tr('blockly.type.zwave'),
     },
     {
         name: 'sensor',
-        friendlyName: 'Capteur',
+        friendlyName: tr('blockly.type.sensor'),
     },
     {
         name: 'light',
-        friendlyName: 'Lampe',
+        friendlyName: tr('blockly.type.light'),
     },
     {
         name: 'automation',
-        friendlyName: 'Routine',
+        friendlyName: tr('blockly.type.automation'),
     },
     {
         name: 'switch',
-        friendlyName: 'Interrupteur',
+        friendlyName: tr('blockly.type.switch'),
     },
     {
         name: 'media_player',
-        friendlyName: 'Lecteur multimédia',
+        friendlyName: tr('blockly.type.mediaPlayer'),
     },
 ];
 
@@ -159,7 +159,7 @@ export default class BlocklyService {
                 this.jsonInit?.(
                     {
                         type: 'numeric_state_condition',
-                        message0: 'Si %1 et son attribut %2 %3 a une valeur %4 %5 entre %6 et %7 %8',
+                        message0: "rien",
                         args0: [
                             {
                                 type: 'field_dropdown',
@@ -203,7 +203,7 @@ export default class BlocklyService {
                         previousStatement: 'Condition',
                         nextStatement: 'Condition',
                         colour: COLORS.HUE_YELLOW,
-                        tooltip: 'Après avoir fourni un capteur numérique, indiquez les valeurs minimum et maximum entre lesquelles le bloc doit/ne doit pas réagir',
+                        tooltip: "",
                         helpUrl: '',
                         mutator: 'numeric_static_condition_esidom_mutator',
                     },

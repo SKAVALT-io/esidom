@@ -79,7 +79,18 @@
     "notIncluded": "non comprise",
     "greater": "au dessus",
     "lower": "en dessous",
-    "noAttribute": "pas d'attribut"
+    "noAttribute": "pas d'attribut",
+    "type": {
+       "binarySensor": "capteur binaire",
+       "person": "personne",
+       "weather": "météo",
+       "zwave": "zwave",
+       "sensor": "capteur",
+       "light": "lampe",
+       "automation": "routine",
+       "switch": "interrupteur",
+       "mediaPlayer": "Lecteur multimédia"
+    }
   },
   "buttons": {
     "cancel": "Annuler",
