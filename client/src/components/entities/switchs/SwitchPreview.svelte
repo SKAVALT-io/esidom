@@ -1,22 +1,21 @@
 <script>
     import { onDestroy, onMount } from 'svelte';
-    import type { SensorEntity } from '../../../../types/entities/sensorEntity';
+    import type { SwitchEntity } from '../../../../types/entities/switchEntity';
 
     import { socketManager } from '../../../managers/socketManager';
     import { tr } from '../../../utils/i18nHelper';
 
     import EntityPreview from '../EntityPreview.svelte';
 
-    export let entity: SensorEntity;
+    export let entity: SwitchEntity;
 
     // Is it on or off
     let isOn: boolean;
     // The src for the icon
-    let srcImg = 'devices/sensor.png';
+    let srcImg = 'devices/switch.png';
     $: isOn = entity.state === 'on';
-    // $: srcImg = isOn ? 'door-open.png' : 'door-close.png';
 
-    function updateState(data: SensorEntity) {
+    function updateState(data: SwitchEntity) {
         console.log('new ws', data);
         entity = data;
     }
@@ -43,9 +42,5 @@
         class="h-inherit max-w-full max-h-full object-contain"
     />
     <!-- Data -->
-    <div slot="sensor">
-        {tr('devices.state')}
-        :
-        {entity.state + (entity.attributes.unit_of_measurement ?? '')}
-    </div>
+    <div slot="sensor">{tr('devices.state')} : {entity.state}</div>
 </EntityPreview>

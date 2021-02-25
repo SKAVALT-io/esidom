@@ -10,7 +10,6 @@
     import Modal from '../UI/modal/Modal.svelte';
     import { tr } from '../../utils/i18nHelper';
     import CancelButton from '../UI/buttons/CancelButton.svelte';
-    import OutlineButton from '../UI/buttons/OutlineButton.svelte';
     import BorderedButton from '../UI/buttons/BorderedButton.svelte';
 
     export let automation: AutomationPreview;

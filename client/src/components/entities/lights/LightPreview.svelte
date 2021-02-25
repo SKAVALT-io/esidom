@@ -18,7 +18,7 @@
     // The src for the icon
     let srcLamp: string;
     $: isOn = entity.state === 'on';
-    $: srcLamp = isOn ? 'lampe-allumee.png' : 'lampe-eteinte.png';
+    $: srcLamp = isOn ? 'devices/lamp-on.png' : 'devices/lamp-off.png';
 
     function updateLightState(data: LightEntity) {
         console.log('new ws', data);
@@ -49,9 +49,15 @@
 
 <EntityPreview isError={false} {entity}>
     <!-- Image -->
-    <img slot="img" src={srcLamp} alt="" on:click={switchLight} />
+    <img
+        slot="img"
+        src={srcLamp}
+        alt=""
+        on:click={switchLight}
+        class="h-inherit max-w-full max-h-full object-contain"
+    />
     <!-- Data -->
-    <div slot="sensor">
+    <div slot="sensor" class="px-2">
         {#if isOn}
             <BrightnessPicker
                 value={entity.attributes.brightness}
