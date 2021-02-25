@@ -17,11 +17,7 @@
 </script>
 
 <div class="w-inherit">
-    <p>
-        {tr('devices.colorTemperature')}
-        Color temperature :
-        {value.toFixed(0)}K°
-    </p>
+    <p>{tr('devices.colorTemperature')} : {value.toFixed(0)}K°</p>
     <input
         type="range"
         min="153"
