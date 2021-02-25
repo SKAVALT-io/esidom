@@ -37,6 +37,9 @@ export type BlocksDefinitions = {
     action: BlockFunctions;
     color_picker: BlockFunctions;
     color_rgb: BlockFunctions;
+    brightness: BlockFunctions;
+    color_temp: BlockFunctions;
+    color_brightness_temp: BlockFunctions;
     object_action: BlockFunctions;
 }
 
@@ -599,7 +602,7 @@ export type BlocksDefinitions = {
      */
 
     /**
-     * Catégorie Couleur
+     * Catégorie ontrôle de lampe
      */
     block.color_picker = {
         init() {
@@ -657,6 +660,50 @@ export type BlocksDefinitions = {
                 output: 'Color',
                 colour: COLORS.HUE_MAUVE,
                 tooltip: tr('blockly.blocks.color_rgb.tooltip'),
+                helpUrl: '',
+            });
+        },
+    };
+
+    block.brightness = {
+        init() {
+            this.jsonInit?.({
+                type: 'brightness',
+                message0: 'Intensité %1',
+                args0: [
+                    {
+                        type: 'field_number',
+                        name: 'Brightness',
+                        value: 0,
+                        min: 0,
+                        max: 255,
+                    },
+                ],
+                output: 'Brightness',
+                colour: COLORS.HUE_MAUVE,
+                tooltip: '',
+                helpUrl: '',
+            });
+        },
+    };
+
+    block.color_temp = {
+        init() {
+            this.jsonInit?.({
+                type: 'color_temp',
+                message0: 'Température %1',
+                args0: [
+                    {
+                        type: 'field_number',
+                        name: 'Temperature',
+                        value: 153,
+                        min: 153,
+                        max: 500,
+                    },
+                ],
+                output: 'ColorTemperature',
+                colour: COLORS.HUE_MAUVE,
+                tooltip: '',
                 helpUrl: '',
             });
         },

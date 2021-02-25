@@ -111,7 +111,7 @@ export default class BlocklyService {
         const services = await EntityService.getServices();
 
         // We create the object_action Block
-        this.createObjectAction(entities, services);
+        this.createObjectAction((entities as Entity<string[]>[]), services);
 
         // We create all the object Blocks
         this.createObjects(entities);
@@ -479,13 +479,36 @@ export default class BlocklyService {
             },
 
             objectActionUpdateShape(entityId: string): void {
-                const newDropdown = entityWithServicesMap.get(entityId)
-                    ?.services.map((service: string) => [service.split('.')[1], service])
+                const type = entityId.split('.')[0];
+                const entityServices = entityWithServicesMap.get(entityId)?.services;
+                const newDropdown = entityServices?.map((service: string) => [service.split('.')[1], service])
                     ?? [[tr('blockly.unknownAction'), tr('blockly.unknownAction')]];
 
                 const serviceInput = (this as EsidomBlockType).getInput?.('services');
                 serviceInput.removeField('Services', true);
                 serviceInput.appendField(new Blockly.FieldDropdown(newDropdown), 'Services');
+
+                const entityField = (this as EsidomBlockType).getFieldValue('Entities');
+                const currentType = entityField.split('.')[0];
+
+                if (type === 'light' && currentType !== 'light') {
+                    (this as EsidomBlockType).removeInput('Color', true);
+                    (this as EsidomBlockType).appendValueInput('Color')
+                        .setCheck('Color')
+                        .appendField('Couleur');
+                    (this as EsidomBlockType).removeInput('Brightness', true);
+                    (this as EsidomBlockType).appendValueInput('Brightness')
+                        .setCheck('Brightness')
+                        .appendField('Intensité');
+                    (this as EsidomBlockType).removeInput('Temperature', true);
+                    (this as EsidomBlockType).appendValueInput('Temperature')
+                        .setCheck('ColorTemperature')
+                        .appendField('Température');
+                } else if (type !== 'light') {
+                    (this as EsidomBlockType).removeInput('Color', true);
+                    (this as EsidomBlockType).removeInput('Brightness', true);
+                    (this as EsidomBlockType).removeInput('Temperature', true);
+                }
             },
         };
 
@@ -564,11 +587,20 @@ export default class BlocklyService {
             const entityId = action.entity_id;
             const { service } = action;
 
+            const { data } = action;
+
+            const rgbColor = data.rgb_color;
+            const { brightness } = data;
+            const colorTemp = data.color_temp;
+
             xml += `
                 <value name="Action">
                 <block type="object_action">
                     <field name="Entities">${entityId}</field>
                     <field name="Services">${service}</field>
+                    ${this.getActionColorXml(rgbColor)}
+                    ${this.getActionBrightnessXml(brightness)}
+                    ${this.getActionTemperatureXml(colorTemp)}
                 </block>
                 </value>
             `;
@@ -577,5 +609,43 @@ export default class BlocklyService {
         xml += '</block></xml>';
 
         return xml;
+    }
+
+    static getActionColorXml(rgbColor: number[]): string {
+        return rgbColor
+            ? `
+                '<value name="Color">
+                    <block type="color_rgb">
+                        <field name="Red">${rgbColor[0]}</field>
+                        <field name="Green">${rgbColor[1]}</field>
+                        <field name="Blue">${rgbColor[2]}</field>
+                    </block>
+                </value>'
+            `
+            : '';
+    }
+
+    static getActionBrightnessXml(brightness: number[]): string {
+        return brightness
+            ? `
+                '<value name="Brightness">
+                    <block type="brightness">
+                        <field name="Brightness">${brightness}</field>
+                    </block>
+                </value>'
+            `
+            : '';
+    }
+
+    static getActionTemperatureXml(colorTemp: number[]): string {
+        return colorTemp
+            ? `
+                '<value name="Temperature">
+                    <block type="color_temp">
+                        <field name="Temperature">${colorTemp}</field>
+                    </block>
+                </value>'
+            `
+            : '';
     }
 }

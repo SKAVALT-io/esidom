@@ -44,9 +44,11 @@
             <block type="switch" />
             <block type="media_player" />
         </category>
-        <category name="Couleur" colour={COLORS.HUE_MAUVE}>
+        <category name="Contrôle de lampe" colour={COLORS.HUE_MAUVE}>
             <block type="color_picker" />
             <block type="color_rgb" />
+            <block type="brightness" />
+            <block type="color_temp" />
         </category>
     </BlocklyComponent>
 </div>
