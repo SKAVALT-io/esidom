@@ -52,7 +52,7 @@ export type BlocksDefinitions = {
             this.jsonInit?.(
                 {
                     type: 'esidom_automation',
-                    message0: tr('blockly.blocks.esidom_automation.message'), // 'Avec quel mode ? %4',
+                    message0: tr('blockly.blocks.esidom_automation.message'),
                     args0: [
                         {
                             type: 'input_statement',
@@ -602,7 +602,7 @@ export type BlocksDefinitions = {
      */
 
     /**
-     * Catégorie ontrôle de lampe
+     * Catégorie Contrôle de lampe
      */
     block.color_picker = {
         init() {
