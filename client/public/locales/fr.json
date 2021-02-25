@@ -124,6 +124,19 @@
                 "sunset": "coucher"
             }
         },
+        "numeric_state_trigger": {
+            "message": "Si %1 et son attribut %2 %3 a une valeur %4 %5 entre %6 et %7 %8",
+            "tooltip": "Après avoir fourni un capteur numérique, sélectionnez la (les) valeur(s) pour laquelle (lesquelles) la condition doit s'appliquer parmi les intervalles [compris, non compris, supérieur, inférieur]",
+            "dropdown3": {
+                "included": "comprise",
+                "notIncluded":"non comprise",
+                "greater": "au dessus",
+                "lower": "en dessous"
+            },
+            "between": "entre",
+            "and": "et",
+            "of": "de"
+        },
         "time_condition": {
             "message": "Début : %1 h %2 m %3 s %4 Fin : %5 h %6 m %7 s %8 %9 lundi %10 %11 mardi %12 %13 mercredi %14 %15 jeudi %16 %17 vendredi %18 %19 samedi %20 %21 dimanche",
             "tooltip": "Permet de sélectionner l'heure et le (ou les) jours de déclenchement de la routine"
@@ -141,7 +154,7 @@
             }
         },
         "time_condition_hour": {
-            "message": "Début : %1 h %2 m %3 s %4 Fin : %5 h %6 m %7 s",
+            "message": "Début %1 h %2 m %3 s %4 Fin %5 h %6 m %7 s",
             "tooltip": "Applique la condition hh:mm:ss tous les jours"
         },
         "time_condition_week": {
@@ -163,16 +176,27 @@
             }
         },
         "color_picker": {
-            "message": "Couleur : %1",
-            "tooltip": "Sélectionne une couleur parmi celles proposées"
+            "message": "Couleur %1",
+            "tooltip": "Sélectionne une couleur parmi celles proposées."
         },
         "color_rgb": {
             "message": "Couleur personnalisée : %1 rouge : %2 vert : %3 bleu %4",
             "tooltip": "Permet de définir la couleur avec les paramètres Rouge, vert et bleu. Chaque valeur étant comprise entre 0 (absence de couleur) et 255 (couleur maximale)"
         },
+        "brightness": {
+            "message": "Intensité %1",
+            "tooltip": "Permet de définir l'intensité de la lampe. La valeur est comprise entre 0 et 255."
+        },
+        "color_temp": {
+            "message": "Température %1",
+            "tooltip": "Permet de définir la température de la lampe. La valeur est comprise entre 153 (blanche) et 500 (jaune)."
+        },
         "object_action": {
-            "message": "Objet : %1",
-            "tooltip": "Sélectionne un objet, puis les actions possibles sur celui-ci"
+            "message": "Objet %1 %2 Action %3 %4",
+            "tooltip": "Sélectionne un objet, puis contrôle les actions possibles sur celui-ci. Attention : la couleur et la température d'une lampe ne sont pas compatibles.",
+            "color": "Couleur",
+            "brightness": "Intensité",
+            "temperature": "Température"
         }
 
     }

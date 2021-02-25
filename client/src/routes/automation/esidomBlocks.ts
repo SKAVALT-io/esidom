@@ -669,7 +669,7 @@ export type BlocksDefinitions = {
         init() {
             this.jsonInit?.({
                 type: 'brightness',
-                message0: 'Intensité %1',
+                message0: tr('blockly.blocks.brightness.message'),
                 args0: [
                     {
                         type: 'field_number',
@@ -681,7 +681,7 @@ export type BlocksDefinitions = {
                 ],
                 output: 'Brightness',
                 colour: COLORS.HUE_MAUVE,
-                tooltip: '',
+                tooltip: tr('blockly.blocks.brightness.tooltip'),
                 helpUrl: '',
             });
         },
@@ -691,7 +691,7 @@ export type BlocksDefinitions = {
         init() {
             this.jsonInit?.({
                 type: 'color_temp',
-                message0: 'Température %1',
+                message0: tr('blockly.blocks.color_temp.message'),
                 args0: [
                     {
                         type: 'field_number',
@@ -703,7 +703,7 @@ export type BlocksDefinitions = {
                 ],
                 output: 'ColorTemperature',
                 colour: COLORS.HUE_MAUVE,
-                tooltip: '',
+                tooltip: tr('blockly.blocks.color_temp.tooltip'),
                 helpUrl: '',
             });
         },

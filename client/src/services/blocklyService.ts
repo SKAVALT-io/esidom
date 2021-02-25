@@ -213,19 +213,19 @@ export default class BlocklyService {
                 ) {
                     (this as EsidomBlockType).removeInput('condition', true);
                     (this as EsidomBlockType).appendDummyInput('condition')
-                        .appendField('entre')
+                        .appendField(tr('blockly.blocks.numeric_state_trigger.between'))
                         .appendField(new Blockly.FieldNumber(0), 'Minimum')
-                        .appendField('et')
+                        .appendField(tr('blockly.blocks.numeric_state_trigger.and'))
                         .appendField(new Blockly.FieldNumber(0), 'Maximum');
                 } else if (option === 'greater') {
                     (this as EsidomBlockType).removeInput('condition', true);
                     (this as EsidomBlockType).appendDummyInput('condition')
-                        .appendField('de')
+                        .appendField(tr('blockly.blocks.numeric_state_trigger.of'))
                         .appendField(new Blockly.FieldNumber(0), 'Minimum');
                 } else if (option === 'lower') {
                     (this as EsidomBlockType).removeInput('condition', true);
                     (this as EsidomBlockType).appendDummyInput('condition')
-                        .appendField('de')
+                        .appendField(tr('blockly.blocks.numeric_state_trigger.of'))
                         .appendField(new Blockly.FieldNumber(0), 'Maximum');
                 }
             },
@@ -263,7 +263,7 @@ export default class BlocklyService {
                 this.jsonInit?.(
                     {
                         type: 'numeric_state_trigger',
-                        message0: 'Si %1 et son attribut %2 %3 a une valeur %4 %5 entre %6 et %7 %8',
+                        message0: tr('blockly.blocks.numeric_state_trigger.message'),
                         args0: [
                             {
                                 type: 'field_dropdown',
@@ -307,7 +307,7 @@ export default class BlocklyService {
                         previousStatement: 'Trigger',
                         nextStatement: 'Trigger',
                         colour: COLORS.HUE_GREEN,
-                        tooltip: 'Après avoir fourni un choisi l\'objet et son attribut, indiquez les valeurs minimum et maximum entre lesquelles le bloc doit/ne doit pas réagir',
+                        tooltip: tr('blockly.blocks.numeric_state_trigger.tooltip'),
                         helpUrl: '',
                         mutator: 'numeric_static_trigger_esidom_mutator',
                     },
@@ -495,15 +495,15 @@ export default class BlocklyService {
                     (this as EsidomBlockType).removeInput('Color', true);
                     (this as EsidomBlockType).appendValueInput('Color')
                         .setCheck('Color')
-                        .appendField('Couleur');
+                        .appendField(tr('blockly.blocks.object_action.color'));
                     (this as EsidomBlockType).removeInput('Brightness', true);
                     (this as EsidomBlockType).appendValueInput('Brightness')
                         .setCheck('Brightness')
-                        .appendField('Intensité');
+                        .appendField(tr('blockly.blocks.object_action.brightness'));
                     (this as EsidomBlockType).removeInput('Temperature', true);
                     (this as EsidomBlockType).appendValueInput('Temperature')
                         .setCheck('ColorTemperature')
-                        .appendField('Température');
+                        .appendField(tr('blockly.blocks.object_action.temperature'));
                 } else if (type !== 'light') {
                     (this as EsidomBlockType).removeInput('Color', true);
                     (this as EsidomBlockType).removeInput('Brightness', true);
