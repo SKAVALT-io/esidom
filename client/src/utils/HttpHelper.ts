@@ -1,5 +1,6 @@
 import axios from 'axios';
 import config from '../config/config';
+import toastService from './toast';
 
 class Http {
     private http = axios.create({
@@ -10,23 +11,48 @@ class Http {
     });
 
     async get<T>(url: string): Promise<T> {
-        return (await this.http.get<T>(url)).data;
+        return this.http.get<T>(url)
+            .then((x) => x.data)
+            .catch((e) => {
+                toastService.toast(e.message);
+                throw e;
+            });
     }
 
     async post<T, U>(url: string, data?: U): Promise<T> {
-        return (await this.http.post<T>(url, data)).data;
+        return this.http.post<T>(url, data)
+            .then((x) => x.data)
+            .catch((e) => {
+                toastService.toast(e.message);
+                throw e;
+            });
     }
 
     async put<T, U>(url: string, data?: U): Promise<T> {
-        return (await this.http.put<T>(url, data)).data;
+        return this.http.put<T>(url, data)
+            .then((x) => x.data)
+            .catch((e) => {
+                toastService.toast(e.message);
+                throw e;
+            });
     }
 
     async patch<T, U>(url: string, data?: U): Promise<T> {
-        return (await this.http.patch<T>(url, data)).data;
+        return this.http.patch<T>(url, data)
+            .then((x) => x.data)
+            .catch((e) => {
+                toastService.toast(e.message);
+                throw e;
+            });
     }
 
     async delete<T, U>(url: string, data?: U): Promise<T> {
-        return (await this.http.delete<T>(url, data)).data;
+        return this.http.delete<T>(url, data)
+            .then((x) => x.data)
+            .catch((e) => {
+                toastService.toast(e.message);
+                throw e;
+            });
     }
 }
 
