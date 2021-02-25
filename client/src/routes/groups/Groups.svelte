@@ -11,12 +11,14 @@
     import { tr } from '../../utils/i18nHelper';
     import { onMount, onDestroy } from 'svelte';
     import { socketManager } from '../../managers/socketManager';
+    import Tooltip from '../../components/UI/utils/Tooltip.svelte';
 
     let isOpen = false;
     let currentGroup: Group;
     let isLoad = true;
     let groups: Group[];
     let searchPattern: string = '';
+    let showCreateTip = false;
 
     let flipSwitch = false;
     let selectedSortOption = 0;
@@ -125,7 +127,18 @@
         <GroupDetail bind:currentGroup {closeFunction} />
     </div>
 </Modal>
-<div class="fixed bottom-0 right-0 h-16 w-16">
+<div
+    class="fixed bottom-0 right-0 h-16 w-16"
+    on:touchstart={() => (showCreateTip = true)}
+    on:touchend={() => (showCreateTip = false)}
+    on:mouseleave={() => (showCreateTip = false)}
+    on:mouseenter={() => (showCreateTip = true)}
+>
+    <Tooltip
+        text={tr('groups.buttons.create')}
+        position="left"
+        show={showCreateTip}
+    />
     <RoundedButton
         on:click={() => {
             isOpen = true;

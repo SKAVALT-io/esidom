@@ -15,8 +15,10 @@
 
     import { tr } from '../../utils/i18nHelper';
     import LoadingAnimation from '../../components/animations/LoadingAnimation.svelte';
+    import Tooltip from '../../components/UI/utils/Tooltip.svelte';
 
     let isPairDeviceOpen = false;
+    let showPairTip = false;
 
     const mapDomainToComp = new Map<string, typeof SvelteComponent>();
     mapDomainToComp.set('light', LightPreview);
@@ -71,7 +73,18 @@
     {/await}
 
     <!-- The + button to add device -->
-    <div class="absolute bottom-0 right-0 h-16 w-16">
+    <div
+        class="absolute bottom-0 right-0 h-16 w-16"
+        on:touchstart={() => (showPairTip = true)}
+        on:touchend={() => (showPairTip = false)}
+        on:mouseleave={() => (showPairTip = false)}
+        on:mouseenter={() => (showPairTip = true)}
+    >
+        <Tooltip
+            text={tr('entities.menu.pair')}
+            position="left"
+            show={showPairTip}
+        />
         <RoundedButton
             on:click={() => {
                 isPairDeviceOpen = true;
