@@ -16,7 +16,16 @@
   },
   "devices": {
     "lights": "lampes",
-    "sensors": "capteurs"
+    "sensors": "capteurs",
+    "binary_sensor": "Capteurs on/off",
+    "light": "Lampes",
+    "sensor": "Capteurs",
+    "switch": "Prises",
+    "brightness": "Luminosité",
+    "state": "Etat",
+    "loading": "Chargement des équipements...",
+    "dataUnavailable": "Informations indisponibles",
+    "colorTemperature": "Température"
   },
   "automations": {
     "myAutomations": "Mes Routines",
@@ -42,6 +51,8 @@
       "advice": "Suivez les étapes préparatoires suivantes pour appairer vos appareils connectés au sein de votre réseau :",
       "advice1": "Préparez l'appareil que vous souhaitez ajouter au sein de votre réseau.",
       "advice2": "Veuillez lire la notice de votre appareil pour connaitre la manipulation à réaliser durant la procédure d'appairage pour ajouter votre objet.",
+      "validate": "valider",
+      "start": "pour lancer la procédure d'appairage.",
       "ready": "Une fois prêt, cliquez sur le bouton {0} pour lancer la procédure d'appairage."
     },
     "start": {
@@ -77,104 +88,103 @@
     "automationDesc": "Description",
     "noAttribute": "pas d'attribut",
     "type": {
-       "binarySensor": "capteur binaire",
-       "person": "personne",
-       "weather": "météo",
-       "zwave": "zwave",
-       "sensor": "capteur",
-       "light": "lampe",
-       "automation": "routine",
-       "switch": "interrupteur",
-       "mediaPlayer": "Lecteur multimédia"
+      "binarySensor": "capteur binaire",
+      "person": "personne",
+      "weather": "météo",
+      "zwave": "zwave",
+      "sensor": "capteur",
+      "light": "lampe",
+      "automation": "routine",
+      "switch": "interrupteur",
+      "mediaPlayer": "Lecteur multimédia"
     },
     "blocks": {
-        "blocks_by_type": {
-            "binarySensor":"capteur binaire",
-            "person": "personne",
-            "weather": "météo",
-            "zwave": "zwave",
-            "sensor": "capteur",
-            "light": "lampe",
-            "automation": "routine",
-            "switch": "interrupteur",
-            "mediaPlayer": "Lecteur multimédia",
-            "tooltip": "Liste tous les objets (entités) de type : "
-         },
-        "esidom_automation": {
-            "message": "Quels sont les déclencheurs ? %1 Sous quelles conditions ? %2 Que faire ? %3",
-            "tooltip": "Permet de définir une routine. La partie \"déclencheur\" défini les évènements auxquels la routine réagira. Cette routine ne sera exécutée que si elle remplie les \"conditions\" définies (non obligatoire). Enfin, les \"actions\" seront exéctutées si les \"conditions\" sont vérfiées lors du \"déclenchement\""
+      "blocks_by_type": {
+        "binarySensor": "capteur binaire",
+        "person": "personne",
+        "weather": "météo",
+        "zwave": "zwave",
+        "sensor": "capteur",
+        "light": "lampe",
+        "automation": "routine",
+        "switch": "interrupteur",
+        "mediaPlayer": "Lecteur multimédia",
+        "tooltip": "Liste tous les objets (entités) de type : "
+      },
+      "esidom_automation": {
+        "message": "Quels sont les déclencheurs ? %1 Sous quelles conditions ? %2 Que faire ? %3",
+        "tooltip": "Permet de définir une routine. La partie \"déclencheur\" défini les évènements auxquels la routine réagira. Cette routine ne sera exécutée que si elle remplie les \"conditions\" définies (non obligatoire). Enfin, les \"actions\" seront exéctutées si les \"conditions\" sont vérfiées lors du \"déclenchement\""
+      },
+      "binary_trigger": {
+        "message": "Quand le capteur binaire %1 passe à %2",
+        "tooltip": "Placer un capteur qui n'a que deux états (interrupteur, déctecteur d'ouverture) et choisissez l'état pour lequel le routine doit se déclencher"
+      },
+      "time_trigger": {
+        "message": "%1 h %2 %3 m %4 %5 s",
+        "tooltip": "Indique l'heure à laquelle la routine doit se déclencher (hh:mm:ss)"
+      },
+      "sun_trigger": {
+        "message": "%1 h %2 m %3 s %4 le %5 du soleil",
+        "tooltip": "Déclenche la routine hh:mm:ss [avant, après] le [lever, coucher] du soleil",
+        "before_after": {
+          "before": "avant",
+          "after": "après"
         },
-        "binary_trigger": {
-            "message": "Quand le capteur binaire %1 passe à %2",
-            "tooltip": "Placer un capteur qui n'a que deux états (interrupteur, déctecteur d'ouverture) et choisissez l'état pour lequel le routine doit se déclencher"
-        },
-        "time_trigger": {
-            "message": "%1 h %2 %3 m %4 %5 s",
-            "tooltip": "Indique l'heure à laquelle la routine doit se déclencher (hh:mm:ss)"
-        },
-        "sun_trigger": {
-            "message": "%1 h %2 m %3 s %4 le %5 du soleil",
-            "tooltip": "Déclenche la routine hh:mm:ss [avant, après] le [lever, coucher] du soleil",
-            "before_after": {
-                "before": "avant",
-                "after": "après"
-            },
-            "sun": {
-                "sunrise": "lever",
-                "sunset": "coucher"
-            }
-        },
-        "time_condition": {
-            "message": "Début : %1 h %2 m %3 s %4 Fin : %5 h %6 m %7 s %8 %9 lundi %10 %11 mardi %12 %13 mercredi %14 %15 jeudi %16 %17 vendredi %18 %19 samedi %20 %21 dimanche",
-            "tooltip": "Permet de sélectionner l'heure et le (ou les) jours de déclenchement de la routine"
-        },
-        "sun_condition": {
-            "message": "%1 h %2 m %3 s %4 le %5 du soleil",
-            "tooltip": "Ne déclenche la routine que si l'heure actuelle est hh:mm:ss [avant, après] le [lever, coucher] du soleil",
-            "before_after": {
-                "before": "avant",
-                "after": "après"
-            },
-            "sun": {
-                "sunrise": "lever",
-                "sunset": "coucher"
-            }
-        },
-        "time_condition_hour": {
-            "message": "Début : %1 h %2 m %3 s %4 Fin : %5 h %6 m %7 s",
-            "tooltip": "Applique la condition hh:mm:ss tous les jours"
-        },
-        "time_condition_week": {
-            "message": "%1 lundi %2 %3 mardi %4 %5 mercredi %6 %7 jeudi %8 %9 vendredi %10 %11 samedi %12 %13 dimanche",
-            "tooltip": "Applique la condition chaque jour coché, quelle que soit l'heure"
-        },
-        "binary_condition": {
-            "message": "Si le capteur binaire %1 est à l'état %2",
-            "tooltip": "Placer un capteur qui n'a que deux états (interrupteur, déctecteur d'ouverture) et choisissez l'état pour lequel l'équipement doit être pour continuer la routine"
-        },
-        "numeric_state_condition": {
-            "message": "Si %1 et son attribut %2 %3 a une valeur %4 %5 entre %6 et %7 %8",
-            "tooltip": "Après avoir fourni un capteur numérique, sélectionnez la (les) valeur(s) pour laquelle (lesquelles) la condition doit s'appliquer parmi les intervalles [compris, non compris, supérieur, inférieur]",
-            "dropdown3": {
-                "included": "comprise",
-                "notIncluded":"non comprise",
-                "greater": "au dessus",
-                "lower": "en dessous"
-            }
-        },
-        "color_picker": {
-            "message": "Couleur : %1",
-            "tooltip": "Sélectionne une couleur parmi celles proposées"
-        },
-        "color_rgb": {
-            "message": "Couleur personnalisée : %1 rouge : %2 vert : %3 bleu %4",
-            "tooltip": "Permet de définir la couleur avec les paramètres Rouge, vert et bleu. Chaque valeur étant comprise entre 0 (absence de couleur) et 255 (couleur maximale)"
-        },
-        "object_action": {
-            "message": "Objet : %1",
-            "tooltip": "Sélectionne un objet, puis les actions possibles sur celui-ci"
+        "sun": {
+          "sunrise": "lever",
+          "sunset": "coucher"
         }
-
+      },
+      "time_condition": {
+        "message": "Début : %1 h %2 m %3 s %4 Fin : %5 h %6 m %7 s %8 %9 lundi %10 %11 mardi %12 %13 mercredi %14 %15 jeudi %16 %17 vendredi %18 %19 samedi %20 %21 dimanche",
+        "tooltip": "Permet de sélectionner l'heure et le (ou les) jours de déclenchement de la routine"
+      },
+      "sun_condition": {
+        "message": "%1 h %2 m %3 s %4 le %5 du soleil",
+        "tooltip": "Ne déclenche la routine que si l'heure actuelle est hh:mm:ss [avant, après] le [lever, coucher] du soleil",
+        "before_after": {
+          "before": "avant",
+          "after": "après"
+        },
+        "sun": {
+          "sunrise": "lever",
+          "sunset": "coucher"
+        }
+      },
+      "time_condition_hour": {
+        "message": "Début : %1 h %2 m %3 s %4 Fin : %5 h %6 m %7 s",
+        "tooltip": "Applique la condition hh:mm:ss tous les jours"
+      },
+      "time_condition_week": {
+        "message": "%1 lundi %2 %3 mardi %4 %5 mercredi %6 %7 jeudi %8 %9 vendredi %10 %11 samedi %12 %13 dimanche",
+        "tooltip": "Applique la condition chaque jour coché, quelle que soit l'heure"
+      },
+      "binary_condition": {
+        "message": "Si le capteur binaire %1 est à l'état %2",
+        "tooltip": "Placer un capteur qui n'a que deux états (interrupteur, déctecteur d'ouverture) et choisissez l'état pour lequel l'équipement doit être pour continuer la routine"
+      },
+      "numeric_state_condition": {
+        "message": "Si %1 et son attribut %2 %3 a une valeur %4 %5 entre %6 et %7 %8",
+        "tooltip": "Après avoir fourni un capteur numérique, sélectionnez la (les) valeur(s) pour laquelle (lesquelles) la condition doit s'appliquer parmi les intervalles [compris, non compris, supérieur, inférieur]",
+        "dropdown3": {
+          "included": "comprise",
+          "notIncluded": "non comprise",
+          "greater": "au dessus",
+          "lower": "en dessous"
+        }
+      },
+      "color_picker": {
+        "message": "Couleur : %1",
+        "tooltip": "Sélectionne une couleur parmi celles proposées"
+      },
+      "color_rgb": {
+        "message": "Couleur personnalisée : %1 rouge : %2 vert : %3 bleu %4",
+        "tooltip": "Permet de définir la couleur avec les paramètres Rouge, vert et bleu. Chaque valeur étant comprise entre 0 (absence de couleur) et 255 (couleur maximale)"
+      },
+      "object_action": {
+        "message": "Objet : %1",
+        "tooltip": "Sélectionne un objet, puis les actions possibles sur celui-ci"
+      }
     }
   },
   "buttons": {
@@ -185,22 +195,33 @@
   },
   "groups": {
     "myGroups": "Mes groupes",
-    "implicitGroup" : {
-        "name" : "Groupe implicite",
-        "cat": {
-            "switchlight": "Lampes et prises "
-        },
-        "of": "de la pièce"
+    "implicitGroup": {
+      "name": "Groupes implicit",
+      "cat": {
+        "switchlight": "Lampes et prises "
+      },
+      "of": "de la pièce"
     },
     "search": "Rechercher ...",
     "sortBy": {
-        "title": "Trier par",
-        "options": {
-            "name": "Noms"
-        }
+      "title": "Trier par",
+      "options": {
+        "name": "Noms"
+      }
     },
     "createGroup": "Nouveau groupe",
     "groupName": "Nom du groupe",
-    "groupEntities": "Equipements dans le groupe"
+    "groupEntities": "Equipement dans le groupe"
+  },
+  "entities": {
+    "menu": {
+      "name": "Nom :",
+      "type": "Type :",
+      "state": "Etat :",
+      "informations": "Informations"
+    },
+    "light": {
+      "turnTheLightOn": "Allumez l'appareil si vous souhaitez configurer la lampe."
+    }
   }
 }

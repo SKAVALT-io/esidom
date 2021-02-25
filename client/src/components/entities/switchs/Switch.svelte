@@ -1,23 +1,19 @@
 <script>
     import { onDestroy, SvelteComponent } from 'svelte';
-    import type { BinarySensorEntity } from '../../../../types/entities/binarySensorEntity';
+    import type { SwitchEntity } from '../../../../types/entities/switchEntity';
 
     import { socketManager } from '../../../managers/socketManager';
     import { getEntity } from '../../../services/entityService';
-    import ContactSensor from './things/ContactSensor.svelte';
 
     export let entityId: string;
-    let entity: BinarySensorEntity;
+    let entity: SwitchEntity;
 
     async function loadEntity() {
-        entity = await getEntity<BinarySensorEntity>(entityId);
+        entity = await getEntity<SwitchEntity>(entityId);
         console.log('binary sensor: ', entity);
     }
 
-    const sensorPropMap = new Map<string, typeof SvelteComponent>();
-    sensorPropMap.set('contact', ContactSensor);
-
-    function updateEntity(data: BinarySensorEntity) {
+    function updateEntity(data: SwitchEntity) {
         console.log('new ws', data);
         entity = data;
     }
@@ -52,20 +48,6 @@
                 <div class="col-span-9 row-start-3">{entity.type}</div>
                 <div class="col-span-3 row-start-4 text-right">Etat :</div>
                 <div class="col-span-9 row-start-4">{entity.state}</div>
-            </div>
-
-            <div id="attributes" class=" grid grid-cols-1 gap-4 py-4">
-                {#each Object.entries(entity.attributes) as [key, value] (key)}
-                    {#if sensorPropMap.has(key)}
-                        <div class="text-center">
-                            <!-- {key}:{value} -->
-                            <svelte:component
-                                this={sensorPropMap.get(key)}
-                                {...{ value }}
-                            />
-                        </div>
-                    {/if}
-                {/each}
             </div>
         </div>
     </div>

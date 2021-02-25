@@ -7,10 +7,13 @@
     import PlaceholderPreview from '../../components/entities/PlaceholderPreview.svelte';
     import PairDevice from '../../components/pairing/PairDevice.svelte';
     import SensorPreview from '../../components/entities/sensors/SensorPreview.svelte';
+    import SwitchPreview from '../../components/entities/switchs/SwitchPreview.svelte';
 
     import RoundedButton from '../../components/UI/buttons/RoundedButton.svelte';
     import DeviceContainer from '../../components/UI/container/DeviceContainer.svelte';
-    import EntityService, { actualDomains } from '../../services/entityService';
+    import EntityService from '../../services/entityService';
+
+    import { tr } from '../../utils/i18nHelper';
     import LoadingAnimation from '../../components/animations/LoadingAnimation.svelte';
 
     let isPairDeviceOpen = false;
@@ -19,6 +22,7 @@
     mapDomainToComp.set('light', LightPreview);
     mapDomainToComp.set('binary_sensor', BinarySensorPreview);
     mapDomainToComp.set('sensor', SensorPreview);
+    mapDomainToComp.set('switch', SwitchPreview);
 
     function getCompByDomain(entityId: string): typeof SvelteComponent {
         const domain = entityId.split('.')[0];
@@ -42,14 +46,17 @@
 </script>
 
 <!-- Div containing all devices -->
-<div id="test">
+<div id="test" class="pr-6 xl:pr-10 mb-20">
     {#await loadEntities()}
         <div id="loader" class="flex items-center justify-center">
             <LoadingAnimation />
         </div>
     {:then values}
         {#each Object.entries(values).sort() as [domain, entities] (domain)}
-            <DeviceContainer title={domain} iconPath="favicon.png">
+            <DeviceContainer
+                title={tr('devices.' + domain)}
+                iconPath="devices/{domain}.png"
+            >
                 {#each entities as entity}
                     <svelte:component
                         this={getCompByDomain(entity.id)}
