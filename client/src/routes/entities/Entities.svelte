@@ -46,7 +46,7 @@
 </script>
 
 <!-- Div containing all devices -->
-<div id="test" class="pr-6 xl:pr-10 mb-20">
+<div id="test" class="pr-6 xl:pr-10 mb-20 pb-12">
     {#await loadEntities()}
         <div id="loader" class="flex items-center justify-center">
             <LoadingAnimation />
