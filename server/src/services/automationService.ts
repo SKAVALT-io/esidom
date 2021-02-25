@@ -40,7 +40,7 @@ class AutomationService implements EventObserver {
                     socketForwarder.emitSocket(event, updated);
                     return;
                 }
-                if (event === 'automationCreated' && nbRec < MAX_RETRIEVE_ATTEMPTS) {
+                if (nbRec < MAX_RETRIEVE_ATTEMPTS) {
                     setTimeout(() => {
                         // eslint-disable-next-line no-param-reassign
                         this.retrieveAndEmit(id, event, nbRec++);
