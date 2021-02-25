@@ -162,6 +162,7 @@ class EntityService implements EventObserver {
         await socketService.updateEntity(entity.id, name);
         return this.getEntityById(id);
     }
+
 }
 
 export default new EntityService();

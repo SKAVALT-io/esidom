@@ -1,5 +1,5 @@
 import { socketForwarder } from '../forwarders';
-import { entityService, socketService, httpService } from '.';
+import { entityService, socketService } from '.';
 import {
     Device,
     EventObserver,
