@@ -10,6 +10,7 @@
     import { socketManager } from '../../managers/socketManager';
     import EntityService from '../../services/entityService';
     import type { Room } from '../../../types/roomType';
+    import RoomService from '../../services/roomService';
 
     export let room: Room;
 
@@ -43,7 +44,9 @@
     <div class="col-span-1 relative">
         <RoundedButton
             size={8}
-            on:click={() => {}}
+            on:click={() => {
+                RoomService.deleteGroup(room);
+            }}
             iconPath="icons/button/trash.svg"
         />
     </div>
