@@ -51,7 +51,7 @@
       "advice1": "Préparez l'appareil que vous souhaitez ajouter au sein de votre réseau.",
       "advice2": "Veuillez lire la notice de votre appareil pour connaitre la manipulation à réaliser durant la procédure d'appairage pour ajouter votre objet.",
       "validate": "valider",
-      "start": "pour lancer la procédure d'appairage."
+      "start": "pour lancer la procédure d'appairage.",
       "ready": "Une fois prêt, cliquez sur le bouton {0} pour lancer la procédure d'appairage."
     },
     "start": {
