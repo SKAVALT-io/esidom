@@ -9,6 +9,7 @@ import {
     HaStateResponse,
 } from '../types';
 import { logger } from '../utils';
+import httpService from './forwarderServices/httpService';
 
 class DeviceService implements EventObserver {
 
@@ -34,7 +35,7 @@ class DeviceService implements EventObserver {
                                     id: d.id,
                                     name: d.name,
                                     model: d.model,
-                                    entities: device.entity,
+                                    entities: entityService.filterUnwantedEntities2(device.entity),
                                     automation: device.automation,
                                 }))[0];
                             socketForwarder.emitSocket('deviceCreated', data);
