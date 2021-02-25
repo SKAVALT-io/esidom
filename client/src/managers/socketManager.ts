@@ -57,8 +57,8 @@ class SocketManager {
         this.socket.on(name, f);
     }
 
-    registerGlobalListener(name: string, func: (data: unknown) => void) {
-        const f = (data: SocketError | unknown) => {
+    registerGlobalListener<T>(name: string, func: (data: T) => void) {
+        const f = (data: SocketError | T) => {
             if (isSocketError(data)) {
                 toastError(name, data.error);
                 return;

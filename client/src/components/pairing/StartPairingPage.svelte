@@ -6,6 +6,7 @@
     import LoadingAnimation from '../animations/LoadingAnimation.svelte';
     import CancelButton from '../UI/buttons/CancelButton.svelte';
     import DeviceService from '../../services/deviceService';
+    import type { Device } from '../../../types/deviceType';
 
     const dispatch = createEventDispatcher();
 
@@ -17,7 +18,7 @@
     }
 
     /*enter this function if the pairing is successful*/
-    function successDevicePaired(data) {
+    function successDevicePaired(data: Device) {
         DeviceFound.data = data;
         console.log('Device founded : ', data);
         step.update(() => 'SuccessPairingPage');

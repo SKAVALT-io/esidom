@@ -1,19 +1,19 @@
 <script lang="ts">
-    import { push } from "svelte-spa-router";
-    import { onDestroy, onMount } from "svelte";
+    import { push } from 'svelte-spa-router';
+    import { onDestroy, onMount } from 'svelte';
 
-    import RoundedButton from "../UI/buttons/RoundedButton.svelte";
-    import ToggleButton from "../UI/buttons/ToggleButton.svelte";
-    import type { Group } from "../../../types/groupType";
-    import Modal from "../UI/modal/Modal.svelte";
-    import GroupService from "../../services/groupService";
-    import { tr } from "../../utils/i18nHelper";
-    import { socketManager } from "../../managers/socketManager";
-    import EntityService from "../../services/entityService";
-    import type { Entity } from "../../../types/entityType";
+    import RoundedButton from '../UI/buttons/RoundedButton.svelte';
+    import ToggleButton from '../UI/buttons/ToggleButton.svelte';
+    import type { Group } from '../../../types/groupType';
+    import Modal from '../UI/modal/Modal.svelte';
+    import GroupService from '../../services/groupService';
+    import { tr } from '../../utils/i18nHelper';
+    import { socketManager } from '../../managers/socketManager';
+    import EntityService from '../../services/entityService';
+    import type { Entity } from '../../../types/entityType';
 
     export let group: Group;
-    let checked = group.state === "on";
+    let checked = group.state === 'on';
 
     function handleToggle() {
         console.log(group.groupId);
@@ -22,10 +22,10 @@
         }
         EntityService.toggle(`group.${group.groupId}`);
     }
-    function groupUpdatedHandler(data: any) {
+    function groupUpdatedHandler(data: Group) {
         if (data.groupId && data.groupId === group.groupId) {
             group = data;
-            checked = data?.state === "on";
+            checked = data?.state === 'on';
             group = GroupService.updateGroupNameIfIsImplicit(group);
         }
     }
@@ -35,13 +35,13 @@
             return;
         }
         socketManager.registerGlobalListener(
-            "groupUpdated",
+            'groupUpdated',
             groupUpdatedHandler
         );
     });
 
     onDestroy(() => {
-        socketManager.removeListener("groupUpdated", groupUpdatedHandler);
+        socketManager.removeListener('groupUpdated', groupUpdatedHandler);
     });
 </script>
 
