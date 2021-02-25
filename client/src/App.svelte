@@ -15,6 +15,7 @@
     import Navbar from './components/UI/bar/Navbar.svelte';
     import { socketManager } from './managers/socketManager';
     import Sidebar from './components/UI/bar/Sidebar.svelte';
+    import Toast from './Toast.svelte';
 
     // Configure the app routes
     const routes = {
@@ -45,6 +46,7 @@
 </script>
 
 <main>
+    <Toast />
     <div id="row1">
         <div class="header">
             <Navbar
