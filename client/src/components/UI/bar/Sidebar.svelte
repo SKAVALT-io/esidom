@@ -4,7 +4,16 @@
     import { clickOutside } from '../../../utils/functions';
     export let open = false;
 
-    let currentPageSelected = 'entities';
+    function hashToPage() {
+        const sub = window.location.hash.substring(2);
+        return sub !== '' ? sub : 'entities';
+    }
+
+    let currentPageSelected = hashToPage();
+    window.onhashchange = () => {
+        currentPageSelected = hashToPage();
+    };
+
     const pageLinkClicked = (currentPage: string) => {
         currentPageSelected = currentPage;
         open = false;
