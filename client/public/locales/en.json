@@ -52,16 +52,23 @@
     },
     "confirmDelete": "Are you sure you want to delete this automation ?",
     "buttons": {
-        "edit": "Edit",
-        "delete": "Delete",
-        "trigger": "Trigger",
-        "create": "Create an automation"
+      "edit": "Edit",
+      "delete": "Delete",
+      "trigger": "Trigger",
+      "create": "Create an automation"
     }
   },
   "buttons": {
     "cancel": "Cancel",
     "confirm": "Confirm",
     "retry": "Retry",
-    "close": "Quit"
+    "close": "Quit",
+    "unlock": "Unlock"
+  },
+  "app": {
+    "name": "ESIDOM"
+  },
+  "placeholder": {
+    "password": "Password"
   }
 }

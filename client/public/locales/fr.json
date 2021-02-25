@@ -74,10 +74,15 @@
     "automationName": "Nom",
     "automationDesc": "Description"
   },
+  "placeholder": {
+      "password": "Mot de passe"
+  },
+  
   "buttons": {
     "cancel": "Annuler",
     "confirm": "Valider",
     "retry": "Réessayer",
-    "close": "Fermer"
+    "close": "Fermer",
+    "unlock": "Déverouiller"
   }
 }

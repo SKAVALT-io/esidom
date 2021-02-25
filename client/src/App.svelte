@@ -18,6 +18,7 @@
     import Toast from './Toast.svelte';
     import UserService from './services/userService';
     import toastService from './utils/toast';
+    import LoginPage from './components/login/LoginPage.svelte';
 
     // Configure the app routes
     const routes = {
@@ -46,21 +47,10 @@
     // Initiate the socket
     socketManager.connect();
 
-    let password = '';
     async function lockFront(): Promise<void> {
         await UserService.lockFront(prompt('Mot de pass') ?? '').then(() =>
             window.location.reload()
         );
-    }
-
-    async function unlock(): Promise<void> {
-        UserService.unlockFront(password).then((unlocked) => {
-            if (unlocked) {
-                window.location.reload();
-            } else {
-                toastService.toast('Mot de passe incorrect');
-            }
-        });
     }
 
     async function isLocked(): Promise<boolean> {
@@ -73,14 +63,7 @@
 
     {#await isLocked() then locked}
         {#if locked}
-            App is locked lol
-            <input
-                class="bg-esidom border border-yellow-400"
-                type="text"
-                bind:value={password}
-                placeholder="Mot de passe"
-            />
-            <button on:click={() => unlock()}>Unlock</button>
+            <LoginPage />
         {:else}
             <div id="row1">
                 <div class="header">
