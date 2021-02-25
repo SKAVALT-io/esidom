@@ -18,7 +18,7 @@
     }
 </script>
 
-<div class="px-8">
+<div class="px-8 pb-20 md:pb-0">
     <OutlineButton text="Retour" on:click={pop} />
 
     <br />
