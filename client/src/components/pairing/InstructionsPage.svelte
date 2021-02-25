@@ -1,6 +1,6 @@
 <script lang="ts">
     import { createEventDispatcher } from 'svelte';
-    import { tr } from '../../utils/i18nHelper';
+    import { tr, format } from '../../utils/i18nHelper';
     import { step, reset } from './PairingStore.svelte';
     import BorderedButton from '../UI/buttons/BorderedButton.svelte';
     import CancelButton from '../UI/buttons/CancelButton.svelte';
@@ -24,11 +24,7 @@
         <li>{tr('pairing.instructions.advice2')}</li>
     </ul>
     <p class="max-w-lg md:max-w-xl">
-        {tr('pairing.instructions.ready')}
-        <span
-            class="text-blue-300 capitalize"
-        >{tr('pairing.instructions.validate')}</span>
-        {tr('pairing.instructions.start')}
+        {format(tr('pairing.instructions.ready'), tr('buttons.confirm'))}
     </p>
     <div class="flex flex-row space-x-4">
         <CancelButton
@@ -37,6 +33,6 @@
                 reset();
             }}
         />
-        <BorderedButton text="Valider" on:click={startPairing} />
+        <BorderedButton text={tr('buttons.confirm')} on:click={startPairing} />
     </div>
 </div>

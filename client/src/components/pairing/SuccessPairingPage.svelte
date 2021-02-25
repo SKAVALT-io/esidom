@@ -48,10 +48,10 @@
     >
         <form class="form-control mb-8">
             <InputBar
-                label="Préfixe (obligatoire)"
+                label={tr('pairing.success.prefix')}
                 bind:input={prefix}
                 bind:submitted
-                placeholder="Préfixe de l'équipement"
+                placeholder={tr('pairing.success.prefixPlaceholder')}
                 required={true}
                 width="56"
             />
@@ -59,7 +59,7 @@
         {#each entitiesNames as { id, newName }, i}
             <div class="mb-4">
                 <InputBar
-                    label="Entité {i + 1} (facultatif)"
+                    label={format(tr('pairing.success.entity'), `${i + 1}`)}
                     bind:input={newName}
                     placeholder={id}
                 >
@@ -71,7 +71,7 @@
         {/each}
     </div>
     <div class="flex flex-row space-x-4">
-        <BorderedButton text="Valider" on:click={changeName} />
+        <BorderedButton text={tr('buttons.confirm')} on:click={changeName} />
     </div>
 </div>
 

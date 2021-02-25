@@ -33,7 +33,7 @@
     </div>
 
     <OutlineButton
-        text="Fermer"
+        text={tr('buttons.close')}
         on:click={() => {
             dispatch('cancel');
             reset();

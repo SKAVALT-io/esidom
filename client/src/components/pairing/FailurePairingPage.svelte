@@ -31,6 +31,6 @@
                 reset();
             }}
         />
-        <BorderedButton text="Réassayer" on:click={retry} />
+        <BorderedButton text={tr('buttons.retry')} on:click={retry} />
     </div>
 </div>

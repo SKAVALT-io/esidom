@@ -35,9 +35,7 @@
       "advice": "Suivez les étapes préparatoires suivantes pour appairer vos appareils connectés au sein de votre réseau :",
       "advice1": "Préparez l'appareil que vous souhaitez ajouter au sein de votre réseau.",
       "advice2": "Veuillez lire la notice de votre appareil pour connaitre la manipulation à réaliser durant la procédure d'appairage pour ajouter votre objet.",
-      "ready": "Une fois prêt, cliquez sur le bouton",
-      "validate": "valider",
-      "start": "pour lancer la procédure d'appairage."
+      "ready": "Une fois prêt, cliquez sur le bouton {0} pour lancer la procédure d'appairage."
     },
     "start": {
       "information": "Veuillez appairer votre objet"
@@ -46,7 +44,10 @@
       "deviceFound": "🎉 Félicitations ! Nous  avons trouvé l'équipement suivant : {0}",
       "entitiesAttached": "Cet objet possède {0} entités associées, représentant chacune une possibilité d'interaction avec \nl'équipement (action sur l'objet, lecture d'une valeur, etc)",
       "deviceName": "Une entité est quelque chose avec lequel où il peut être possible d'intéragir.\nLes noms des entités générés ne sont pas très parlant, nous vous conseillons de les renommer pour mieux vous y retrouver:",
-      "instructions": "Nous vous conseillons de les renommer pour vous aider !"
+      "instructions": "Nous vous conseillons de les renommer pour vous aider !",
+      "prefix": "Préfixe (Obligatoire)",
+      "prefixPlaceholder": "Préfixe de l'équipement",
+      "entity": "Entité {0} (Facultatif)"
     },
     "failure": {
       "deviceNotFound": "Nous n'avons pas trouvé votre équipement 😟",
@@ -69,6 +70,8 @@
   },
   "buttons": {
     "cancel": "Annuler",
-    "confirm": "Valider"
+    "confirm": "Valider",
+    "retry": "Réessayer",
+    "close": "Fermer"
   }
 }
