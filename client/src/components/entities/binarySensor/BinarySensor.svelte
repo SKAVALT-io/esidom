@@ -73,12 +73,3 @@
     Error:
     {error}
 {/await}
-
-<!--<style lang="scss">
-    #info {
-        border: 1px solid yellow;
-        div:not(:first-child) {
-            border: 1px solid yellow;
-        }
-    }
-</style>-->

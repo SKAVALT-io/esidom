@@ -16,7 +16,6 @@
     import { getEntity } from '../../../services/entityService';
 
     import ToggleButton from '../../UI/buttons/ToggleButton.svelte';
-    import BorderedButton from '../../UI/buttons/BorderedButton.svelte';
 
     export let entityId: string;
 
@@ -55,8 +54,6 @@
     onDestroy(() => {
         socketManager.removeListener('entity_updated', updateLightState);
     });
-
-    const undetected: string[] = [];
 </script>
 
 {#await loadLight()}
@@ -114,12 +111,3 @@
     Error:
     {error}
 {/await}
-
-<!--<style lang="scss">
-    #info {
-        border: 1px solid yellow;
-        div:not(:first-child) {
-            border: 1px solid yellow;
-        }
-    }
-</style>-->
