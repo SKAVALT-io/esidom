@@ -16,6 +16,8 @@
     import { socketManager } from './managers/socketManager';
     import Sidebar from './components/UI/bar/Sidebar.svelte';
     import Toast from './Toast.svelte';
+    import UserService from './services/userService';
+    import toastService from './utils/toast';
 
     // Configure the app routes
     const routes = {
@@ -43,30 +45,66 @@
 
     // Initiate the socket
     socketManager.connect();
+
+    let password = '';
+    async function lockFront(): Promise<void> {
+        await UserService.lockFront(prompt('Mot de pass') ?? '').then(() =>
+            window.location.reload()
+        );
+    }
+
+    async function unlock(): Promise<void> {
+        UserService.unlockFront(password).then((unlocked) => {
+            if (unlocked) {
+                window.location.reload();
+            } else {
+                toastService.toast('Mot de passe incorrect');
+            }
+        });
+    }
+
+    async function isLocked(): Promise<boolean> {
+        return UserService.isLocked();
+    }
 </script>
 
 <main>
     <Toast />
-    <div id="row1">
-        <div class="header">
-            <Navbar
-                on:press={() => {
-                    open = !open;
-                }}
+
+    {#await isLocked() then locked}
+        {#if locked}
+            App is locked lol
+            <input
+                class="bg-esidom border border-yellow-400"
+                type="text"
+                bind:value={password}
+                placeholder="Mot de passe"
             />
-        </div>
-    </div>
-    <div
-        id="row2"
-        class="flex flex-row space-x-4 sm:space-x-20 overflow-y-auto h-screen"
-    >
-        <div class="sidenav fixed z-100">
-            <Sidebar bind:open />
-        </div>
-        <div class="main-content w-full mt-6">
-            <Router {routes} />
-        </div>
-    </div>
+            <button on:click={() => unlock()}>Unlock</button>
+        {:else}
+            <div id="row1">
+                <div class="header">
+                    <Navbar
+                        on:press={() => {
+                            open = !open;
+                        }}
+                        on:disconnect={lockFront}
+                    />
+                </div>
+            </div>
+            <div
+                id="row2"
+                class="flex flex-row space-x-4 sm:space-x-20 overflow-y-auto h-screen"
+            >
+                <div class="sidenav fixed z-100">
+                    <Sidebar bind:open />
+                </div>
+                <div class="main-content w-full mt-6">
+                    <Router {routes} />
+                </div>
+            </div>
+        {/if}
+    {/await}
 </main>
 
 <style lang="scss">
