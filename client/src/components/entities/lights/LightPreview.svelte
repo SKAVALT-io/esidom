@@ -54,7 +54,7 @@
         src={srcLamp}
         alt=""
         on:click={switchLight}
-        class="h-inherit max-w-full max-h-full"
+        class="h-inherit max-w-full max-h-full object-contain"
     />
     <!-- Data -->
     <div slot="sensor" class="px-2">

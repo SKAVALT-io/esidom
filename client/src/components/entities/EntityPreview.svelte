@@ -14,7 +14,7 @@
     function parseStringByLength(str: string, len = 20): string {
         return str
             ? str.length >= len
-                ? str.substring(0, 20) + ' [...]'
+                ? str.substring(0, 20) + '...'
                 : str
             : '<Sans nom>';
     }

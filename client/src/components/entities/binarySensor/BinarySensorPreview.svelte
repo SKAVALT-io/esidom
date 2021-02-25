@@ -39,7 +39,7 @@
         slot="img"
         src={srcImg}
         alt=""
-        class="h-inherit max-w-full max-h-full"
+        class="h-inherit max-w-full max-h-full object-contain"
     />
     <!-- Data -->
     <div slot="sensor">{tr('devices.state')} : {isOn ? 'ouvert' : 'fermé'}</div>
