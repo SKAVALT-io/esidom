@@ -60,10 +60,10 @@
       "deviceNotFound": "Nous n'avons pas trouvé votre équipement 😟",
       "followInstructions": "Assurez-vous d'avoir bien suivi les étapes d'appairage de votre équipement.",
       "retryPairingProcedure": "Pour relancer la procédure d'appairage, cliquez sur le bouton",
-      "retry": "Réassayer"
+      "retry": "Réessayer"
     },
     "finish": {
-      "congratulation": "Félicitation, les équipements suivants ont bien été rajoutés au sein de votre réseau."
+      "congratulation": "Félicitations, les équipements suivants ont bien été rajoutés au sein de votre réseau."
     }
   },
   "blockly": {
@@ -186,7 +186,7 @@
   "groups": {
     "myGroups": "Mes groupes",
     "implicitGroup" : {
-        "name" : "Groupes implicit",
+        "name" : "Groupe implicite",
         "cat": {
             "switchlight": "Lampes et prises "
         },
@@ -199,8 +199,8 @@
             "name": "Noms"
         }
     },
-    "createGroup": "Nouveau group",
+    "createGroup": "Nouveau groupe",
     "groupName": "Nom du groupe",
-    "groupEntities": "Equipement dans le groupe"
+    "groupEntities": "Equipements dans le groupe"
   }
 }
