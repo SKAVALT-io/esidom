@@ -3,6 +3,7 @@ import App from '../app';
 import { automationService } from '../services';
 import { Automation, AutomationPreview, HaDumbType } from '../types';
 import {
+    logger,
     send, sendf, sendNoSuchId, Success, SuccessOrError,
 } from '../utils';
 
@@ -88,7 +89,10 @@ class AutomationController {
         return automationService
             .deleteAutomation(id)
             .then(sendf(res, 200))
-            .catch((err) => send(res, 400, { error: err.message }));
+            .catch((err) => {
+                logger.error(`Error while deleting automation ${id}: ${err}`);
+                return send(res, 400, { error: err.message });
+            });
     }
 
 }

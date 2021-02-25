@@ -8,6 +8,7 @@ import {
     HaSearchDeviceResponse,
     HaStateResponse,
 } from '../types';
+import { logger } from '../utils';
 
 class DeviceService implements EventObserver {
 
@@ -15,33 +16,42 @@ class DeviceService implements EventObserver {
         socketForwarder.registerObserver(this);
     }
 
-    /* inherited from EventObserver */
-    onDeviceRegistryUpdated(deviceId: string): void {
-        setTimeout(() => { socketService.searchDeviceById(deviceId)
-            .then((device: HaSearchDeviceResponse) => {
-                socketService.listDeviceRegistry()
-                    .then((haDevices: HaDevice[]) => {
-                        const data = haDevices
-                            .filter((d: HaDevice) => d
+    /* Start inherited from EventObserver */
+    onDeviceCreated(id: string): void {
+        setTimeout(() => {
+            socketService.searchDeviceById(id)
+                .then((device: HaSearchDeviceResponse) => {
+                    socketService.listDeviceRegistry()
+                        .then((haDevices: HaDevice[]) => {
+                            const data = haDevices
+                                .filter((d: HaDevice) => d
                                 // TODO: it may not be the correct device,
                                 // because we filter on the config_entry attribute,
                                 // and multiple devices can share a similar config_entry.
-                                .config_entries.sort().toString()
+                                    .config_entries.sort().toString()
                                 === device.config_entry.sort().toString()) // VALIDATE THIS WORKS
-                            .map((d: HaDevice) => ({
-                                id: d.id,
-                                name: d.name,
-                                model: d.model,
-                                entities: device.entity,
-                                automation: device.automation,
-                            }))[0];
-                        console.log('DEVICE CREATED : ', data);
-                        socketForwarder.emitSocket('device_created', data);
-                    });
-            })
-            .catch((err) => socketForwarder.emitSocket('device_created', { error: err.message }));
+                                .map((d: HaDevice) => ({
+                                    id: d.id,
+                                    name: d.name,
+                                    model: d.model,
+                                    entities: device.entity,
+                                    automation: device.automation,
+                                }))[0];
+                            socketForwarder.emitSocket('deviceCreated', data);
+                        });
+                })
+                .catch((err) => socketForwarder.emitSocket('deviceCreated', { error: err.message }));
         }, 2000);
     }
+
+    onDeviceUpdated(id: string): void {
+        logger.warn(`Received event 'device ${id} updated', but forwarding to the client is not implemented yet`);
+    }
+
+    onDeviceRemoved(id: string): void {
+        logger.warn(`Received event 'device ${id} removed', but forwarding to the client is not implemented yet`);
+    }
+    /* End inherited from EventObserver */
 
     /**
      * Get all the devices

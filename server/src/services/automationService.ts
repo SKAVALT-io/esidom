@@ -1,8 +1,10 @@
 import { socketForwarder } from '../forwarders';
 import { socketService, httpService } from '.';
 import {
-    EventObserver, Automation, AutomationPreview, HaAutomation, HaDumbType, HaStateResponse,
+    EventObserver, Event, Automation, AutomationPreview,
+    HaAutomation, HaDumbType, HaStateResponse, MAX_RETRIEVE_ATTEMPTS,
 } from '../types';
+import { logger } from '../utils';
 
 // HA needs the automation id to find an automation, but the client
 // will make its request using the entity_id of the automation
@@ -19,37 +21,38 @@ class AutomationService implements EventObserver {
 
     /* start inherited from EventObserver */
 
-    onAutomationUpdated(data: string): void {
-        this.getAutomationById(data)
-            .then((updated: Automation | undefined) => {
-                if (!updated) {
-                    return;
-                }
-                const updatedPreview: AutomationPreview = {
-                    id: updated.id,
-                    name: updated.name,
-                    state: updated.state,
-                };
-                socketForwarder.emitSocket('entity_updated', updatedPreview);
-            })
-            .catch((err) => socketForwarder
-                .emitSocket('entity_updated', { error: err.message }));
+    onAutomationUpdated(id: string): void {
+        this.retrieveAndEmit(id, 'automationUpdated');
     }
 
     onAutomationRemoved(id: string) {
-        socketForwarder.emitSocket('automation_removed', { id });
+        socketForwarder.emitSocket('automationRemoved', { id });
     }
 
     async onAutomationCreated(id: string) {
-        const automation: AutomationPreview | undefined = await this
-            .getAutomationPreviewById(id);
-        if (!automation) { // wait for HA to finish initializing automation
-            setTimeout(() => {
-                this.onAutomationCreated(id);
-            }, 2000);
-        } else {
-            socketForwarder.emitSocket('automation_created', automation);
-        }
+        this.retrieveAndEmit(id, 'automationCreated');
+    }
+
+    private retrieveAndEmit(id: string, event: Event, nbRec: number = 0) {
+        this.getAutomationPreviewById(id)
+            .then((updated: AutomationPreview | undefined) => {
+                if (updated) {
+                    socketForwarder.emitSocket(event, updated);
+                    return;
+                }
+                if (event === 'automationCreated' && nbRec < MAX_RETRIEVE_ATTEMPTS) {
+                    setTimeout(() => {
+                        // eslint-disable-next-line no-param-reassign
+                        this.retrieveAndEmit(id, event, nbRec++);
+                    }, 2000);
+                } else {
+                    const error = `Unable to retrieve updated automation: ${id}`;
+                    logger.error(error);
+                    throw new Error(error);
+                }
+            })
+            .catch((err) => socketForwarder
+                .emitSocket('automationUpdated', { error: err.message }));
     }
 
     /* end inherited from EventObserver */
@@ -119,7 +122,7 @@ class AutomationService implements EventObserver {
                     id: a.entity_id,
                     name: a.attributes.friendly_name,
                     state: a.state,
-                } as AutomationPreviewWithId;
+                };
             });
     }
 

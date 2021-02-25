@@ -16,6 +16,11 @@ export interface EntityDataChanged<T> {
     attributes: T;
 }
 
+type SocketError = { error: string };
+function isSocketError(data: any): data is SocketError {
+    return 'error' in data;
+}
+
 class SocketManager {
     private socket: any;
 
@@ -25,18 +30,23 @@ class SocketManager {
     }
 
     registerListenerById<T>(name: string, id: string, func: (data: EntityDataChanged<T>) => void) {
-        this.socket.on(name, (data: EntityDataChanged<T>) => {
-            // console.log(data);
-            // console.log(data.id, id);
-            if (data.id === id) {
+        this.socket.on(name, (data: EntityDataChanged<T> | SocketError) => {
+            if (isSocketError(data)) {
+                console.log(`Error on event ${name}. Result: ${JSON.stringify(data)}`);
+                return;
+            }
+            if ((data as EntityDataChanged<T>).id === id) {
                 func(data);
             }
         });
     }
 
     registerGlobalListener(name: string, func: (data: any) => void) {
-        this.socket.on(name, (data: any) => {
-            // console.log(data.id, id);
+        this.socket.on(name, (data: SocketError | any) => {
+            if (isSocketError(data)) {
+                console.log(`Error on event ${name}. Result: ${data}`);
+                return;
+            }
             func(data);
         });
     }

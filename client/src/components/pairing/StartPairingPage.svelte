@@ -26,9 +26,11 @@
     /*when creating the component, we launch the pairing procedure and listen to the responses from the back*/
     onMount(() => {
         /* request to start the pairing procedure */
-        DeviceService.launchPair();
+        DeviceService.launchPair().catch((x) =>
+            console.log('Pairing Mode Error :', x)
+        );
         socketManager.registerGlobalListener(
-            'device_created',
+            'deviceCreated',
             successDevicePaired
         );
         // Wait 120s an object was paired otherwise we go into the failure page
@@ -38,7 +40,7 @@
     /*when the component is destroyed, we stop the timeout and delete the listener on which we were listening*/
     onDestroy(() => {
         clearTimeout(timeout);
-        socketManager.removeListener('device_created', successDevicePaired);
+        socketManager.removeListener('deviceCreated', successDevicePaired);
     });
 </script>
 

@@ -22,14 +22,14 @@
 
     onMount(() => {
         socketManager.registerListenerById(
-            'entity_updated',
+            'entityUpdated',
             entity.id,
             updateState
         );
     });
 
     onDestroy(() => {
-        socketManager.removeListener('entity_updated', updateState);
+        socketManager.removeListener('entityUpdated', updateState);
     });
 </script>
 

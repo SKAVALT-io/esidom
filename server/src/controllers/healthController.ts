@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import App from '../app';
 import { healthService } from '../services';
-import { send } from '../utils';
+import { logger, send } from '../utils';
 
 @App.rest('/health')
 class HealthController {
@@ -17,7 +17,11 @@ class HealthController {
         return healthService
             .getHealth()
             .then(() => send(res, 200, { healthy: true }))
-            .catch(() => send(res, 200, { healthy: false }));
+            .catch(() => {
+                logger.error('HA is not healthy');
+                return send(res, 200, { healthy: false });
+            });
+
     }
 
 }

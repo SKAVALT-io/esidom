@@ -52,10 +52,16 @@
     },
     "confirmDelete": "Are you sure you want to delete this automation ?",
     "buttons": {
-      "cancel": "Cancel",
-      "confirm": "Confirm",
-      "retry": "Retry",
-      "close": "Quit"
+        "edit": "Edit",
+        "delete": "Delete",
+        "trigger": "Trigger",
+        "create": "Create an automation"
     }
+  },
+  "buttons": {
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "retry": "Retry",
+    "close": "Quit"
   }
 }

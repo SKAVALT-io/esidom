@@ -11,6 +11,7 @@ import {
     HaEntityUpdated,
 } from '../types';
 import config from '../config/config';
+import { logger } from '../utils';
 
 type EventType = 'event_type' | 'type';
 
@@ -72,22 +73,31 @@ class SocketForwarder {
             } else if (data) {
                 if (event === 'entityUpdated') {
                     observer.onEntityUpdated?.(data);
+                } else if (event === 'entityCreated') {
+                    observer.onEntityCreated?.(data);
+                } else if (event === 'entityRemoved') {
+                    observer.onEntityRemoved?.(data);
+
+                } else if (event === 'deviceUpdated') {
+                    observer.onDeviceUpdated?.(data);
+                } else if (event === 'deviceRemoved') {
+                    observer.onDeviceRemoved?.(data);
+                } else if (event === 'deviceCreated') {
+                    observer.onDeviceCreated?.(data);
+
                 } else if (event === 'automationUpdated') {
                     observer.onAutomationUpdated?.(data);
                 } else if (event === 'automationRemoved') {
                     observer.onAutomationRemoved?.(data);
                 } else if (event === 'automationCreated') {
                     observer.onAutomationCreated?.(data);
-                } else if (event === 'deviceRegistryUpdated') {
-                    observer.onDeviceRegistryUpdated?.(data);
-                } else if (event === 'entityRegistryUpdated') {
-                    observer.onEntityRegistryUpdated?.();
+
                 } else if (event === 'areaUpdated') {
                     observer.onAreaUpdated?.(data);
                 } else if (event === 'areaRemoved') {
                     observer.onAreaRemoved?.(data);
                 } else {
-                    console.log(`No such event ${event}`);
+                    logger.error(`No such event ${event}`);
                 }
             }
         });
@@ -97,11 +107,11 @@ class SocketForwarder {
         this.socket = new WebSocket(`ws://${config.baseUrl}/api/websocket`);
         this.socket
             .on('open', () => {
-                console.log('connected to websocket');
+                logger.info('Connected to websocket');
                 setTimeout(() => this.subscribeToEvents(), 1000);
             })
             .on('close', () => {
-                console.log('connection to websocket closed');
+                logger.info('Connection to websocket closed');
                 // TODO: try reconnecting to HA
             })
             .on('message', (wsData: WebSocket.Data) => {
@@ -113,7 +123,7 @@ class SocketForwarder {
                     );
                     break;
                 case 'auth_ok':
-                    console.log('Authorized');
+                    logger.info('Authenticated to websocket');
                     this.notifyObservers('authOk');
                     break;
                 case 'event':
@@ -151,13 +161,13 @@ class SocketForwarder {
 
     handleSocketResult(data: HaSocket): void {
         const { id } = data;
-        console.log(`received result for ws ${id}`);
+        logger.silly(`Received result for ws ${id}`);
         if (data.success === true) {
-            // console.log(data.result);
-            (this.socketsMap.get(id) || console.log)(data.result);
+            logger.silly('Data: ', data.result);
+            (this.socketsMap.get(id) || logger.error)(data.result);
         } else if (data.success === false) {
-            console.log(`${data.error?.code} ${data.error?.message}`);
-            (this.errorsMap.get(id) || console.log)(data.error);
+            logger.error(`${data.error?.code} ${data.error?.message}`);
+            (this.errorsMap.get(id) || logger.error)(data.error);
         }
         this.socketsMap.delete(id);
         this.errorsMap.delete(id);
@@ -168,8 +178,9 @@ class SocketForwarder {
         if (!eventType) {
             return;
         }
-        console.log(`received WS event : ${eventType}`, data);
+        logger.debug(`Received WS event : ${eventType}`);
         const eventData: any = data?.event?.data;
+        logger.silly('Data: ', eventData);
         if (eventType === 'device_registry_updated') {
             this.handleDeviceRegistryUpdated(eventData, eventType);
         }
@@ -205,24 +216,24 @@ class SocketForwarder {
         return this.getSocketResponse<T>(data);
     }
 
-    emitSocket<T>(event: string, data: T): void {
+    emitSocket<T>(event: Event, data: T): void {
+        logger.debug(`Emit ${event} socket with data:`, data);
         this.io.emit(event, data);
     }
 
     private handleDeviceRegistryUpdated(eventData: any, eventType: string) {
-        console.log(eventData);
         switch (eventData?.action) {
         case 'create':
-            this.notifyObservers('deviceRegistryUpdated', eventData.device_id);
+            this.notifyObservers('deviceCreated', eventData.device_id);
             return;
         case 'remove':
-            this.io.emit('device_removed', eventData);
+            this.notifyObservers('deviceRemoved', eventData);
             return;
         case 'update':
-            this.notifyObservers('deviceRegistryUpdated');
+            this.notifyObservers('deviceUpdated');
             return;
         default:
-            console.log(`Unknown event ${eventType}`);
+            logger.error(`Unknown event ${eventType}`);
         }
     }
 
@@ -249,13 +260,13 @@ class SocketForwarder {
             if (updated.entity_id.startsWith('automation')) {
                 this.notifyObservers('automationRemoved', updated.entity_id);
             } else {
-                this.notifyObservers('entityRegistryUpdated', updated.entity_id);
+                this.notifyObservers('entityRemoved', updated.entity_id);
             }
         } else if (updated.action === 'create') {
             if (updated.entity_id.startsWith('automation')) {
                 this.notifyObservers('automationCreated', updated.entity_id);
             } else {
-                this.notifyObservers('entityRegistryUpdated', updated.entity_id);
+                this.notifyObservers('entityCreated', updated.entity_id);
             }
         }
     }

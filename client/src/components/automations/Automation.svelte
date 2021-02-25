@@ -11,6 +11,7 @@
     import { tr } from '../../utils/i18nHelper';
     import CancelButton from '../UI/buttons/CancelButton.svelte';
     import OutlineButton from '../UI/buttons/OutlineButton.svelte';
+    import BorderedButton from '../UI/buttons/BorderedButton.svelte';
 
     export let automation: AutomationPreview;
 
@@ -41,13 +42,13 @@
         isConfirmDeleteOpen = false;
     }
 
-    function automationUpdatedHandler(data: any) {
+    function automationUpdatedHandler(data: AutomationPreview) {
         automation = data;
     }
 
     onMount(async () => {
-        socketManager.registerListenerById(
-            'entity_updated',
+        socketManager.registerListenerById<AutomationPreview>(
+            'automationUpdated',
             automation.id,
             automationUpdatedHandler
         );
@@ -55,7 +56,7 @@
 
     onDestroy(() => {
         socketManager.removeListener(
-            'entity_updated',
+            'automationUpdated',
             automationUpdatedHandler
         );
     });
@@ -82,7 +83,11 @@
             size={8}
             on:click={handleTrigger}
         />
-        <Tooltip text="Déclencher" position="top" show={showTriggerTip} />
+        <Tooltip
+            text={tr('automations.buttons.trigger')}
+            position="top"
+            show={showTriggerTip}
+        />
     </div>
     <div
         id="edit_button"
@@ -92,7 +97,11 @@
         on:mouseleave={() => (showEditTip = false)}
         on:mouseenter={() => (showEditTip = true)}
     >
-        <Tooltip text={'Éditer'} position="top" show={showEditTip} />
+        <Tooltip
+            text={tr('automations.buttons.edit')}
+            position="top"
+            show={showEditTip}
+        />
         <RoundedButton
             size={8}
             on:click={handleEdit}
@@ -107,7 +116,11 @@
         on:mouseleave={() => (showDeleteTip = false)}
         on:mouseenter={() => (showDeleteTip = true)}
     >
-        <Tooltip text={'Supprimer'} position="top" show={showDeleteTip} />
+        <Tooltip
+            text={tr('automations.buttons.delete')}
+            position="top"
+            show={showDeleteTip}
+        />
         <RoundedButton
             size={8}
             on:click={() => (isConfirmDeleteOpen = true)}
@@ -124,7 +137,7 @@
                         <CancelButton
                             on:click={() => (isConfirmDeleteOpen = false)}
                         />
-                        <OutlineButton
+                        <BorderedButton
                             text={tr('buttons.confirm')}
                             on:click={handleDelete}
                         />
