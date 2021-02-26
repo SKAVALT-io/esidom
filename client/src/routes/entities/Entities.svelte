@@ -16,6 +16,8 @@
     import { tr } from '../../utils/i18nHelper';
     import LoadingAnimation from '../../components/animations/LoadingAnimation.svelte';
     import Tooltip from '../../components/UI/utils/Tooltip.svelte';
+    import type { User } from '../../../types/userType';
+    import UserService from '../../services/userService';
 
     let isPairDeviceOpen = false;
     let showPairTip = false;
@@ -35,8 +37,20 @@
         [key: string]: Entity<any>[];
     };
 
+    let user: User | undefined = undefined;
+    UserService.user.subscribe((newUser) => {
+        user = newUser;
+    });
+
     async function loadEntities() {
-        const entities = await EntityService.getActualEntities();
+        const entities = await EntityService.getActualEntities().then((es) => {
+            if (!user || user.admin || user.entities.length === 0) {
+                return es;
+            }
+            return es.filter((e) => {
+                return user?.entities.includes(e.id);
+            });
+        });
         // Group them by domain
         return entities.reduce((all: EntityByDomain, cur) => {
             const domain: string = cur.id.split('.')[0];
