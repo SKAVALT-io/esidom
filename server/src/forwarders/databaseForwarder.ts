@@ -119,7 +119,10 @@ class DatabaseForwarder {
     async getUserById(id: number): Promise<User> {
         const sqlUsers = await this.db.all<SqlUser[]>(`SELECT * FROM User WHERE id == ${id}`);
         const users = await this.getUsersWithEntities(sqlUsers);
-        if (users.length !== 1) {
+        if (users.length === 0) {
+            throw new Error(`No user with such id ${id}`);
+        }
+        if (users.length > 1) {
             throw new Error('Database is inconsistent (at least two users have the same id)');
         }
         return users[0];
@@ -129,10 +132,10 @@ class DatabaseForwarder {
     async updateUser(id: number, username?: string,
         admin?: boolean, entities?: string[]): Promise<User> {
         if (username) {
-            await this.updateUserField(`username = '${username}'`);
+            await this.updateUserField(id, `username = '${username}'`);
         }
         if (admin) {
-            await this.updateUserField(`admin = ${admin ? 1 : 0}`);
+            await this.updateUserField(id, `admin = ${admin ? 1 : 0}`);
         }
         if (entities) {
             await this.insertUserEntities(id, entities);
@@ -140,8 +143,9 @@ class DatabaseForwarder {
         return this.getUserById(id);
     }
 
-    private async updateUserField(keyValue: string): Promise<void> {
-        await this.db.run(`UPDATE User SET ${keyValue}`);
+    private async updateUserField(userId: number, keyValue: string): Promise<void> {
+        logger.debug(`UPDATE User as u SET ${keyValue} WHERE u.id = ${userId}`);
+        await this.db.run(`UPDATE User as u SET ${keyValue} WHERE u.id = ${userId}`);
     }
 
     private async getUsersWithEntities(users: SqlUser[]): Promise<User[]> {
@@ -159,10 +163,16 @@ class DatabaseForwarder {
     }
 
     private async insertUserEntities(userId: number, entities: string[]): Promise<void> {
+        await this.db.run(`DELETE FROM AccessEntity as a WHERE a.userId = ${userId}`);
         await Promise.all(
             entities.map(async (entityId) => this.db
                 .run(`INSERT INTO AccessEntity(userId, entityId) VALUES(${userId}, '${entityId}')`)),
         );
+    }
+
+    async deleteUser(userId: number): Promise<void> {
+        await this.db.run(`DELETE FROM User as u WHERE u.id = ${userId}`);
+        await this.db.run(`DELETE FROM AccessEntity as a WHERE a.userId = ${userId}`);
     }
 
 }

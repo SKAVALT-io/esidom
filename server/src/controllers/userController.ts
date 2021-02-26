@@ -3,7 +3,7 @@ import userService from '../services/userService';
 import App from '../app';
 import {
     send, sendf,
-    Success, SuccessOrError,
+    Success, SuccessMessageOrError, SuccessOrError,
 } from '../utils';
 import { User } from '../types';
 
@@ -59,6 +59,15 @@ class UserController {
         return userService
             .updateUser(parseInt(id, 10), username, admin, entities)
             .then(sendf(res, 200))
+            .catch((err) => send(res, 400, { error: err.message }));
+    }
+
+    @App.delete('/:id')
+    async deleteUser(req: Request, res: Response): SuccessMessageOrError {
+        const { id } = req.params;
+        return userService
+            .deleteUser(parseInt(id, 10))
+            .then(() => send(res, 200, { message: 'ok' }))
             .catch((err) => send(res, 400, { error: err.message }));
     }
 

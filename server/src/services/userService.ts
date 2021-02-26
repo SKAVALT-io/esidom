@@ -30,6 +30,11 @@ class UserService {
             .updateUser(id, username, admin, entities);
     }
 
+    async deleteUser(id: number): Promise<void> {
+        return databaseForwarder
+            .deleteUser(id);
+    }
+
     async lockFront(password: string): Promise<string> {
         if (this.frontPassword) {
             throw new Error('Un mot de passe est déjà définit.');
