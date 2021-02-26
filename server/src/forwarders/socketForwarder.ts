@@ -236,7 +236,7 @@ class SocketForwarder {
             this.notifyObservers('deviceRemoved', eventData);
             return;
         case 'update':
-            this.notifyObservers('deviceUpdated');
+            this.notifyObservers('deviceUpdated', eventData.device_id);
             return;
         default:
             logger.error(`Unknown event ${eventType}`);
