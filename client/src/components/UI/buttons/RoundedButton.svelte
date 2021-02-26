@@ -7,7 +7,7 @@
 
 <button
     on:click
-    class="roundedButton inline-flex items-center justify-center p-2 w-{size} {`h-${size}`} text-white transition-colors duration-150 {bgColor} hover:{bgColorHover} rounded-full focus:shadow-outline"
+    class="roundedButton inline-flex items-center justify-center p-2 w-{size} h-{size} text-white transition-colors duration-150 {bgColor} hover:{bgColorHover} rounded-full focus:shadow-outline"
 >
     {#if iconPath === ''}
         <span><slot /></span>
