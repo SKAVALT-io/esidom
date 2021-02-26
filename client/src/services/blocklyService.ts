@@ -111,14 +111,21 @@ export default class BlocklyService {
         const services = await EntityService.getServices();
 
         // We create the object_action Block
-        this.createObjectAction(entities, services);
+        this.createObjectAction((entities as Entity<string[]>[]), services);
+
         // We create all the object Blocks
         this.createObjects(entities);
+
         // We create the numeric_state_condition Block
         this.createNumericStateCondition((entities as Entity<string[]>[]));
+
+        // We create the numeric_state_trigger Block
+        this.createNumericStateTrigger((entities as Entity<string[]>[]));
     }
 
-    static createNumericStateCondition(entities: Entity<string[]>[]): void {
+    static createNumericEntityWithAttributesMap(
+        entities: Entity<string[]>[],
+    ): Map<string, EntityWithAttributes> {
         const entityWithAttributesMap = new Map<string, EntityWithAttributes>();
 
         entities.forEach((entity: Entity<string[]>) => {
@@ -128,6 +135,14 @@ export default class BlocklyService {
                 attributes: Object.keys(entity.attributes),
             });
         });
+
+        return entityWithAttributesMap;
+    }
+
+    static createNumericDropdowns(
+        entityWithAttributesMap: Map<string, EntityWithAttributes>,
+    ): string[][][] {
+        const dropdowns = [];
 
         const values = Array.from(entityWithAttributesMap.values());
         const tmpDropdown1 = values.map((
@@ -153,6 +168,164 @@ export default class BlocklyService {
             [tr('blockly.blocks.numeric_state_condition.dropdown3.lower'), 'lower'],
         ];
 
+        dropdowns.push(dropdown1, dropdown2, dropdown3);
+        return dropdowns;
+    }
+
+    static registerNumericMutator(
+        entityWithAttributesMap: Map<string, EntityWithAttributes>,
+        mutatorName: string,
+        inputName: string,
+    ):void {
+        const NUMERIC_STATE_MUTATOR_MIXIN = {
+
+            mutationToDom(): HTMLElement {
+                const container = document.createElement('mutation');
+                const entitiesInput: string = (this as EsidomBlockType).getFieldValue('Entities');
+                container.setAttribute(inputName, entitiesInput);
+                return container;
+            },
+
+            domToMutation(xmlElement: HTMLElement): void {
+                const attribute = xmlElement.getAttribute(inputName);
+                const entityId = attribute != null ? attribute : '';
+                this.numericStateConditionUpdateAttribute(entityId);
+            },
+
+            numericStateConditionUpdateAttribute(entityId: string): void {
+                const newDropdown = entityWithAttributesMap.get(entityId)
+                    ?.attributes.map((attribute: string) => [attribute, attribute])
+                    ?? [[tr('blockly.unknownAttribute'), tr('blockly.unknownAttribute')]];
+
+                newDropdown.unshift([tr('blockly.noAttribute'), 'noAttribute']);
+
+                const attInput = (this as EsidomBlockType).getInput?.('entities');
+                attInput.removeField('Attributes', true);
+                attInput.appendField(new Blockly.FieldDropdown(newDropdown), 'Attributes');
+            },
+
+            numericStateConditionUpdateCondition(option: string): void {
+                const includedField = (this as EsidomBlockType).getFieldValue('Included');
+
+                if (
+                    (option === 'included' || option === 'notIncluded')
+                    && (includedField !== 'included' && includedField !== 'notIncluded')
+                ) {
+                    (this as EsidomBlockType).removeInput('condition', true);
+                    (this as EsidomBlockType).appendDummyInput('condition')
+                        .appendField(tr('blockly.blocks.numeric_state_trigger.between'))
+                        .appendField(new Blockly.FieldNumber(0), 'Minimum')
+                        .appendField(tr('blockly.blocks.numeric_state_trigger.and'))
+                        .appendField(new Blockly.FieldNumber(0), 'Maximum');
+                } else if (option === 'greater') {
+                    (this as EsidomBlockType).removeInput('condition', true);
+                    (this as EsidomBlockType).appendDummyInput('condition')
+                        .appendField(tr('blockly.blocks.numeric_state_trigger.of'))
+                        .appendField(new Blockly.FieldNumber(0), 'Minimum');
+                } else if (option === 'lower') {
+                    (this as EsidomBlockType).removeInput('condition', true);
+                    (this as EsidomBlockType).appendDummyInput('condition')
+                        .appendField(tr('blockly.blocks.numeric_state_trigger.of'))
+                        .appendField(new Blockly.FieldNumber(0), 'Maximum');
+                }
+            },
+
+        };
+
+        const NUMERIC_STATE_MUTATOR_EXTENSION = function mutate(this: EsidomBlockType) {
+            this.getField('Included').setValidator((option: string) => {
+                this.numericStateConditionUpdateCondition(option);
+            });
+
+            this.getField('Entities').setValidator((option: string) => {
+                this.numericStateConditionUpdateAttribute(option);
+            });
+        };
+
+        try {
+            Blockly.Extensions.registerMutator(
+                mutatorName,
+                NUMERIC_STATE_MUTATOR_MIXIN,
+                NUMERIC_STATE_MUTATOR_EXTENSION,
+            );
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    static createNumericStateTrigger(entities: Entity<string[]>[]): void {
+        const entityWithAttributesMap = this.createNumericEntityWithAttributesMap(entities);
+        const dropdowns = this.createNumericDropdowns(entityWithAttributesMap);
+
+        const block = Blockly.Blocks as unknown as BlocksDefinitions;
+        block.numeric_state_trigger = {
+            init() {
+                this.jsonInit?.(
+                    {
+                        type: 'numeric_state_trigger',
+                        message0: tr('blockly.blocks.numeric_state_trigger.message'),
+                        args0: [
+                            {
+                                type: 'field_dropdown',
+                                name: 'Entities',
+                                options: dropdowns[0],
+                            },
+                            {
+                                type: 'field_dropdown',
+                                name: 'Attributes',
+                                options: dropdowns[1],
+                            },
+                            {
+                                type: 'input_dummy',
+                                name: 'entities',
+                            },
+                            {
+                                type: 'field_dropdown',
+                                name: 'Included',
+                                options: dropdowns[2],
+                            },
+                            {
+                                type: 'input_dummy',
+                                name: 'included',
+                            },
+                            {
+                                type: 'field_number',
+                                name: 'Minimum',
+                                value: 0,
+                            },
+                            {
+                                type: 'field_number',
+                                name: 'Maximum',
+                                value: 0,
+                            },
+                            {
+                                type: 'input_dummy',
+                                name: 'condition',
+                            },
+                        ],
+                        inputsInline: false,
+                        previousStatement: 'Trigger',
+                        nextStatement: 'Trigger',
+                        colour: COLORS.HUE_GREEN,
+                        tooltip: tr('blockly.blocks.numeric_state_trigger.tooltip'),
+                        helpUrl: '',
+                        mutator: 'numeric_static_trigger_esidom_mutator',
+                    },
+                );
+            },
+        };
+
+        this.registerNumericMutator(
+            entityWithAttributesMap,
+            'numeric_static_trigger_esidom_mutator',
+            'numeric_state_trigger_entities_input',
+        );
+    }
+
+    static createNumericStateCondition(entities: Entity<string[]>[]): void {
+        const entityWithAttributesMap = this.createNumericEntityWithAttributesMap(entities);
+        const dropdowns = this.createNumericDropdowns(entityWithAttributesMap);
+
         const block = Blockly.Blocks as unknown as BlocksDefinitions;
         block.numeric_state_condition = {
             init() {
@@ -164,12 +337,12 @@ export default class BlocklyService {
                             {
                                 type: 'field_dropdown',
                                 name: 'Entities',
-                                options: dropdown1,
+                                options: dropdowns[0],
                             },
                             {
                                 type: 'field_dropdown',
                                 name: 'Attributes',
-                                options: dropdown2,
+                                options: dropdowns[1],
                             },
                             {
                                 type: 'input_dummy',
@@ -178,7 +351,7 @@ export default class BlocklyService {
                             {
                                 type: 'field_dropdown',
                                 name: 'Included',
-                                options: dropdown3,
+                                options: dropdowns[2],
                             },
                             {
                                 type: 'input_dummy',
@@ -211,90 +384,23 @@ export default class BlocklyService {
             },
         };
 
-        const NUMERIC_STATE_CONDITION_MUTATOR_MIXIN = {
-
-            mutationToDom(): HTMLElement {
-                const container = document.createElement('mutation');
-                const entitiesInput: string = (this as EsidomBlockType).getFieldValue('Entities');
-                container.setAttribute('numeric_state_condition_entities_input', entitiesInput);
-                return container;
-            },
-
-            domToMutation(xmlElement: HTMLElement): void {
-                const attribute = xmlElement.getAttribute('numeric_state_condition_entities_input');
-                const entityId = attribute != null ? attribute : '';
-                this.numericStateConditionUpdateAttribute(entityId);
-            },
-
-            numericStateConditionUpdateAttribute(entityId: string): void {
-                const newDropdown = entityWithAttributesMap.get(entityId)
-                    ?.attributes.map((attribute: string) => [attribute, attribute])
-                    ?? [[tr('blockly.unknownAttribute'), tr('blockly.unknownAttribute')]];
-
-                newDropdown.unshift([tr('blockly.noAttribute'), 'noAttribute']);
-
-                const attInput = (this as EsidomBlockType).getInput?.('entities');
-                attInput.removeField('Attributes', true);
-                attInput.appendField(new Blockly.FieldDropdown(newDropdown), 'Attributes');
-            },
-
-            numericStateConditionUpdateCondition(option: string): void {
-                const includedField = (this as EsidomBlockType).getFieldValue('Included');
-
-                if (
-                    (option === 'included' || option === 'notIncluded')
-                    && (includedField !== 'included' && includedField !== 'notIncluded')
-                ) {
-                    (this as EsidomBlockType).removeInput('condition', true);
-                    (this as EsidomBlockType).appendDummyInput('condition')
-                        .appendField('entre')
-                        .appendField(new Blockly.FieldNumber(0), 'Minimum')
-                        .appendField('et')
-                        .appendField(new Blockly.FieldNumber(0), 'Maximum');
-                } else if (option === 'greater') {
-                    (this as EsidomBlockType).removeInput('condition', true);
-                    (this as EsidomBlockType).appendDummyInput('condition')
-                        .appendField('de')
-                        .appendField(new Blockly.FieldNumber(0), 'Minimum');
-                } else if (option === 'lower') {
-                    (this as EsidomBlockType).removeInput('condition', true);
-                    (this as EsidomBlockType).appendDummyInput('condition')
-                        .appendField('de')
-                        .appendField(new Blockly.FieldNumber(0), 'Maximum');
-                }
-            },
-
-        };
-
-        const NUMERIC_STATE_CONDITION_MUTATION_EXTENSION = function mutate(this: EsidomBlockType) {
-            this.getField('Included').setValidator((option: string) => {
-                this.numericStateConditionUpdateCondition(option);
-            });
-
-            this.getField('Entities').setValidator((option: string) => {
-                this.numericStateConditionUpdateAttribute(option);
-            });
-        };
-
-        try {
-            Blockly.Extensions.registerMutator('numeric_static_condition_esidom_mutator',
-                NUMERIC_STATE_CONDITION_MUTATOR_MIXIN,
-                NUMERIC_STATE_CONDITION_MUTATION_EXTENSION);
-        } catch (error) {
-            console.log(error);
-        }
+        this.registerNumericMutator(
+            entityWithAttributesMap,
+            'numeric_static_condition_esidom_mutator',
+            'numeric_state_condition_entities_input',
+        );
     }
 
-    static createObjectAction(entities: Entity<unknown>[], services: Service[]): void {
-        const entityWithServicesLst: EntityWithServices[] = [];
+    static createObjectAction(entities: Entity<string[]>[], services: Service[]): void {
+        const entityWithServicesMap = new Map<string, EntityWithServices>();
 
-        entities.forEach((entity: Entity<unknown>) => {
+        entities.forEach((entity: Entity<string[]>) => {
             const tmpServices: string[] = services
                 .filter((service: Service) => service.name.split('.')[0] === entity.type)
                 .map((service: Service) => service.name);
 
             if (tmpServices.length > 0) {
-                entityWithServicesLst.push({
+                entityWithServicesMap.set(entity.id, {
                     id: entity.id,
                     name: entity.name,
                     services: tmpServices,
@@ -306,17 +412,20 @@ export default class BlocklyService {
         // Create object_action Block
         block.object_action = {
             init() {
-                const tmpDropdown1 = entityWithServicesLst.map((
+                const values = Array.from(entityWithServicesMap.values());
+                const tmpDropdown1 = values.map((
                     entity: EntityWithServices,
-                    index: number,
                 ) => {
                     if (entity.name === null || entity.name === '') {
                         entity.name = tr('blockly.unknownName');
                     }
-                    return [entity.name, `${index.toString()}:${entity.id}:${entity.name}`];
+                    return [entity.name, entity.id];
                 });
 
                 const dropdown1 = tmpDropdown1.length > 0 ? tmpDropdown1 : [[tr('blockly.unknownName'), tr('blockly.unknownName')]];
+                const dropdown2 = values[0]
+                    .services.map((service: string) => [service.split('.')[1], service])
+                ?? [[tr('blockly.unknownAction'), tr('blockly.unknownAction')]];
 
                 this.jsonInit?.(
                     {
@@ -328,7 +437,19 @@ export default class BlocklyService {
                                 name: 'Entities',
                                 options: dropdown1,
                             },
-
+                            {
+                                type: 'input_dummy',
+                                name: 'entities',
+                            },
+                            {
+                                type: 'field_dropdown',
+                                name: 'Services',
+                                options: dropdown2,
+                            },
+                            {
+                                type: 'input_dummy',
+                                name: 'services',
+                            },
                         ],
                         inputsInline: false,
                         previousStatement: 'Action',
@@ -346,43 +467,63 @@ export default class BlocklyService {
 
             mutationToDom(): HTMLElement {
                 const container = document.createElement('mutation');
-                const entitiesInput: number = parseInt((this as EsidomBlockType).getFieldValue('Entities').split(':')[0], 10);
-                container.setAttribute('entities_input', entitiesInput.toString());
+                const entitiesInput: string = (this as EsidomBlockType).getFieldValue('Entities');
+                container.setAttribute('entities_input', entitiesInput);
                 return container;
             },
 
             domToMutation(xmlElement: HTMLElement): void {
                 const attribute = xmlElement.getAttribute('entities_input');
-                const index = attribute != null ? parseInt(attribute, 10) : 0;
-                this.objectActionUpdateShape(index);
+                const entityId = attribute != null ? attribute : '';
+                this.objectActionUpdateShape(entityId);
             },
 
-            objectActionUpdateShape(index: number): void {
-                const newDropdown = entityWithServicesLst[index]
-                    ?.services.map((service: string) => [service.split('.')[1], service])
+            objectActionUpdateShape(entityId: string): void {
+                const type = entityId.split('.')[0];
+                const entityServices = entityWithServicesMap.get(entityId)?.services;
+                const newDropdown = entityServices?.map((service: string) => [service.split('.')[1], service])
                     ?? [[tr('blockly.unknownAction'), tr('blockly.unknownAction')]];
 
-                (this as EsidomBlockType).removeInput?.('services', true);
-                (this as EsidomBlockType).appendDummyInput?.('services')
-                    .appendField?.('Action :')
-                    .appendField?.(
-                        new Blockly.FieldDropdown(newDropdown),
-                        'Services',
-                    );
+                const serviceInput = (this as EsidomBlockType).getInput?.('services');
+                serviceInput.removeField('Services', true);
+                serviceInput.appendField(new Blockly.FieldDropdown(newDropdown), 'Services');
+
+                const entityField = (this as EsidomBlockType).getFieldValue('Entities');
+                const currentType = entityField.split('.')[0];
+
+                if (type === 'light' && currentType !== 'light') {
+                    (this as EsidomBlockType).removeInput('Color', true);
+                    (this as EsidomBlockType).appendValueInput('Color')
+                        .setCheck('Color')
+                        .appendField(tr('blockly.blocks.object_action.color'));
+                    (this as EsidomBlockType).removeInput('Brightness', true);
+                    (this as EsidomBlockType).appendValueInput('Brightness')
+                        .setCheck('Brightness')
+                        .appendField(tr('blockly.blocks.object_action.brightness'));
+                    (this as EsidomBlockType).removeInput('Temperature', true);
+                    (this as EsidomBlockType).appendValueInput('Temperature')
+                        .setCheck('ColorTemperature')
+                        .appendField(tr('blockly.blocks.object_action.temperature'));
+                } else if (type !== 'light') {
+                    (this as EsidomBlockType).removeInput('Color', true);
+                    (this as EsidomBlockType).removeInput('Brightness', true);
+                    (this as EsidomBlockType).removeInput('Temperature', true);
+                }
             },
         };
 
-        const OBJECT_ACTION_MUTATION_EXTENSION = function mutate(this: EsidomBlockType) {
+        const OBJECT_ACTION_MUTATOR_EXTENSION = function mutate(this: EsidomBlockType) {
             this.getField('Entities').setValidator((option: string) => {
-                const index: number = parseInt(option.split(':')[0], 10);
-                this.objectActionUpdateShape(index);
+                this.objectActionUpdateShape(option);
             });
         };
 
         try {
-            Blockly.Extensions.registerMutator('object_action_esidom_mutator',
+            Blockly.Extensions.registerMutator(
+                'object_action_esidom_mutator',
                 OBJECT_ACTION_MUTATOR_MIXIN,
-                OBJECT_ACTION_MUTATION_EXTENSION);
+                OBJECT_ACTION_MUTATOR_EXTENSION,
+            );
         } catch (error) {
             console.log(error);
         }
@@ -443,14 +584,23 @@ export default class BlocklyService {
         });
 
         automation.action?.forEach((action) => {
-            const { alias } = action;
+            const entityId = action.entity_id;
             const { service } = action;
+
+            const { data } = action;
+
+            const rgbColor = data.rgb_color;
+            const { brightness } = data;
+            const colorTemp = data.color_temp;
 
             xml += `
                 <value name="Action">
                 <block type="object_action">
-                    <field name="Entities">${alias}</field>
+                    <field name="Entities">${entityId}</field>
                     <field name="Services">${service}</field>
+                    ${this.getActionColorXml(rgbColor)}
+                    ${this.getActionBrightnessXml(brightness)}
+                    ${this.getActionTemperatureXml(colorTemp)}
                 </block>
                 </value>
             `;
@@ -459,5 +609,43 @@ export default class BlocklyService {
         xml += '</block></xml>';
 
         return xml;
+    }
+
+    static getActionColorXml(rgbColor: number[]): string {
+        return rgbColor
+            ? `
+                '<value name="Color">
+                    <block type="color_rgb">
+                        <field name="Red">${rgbColor[0]}</field>
+                        <field name="Green">${rgbColor[1]}</field>
+                        <field name="Blue">${rgbColor[2]}</field>
+                    </block>
+                </value>'
+            `
+            : '';
+    }
+
+    static getActionBrightnessXml(brightness: number[]): string {
+        return brightness
+            ? `
+                '<value name="Brightness">
+                    <block type="brightness">
+                        <field name="Brightness">${brightness}</field>
+                    </block>
+                </value>'
+            `
+            : '';
+    }
+
+    static getActionTemperatureXml(colorTemp: number[]): string {
+        return colorTemp
+            ? `
+                '<value name="Temperature">
+                    <block type="color_temp">
+                        <field name="Temperature">${colorTemp}</field>
+                    </block>
+                </value>'
+            `
+            : '';
     }
 }

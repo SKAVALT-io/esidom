@@ -27,6 +27,7 @@ export type BlocksDefinitions = {
     binary_trigger: BlockFunctions;
     time_trigger: BlockFunctions;
     sun_trigger: BlockFunctions;
+    numeric_state_trigger: BlockFunctions;
     time_condition: BlockFunctions;
     sun_condition: BlockFunctions;
     time_condition_hour: BlockFunctions;
@@ -36,6 +37,9 @@ export type BlocksDefinitions = {
     action: BlockFunctions;
     color_picker: BlockFunctions;
     color_rgb: BlockFunctions;
+    brightness: BlockFunctions;
+    color_temp: BlockFunctions;
+    color_brightness_temp: BlockFunctions;
     object_action: BlockFunctions;
 }
 
@@ -48,7 +52,7 @@ export type BlocksDefinitions = {
             this.jsonInit?.(
                 {
                     type: 'esidom_automation',
-                    message0: tr('blockly.blocks.esidom_automation.message'), // 'Avec quel mode ? %4',
+                    message0: tr('blockly.blocks.esidom_automation.message'),
                     args0: [
                         {
                             type: 'input_statement',
@@ -598,7 +602,7 @@ export type BlocksDefinitions = {
      */
 
     /**
-     * Catégorie Couleur
+     * Catégorie Contrôle de lampe
      */
     block.color_picker = {
         init() {
@@ -656,6 +660,50 @@ export type BlocksDefinitions = {
                 output: 'Color',
                 colour: COLORS.HUE_MAUVE,
                 tooltip: tr('blockly.blocks.color_rgb.tooltip'),
+                helpUrl: '',
+            });
+        },
+    };
+
+    block.brightness = {
+        init() {
+            this.jsonInit?.({
+                type: 'brightness',
+                message0: tr('blockly.blocks.brightness.message'),
+                args0: [
+                    {
+                        type: 'field_number',
+                        name: 'Brightness',
+                        value: 0,
+                        min: 0,
+                        max: 255,
+                    },
+                ],
+                output: 'Brightness',
+                colour: COLORS.HUE_MAUVE,
+                tooltip: tr('blockly.blocks.brightness.tooltip'),
+                helpUrl: '',
+            });
+        },
+    };
+
+    block.color_temp = {
+        init() {
+            this.jsonInit?.({
+                type: 'color_temp',
+                message0: tr('blockly.blocks.color_temp.message'),
+                args0: [
+                    {
+                        type: 'field_number',
+                        name: 'Temperature',
+                        value: 153,
+                        min: 153,
+                        max: 500,
+                    },
+                ],
+                output: 'ColorTemperature',
+                colour: COLORS.HUE_MAUVE,
+                tooltip: tr('blockly.blocks.color_temp.tooltip'),
                 helpUrl: '',
             });
         },

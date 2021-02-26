@@ -14,6 +14,9 @@
             <block type="binary_trigger" />
             <block type="time_trigger" />
             <block type="sun_trigger" />
+            <block type="numeric_state_trigger">
+                <mutation numeric_state_trigger_entities_input="" />
+            </block>
         </category>
         <category name="Conditions" colour={COLORS.HUE_YELLOW}>
             <block type="binary_condition" />
@@ -27,7 +30,7 @@
         </category>
         <category name="Actions" colour={COLORS.HUE_ORANGE}>
             <block type="object_action">
-                <mutation entities_input="0" />
+                <mutation entities_input="" />
             </block>
         </category>
         <category name="Objets" colour={COLORS.HUE_RED}>
@@ -41,9 +44,11 @@
             <block type="switch" />
             <block type="media_player" />
         </category>
-        <category name="Couleur" colour={COLORS.HUE_MAUVE}>
+        <category name="Contrôle de lampe" colour={COLORS.HUE_MAUVE}>
             <block type="color_picker" />
             <block type="color_rgb" />
+            <block type="brightness" />
+            <block type="color_temp" />
         </category>
     </BlocklyComponent>
 </div>
