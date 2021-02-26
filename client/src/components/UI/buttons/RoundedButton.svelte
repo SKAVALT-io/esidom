@@ -1,11 +1,13 @@
 <script>
     export let size = 11;
     export let iconPath = '';
+    export let bgColor = 'bg-blue-500';
+    export let bgColorHover = 'bg-blue-600';
 </script>
 
 <button
     on:click
-    class="roundedButton inline-flex items-center justify-center p-2 {`w-${size}`} {`h-${size}`} text-white transition-colors duration-150 bg-blue-500 rounded-full focus:shadow-outline hover:bg-blue-600"
+    class="roundedButton inline-flex items-center justify-center p-2 w-{size} {`h-${size}`} text-white transition-colors duration-150 {bgColor} hover:{bgColorHover} rounded-full focus:shadow-outline"
 >
     {#if iconPath === ''}
         <span><slot /></span>
