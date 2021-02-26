@@ -218,7 +218,8 @@
     "confirmation": "Confirmer le mot de passe"
   },
   "modal": {
-    "registerPassword": "Verrouillez l'application avec un mot de passe"
+      "registerPassword": "Verrouillez l'application avec un mot de passe",
+      "login": "Choisissez un utilisateur"
   },
   "buttons": {
     "cancel": "Annuler",
@@ -286,5 +287,9 @@
     "options": {
       "name": "Noms"
     }
+  },
+  "user": {
+      "connectedAs": "Connecté en tant que {0}",
+      "notConnected": "Non connecté"
   }
 }

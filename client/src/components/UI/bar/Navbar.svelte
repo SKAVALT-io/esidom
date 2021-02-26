@@ -5,8 +5,15 @@
     import { tr } from '../../../utils/i18nHelper';
     import AccountSvg from '../../svg_icons/AccountSVG.svelte';
     import RoundedButton from '../buttons/RoundedButton.svelte';
+    import UserService from '../../../services/userService';
+    import type { User } from '../../../../types/userType';
 
     const dispatch = createEventDispatcher();
+
+    let user: User | undefined = undefined;
+    UserService.user.subscribe((newUser) => {
+        user = newUser;
+    });
 </script>
 
 <nav
@@ -42,12 +49,21 @@
                 alt="logout"
             />
         </button>
-        <a
+        <div>
+            {#if user}
+                <i>{user.username}</i>
+            {:else}
+                <p>{tr('user.notConnected')}</p>
+            {/if}
+        </div>
+        <button
+            id="login"
+            on:click={() => dispatch('login')}
             href="/#/"
             class="lg:inline-flex lg:w-auto w-full py-2 rounded text-gray-400 items-center justify-center hover:bg-gray-900 hover:text-white"
         >
             <AccountSvg />
-        </a>
+        </button>
     </div>
 </nav>
 

@@ -1,10 +1,10 @@
 <script lang="ts">
     // eslint-disable-next-line import/first
     import { onMount } from 'svelte';
-    export let formatDate = '';
+    export let formatDate: 'short' | 'long' = 'long';
 
     let date = new Date();
-    let options = {
+    let options: Intl.DateTimeFormatOptions = {
         weekday: 'long',
         year: 'numeric',
         month: 'long',

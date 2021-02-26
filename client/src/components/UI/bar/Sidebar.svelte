@@ -2,6 +2,8 @@
     import * as SPA from 'svelte-spa-router';
     import { tr } from '../../../utils/i18nHelper';
     import { clickOutside } from '../../../utils/functions';
+    import UserService from '../../../services/userService';
+    import type { User } from '../../../../types/userType';
     export let open = false;
 
     function hashToPage() {
@@ -26,6 +28,11 @@
             open = false;
         }
     }
+
+    let user: User | undefined = undefined;
+    UserService.user.subscribe((newUser) => {
+        user = newUser;
+    });
 </script>
 
 <nav

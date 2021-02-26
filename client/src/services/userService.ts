@@ -1,7 +1,24 @@
+import { Writable, writable } from 'svelte/store';
 import type { User, UserWithoutId } from '../../types/userType';
 import http from '../utils/HttpHelper';
+import { format, tr } from '../utils/i18nHelper';
+import toastService from '../utils/toast';
+
+const { set, subscribe, update } = writable<User | undefined>(JSON.parse(localStorage.getItem('user') ?? 'null') ?? undefined);
+
+const userStore: Writable<User | undefined> = {
+    set: (value: User | undefined) => {
+        toastService.toast(format(tr('user.connectedAs'), value?.username ?? ''));
+        localStorage.setItem('user', JSON.stringify(value));
+        set(value);
+    },
+    subscribe,
+    update,
+};
 
 export default class UserService {
+    static user = userStore;
+
     static async lockFront(password: string): Promise<string> {
         return http.post('/user/lock', { password });
     }
