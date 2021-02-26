@@ -25,7 +25,6 @@
     const routes = {
         '/entities/': Entities,
         '/entity/:id': Entity,
-        '/home/': Home,
         '/blockly': Blockly,
         '/blockly/:id': Blockly,
         '/automations': Automations,
