@@ -5,6 +5,7 @@
     import BorderedButton from '../UI/buttons/BorderedButton.svelte';
     import CancelButton from '../UI/buttons/CancelButton.svelte';
     import type { Protocols, Status } from '../../../types/protocols';
+    import { stat } from 'fs';
 
     const dispatch = createEventDispatcher();
 
@@ -38,7 +39,12 @@
         <br />
         <span class="text-red-500">
             {#if toto}
-                {#each toto as n}{n.name + ' : ' + n.status.error} <br />{/each}
+                {#each toto as n}
+                    {#if n.status.status === 'failed'}
+                        {n.name + ' : ' + n.status.error}
+                        <br />
+                    {/if}
+                {/each}
             {/if}
         </span>
 
