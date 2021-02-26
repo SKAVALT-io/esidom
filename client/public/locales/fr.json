@@ -290,6 +290,10 @@
   },
   "user": {
       "connectedAs": "Connecté en tant que {0}",
-      "notConnected": "Non connecté"
-  }
+      "notConnected": "Non connecté",
+      "confirmDelete": "Voulez-vous vraiment supprimer cet utilisateur ?",
+      "name": "Nom d'utilisateur",
+      "edit": "Editer l'utilisateur",
+      "assignEntities": "Assigner des entités à l'utilisateur"
+  } 
 }

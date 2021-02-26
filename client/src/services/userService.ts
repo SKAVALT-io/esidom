@@ -65,4 +65,8 @@ export default class UserService {
         }
         return http.put(`/user/${id}`, body);
     }
+
+    static async deleteUser(id: string): Promise<{message: string} | {error: string}> {
+        return http.delete(`/user/${id}`);
+    }
 }

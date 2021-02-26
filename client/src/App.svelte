@@ -17,6 +17,7 @@
     import Sidebar from './components/UI/bar/Sidebar.svelte';
     import Toast from './Toast.svelte';
     import Groups from './routes/groups/Groups.svelte';
+    import Users from './routes/users/Users.svelte';
     import UserService from './services/userService';
     import LoginPage from './components/login/LoginPage.svelte';
     import DisconnectModal from './components/login/DisconnectModal.svelte';
@@ -32,6 +33,7 @@
         '/automations': Automations,
         '/groups': Groups,
         '/rooms': Rooms,
+        '/users': Users,
         // This is optional, but if present it must be the last
         '*': Entities,
     };

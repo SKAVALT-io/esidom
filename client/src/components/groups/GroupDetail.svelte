@@ -1,12 +1,7 @@
 <script lang="ts">
     import { createEventDispatcher, onMount } from 'svelte';
-
-    import RoundedButton from '../UI/buttons/RoundedButton.svelte';
-    import ToggleButton from '../UI/buttons/ToggleButton.svelte';
     import type { Group } from '../../../types/groupType';
-    import Modal from '../../components/UI/modal/Modal.svelte';
     import SaveButton from '../UI/buttons/SaveButton.svelte';
-    import { each } from 'svelte/internal';
 
     import LoadingAnimation from '../../components/animations/LoadingAnimation.svelte';
     import EntityService from '../../services/entityService';
@@ -55,9 +50,9 @@
                                 <input
                                     type="checkbox"
                                     class="form-checkbox"
-                                    checked={currentGroup.entities.find((e) => {
-                                        return e.id === entity.id;
-                                    })}
+                                    checked={currentGroup.entities
+                                        .map((e) => e.id)
+                                        .includes(entity.id)}
                                     on:click={(val) => {
                                         if (val.target.checked) {
                                             currentGroup.entities.push(entity);
