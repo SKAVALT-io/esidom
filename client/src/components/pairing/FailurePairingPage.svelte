@@ -5,7 +5,6 @@
     import BorderedButton from '../UI/buttons/BorderedButton.svelte';
     import CancelButton from '../UI/buttons/CancelButton.svelte';
     import type { Protocols, Status } from '../../../types/protocols';
-    import { stat } from 'fs';
 
     const dispatch = createEventDispatcher();
 
