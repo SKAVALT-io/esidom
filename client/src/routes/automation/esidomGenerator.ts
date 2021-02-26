@@ -425,7 +425,7 @@ export type BlocksGenerator = {
     };
 
     /**
-     * Catégorie ontrôle de lampe
+     * Catégorie Contrôle de lampe
      */
 
     block.color_picker = (blk: Block) => {
