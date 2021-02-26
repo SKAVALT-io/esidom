@@ -25,7 +25,6 @@
     const routes = {
         '/entities/': Entities,
         '/entity/:id': Entity,
-        '/home/': Home,
         '/blockly': Blockly,
         '/blockly/:id': Blockly,
         '/automations': Automations,
@@ -78,7 +77,7 @@
                 id="row2"
                 class="flex flex-row space-x-4 sm:space-x-20 overflow-y-auto h-screen"
             >
-                <div class="sidenav fixed z-100">
+                <div class="sidenav fixed z-110">
                     <Sidebar bind:open={openSidebar} />
                 </div>
                 <div class="main-content w-full mt-6">
@@ -86,7 +85,7 @@
                 </div>
             </div>
         {/if}
-    {/await}/>
+    {/await}
 </main>
 
 <style lang="scss">

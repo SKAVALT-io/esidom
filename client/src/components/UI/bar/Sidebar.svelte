@@ -39,24 +39,6 @@
     >
         <li class="nav_item">
             <a
-                class="nav-link"
-                href="/home"
-                use:SPA.link
-                on:click={() => {
-                    pageLinkClicked('home');
-                }}
-                class:selected={currentPageSelected === 'home' || currentPageSelected === ''}
-            >
-                <img
-                    class="link-svg"
-                    src="icons/sidebar/home.svg"
-                    alt={tr('menu.home')}
-                />
-                <span class="link-text">{tr('menu.home')}</span>
-            </a>
-        </li>
-        <li class="nav_item">
-            <a
                 href="/entities"
                 class="nav-link"
                 use:SPA.link
