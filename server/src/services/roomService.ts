@@ -48,12 +48,18 @@ class RoomService implements EventObserver {
         }));
     }
 
-    async createRoom(name: string): Promise<Room> {
+    async createRoom(name: string, devices?: Device[]): Promise<Room> {
         const haRoom: HaRoom = await socketService.createRoom(name);
+
+        if (devices) {
+            await Promise.all(
+                devices.map((device) => socketService.addRoomToDevice(device.id, haRoom.area_id)),
+            );
+        }
         const room : Room = {
             roomId: haRoom.area_id,
             name: haRoom.name,
-            devices: [],
+            devices: devices || [],
             automations: [],
         };
         return room;

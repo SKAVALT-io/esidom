@@ -6,15 +6,15 @@ export default class RoomService {
         return HttpHelper.get<Room[]>('/room');
     }
 
-    static async createGroup(room: Room): Promise<Room> {
+    static async createRoom(room: Room): Promise<Room> {
         return HttpHelper.post('/room', room);
     }
 
-    static async deleteGroup(room: Room): Promise<void> {
+    static async deleteRoom(room: Room): Promise<void> {
         return HttpHelper.delete(`/room/${room.roomId}`);
     }
 
-    static async updateGroup(room: Room): Promise<void> {
+    static async updateRoom(room: Room): Promise<void> {
         return HttpHelper.put(`/room/${room.roomId}`, room);
     }
 }

@@ -36,12 +36,13 @@ class RoomController {
      */
     @App.post('')
     async createRoom(req: Request, res: Response): SuccessOrError<Room> {
-        const { name } = req.body;
+        const { name, devices } = req.body;
+
         if (!name) {
             return sendMissingParam(res, 'name');
         }
         return roomService
-            .createRoom(name)
+            .createRoom(name, devices)
             .then(sendf<Room>(res, 200));
     }
 

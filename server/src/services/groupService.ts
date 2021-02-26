@@ -65,7 +65,6 @@ class GroupService implements EventObserver {
     }
 
     async onRoomUpdated(roomId: string): Promise<void> {
-        // console.log('GPService : this.onAreaUpdated');
         const room: Room | undefined = await roomService.getRoomById(roomId);
         if (!room) {
             return;

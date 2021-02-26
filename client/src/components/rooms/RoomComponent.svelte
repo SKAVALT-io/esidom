@@ -21,15 +21,11 @@
     }
 
     onMount(async () => {
-        /*
         socketManager.registerGlobalListener('roomUpdated', roomUpdatedHandler);
-        */
     });
 
     onDestroy(() => {
-        /*
         socketManager.removeListener('roomUpdated', roomUpdatedHandler);
-        */
     });
 </script>
 
@@ -45,7 +41,7 @@
         <RoundedButton
             size={8}
             on:click={() => {
-                RoomService.deleteGroup(room);
+                RoomService.deleteRoom(room);
             }}
             iconPath="icons/button/trash.svg"
         />

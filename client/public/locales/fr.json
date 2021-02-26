@@ -272,13 +272,17 @@
     "close": "Fermer",
     "unlock": "Déverouiller"
     },
-    "rooms": {
-        "myRooms": "Mes pièces"
-    },
-    "sortBy": {
-        "title": "Trier par",
-        "options": {
-        "name": "Noms"
-        }
+  "rooms": {
+    "myRooms": "Mes pièces",
+    "search": "Rechercher ...",
+    "createRoom": "Nouvelle pièce",
+    "roomName": "Nom de la pièce",
+    "roomDevices": "Equipement dans la pièce"
+  },
+  "sortBy": {
+    "title": "Trier par",
+    "options": {
+      "name": "Noms"
     }
+  }
 }

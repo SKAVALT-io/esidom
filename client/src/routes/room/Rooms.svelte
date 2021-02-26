@@ -11,6 +11,7 @@
     import { socketManager } from '../../managers/socketManager';
     import RoomComponent from '../../components/rooms/RoomComponent.svelte';
     import RoomService from '../../services/roomService';
+    import RoomDetail from '../../components/rooms/RoomDetail.svelte';
 
     let isOpen = false;
     let currentRoom: Room;
@@ -112,7 +113,9 @@
 {/if}
 
 <Modal bind:isOpen>
-    <div slot="content" />
+    <div slot="content">
+        <RoomDetail bind:currentRoom {closeFunction} />
+    </div>
 </Modal>
 <div class="fixed bottom-0 right-0 h-16 w-16">
     <RoundedButton
