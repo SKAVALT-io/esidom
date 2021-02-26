@@ -11,6 +11,9 @@ import {
 import { logger } from '../utils';
 import httpService from './forwarderServices/httpService';
 
+type PairStatus = {status: string } | {status: 'failed', error: string};
+export type PairSuccessOrFailed = {[protocol: string]: PairStatus}
+
 class DeviceService implements EventObserver {
 
     constructor() {
@@ -88,15 +91,31 @@ class DeviceService implements EventObserver {
         return devices.find((d: Device) => d.id === id);
     }
 
+    async pairZwave(): Promise<PairStatus> {
+        return httpService
+            .enableZWavePairing()
+            .then(() => ({ status: 'ok' }))
+            .catch((err:{message: string}) => ({ status: 'failed', error: err.message }));
+    }
+
+    async pairZigbee() : Promise<PairStatus> {
+        return socketService
+            .callService('mqtt', 'publish', {
+                topic: 'zigbee2mqtt/bridge/request/permit_join',
+                payload_template: '{"value": true, "time": 120}', // timeout of 120s according front app
+            })
+            .then(() => ({ status: 'ok' }))
+            .catch((err:{message: string}) => ({ status: 'failed', error: err.message }));
+    }
+
     /**
      * Pair a new device
      */
-    async pairDevice(): Promise<void> {
-        // await httpService.enableZWavePairing();
-        await socketService.callService('mqtt', 'publish', {
-            topic: 'zigbee2mqtt/bridge/request/permit_join',
-            payload_template: '{"value": true, "time": 120}', // timeout of 120s according front app
-        });
+    async pairDevice(): Promise<PairSuccessOrFailed> {
+        return {
+            zwave: await this.pairZwave(),
+            zigbee: await this.pairZigbee(),
+        };
     }
 
 }
