@@ -1,7 +1,9 @@
 import { Request, Response } from 'express';
 import userService from '../services/userService';
 import App from '../app';
-import { send, sendf, Success, SuccessOrError } from '../utils';
+import {
+    send, sendf, Success, SuccessOrError,
+} from '../utils';
 import { User } from '../types';
 
 @App.rest('/user')
