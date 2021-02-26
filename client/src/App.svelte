@@ -85,7 +85,7 @@
                 </div>
             </div>
         {/if}
-    {/await}/>
+    {/await}
 </main>
 
 <style lang="scss">
