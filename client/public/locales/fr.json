@@ -13,7 +13,8 @@
     "blockly": "blockly",
     "pairing": "appairage",
     "groups": "groupes",
-    "rooms": "pièces"
+    "rooms": "pièces",
+    "users": "utilisateurs"
   },
   "devices": {
     "lights": "lampes",

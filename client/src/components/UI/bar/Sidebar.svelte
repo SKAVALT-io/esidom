@@ -116,6 +116,24 @@
                 <span class="link-text">{tr('menu.rooms')}</span>
             </a>
         </li>
+        <li class="nav_item" class:visible={user?.admin}>
+            <a
+                href="/users"
+                class="nav-link"
+                use:SPA.link
+                on:click={() => {
+                    pageLinkClicked('users');
+                }}
+                class:selected={currentPageSelected === 'users'}
+            >
+                <img
+                    class="link-svg"
+                    src="icons/sidebar/groups.svg"
+                    alt={tr('menu.users')}
+                />
+                <span class="link-text">{tr('menu.users')}</span>
+            </a>
+        </li>
     </ul>
 </nav>
 
