@@ -12,10 +12,11 @@
     import ColorTemperaturePicker from './things/ColorTemperaturePicker.svelte';
     import { socketManager } from '../../../managers/socketManager';
     import type { LightEntity } from '../../../../types/entities/lightEntity';
-    import { getEntity } from '../../../services/entityService';
+    import EntityService, { getEntity } from '../../../services/entityService';
     import { tr } from '../../../utils/i18nHelper';
 
     import ToggleButton from '../../UI/buttons/ToggleButton.svelte';
+    import EditableDiv from '../../UI/utils/EditableDiv.svelte';
 
     export let entityId: string;
 
@@ -54,13 +55,25 @@
     onDestroy(() => {
         socketManager.removeListener('entityUpdated', updateLightState);
     });
+
+    async function changeName(e: CustomEvent<boolean>): Promise<void> {
+        if (e.detail) {
+            await EntityService.patchEntityName(entityId, light.name);
+        }
+    }
 </script>
 
 {#await loadLight()}
-    Loading data...
+    {tr('entities.menu.loading')}
 {:then}
     <div id="title">
-        <h1 class="text-4xl text-center py-6">{light.name}</h1>
+        <h1 class="text-4xl text-center py-6">
+            <EditableDiv
+                bind:value={light.name}
+                placeholder={tr('entities.menu.enterEntityName')}
+                on:edition={changeName}
+            />
+        </h1>
     </div>
     <div id="content" class="flex flex-col md:flex-row justify-center">
         <div
@@ -108,9 +121,7 @@
                         </div>
                     {/if}
                 {/each}
-            {:else}
-                {tr('entities.light.turnTheLightOn')}
-            {/if}
+            {:else}{tr('entities.light.turnTheLightOn')}{/if}
         </div>
     </div>
 {:catch error}

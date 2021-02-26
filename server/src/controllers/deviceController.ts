@@ -1,9 +1,10 @@
 import { Request, Response } from 'express';
+import { PairSuccessOrFailed } from '../services/deviceService';
 import App from '../app';
 import { deviceService } from '../services';
 import { Device } from '../types';
 import {
-    send, sendf, sendNoSuchId, Success, SuccessMessage, SuccessOrError,
+    send, sendf, sendNoSuchId, Success, SuccessOrError,
 } from '../utils';
 
 @App.rest('/device')
@@ -43,10 +44,10 @@ class DeviceController {
      * @returns a message
      */
     @App.post('')
-    async postDevice(_req: Request, res: Response): SuccessMessage {
+    async postDevice(_req: Request, res: Response): Success<PairSuccessOrFailed> {
         return deviceService
             .pairDevice()
-            .then(() => send(res, 200, { message: 'pairing mode enabled' }));
+            .then(sendf(res, 200));
     }
 
 }

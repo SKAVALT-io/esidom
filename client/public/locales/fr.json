@@ -233,10 +233,16 @@
       "type": "Type :",
       "state": "Etat :",
       "informations": "Informations",
-      "pair": "Appairer un équipement"
+      "pair": "Appairer un équipement",
+      "enterEntityName": "Entrer un nom à cet équipement",
+      "loading": "Chargement de l'équipement..."
     },
     "light": {
       "turnTheLightOn": "Allumez l'appareil si vous souhaitez configurer la lampe."
+    },
+    "binarySensor": {
+        "on": "On",
+        "off": "Off"
     },
     "close": "Fermer",
     "unlock": "Déverouiller"
