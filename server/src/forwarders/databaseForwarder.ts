@@ -129,10 +129,10 @@ class DatabaseForwarder {
     async updateUser(id: number, username?: string,
         admin?: boolean, entities?: string[]): Promise<User> {
         if (username) {
-            await this.updateUserField('username', username);
+            await this.updateUserField(`username = '${username}'`);
         }
         if (admin) {
-            await this.updateUserField('admin', admin ? 1 : 0);
+            await this.updateUserField(`admin = ${admin ? 1 : 0}`);
         }
         if (entities) {
             await this.insertUserEntities(id, entities);
@@ -140,8 +140,8 @@ class DatabaseForwarder {
         return this.getUserById(id);
     }
 
-    private async updateUserField(fieldName: string, fieldValue: any): Promise<void> {
-        await this.db.run(`UPDATE User SET ${fieldName} = ${fieldValue}`);
+    private async updateUserField(keyValue: string): Promise<void> {
+        await this.db.run(`UPDATE User SET ${keyValue}`);
     }
 
     private async getUsersWithEntities(users: SqlUser[]): Promise<User[]> {
