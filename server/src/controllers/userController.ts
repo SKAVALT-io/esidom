@@ -10,6 +10,32 @@ import { User } from '../types';
 @App.rest('/user')
 class UserController {
 
+    @App.post('/lock')
+    async lock(req: Request, res: Response): SuccessOrError<string> {
+        const { password } = req.body as { password: string };
+
+        return userService
+            .lockFront(password)
+            .then(sendf(res, 200))
+            .catch((e) => send(res, 401, { error: e }));
+    }
+
+    @App.post('/unlock')
+    async unlock(req: Request, res: Response): Success<boolean> {
+        const { password } = req.body as { password: string };
+
+        return userService
+            .unlockFront(password)
+            .then(sendf(res, 200));
+    }
+
+    @App.get('/isLocked')
+    async isLocked(req: Request, res: Response): Success<boolean> {
+        return userService
+            .isLocked()
+            .then(sendf(res, 200));
+    }
+
     /**
      * Get all the users
      * @return an array of users
@@ -69,32 +95,6 @@ class UserController {
             .deleteUser(parseInt(id, 10))
             .then(() => send(res, 200, { message: 'ok' }))
             .catch((err) => send(res, 400, { error: err.message }));
-    }
-
-    @App.post('/lock')
-    async lock(req: Request, res: Response): SuccessOrError<string> {
-        const { password } = req.body as { password: string };
-
-        return userService
-            .lockFront(password)
-            .then(sendf(res, 200))
-            .catch((e) => send(res, 401, { error: e }));
-    }
-
-    @App.post('/unlock')
-    async unlock(req: Request, res: Response): Success<boolean> {
-        const { password } = req.body as { password: string };
-
-        return userService
-            .unlockFront(password)
-            .then(sendf(res, 200));
-    }
-
-    @App.get('/isLocked')
-    async isLocked(req: Request, res: Response): Success<boolean> {
-        return userService
-            .isLocked()
-            .then(sendf(res, 200));
     }
 
 }
