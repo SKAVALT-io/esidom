@@ -187,6 +187,15 @@
       }
     }
   },
+  "placeholder": {
+      "password": "Mot de passe",
+      "newPassword": "Nouveau mot de passe",
+      "confirmation": "Confirmer le mot de passe"
+  },
+  "modal": {
+      "registerPassword": "Verrouillez l'application avec un mot de passe"
+  },
+  
   "buttons": {
     "cancel": "Annuler",
     "confirm": "Valider",
@@ -235,5 +244,7 @@
         "on": "On",
         "off": "Off"
     }
+    "close": "Fermer",
+    "unlock": "Déverouiller"
   }
 }
