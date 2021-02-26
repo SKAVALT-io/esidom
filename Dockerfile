@@ -14,6 +14,7 @@ WORKDIR /usr/src/esidom/server
 COPY server/package*.json ./
 COPY server/.env ./
 COPY server/dist ./dist
+COPY server/database.db ./
 RUN npm ci --only=production
 #&& npm run build
 #RUN npm prune --production

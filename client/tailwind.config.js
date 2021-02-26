@@ -13,6 +13,7 @@ module.exports = {
             '2xl': '1536px',
         },
         colors: {
+            esidomlight: '#453b69',
             esidom: '#120639',
             transparent: 'transparent',
             current: 'currentColor',
@@ -371,6 +372,7 @@ module.exports = {
             'vh-80': '80vh',
             full: '100%',
             screen: '100vh',
+            inherit: 'inherit',
         }),
         inset: (theme, { negative }) => ({
             auto: 'auto',
@@ -382,6 +384,11 @@ module.exports = {
             '1/4': '25%',
             '2/4': '50%',
             '3/4': '75%',
+            '1/6': '16.666667%',
+            '2/6': '33.333333%',
+            '3/6': '50%',
+            '4/6': '66.666667%',
+            '5/6': '83.333333%',
             full: '100%',
             '-1/2': '-50%',
             '-1/3': '-33.333333%',
@@ -747,6 +754,7 @@ module.exports = {
             screen: '100vw',
             min: 'min-content',
             max: 'max-content',
+            inherit: 'inherit',
         }),
         zIndex: {
             auto: 'auto',
@@ -757,6 +765,7 @@ module.exports = {
             40: '40',
             50: '50',
             100: '100',
+            110: '110',
         },
     },
     variantOrder: [

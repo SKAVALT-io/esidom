@@ -16,7 +16,16 @@
   },
   "devices": {
     "lights": "lampes",
-    "sensors": "capteurs"
+    "sensors": "capteurs",
+    "binary_sensor": "Capteurs on/off",
+    "light": "Lampes",
+    "sensor": "Capteurs",
+    "switch": "Prises",
+    "brightness": "Luminosité",
+    "state": "Etat",
+    "loading": "Chargement des équipements...",
+    "dataUnavailable": "Informations indisponibles",
+    "colorTemperature": "Température de couleur"
   },
   "automations": {
     "myAutomations": "Mes Routines",
@@ -42,6 +51,8 @@
       "advice": "Suivez les étapes préparatoires suivantes pour appairer vos appareils connectés au sein de votre réseau :",
       "advice1": "Préparez l'appareil que vous souhaitez ajouter au sein de votre réseau.",
       "advice2": "Veuillez lire la notice de votre appareil pour connaitre la manipulation à réaliser durant la procédure d'appairage pour ajouter votre objet.",
+      "validate": "valider",
+      "start": "pour lancer la procédure d'appairage.",
       "ready": "Une fois prêt, cliquez sur le bouton {0} pour lancer la procédure d'appairage."
     },
     "start": {
@@ -60,10 +71,10 @@
       "deviceNotFound": "Nous n'avons pas trouvé votre équipement 😟",
       "followInstructions": "Assurez-vous d'avoir bien suivi les étapes d'appairage de votre équipement.",
       "retryPairingProcedure": "Pour relancer la procédure d'appairage, cliquez sur le bouton",
-      "retry": "Réassayer"
+      "retry": "Réessayer"
     },
     "finish": {
-      "congratulation": "Félicitation, les équipements suivants ont bien été rajoutés au sein de votre réseau."
+      "congratulation": "Félicitations, les équipements suivants ont bien été rajoutés au sein de votre réseau."
     }
   },
   "blockly": {
@@ -77,32 +88,47 @@
     "automationDesc": "Description",
     "noAttribute": "pas d'attribut",
     "type": {
-       "binarySensor": "capteur binaire",
-       "person": "personne",
-       "weather": "météo",
-       "zwave": "zwave",
-       "sensor": "capteur",
-       "light": "lampe",
-       "automation": "routine",
-       "switch": "interrupteur",
-       "mediaPlayer": "Lecteur multimédia"
+      "binarySensor": "capteur binaire",
+      "person": "personne",
+      "weather": "météo",
+      "zwave": "zwave",
+      "sensor": "capteur",
+      "light": "lampe",
+      "automation": "routine",
+      "switch": "interrupteur",
+      "mediaPlayer": "Lecteur multimédia"
     },
     "blocks": {
-        "blocks_by_type": {
-            "binarySensor":"capteur binaire",
-            "person": "personne",
-            "weather": "météo",
-            "zwave": "zwave",
-            "sensor": "capteur",
-            "light": "lampe",
-            "automation": "routine",
-            "switch": "interrupteur",
-            "mediaPlayer": "Lecteur multimédia",
-            "tooltip": "Liste tous les objets (entités) de type : "
-         },
-        "esidom_automation": {
-            "message": "Quels sont les déclencheurs ? %1 Sous quelles conditions ? %2 Que faire ? %3",
-            "tooltip": "Permet de définir une routine. La partie \"déclencheur\" défini les évènements auxquels la routine réagira. Cette routine ne sera exécutée que si elle remplie les \"conditions\" définies (non obligatoire). Enfin, les \"actions\" seront exéctutées si les \"conditions\" sont vérfiées lors du \"déclenchement\""
+      "blocks_by_type": {
+        "binarySensor": "capteur binaire",
+        "person": "personne",
+        "weather": "météo",
+        "zwave": "zwave",
+        "sensor": "capteur",
+        "light": "lampe",
+        "automation": "routine",
+        "switch": "interrupteur",
+        "mediaPlayer": "Lecteur multimédia",
+        "tooltip": "Liste tous les objets (entités) de type : "
+      },
+      "esidom_automation": {
+        "message": "Quels sont les déclencheurs ? %1 Sous quelles conditions ? %2 Que faire ? %3",
+        "tooltip": "Permet de définir une routine. La partie \"déclencheur\" défini les évènements auxquels la routine réagira. Cette routine ne sera exécutée que si elle remplie les \"conditions\" définies (non obligatoire). Enfin, les \"actions\" seront exéctutées si les \"conditions\" sont vérfiées lors du \"déclenchement\""
+      },
+      "binary_trigger": {
+        "message": "Quand le capteur binaire %1 passe à %2",
+        "tooltip": "Placer un capteur qui n'a que deux états (interrupteur, déctecteur d'ouverture) et choisissez l'état pour lequel le routine doit se déclencher"
+      },
+      "time_trigger": {
+        "message": "%1 h %2 %3 m %4 %5 s",
+        "tooltip": "Indique l'heure à laquelle la routine doit se déclencher (hh:mm:ss)"
+      },
+      "sun_trigger": {
+        "message": "%1 h %2 m %3 s %4 le %5 du soleil",
+        "tooltip": "Déclenche la routine hh:mm:ss [avant, après] le [lever, coucher] du soleil",
+        "before_after": {
+          "before": "avant",
+          "after": "après"
         },
         "binary_trigger": {
             "message": "Quand le capteur binaire %1 passe à %2",
@@ -198,33 +224,67 @@
             "brightness": "Intensité",
             "temperature": "Température"
         }
-
+      }
     }
+  },
+  "placeholder": {
+    "password": "Mot de passe",
+    "newPassword": "Nouveau mot de passe",
+    "confirmation": "Confirmer le mot de passe"
+  },
+  "modal": {
+    "registerPassword": "Verrouillez l'application avec un mot de passe"
   },
   "buttons": {
     "cancel": "Annuler",
     "confirm": "Valider",
     "retry": "Réessayer",
-    "close": "Fermer"
+    "close": "Fermer",
+    "unlock": "Déverrouiller"
   },
   "groups": {
     "myGroups": "Mes groupes",
-    "implicitGroup" : {
-        "name" : "Groupes implicit",
-        "cat": {
-            "switchlight": "Lampes et prises "
-        },
-        "of": "de la pièce"
+    "implicitGroup": {
+      "name": "Groupes implicit",
+      "cat": {
+        "switchlight": "Lampes et prises "
+      },
+      "of": "de la pièce"
     },
     "search": "Rechercher ...",
     "sortBy": {
-        "title": "Trier par",
-        "options": {
-            "name": "Noms"
-        }
+      "title": "Trier par",
+      "options": {
+        "name": "Noms"
+      }
     },
-    "createGroup": "Nouveau group",
+    "createGroup": "Nouveau groupe",
     "groupName": "Nom du groupe",
-    "groupEntities": "Equipement dans le groupe"
+    "groupEntities": "Equipement dans le groupe",
+    "buttons": {
+      "create": "Créer un groupe",
+      "edit": "Editer",
+      "delete": "Supprimer"
+    }
+  },
+  "entities": {
+    "menu": {
+      "name": "Nom :",
+      "type": "Type :",
+      "state": "Etat :",
+      "informations": "Informations",
+      "pair": "Appairer un équipement",
+      "enterEntityName": "Entrer un nom à cet équipement",
+      "loading": "Chargement de l'équipement..."
+    },
+    "light": {
+      "turnTheLightOn": "Allumez l'appareil si vous souhaitez configurer la lampe."
+    },
+    "binarySensor": {
+      "on": "On",
+      "off": "Off"
+    },
+    "close": "Fermer",
+    "unlock": "Déverouiller"
   }
 }

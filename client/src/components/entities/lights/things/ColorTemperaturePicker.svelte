@@ -2,6 +2,7 @@
     import { createEventDispatcher } from 'svelte';
 
     import { debounce } from '../../../../utils/functions';
+    import { tr } from '../../../../utils/i18nHelper';
 
     // Color temperature value, between 153 and 500
     export let value: number;
@@ -15,12 +16,14 @@
     });
 </script>
 
-Color temperature:
-<input
-    type="range"
-    min="153"
-    max="500"
-    bind:value
-    on:change={tempColorChangeHandler}
-/>
-{value.toFixed(0)}°?
+<div class="w-inherit">
+    <p>{tr('devices.colorTemperature')} : {value.toFixed(0)}°K</p>
+    <input
+        type="range"
+        min="153"
+        max="500"
+        bind:value
+        on:change={tempColorChangeHandler}
+        class="w-inherit"
+    />
+</div>

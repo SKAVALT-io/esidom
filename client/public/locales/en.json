@@ -3,6 +3,16 @@
     "welcome": "Hello World",
     "coucou": "Yo people :D"
   },
+  "devices": {
+    "binary_sensor": "Binary sensor",
+    "light": "Light",
+    "sensor": "Sensor",
+    "switch": "Switch",
+    "loading": "Loading entitites...",
+    "dataUnavailable": "Data unavailable",
+    "state": "State",
+    "colorTemperature": "Color temperature"
+  },
   "menu": {
     "devices": "devices",
     "home": "home",
@@ -52,16 +62,28 @@
     },
     "confirmDelete": "Are you sure you want to delete this automation ?",
     "buttons": {
-        "edit": "Edit",
-        "delete": "Delete",
-        "trigger": "Trigger",
-        "create": "Create an automation"
+      "edit": "Edit",
+      "delete": "Delete",
+      "trigger": "Trigger",
+      "create": "Create an automation"
     }
   },
   "buttons": {
     "cancel": "Cancel",
     "confirm": "Confirm",
     "retry": "Retry",
-    "close": "Quit"
+    "close": "Quit",
+    "unlock": "Unlock"
+  },
+  "app": {
+    "name": "ESIDOM"
+  },
+  "placeholder": {
+    "password": "Password",
+    "newPassword": "New Password",
+    "confirmation": "Confirm password"
+  },
+  "modal": {
+    "registerPassword": "Lock the application with a password"
   }
 }

@@ -1,9 +1,7 @@
 <script lang="ts">
     import Router from 'svelte-spa-router';
 
-    import {
-        addMessages, init, getLocaleFromNavigator,
-} from 'svelte-i18n';
+    import { addMessages, init, getLocaleFromNavigator } from 'svelte-i18n';
 
     import fr from 'locales/fr.json';
     import en from 'locales/en.json';
@@ -19,6 +17,9 @@
     import Sidebar from './components/UI/bar/Sidebar.svelte';
     import Toast from './Toast.svelte';
     import Groups from './routes/groups/Groups.svelte';
+    import UserService from './services/userService';
+    import LoginPage from './components/login/LoginPage.svelte';
+    import DisconnectModal from './components/login/DisconnectModal.svelte';
 
     // Configure the app routes
     const routes = {
@@ -34,7 +35,9 @@
     };
 
     /* Open/Close sidebar from navbar */
-    let open = false;
+    let openSidebar = false;
+
+    let openDisconnectModal = false;
 
     // Configure and init i18n
     addMessages('fr', fr);
@@ -47,30 +50,43 @@
 
     // Initiate the socket
     socketManager.connect();
+
+    async function isLocked(): Promise<boolean> {
+        return UserService.isLocked();
+    }
 </script>
 
 <main>
     <Toast />
-    <div id="row1">
-        <div class="header">
-            <Navbar
-                on:press={() => {
-                    open = !open;
-                }}
-            />
-        </div>
-    </div>
-    <div
-        id="row2"
-        class="flex flex-row space-x-4 sm:space-x-20 overflow-y-auto h-screen"
-    >
-        <div class="sidenav fixed z-100">
-            <Sidebar bind:open />
-        </div>
-        <div class="main-content w-full mt-6">
-            <Router {routes} />
-        </div>
-    </div>
+    <DisconnectModal bind:open={openDisconnectModal} />
+
+    {#await isLocked() then locked}
+        {#if locked}
+            <LoginPage />
+        {:else}
+            <div id="row1">
+                <div class="header">
+                    <Navbar
+                        on:press={() => {
+                            openSidebar = !openSidebar;
+                        }}
+                        on:disconnect={() => (openDisconnectModal = true)}
+                    />
+                </div>
+            </div>
+            <div
+                id="row2"
+                class="flex flex-row space-x-4 sm:space-x-20 overflow-y-auto h-screen"
+            >
+                <div class="sidenav fixed z-100">
+                    <Sidebar bind:open={openSidebar} />
+                </div>
+                <div class="main-content w-full mt-6">
+                    <Router {routes} />
+                </div>
+            </div>
+        {/if}
+    {/await}/>
 </main>
 
 <style lang="scss">

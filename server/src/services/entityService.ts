@@ -56,19 +56,21 @@ class EntityService implements EventObserver {
     async getEntities(): Promise<Entity[]> {
         const entities = await socketService.listEntityRegistry();
         const states = await socketService.getStates();
-        return states.map((e: HaStateResponse) => {
-            const entityState = entities.find((ent: HaEntity) => ent.entity_id === e.entity_id);
-            const { attributes } = e ?? {};
-            const state = e?.state ?? '';
-            const entity: Entity = {
-                id: e.entity_id ?? '',
-                name: entityState?.name ?? e.attributes?.friendly_name ?? '',
-                type: e.entity_id.split('.')[0],
-                attributes,
-                state,
-            };
-            return entity;
-        });
+        return this.filterUnwantedEntities(
+            states.map((e: HaStateResponse) => {
+                const entityState = entities.find((ent: HaEntity) => ent.entity_id === e.entity_id);
+                const { attributes } = e ?? {};
+                const state = e?.state ?? '';
+                const entity: Entity = {
+                    id: e.entity_id ?? '',
+                    name: entityState?.name ?? e.attributes?.friendly_name ?? '',
+                    type: e.entity_id.split('.')[0],
+                    attributes,
+                    state,
+                };
+                return entity;
+            }),
+        );
     }
 
     /**
@@ -81,7 +83,7 @@ class EntityService implements EventObserver {
     filterEntitiesByDevice(id: string, entities: HaEntity[], states: HaStateResponse[]): Entity[] {
         // entities and states are provided to prevent multiple requests on HA
         // when iterating over an array
-        return entities
+        const res = entities
             .filter((e: HaEntity) => e.device_id === id)
             .map((e: HaEntity) => {
                 const entityState = states
@@ -96,6 +98,7 @@ class EntityService implements EventObserver {
                     state,
                 };
             });
+        return this.filterUnwantedEntities(res);
     }
 
     /**
@@ -161,6 +164,21 @@ class EntityService implements EventObserver {
         }
         await socketService.updateEntity(entity.id, name);
         return this.getEntityById(id);
+    }
+
+    filterUnwantedEntities(entities: Entity[]): Entity[] {
+        const UNWANTED_SUFFIXES = ['_power_status', '_update_available',
+            '_linkquality', '_update_state', 'power_management', 'sourcenodeid',
+            '_power_on_behavior', '_alarm_level', '_alarm_type'];
+        return entities.filter((e) => !UNWANTED_SUFFIXES.some((name) => e.id.endsWith(name)));
+    }
+
+    // TODO Change this
+    filterUnwantedEntities2(entities: string[]): string[] {
+        const UNWANTED_SUFFIXES = ['_power_status', '_update_available',
+            '_linkquality', '_update_state', 'power_management', 'sourcenodeid',
+            '_power_on_behavior', '_alarm_level', '_alarm_type'];
+        return entities.filter((e) => !UNWANTED_SUFFIXES.some((name) => e.endsWith(name)));
     }
 
 }

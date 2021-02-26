@@ -4,6 +4,7 @@
     import Clock from '../../others/Clock.svelte';
     import { tr } from '../../../utils/i18nHelper';
     import AccountSvg from '../../svg_icons/AccountSVG.svelte';
+    import RoundedButton from '../buttons/RoundedButton.svelte';
 
     const dispatch = createEventDispatcher();
 </script>
@@ -33,7 +34,14 @@
             <Clock formatDate="long" />
         </p>
     </div>
-    <div class="nav-links flex items-center space-x-4">
+    <div class="nav-links grid grid-flow-col grid-cols-2 gap-x-2 items-center">
+        <button id="logout" on:click={() => dispatch('disconnect')}>
+            <img
+                class="link-svg w-5 h-5 opacity-80 hover:opacity-100"
+                src="icons/navbar/logout.svg"
+                alt="logout"
+            />
+        </button>
         <a
             href="/#/"
             class="lg:inline-flex lg:w-auto w-full py-2 rounded text-gray-400 items-center justify-center hover:bg-gray-900 hover:text-white"
