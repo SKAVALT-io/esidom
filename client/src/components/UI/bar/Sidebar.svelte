@@ -150,7 +150,7 @@
 
     /* span */
     .link-text {
-        @apply ml-4 text-sm opacity-0;
+        @apply ml-4 text-sm opacity-0 cursor-default;
     }
 
     .open .link-text {
@@ -177,7 +177,7 @@
 
         .navbar:hover .link-text,
         .open .link-text {
-            @apply opacity-100 transition-opacity delay-150 mr-4;
+            @apply pointer-events-none opacity-100 transition-opacity delay-150 mr-4;
         }
     }
 </style>
