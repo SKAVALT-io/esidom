@@ -12,6 +12,7 @@
     import EntityService from '../../services/entityService';
     import { tr } from '../../utils/i18nHelper';
     import GroupService from '../../services/groupService';
+    import InputBar from '../UI/bar/InputBar.svelte';
 
     export let currentGroup: Group;
     export let closeFunction: () => void;
@@ -28,18 +29,12 @@
     </h1>
     <form class="mb-4">
         <div class="flex flex-col mb-4">
-            <label
-                class="mb-2 font-bold text-lg text-grey-darkest"
-                for="Name"
-            >{tr('groups.groupName')}</label>
-            <input
-                required
-                type="text"
-                name="Name"
-                id="Name"
-                bind:value={currentGroup.name}
-                class="border py-2 px-3 text-grey-darkest"
+            <InputBar
+                label={tr('groups.groupName')}
+                bind:input={currentGroup.name}
                 placeholder={tr('groups.groupName')}
+                required={true}
+                width="56"
             />
         </div>
         <div class="block">
@@ -81,7 +76,7 @@
                 {/await}
             </div>
         </div>
-        <div class="flex flex-col mb-4">
+        <div class="flex flex-col mb-4 pt-6">
             <SaveButton
                 bind:isDisabled={formInvalid}
                 on:click={() => {

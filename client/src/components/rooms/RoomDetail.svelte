@@ -14,6 +14,7 @@
     import DeviceService from '../../services/deviceService';
     import RoomService from '../../services/roomService';
     import toastService from '../../utils/toast';
+    import InputBar from '../UI/bar/InputBar.svelte';
 
     export let currentRoom: Room;
     export let closeFunction: () => void;
@@ -29,19 +30,12 @@
     </h1>
     <form class="mb-4" on:submit={() => false}>
         <div class="flex flex-col mb-4">
-            <label
-                class="mb-2 font-bold text-lg text-grey-darkest"
-                for="Name"
-            >{tr('rooms.roomName')}</label>
-            <input
-                required
-                type="text"
-                name="Name"
-                id="Name"
-                bind:value={currentRoom.name}
-                on:change={() => console.log(currentRoom)}
-                class="border py-2 px-3 text-grey-darkest"
+            <InputBar
+                label={tr('rooms.roomName')}
+                bind:input={currentRoom.name}
                 placeholder={tr('rooms.roomName')}
+                required={true}
+                width="56"
             />
         </div>
         <div class="block">
