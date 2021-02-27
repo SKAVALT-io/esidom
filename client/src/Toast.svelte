@@ -13,7 +13,7 @@
     toastService.subscribe((t) => {
         if (t.msg) {
             toasts = [...toasts, t];
-            setTimeout(unshiftToast, t.msg.length * 1000);
+            setTimeout(unshiftToast, t.msg.length * 200);
         }
     });
 </script>

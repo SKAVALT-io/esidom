@@ -277,7 +277,9 @@
     "search": "Rechercher ...",
     "createRoom": "Nouvelle pièce",
     "roomName": "Nom de la pièce",
-    "roomDevices": "Equipement dans la pièce"
+    "roomDevices": "Equipement dans la pièce",
+    "roomCreated": "Pièce sauvegardé avec sucess",
+    "roomDeleted": "Pièce supprimé avec sucess"
   },
   "sortBy": {
     "title": "Trier par",

@@ -15,6 +15,8 @@
 
     export let currentGroup: Group;
     export let closeFunction: () => void;
+    $: formInvalid =
+        currentGroup.name === '' || currentGroup.entities.length === 0;
     const dispatch = createEventDispatcher();
 </script>
 
@@ -67,6 +69,7 @@
                                         } else {
                                             currentGroup.entities = currentGroup.entities.filter((e) => e.id !== entity.id);
                                         }
+                                        formInvalid = currentGroup.name === '' || currentGroup.entities.length === 0;
                                     }}
                                 />
                                 <span
@@ -80,6 +83,7 @@
         </div>
         <div class="flex flex-col mb-4">
             <SaveButton
+                bind:isDisabled={formInvalid}
                 on:click={() => {
                     currentGroup.groupId !== '' ? GroupService.updateGroup(currentGroup) : GroupService.createGroup(currentGroup);
                     closeFunction?.();

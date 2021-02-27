@@ -33,13 +33,13 @@
     $: comparator = comparators[selectedSortOption][flipSwitch ? 0 : 1];
 
     function roomDeletedHandler(data: any) {
-        toastService.toast('Room deleted !');
+        toastService.toast(tr('rooms.roomDeleted'));
         const { id } = data;
         rooms = rooms.filter((r) => id !== `${r.roomId}`);
     }
 
     function roomCreatedHandler(data: Room) {
-        toastService.toast('Room created !');
+        toastService.toast(tr('rooms.roomCreated'));
         const newRoom = data;
         rooms = [...rooms, newRoom];
     }
