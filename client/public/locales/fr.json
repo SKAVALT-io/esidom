@@ -278,8 +278,8 @@
     "createRoom": "Nouvelle pièce",
     "roomName": "Nom de la pièce",
     "roomDevices": "Equipement dans la pièce",
-    "roomCreated": "Pièce sauvegardé avec sucess",
-    "roomDeleted": "Pièce supprimé avec sucess"
+    "roomCreated": "Pièce sauvegardée avec succès",
+    "roomDeleted": "Pièce supprimée avec succès"
   },
   "sortBy": {
     "title": "Trier par",

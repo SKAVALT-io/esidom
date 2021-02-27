@@ -25,15 +25,6 @@
 
 <div id="toasts" class="absolute top-0 right-5" style="z-index: 9999">
     {#each toasts as toast}
-        <!--
-        <div
-            in:fly={{ delay: 0, duration: 300, x: 0, y: 50, opacity: 0.1, easing: backOut }}
-            out:fade={{ duration: 500 }}
-            class="toast py-5 my-2 w-44 rounded-xl flex text-center"
-        >
-            {toast}
-        </div>
--->
         <div
             in:fly={{ delay: 0, duration: 300, x: 0, y: 50, opacity: 0.1, easing: backOut }}
             out:fade={{ duration: 500 }}
