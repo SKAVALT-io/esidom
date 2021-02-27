@@ -12,7 +12,8 @@
     "automations": "routines",
     "blockly": "blockly",
     "pairing": "appairage",
-    "groups": "groupes"
+    "groups": "groupes",
+    "rooms": "pièces"
   },
   "devices": {
     "lights": "lampes",
@@ -270,5 +271,20 @@
     },
     "close": "Fermer",
     "unlock": "Déverouiller"
+    },
+  "rooms": {
+    "myRooms": "Mes pièces",
+    "search": "Rechercher ...",
+    "createRoom": "Nouvelle pièce",
+    "roomName": "Nom de la pièce",
+    "roomDevices": "Equipement dans la pièce",
+    "roomCreated": "Pièce sauvegardée avec succès",
+    "roomDeleted": "Pièce supprimée avec succès"
+  },
+  "sortBy": {
+    "title": "Trier par",
+    "options": {
+      "name": "Noms"
+    }
   }
 }

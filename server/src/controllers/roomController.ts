@@ -36,12 +36,13 @@ class RoomController {
      */
     @App.post('')
     async createRoom(req: Request, res: Response): SuccessOrError<Room> {
-        const { name } = req.body;
+        const { name, devices } = req.body;
+
         if (!name) {
             return sendMissingParam(res, 'name');
         }
         return roomService
-            .createRoom(name)
+            .createRoom(name, devices)
             .then(sendf<Room>(res, 200));
     }
 
@@ -70,8 +71,16 @@ class RoomController {
      * @returns A success message
      */
     @App.put('/:roomId')
-    async updateRoom(_req: Request, res: Response): SuccessMessage {
-        return send(res, 200, { message: 'TODO' });
+    async updateRoom(req: Request, res: Response): SuccessMessageOrError {
+        const room: Room = req.body;
+        if (!room) {
+            return sendMissingParam(res, 'room');
+        }
+        return roomService.updateRoom(room)
+            .then((success) => (success
+                ? sendMessage(res, 200, 'OK')
+                : sendNoSuchId(res, room.roomId)
+            ));
     }
 
     /**

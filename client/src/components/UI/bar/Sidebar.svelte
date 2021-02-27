@@ -91,6 +91,24 @@
                 <span class="link-text">{tr('menu.groups')}</span>
             </a>
         </li>
+        <li class="nav_item">
+            <a
+                href="/rooms"
+                class="nav-link"
+                use:SPA.link
+                on:click={() => {
+                    pageLinkClicked('rooms');
+                }}
+                class:selected={currentPageSelected === 'rooms'}
+            >
+                <img
+                    class="link-svg"
+                    src="icons/sidebar/rooms.svg"
+                    alt={tr('menu.rooms')}
+                />
+                <span class="link-text">{tr('menu.rooms')}</span>
+            </a>
+        </li>
     </ul>
 </nav>
 

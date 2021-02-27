@@ -1,9 +1,35 @@
+import { socketForwarder } from '../forwarders';
 import { socketService, deviceService } from '.';
 import {
-    Device, Room, HaRoom, HaRoomDetail,
+    Device, Room, HaRoom, HaRoomDetail, EventObserver,
 } from '../types';
 
-class RoomService {
+class RoomService implements EventObserver {
+
+    // Connect this services to the web socket flow
+    constructor() {
+        socketForwarder.registerObserver(this);
+    }
+
+    async onRoomCreated(roomId: string) {
+        const room: Room | undefined = await this.getRoomById(roomId);
+        if (!room) {
+            return;
+        }
+        socketForwarder.emitSocket('roomCreated', room);
+    }
+
+    async onRoomUpdated(roomId: string) {
+        const room: Room | undefined = await this.getRoomById(roomId);
+        if (!room) {
+            return;
+        }
+        socketForwarder.emitSocket('roomUpdated', room);
+    }
+
+    onRoomRemoved(roomId: string) {
+        socketForwarder.emitSocket('roomRemoved', { id: roomId });
+    }
 
     /**
      * Get all the rooms
@@ -22,12 +48,18 @@ class RoomService {
         }));
     }
 
-    async createRoom(name: string): Promise<Room> {
+    async createRoom(name: string, devices?: Device[]): Promise<Room> {
         const haRoom: HaRoom = await socketService.createRoom(name);
+
+        if (devices) {
+            await Promise.all(
+                devices.map((device) => socketService.addRoomToDevice(device.id, haRoom.area_id)),
+            );
+        }
         const room : Room = {
             roomId: haRoom.area_id,
             name: haRoom.name,
-            devices: [],
+            devices: devices || [],
             automations: [],
         };
         return room;
@@ -51,13 +83,60 @@ class RoomService {
         return socketService.deleteRoom(roomId);
     }
 
+    /**
+     * Retrieve room by id
+     * @param roomId
+     */
     async getRoomById(roomId: string): Promise<Room | undefined> {
         const rooms: Room[] = await this.getRooms();
         return rooms.find((r: Room) => r.roomId === roomId);
     }
 
-    private async updateRoomDevice(deviceId: string, areaId: string): Promise<any> {
+    /**
+     * Add equipment assignment for a room
+     * @param groupId Id of the equipment to add room assignment
+     * @param areaId Id of the room for assignment
+     */
+    private async addRoomToDevice(deviceId: string, areaId: string): Promise<any> {
         return socketService.addRoomToDevice(deviceId, areaId);
+    }
+
+    /**
+     * Delete equipment assignment for a room
+     * @param groupId Id of the equipment to delete room assignment
+     */
+    private async deleteRoomToDevice(deviceId: string): Promise<any> {
+        return socketService.deleteRoomToDevice(deviceId);
+    }
+
+    /**
+     * Update room in HA
+     * @param room room with update information
+     */
+    async updateRoom(room: Room): Promise<boolean> {
+        const oldRoom = await this.getRoomById(room.roomId);
+        if (!oldRoom) {
+            return false;
+        }
+        const oldDevicesString = oldRoom.devices.map((d) => d.id);
+        const devicesString = room.devices.map((d) => d.id);
+
+        if (oldRoom.name !== room.name) {
+            await socketService.updateRoomName(room.roomId, room.name);
+        }
+        await Promise.all(oldDevicesString.map((deviceId) => (
+            !devicesString.includes(deviceId)
+                ? this.deleteRoomToDevice(deviceId)
+                : Promise.resolve()
+        )));
+
+        await Promise.all(devicesString.map((deviceId) => (
+            !oldDevicesString.includes(deviceId)
+                ? this.addRoomToDevice(deviceId, room.roomId)
+                : Promise.resolve()
+        )));
+
+        return true;
     }
 
 }

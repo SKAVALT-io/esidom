@@ -3,21 +3,22 @@
 
     import RoundedButton from '../UI/buttons/RoundedButton.svelte';
     import ToggleButton from '../UI/buttons/ToggleButton.svelte';
-    import type { Group } from '../../../types/groupType';
-    import Modal from '../../components/UI/modal/Modal.svelte';
+    import type { Room } from '../../../types/roomType';
+    import Modal from '../UI/modal/Modal.svelte';
     import SaveButton from '../UI/buttons/SaveButton.svelte';
     import { each } from 'svelte/internal';
 
-    import LoadingAnimation from '../../components/animations/LoadingAnimation.svelte';
-    import EntityService from '../../services/entityService';
+    import LoadingAnimation from '../animations/LoadingAnimation.svelte';
+
     import { tr } from '../../utils/i18nHelper';
-    import GroupService from '../../services/groupService';
+    import DeviceService from '../../services/deviceService';
+    import RoomService from '../../services/roomService';
+    import toastService from '../../utils/toast';
     import InputBar from '../UI/bar/InputBar.svelte';
 
-    export let currentGroup: Group;
+    export let currentRoom: Room;
     export let closeFunction: () => void;
-    $: formInvalid =
-        currentGroup.name === '' || currentGroup.entities.length === 0;
+    $: formInvalid = currentRoom.name === '';
     const dispatch = createEventDispatcher();
 </script>
 
@@ -25,14 +26,14 @@
     <h1
         class=" block w-full text-center text-grey-darkest mb-6 font-bold text-3xl"
     >
-        {currentGroup.groupId !== '' ? currentGroup.name : tr('groups.createGroup')}
+        {currentRoom.roomId !== '' ? currentRoom.name : tr('rooms.createRoom')}
     </h1>
-    <form class="mb-4">
+    <form class="mb-4" on:submit={() => false}>
         <div class="flex flex-col mb-4">
             <InputBar
-                label={tr('groups.groupName')}
-                bind:input={currentGroup.name}
-                placeholder={tr('groups.groupName')}
+                label={tr('rooms.roomName')}
+                bind:input={currentRoom.name}
+                placeholder={tr('rooms.roomName')}
                 required={true}
                 width="56"
             />
@@ -41,46 +42,47 @@
             <label
                 class="mb-2 font-bold text-lg text-grey-darkest"
                 for="Name"
-            >{tr('groups.groupEntities')}</label>
+            >{tr('rooms.roomDevices')}</label>
 
             <div class="mt-2">
-                {#await EntityService.getLightAndSwitchEntity()}
+                {#await DeviceService.getDevices()}
                     <div class="loader">
                         <LoadingAnimation />
                     </div>
-                {:then entities}
-                    {#each entities as entity}
+                {:then devices}
+                    {#each devices as device}
                         <div>
                             <label class="inline-flex items-center">
                                 <input
                                     type="checkbox"
                                     class="form-checkbox"
-                                    checked={currentGroup.entities.find((e) => {
-                                        return e.id === entity.id;
+                                    checked={currentRoom.devices.find((e) => {
+                                        return e.id === device.id;
                                     })}
                                     on:click={(val) => {
                                         if (val.target.checked) {
-                                            currentGroup.entities.push(entity);
+                                            currentRoom.devices.push(device);
                                         } else {
-                                            currentGroup.entities = currentGroup.entities.filter((e) => e.id !== entity.id);
+                                            currentRoom.devices = currentRoom.devices.filter((e) => e.id !== device.id);
                                         }
-                                        formInvalid = currentGroup.name === '' || currentGroup.entities.length === 0;
+                                        // formInvalid = currentRoom.name === '' || currentRoom.devices.length === 0;
                                     }}
                                 />
                                 <span
                                     class="ml-2"
-                                >{entity.name ? entity.name : entity.id}</span>
+                                >{device.name ? device.name : device.id}</span>
                             </label>
                         </div>
                     {/each}
                 {/await}
             </div>
         </div>
-        <div class="flex flex-col mb-4 pt-6">
+        <div class="flex flex-col mb-4 bg-pa pt-6">
             <SaveButton
                 bind:isDisabled={formInvalid}
-                on:click={() => {
-                    currentGroup.groupId !== '' ? GroupService.updateGroup(currentGroup) : GroupService.createGroup(currentGroup);
+                on:click={async () => {
+                    await (currentRoom.roomId !== '' ? RoomService.updateRoom(currentRoom) : RoomService.createRoom(currentRoom));
+                    toastService.toast('room updated !');
                     closeFunction?.();
                 }}
             />
@@ -91,12 +93,5 @@
 <style>
     input {
         background-color: #453b69;
-    }
-
-    .container {
-        grid-template-columns: 100px 50px 100px;
-        grid-template-rows: 80px auto 80px;
-        column-gap: 10px;
-        row-gap: 15px;
     }
 </style>

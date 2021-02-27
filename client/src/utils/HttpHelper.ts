@@ -14,7 +14,7 @@ class Http {
         return this.http.get<T>(url)
             .then((x) => x.data)
             .catch((e) => {
-                toastService.toast(e.message);
+                toastService.toast(e.message, 'error');
                 throw e;
             });
     }
@@ -23,7 +23,7 @@ class Http {
         return this.http.post<T>(url, data)
             .then((x) => x.data)
             .catch((e) => {
-                toastService.toast(e.message);
+                toastService.toast(e.message, 'error');
                 throw e;
             });
     }
@@ -32,7 +32,7 @@ class Http {
         return this.http.put<T>(url, data)
             .then((x) => x.data)
             .catch((e) => {
-                toastService.toast(e.message);
+                toastService.toast(e.message, 'error');
                 throw e;
             });
     }
@@ -41,7 +41,7 @@ class Http {
         return this.http.patch<T>(url, data)
             .then((x) => x.data)
             .catch((e) => {
-                toastService.toast(e.message);
+                toastService.toast(e.message, 'error');
                 throw e;
             });
     }
@@ -50,7 +50,7 @@ class Http {
         return this.http.delete<T>(url, data)
             .then((x) => x.data)
             .catch((e) => {
-                toastService.toast(e.message);
+                toastService.toast(e.message, 'error');
                 throw e;
             });
     }

@@ -2,8 +2,9 @@
     import { fade, fly } from 'svelte/transition';
     import { backOut } from 'svelte/easing';
     import toastService from './utils/toast';
+    import type { ToastMessage } from '../types/toastMessage';
 
-    let toasts: string[] = [];
+    let toasts: ToastMessage[] = [];
 
     const unshiftToast = () => {
         toasts = toasts.filter((_, i) => i > 0);
@@ -11,7 +12,7 @@
 
     toastService.subscribe((t) => {
         if (t.msg) {
-            toasts = [...toasts, t.msg];
+            toasts = [...toasts, t];
             setTimeout(unshiftToast, t.msg.length * 200);
         }
     });
@@ -27,9 +28,20 @@
         <div
             in:fly={{ delay: 0, duration: 300, x: 0, y: 50, opacity: 0.1, easing: backOut }}
             out:fade={{ duration: 500 }}
-            class="toast py-5 my-2 w-44 rounded-xl flex text-center"
+            class="text-white px-6 py-4 border-0 rounded-xl relative mb-4 {toast.type === 'error' ? 'bg-red-500' : 'bg-blue-500'}"
         >
-            {toast}
+            <span class="text-xl inline-block mr-5 align-middle">
+                {#if toast.type === 'info'}
+                    <img
+                        class="w-5 h-5"
+                        src={'icons/toast/information.svg'}
+                        alt=""
+                    />
+                {:else if toast.type === 'error'}
+                    <img class="w-5 h-5" src={'icons/toast/close.svg'} alt="" />
+                {/if}
+            </span>
+            <span class="inline-block align-middle mr-8"> {toast.msg} </span>
         </div>
     {/each}
 </div>
