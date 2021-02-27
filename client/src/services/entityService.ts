@@ -1,6 +1,7 @@
 import type { Entity } from '../../types/entityType';
 import type { Service } from '../../types/serviceType';
 import http from '../utils/HttpHelper';
+import UserService from './userService';
 
 export async function getEntity<T extends Entity<unknown>>(id: string): Promise<T> {
     return http.get<T>(`/entity/${id}`);
@@ -18,6 +19,10 @@ export default class EntityService {
     }
 
     static async getEntities(type = ''): Promise<Array<Entity<unknown>>> {
+        const { currentUser } = UserService;
+        if (currentUser) {
+            return http.get(`/entity?userId=${currentUser.id}${type ? `&type=${type}` : ''}`);
+        }
         return http.get(`/entity${type ? `?type=${type}` : ''}`);
     }
 

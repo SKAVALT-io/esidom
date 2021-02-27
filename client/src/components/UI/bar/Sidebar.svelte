@@ -116,7 +116,7 @@
                 <span class="link-text">{tr('menu.rooms')}</span>
             </a>
         </li>
-        <li class="nav_item" class:visible={user?.admin}>
+        <li class="nav_item" class:invisible={!user?.admin}>
             <a
                 href="/users"
                 class="nav-link"

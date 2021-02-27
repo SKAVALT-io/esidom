@@ -19,6 +19,8 @@ const userStore: Writable<User | undefined> = {
 export default class UserService {
     static user = userStore;
 
+    static currentUser: User | undefined;
+
     static async lockFront(password: string): Promise<string> {
         return http.post('/user/lock', { password });
     }
@@ -70,3 +72,7 @@ export default class UserService {
         return http.delete(`/user/${id}`);
     }
 }
+
+UserService.user.subscribe((newUser) => {
+    UserService.currentUser = newUser;
+});

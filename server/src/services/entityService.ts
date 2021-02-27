@@ -1,5 +1,5 @@
 import { socketForwarder } from '../forwarders';
-import { socketService } from '.';
+import { socketService, userService } from '.';
 import {
     EventObserver, Event, Entity, HaEntity, HaStateResponse,
     MAX_RETRIEVE_ATTEMPTS,
@@ -53,7 +53,7 @@ class EntityService implements EventObserver {
     /**
      * Get all entities from HA
      */
-    async getEntities(): Promise<Entity[]> {
+    async getEntities(userId?: string): Promise<Entity[]> {
         const entities = await socketService.listEntityRegistry();
         const states = await socketService.getStates();
         return this.filterUnwantedEntities(
@@ -70,6 +70,7 @@ class EntityService implements EventObserver {
                 };
                 return entity;
             }),
+            userId,
         );
     }
 
@@ -80,7 +81,8 @@ class EntityService implements EventObserver {
      * @param states result of a get_states WS request
      * @returns Array of filtered entities
      */
-    filterEntitiesByDevice(id: string, entities: HaEntity[], states: HaStateResponse[]): Entity[] {
+    async filterEntitiesByDevice(id: string, entities: HaEntity[],
+        states: HaStateResponse[]): Promise<Entity[]> {
         // entities and states are provided to prevent multiple requests on HA
         // when iterating over an array
         const res = entities
@@ -166,11 +168,17 @@ class EntityService implements EventObserver {
         return this.getEntityById(id);
     }
 
-    filterUnwantedEntities(entities: Entity[]): Entity[] {
+    private async filterUnwantedEntities(entities: Entity[], userId?: string): Promise<Entity[]> {
         const UNWANTED_SUFFIXES = ['_power_status', '_update_available',
             '_linkquality', '_update_state', 'power_management', 'sourcenodeid',
             '_power_on_behavior', '_alarm_level', '_alarm_type'];
-        return entities.filter((e) => !UNWANTED_SUFFIXES.some((name) => e.id.endsWith(name)));
+        const result = entities
+            .filter((e) => !UNWANTED_SUFFIXES.some((name) => e.id.endsWith(name)));
+        if (userId) {
+            const user = await userService.getUserById(parseInt(userId, 10));
+            return result.filter((e) => user.entities.includes(e.id));
+        }
+        return result;
     }
 
     // TODO Change this

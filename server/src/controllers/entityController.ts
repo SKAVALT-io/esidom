@@ -15,9 +15,9 @@ class EntityController {
      */
     @App.get('')
     async getEntities(req: Request, res: Response): Success<Entity[]> {
-        const { type } = req.query;
+        const { type, userId } = req.query as {type: string, userId: string};
         return entityService
-            .getEntities()
+            .getEntities(userId)
             .then((entities) => {
                 const data = type === undefined
                     ? entities
