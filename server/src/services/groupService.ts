@@ -253,7 +253,7 @@ class GroupService implements EventObserver {
             .map((entity) => entity.id);
         // console.log(entities);
         if (!entities || entities.length === 0) {
-            // Search if group exist in HA to delete
+            // Delete group if exist in HA
             try {
                 await this.deleteGroupFromHa(this.normalizeImplicitGroupName('switchlight', r.roomId));
             } catch (err) {

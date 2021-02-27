@@ -27,7 +27,7 @@
     >
         {currentRoom.roomId !== '' ? currentRoom.name : tr('rooms.createRoom')}
     </h1>
-    <form class="mb-4" on:submit={() => console.log('submit')}>
+    <form class="mb-4" on:submit={() => false}>
         <div class="flex flex-col mb-4">
             <label
                 class="mb-2 font-bold text-lg text-grey-darkest"
