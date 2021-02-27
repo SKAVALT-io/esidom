@@ -25,7 +25,7 @@
 </script>
 
 <div
-    id="group"
+    id="room"
     class="rounded-lg items-center text-center grid grid-cols-10 px-1 py-4"
 >
     <div class="flex justify-center items-center col-span-8">{room.name}</div>
@@ -44,7 +44,7 @@
 </div>
 
 <style>
-    #group {
+    #room {
         background-color: #22164d;
     }
 </style>
