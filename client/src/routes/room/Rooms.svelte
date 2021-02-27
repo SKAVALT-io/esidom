@@ -12,6 +12,7 @@
     import RoomComponent from '../../components/rooms/RoomComponent.svelte';
     import RoomService from '../../services/roomService';
     import RoomDetail from '../../components/rooms/RoomDetail.svelte';
+    import toastService from '../../utils/toast';
 
     let isOpen = false;
     let currentRoom: Room;
@@ -32,13 +33,13 @@
     $: comparator = comparators[selectedSortOption][flipSwitch ? 0 : 1];
 
     function roomDeletedHandler(data: any) {
-        console.log(data);
+        toastService.toast('Room deleted !');
         const { id } = data;
         rooms = rooms.filter((r) => id !== `${r.roomId}`);
     }
 
     function roomCreatedHandler(data: Room) {
-        console.log(data);
+        toastService.toast('Room created !');
         const newRoom = data;
         rooms = [...rooms, newRoom];
     }

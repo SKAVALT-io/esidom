@@ -11,7 +11,7 @@
     >
         <div class="backdrop" on:click={close} />
         <div class="content-wrapper">
-            <div class="content">
+            <div class="content max-h-screen  md:max-h-screen">
                 <slot name="content" />
             </div>
         </div>
@@ -27,13 +27,12 @@
     }
     div.content-wrapper {
         z-index: 10;
-        max-width: 70vw;
+        max-width: 120vw;
         border-radius: 0.3rem;
         background-color: #22164d;
         overflow: hidden;
     }
     div.content {
-        max-height: 50vh;
         padding: 25px;
         overflow: auto;
     }

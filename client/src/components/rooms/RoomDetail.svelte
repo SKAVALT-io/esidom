@@ -13,9 +13,11 @@
     import { tr } from '../../utils/i18nHelper';
     import DeviceService from '../../services/deviceService';
     import RoomService from '../../services/roomService';
+    import toastService from '../../utils/toast';
 
     export let currentRoom: Room;
     export let closeFunction: () => void;
+    $: formInvalid = currentRoom.name === '';
     const dispatch = createEventDispatcher();
 </script>
 
@@ -25,7 +27,7 @@
     >
         {currentRoom.roomId !== '' ? currentRoom.name : tr('rooms.createRoom')}
     </h1>
-    <form class="mb-4">
+    <form class="mb-4" on:submit={() => console.log('submit')}>
         <div class="flex flex-col mb-4">
             <label
                 class="mb-2 font-bold text-lg text-grey-darkest"
@@ -37,6 +39,7 @@
                 name="Name"
                 id="Name"
                 bind:value={currentRoom.name}
+                on:change={() => console.log(currentRoom)}
                 class="border py-2 px-3 text-grey-darkest"
                 placeholder={tr('rooms.roomName')}
             />
@@ -68,6 +71,7 @@
                                         } else {
                                             currentRoom.devices = currentRoom.devices.filter((e) => e.id !== device.id);
                                         }
+                                        // formInvalid = currentRoom.name === '' || currentRoom.devices.length === 0;
                                     }}
                                 />
                                 <span
@@ -79,10 +83,12 @@
                 {/await}
             </div>
         </div>
-        <div class="flex flex-col mb-4">
+        <div class="flex flex-col mb-4 bg-pa pt-6">
             <SaveButton
-                on:click={() => {
-                    currentRoom.roomId !== '' ? RoomService.updateRoom(currentRoom) : RoomService.createRoom(currentRoom);
+                bind:isDisabled={formInvalid}
+                on:click={async () => {
+                    await (currentRoom.roomId !== '' ? RoomService.updateRoom(currentRoom) : RoomService.createRoom(currentRoom));
+                    toastService.toast('room updated !');
                     closeFunction?.();
                 }}
             />
@@ -93,12 +99,5 @@
 <style>
     input {
         background-color: #453b69;
-    }
-
-    .container {
-        grid-template-columns: 100px 50px 100px;
-        grid-template-rows: 80px auto 80px;
-        column-gap: 10px;
-        row-gap: 15px;
     }
 </style>

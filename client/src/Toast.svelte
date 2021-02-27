@@ -24,12 +24,24 @@
 
 <div id="toasts" class="absolute top-0 right-5" style="z-index: 9999">
     {#each toasts as toast}
+        <!--
         <div
             in:fly={{ delay: 0, duration: 300, x: 0, y: 50, opacity: 0.1, easing: backOut }}
             out:fade={{ duration: 500 }}
             class="toast py-5 my-2 w-44 rounded-xl flex text-center"
         >
             {toast}
+        </div>
+-->
+        <div
+            in:fly={{ delay: 0, duration: 300, x: 0, y: 50, opacity: 0.1, easing: backOut }}
+            out:fade={{ duration: 500 }}
+            class="text-white px-6 py-4 border-0 rounded-xl relative mb-4 bg-blue-500 opacity-80"
+        >
+            <span class="text-xl inline-block mr-5 align-middle">
+                <i class="fas fa-bell" />
+            </span>
+            <span class="inline-block align-middle mr-8"> {toast} </span>
         </div>
     {/each}
 </div>

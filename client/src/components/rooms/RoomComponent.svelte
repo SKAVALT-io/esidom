@@ -1,14 +1,9 @@
 <script lang="ts">
-    import { push } from 'svelte-spa-router';
     import { onDestroy, onMount } from 'svelte';
 
     import RoundedButton from '../UI/buttons/RoundedButton.svelte';
-    import ToggleButton from '../UI/buttons/ToggleButton.svelte';
-    import Modal from '../UI/modal/Modal.svelte';
-    import GroupService from '../../services/groupService';
     import { tr } from '../../utils/i18nHelper';
     import { socketManager } from '../../managers/socketManager';
-    import EntityService from '../../services/entityService';
     import type { Room } from '../../../types/roomType';
     import RoomService from '../../services/roomService';
 
