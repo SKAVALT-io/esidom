@@ -19,6 +19,7 @@
 <div class="w-inherit">
     <p>{tr('devices.colorTemperature')} : {value.toFixed(0)}°K</p>
     <input
+        id="tempColor"
         type="range"
         min="153"
         max="500"
@@ -27,3 +28,19 @@
         class="w-inherit"
     />
 </div>
+
+<style>
+    #tempColor {
+        background: linear-gradient(
+            to right,
+            #0089ff 0%,
+            #ffffff 50%,
+            #f00 100%
+        );
+        border-radius: 8px;
+        height: 7px;
+        outline: none;
+        transition: background 450ms ease-in;
+        appearance: none;
+    }
+</style>
