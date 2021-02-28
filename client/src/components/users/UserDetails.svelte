@@ -44,34 +44,36 @@
                     required={true}
                 />
             </div>
-            <div class="block">
-                <label
-                    class="mb-2 font-bold text-lg text-grey-darkest"
-                    for="Name"
-                >{tr('user.assignEntities')}</label>
+            {#if !user.admin}
+                <div class="block">
+                    <label
+                        class="mb-2 font-bold text-lg text-grey-darkest"
+                        for="Name"
+                    >{tr('user.assignEntities')}</label>
 
-                <div class="mt-2">
-                    {#each entities as entity}
-                        <div>
-                            <label class="inline-flex items-center">
-                                <input
-                                    type="checkbox"
-                                    class="form-checkbox"
-                                    checked={user.entities.includes(entity.id)}
-                                    on:click={(val) => {
-                                        if (val.target.checked) {
-                                            user.entities = [entity.id, ...user.entities];
-                                        } else {
-                                            user.entities = user.entities.filter((e) => e !== entity.id);
-                                        }
-                                    }}
-                                />
-                                <span class="ml-2">{entity.name}</span>
-                            </label>
-                        </div>
-                    {/each}
+                    <div class="mt-2">
+                        {#each entities as entity}
+                            <div>
+                                <label class="inline-flex items-center">
+                                    <input
+                                        type="checkbox"
+                                        class="form-checkbox"
+                                        checked={user.entities.includes(entity.id)}
+                                        on:click={(val) => {
+                                            if (val.target.checked) {
+                                                user.entities = [entity.id, ...user.entities];
+                                            } else {
+                                                user.entities = user.entities.filter((e) => e !== entity.id);
+                                            }
+                                        }}
+                                    />
+                                    <span class="ml-2">{entity.name}</span>
+                                </label>
+                            </div>
+                        {/each}
+                    </div>
                 </div>
-            </div>
+            {/if}
         </form>
         <div id="confirm_cancel" class="flex justify-center items- space-x-4">
             <CancelButton on:click={handleCancel} />
