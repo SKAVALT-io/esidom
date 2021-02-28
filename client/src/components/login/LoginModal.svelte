@@ -22,6 +22,7 @@
 
     async function connect(): Promise<void> {
         UserService.user.set(selectedUser);
+        window.location.reload();
         closeModal();
     }
 </script>
@@ -35,7 +36,11 @@
             class="px-2 py-2 pr-4 w-full placeholder-gray-400 text-gray-900 relative bg-white rounded text-sm shadow outline-none focus:outline-none focus:shadow-outline"
         >
             {#each users as user, i}
-                <option value={user}>{user.username}</option>
+                {#if user.id === UserService.currentUser?.id}
+                    <option value={user} selected>{user.username}</option>
+                {:else}
+                    <option value={user}>{user.username}</option>
+                {/if}
             {/each}
         </select>
 
