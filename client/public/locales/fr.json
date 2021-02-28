@@ -290,14 +290,12 @@
     }
   },
   "user": {
-      "connectedAs": "Connecté en tant que {0}",
-      "notConnected": "Non connecté",
-      "confirmDelete": "Voulez-vous vraiment supprimer cet utilisateur ?",
-      "name": "Nom d'utilisateur",
-      "create": "Créer un utilisateur",
-      "edit": "Editer l'utilisateur",
-      "assignEntities": "Assigner des entités à l'utilisateur"
-  },
+    "confirmDelete": "Voulez-vous vraiment supprimer cet utilisateur ?",
+    "name": "Nom d'utilisateur",
+    "create": "Créer un utilisateur",
+    "edit": "Editer l'utilisateur",
+    "assignEntities": "Assigner des entités à l'utilisateur",
     "connectedAs": "Connecté en tant que {0}",
     "notConnected": "Non connecté"
+  }
 }
