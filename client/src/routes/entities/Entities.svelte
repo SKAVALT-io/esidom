@@ -43,14 +43,7 @@
     });
 
     async function loadEntities() {
-        const entities = await EntityService.getActualEntities().then((es) => {
-            if (!user || user.admin || user.entities.length === 0) {
-                return es;
-            }
-            return es.filter((e) => {
-                return user?.entities.includes(e.id);
-            });
-        });
+        const entities = await EntityService.getActualEntities();
         // Group them by domain
         return entities.reduce((all: EntityByDomain, cur) => {
             const domain: string = cur.id.split('.')[0];

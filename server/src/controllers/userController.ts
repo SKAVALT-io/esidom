@@ -71,7 +71,9 @@ class UserController {
      */
     @App.post('')
     async createUser(req: Request, res: Response): SuccessOrError<User> {
-        const { username, admin, entities } = req.body;
+        const { username, admin, entities } = req.body as {
+            username: string, admin: boolean, entities: string[] | undefined
+        };
         return userService
             .createUser(username, admin, entities)
             .then(sendf(res, 200))
