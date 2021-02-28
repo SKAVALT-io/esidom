@@ -123,7 +123,7 @@
             >
                 <img
                     class="link-svg"
-                    src="icons/sidebar/groups.svg"
+                    src="icons/button/user.svg"
                     alt={tr('menu.users')}
                 />
                 <span class="link-text">{tr('menu.users')}</span>

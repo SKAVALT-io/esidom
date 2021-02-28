@@ -296,6 +296,8 @@
     "edit": "Editer l'utilisateur",
     "assignEntities": "Assigner des entités à l'utilisateur",
     "connectedAs": "Connecté en tant que {0}",
-    "notConnected": "Non connecté"
+    "notConnected": "Non connecté",
+    "logout": "Verrouiller l'application",
+    "changeUser": "Changer d'utilisateur"
   }
 }
