@@ -43,3 +43,8 @@ export function hexToRgb(hex: string): [number, number, number] {
         ? [parseInt(result[1], 16), parseInt(result[2], 16), parseInt(result[3], 16)]
         : [0, 0, 0];
 }
+
+export function getCurrentPage(): string {
+    const sub = window.location.hash.substring(2);
+    return sub !== '' ? sub : 'entities';
+}

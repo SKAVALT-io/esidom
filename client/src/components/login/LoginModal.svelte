@@ -4,9 +4,10 @@
     import BorderedButton from '../UI/buttons/BorderedButton.svelte';
     import UserService from '../../services/userService';
     import { tr } from '../../utils/i18nHelper';
-    import toastService from '../../utils/toast';
     import { onMount } from 'svelte';
     import type { User } from '../../../types/userType';
+    import { push } from 'svelte-spa-router';
+    import { getCurrentPage } from '../../utils/functions';
 
     export let open = false;
     let selectedUser: User;
@@ -22,8 +23,16 @@
 
     async function connect(): Promise<void> {
         UserService.user.set(selectedUser);
-        window.location.reload();
         closeModal();
+        const currentPage = getCurrentPage();
+        if (
+            (!selectedUser.admin && currentPage === 'users') ||
+            currentPage !== 'entities'
+        ) {
+            push('/entities');
+        } else {
+            setTimeout(() => window.location.reload(), 500);
+        }
     }
 </script>
 

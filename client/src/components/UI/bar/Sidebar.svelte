@@ -1,19 +1,14 @@
 <script lang="ts">
     import * as SPA from 'svelte-spa-router';
     import { tr } from '../../../utils/i18nHelper';
-    import { clickOutside } from '../../../utils/functions';
+    import { clickOutside, getCurrentPage } from '../../../utils/functions';
     import UserService from '../../../services/userService';
     import type { User } from '../../../../types/userType';
     export let open = false;
 
-    function hashToPage() {
-        const sub = window.location.hash.substring(2);
-        return sub !== '' ? sub : 'entities';
-    }
-
-    let currentPageSelected = hashToPage();
+    let currentPageSelected = getCurrentPage();
     window.onhashchange = () => {
-        currentPageSelected = hashToPage();
+        currentPageSelected = getCurrentPage();
     };
 
     const pageLinkClicked = (currentPage: string) => {
