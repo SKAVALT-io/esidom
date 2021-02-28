@@ -208,7 +208,13 @@
           "tooltip": "Sélectionne un objet, puis contrôle les actions possibles sur celui-ci. Attention : la couleur et la température d'une lampe ne sont pas compatibles.",
           "color": "Couleur",
           "brightness": "Intensité",
-          "temperature": "Température"
+          "temperature": "Température",
+          "lightTurnOn": "lampe : turn_on",
+          "lightTurnOff": "lampe : turn_off",
+          "lightToggle": "lampe : toggle",
+          "switchTurnOn": "prise : turn_on",
+          "switchTurnOff": "prise : turn_off",
+          "switchToggle": "prise : toggle"
       }
     }
   },

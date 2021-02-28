@@ -407,6 +407,7 @@ export default class BlocklyService {
                 entityWithServicesMap.set(entity.id, {
                     id: entity.id,
                     name: entity.name,
+                    type: entity.type,
                     services: tmpServices,
                 });
             }
@@ -485,8 +486,22 @@ export default class BlocklyService {
             objectActionUpdateShape(entityId: string): void {
                 const type = entityId.split('.')[0];
                 const entityServices = entityWithServicesMap.get(entityId)?.services;
-                const newDropdown = entityServices?.map((service: string) => [service.split('.')[1], service])
+
+                let newDropdown;
+
+                if (type === 'group') {
+                    newDropdown = [
+                        [tr('blockly.blocks.object_action.lightTurnOn'), 'light.turn_on'],
+                        [tr('blockly.blocks.object_action.lightTurnOff'), 'light.turn_off'],
+                        [tr('blockly.blocks.object_action.lightToggle'), 'light.toggle'],
+                        [tr('blockly.blocks.object_action.switchTurnOn'), 'switch.turn_on'],
+                        [tr('blockly.blocks.object_action.switchTurnOff'), 'switch.turn_off'],
+                        [tr('blockly.blocks.object_action.switchToggle'), 'switch.toggle'],
+                    ];
+                } else {
+                    newDropdown = entityServices?.map((service: string) => [service.split('.')[1], service])
                     ?? [[tr('blockly.unknownAction'), tr('blockly.unknownAction')]];
+                }
 
                 const serviceInput = (this as EsidomBlockType).getInput?.('services');
                 serviceInput.removeField('Services', true);
