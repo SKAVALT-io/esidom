@@ -25,7 +25,7 @@
                 if (entity.newName.length !== 0) {
                     await EntityService.patchEntityName(
                         entity.id,
-                        `${prefix}_${entity.newName}`.replace(/ /g, '_')
+                        `${prefix} ${entity.newName}`
                     );
                 }
             });
@@ -63,9 +63,7 @@
                     bind:input={newName}
                     placeholder={id}
                 >
-                    <span
-                        class="text-blue-300"
-                    >{prefix.replace(/ /g, '_')}_</span>
+                    <span class="text-blue-300 mr-2">{prefix}</span>
                 </InputBar>
             </div>
         {/each}
