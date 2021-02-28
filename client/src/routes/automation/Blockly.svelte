@@ -8,7 +8,7 @@
     export let params: { id: string };
 </script>
 
-<div>
+<div class="pb-12">
     <BlocklyComponent automationId={params?.id ?? ''}>
         <category name="Déclencheurs" colour={COLORS.HUE_GREEN}>
             <block type="binary_trigger" />
