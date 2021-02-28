@@ -37,10 +37,10 @@
         [key: string]: Entity<any>[];
     };
 
-    let user: User | undefined = undefined;
-    UserService.user.subscribe((newUser) => {
-        user = newUser;
-    });
+    // let user: User | undefined = undefined;
+    // UserService.user.subscribe((newUser) => {
+    //     user = newUser;
+    // });
 
     async function loadEntities() {
         const entities = await EntityService.getActualEntities();

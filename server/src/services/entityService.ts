@@ -172,12 +172,12 @@ class EntityService implements EventObserver {
     private async filterUnwantedEntities(entities: Entity[], user?: User): Promise<Entity[]> {
         const UNWANTED_SUFFIXES = ['_power_status', '_update_available',
             '_linkquality', '_update_state', 'power_management', 'sourcenodeid',
-            '_power_on_behavior', '_alarm_level', '_alarm_type'];
+            '_power_on_behavior', '_alarm_level', '_alarm_type', 'binary_sensor.updater'];
+        const UNWANTED_TYPES = ['person', 'zone', 'weather', 'media_player', 'persistent_notification', 'zwave'];
         const result = entities
-            .filter((e) => !UNWANTED_SUFFIXES.some((name) => e.id.endsWith(name)));
-        if (user) {
-            return result.filter((e) => user.entities.includes(e.id));
-        }
+            .filter((e) => !UNWANTED_SUFFIXES.some((name) => e.id.endsWith(name))
+                || !UNWANTED_TYPES.some((type) => e.type === type
+                || (user ? user.entities.includes(e.id) : true)));
         return result;
     }
 

@@ -163,16 +163,39 @@ class DatabaseForwarder {
     }
 
     private async insertUserEntities(userId: number, entities: string[]): Promise<void> {
-        await this.db.run(`DELETE FROM AccessEntity as a WHERE a.userId = ${userId}`);
-        await Promise.all(
-            entities.map(async (entityId) => this.db
-                .run(`INSERT INTO AccessEntity(userId, entityId) VALUES(${userId}, '${entityId}')`)),
-        );
+        try {
+            await this.db.run('BEGIN TRANSACTION');
+            await this.db.run(`DELETE FROM AccessEntity as a WHERE a.userId = ${userId}`);
+            await Promise.all(
+                entities.map(async (entityId) => this.db
+                    .run(`INSERT INTO AccessEntity(userId, entityId) VALUES(${userId}, '${entityId}')`)),
+            );
+            await this.db.run('COMMIT');
+            return;
+        } catch (err) {
+            await this.db.run('ROLLBACK');
+            logger.error(`Unexpected error while deleting user from database : ${err}`);
+            throw err;
+        }
     }
 
     async deleteUser(userId: number): Promise<void> {
-        await this.db.run(`DELETE FROM User as u WHERE u.id = ${userId}`);
-        await this.db.run(`DELETE FROM AccessEntity as a WHERE a.userId = ${userId}`);
+        try {
+            await this.db.run('BEGIN TRANSACTION');
+            await this.db.run('DELETE FROM User as u WHERE u.id = ?', userId, (err: any) => {
+                if (err) {
+                    logger.error(err.message);
+                    throw new Error(err.message);
+                }
+            });
+            await this.db.run(`DELETE FROM AccessEntity as a WHERE a.userId = ${userId}`);
+            await this.db.run('COMMIT');
+            return;
+        } catch (err) {
+            await this.db.run('ROLLBACK');
+            logger.error(`Unexpected error while deleting user from database : ${err}`);
+            throw err;
+        }
     }
 
 }

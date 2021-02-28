@@ -8,6 +8,8 @@
     import BorderedButton from '../UI/buttons/BorderedButton.svelte';
     import UserDetails from './UserDetails.svelte';
     import UserService from '../../services/userService';
+    import toastService from '../../utils/toast';
+    import { createEventDispatcher } from 'svelte';
 
     export let user: User;
     export let entities: { id: string; name: string }[];
@@ -15,13 +17,22 @@
     let showDeleteTip = false;
     let isConfirmDeleteOpen = false;
     let isEditModalOpen = false;
+    const dispatch = createEventDispatcher();
 
     function handleEdit(): void {
         isEditModalOpen = true;
     }
 
     async function handleDelete(): Promise<void> {
-        await UserService.deleteUser(user.id);
+        isConfirmDeleteOpen = false;
+        UserService.deleteUser(user.id)
+            .then(() => {
+                toastService.toast(`L'utilisateur a bien été supprimé`);
+                dispatch('userdeleted');
+            })
+            .catch((err) => {
+                console.log(err);
+            });
     }
 
     async function handleEditConfirm(updatedUser: User) {

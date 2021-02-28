@@ -1,4 +1,6 @@
 <script lang="ts">
+    import { createEventDispatcher } from 'svelte';
+
     import type { User } from '../../../types/userType';
     import LoadingAnimation from '../../components/animations/LoadingAnimation.svelte';
     import RoundedButton from '../../components/UI/buttons/RoundedButton.svelte';
@@ -8,6 +10,7 @@
     import EntityService from '../../services/entityService';
     import UserService from '../../services/userService';
     import { tr } from '../../utils/i18nHelper';
+    import toastService from '../../utils/toast';
 
     let users: User[];
     let emptyUser: User = {
@@ -19,6 +22,7 @@
     let isCreateModalOpen = false;
     let entities: { id: string; name: string }[];
     let showCreateTip = false;
+
     async function getUsers(): Promise<void> {
         users = await UserService.getUsers();
         entities = await EntityService.getActualEntities().then((ents) =>
@@ -26,27 +30,34 @@
         );
     }
 
-    async function handleCreateConfirm(user: User) {
-        users = [
-            ...users,
-            await UserService.createUser(
-                user.username,
-                user.admin,
-                user.entities
-            ),
-        ];
-        isCreateModalOpen = false;
-        // TODO: show toast user created
-    }
-
-    function handleCreateCancel() {
-        isCreateModalOpen = false;
+    function resetEmptyUser() {
         emptyUser = {
             id: '',
             admin: false,
             username: '',
             entities: [],
         };
+    }
+
+    async function handleCreateConfirm(user: User) {
+        UserService.createUser(user.username, user.admin, user.entities)
+            .then((u) => {
+                users = [...users, u];
+                toastService.toast(tr('user.userCreated'), 'info');
+            })
+            .catch((_err) => {
+                toastService.toast(
+                    tr('user.errorWhileCreating'),
+                    'error'
+                );
+            });
+        resetEmptyUser();
+        isCreateModalOpen = false;
+    }
+
+    function handleCreateCancel() {
+        isCreateModalOpen = false;
+        resetEmptyUser();
     }
 </script>
 
@@ -85,8 +96,12 @@
         id="users"
         class="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mr-2 ml-2 mt-2"
     >
-        {#each users as user}
-            <UserComponent {entities} {user} />
+        {#each users as user, i}
+            <UserComponent
+                {entities}
+                {user}
+                on:userdeleted={() => (users = users.filter((_u, index) => index !== i))}
+            />
         {/each}
     </div>
 {:catch err}
