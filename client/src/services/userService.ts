@@ -34,7 +34,10 @@ export default class UserService {
     }
 
     static async getUsers(): Promise<User[]> {
-        return http.get('/user');
+        return http.get<User[]>('/user')
+            .then((users: User[]) => users
+                .sort((a: User, b: User) => (
+                    a.username.toLowerCase() > b.username.toLowerCase() ? 1 : -1)));
     }
 
     static async getUserById(id: string): Promise<User> {
