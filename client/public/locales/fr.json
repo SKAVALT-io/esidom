@@ -114,7 +114,7 @@
       },
       "esidom_automation": {
         "message": "Quels sont les déclencheurs ? %1 Sous quelles conditions ? %2 Que faire ? %3",
-        "tooltip": "Permet de définir une routine. La partie \"déclencheur\" défini les évènements auxquels la routine réagira. Cette routine ne sera exécutée que si elle remplie les \"conditions\" définies (non obligatoire). Enfin, les \"actions\" seront exéctutées si les \"conditions\" sont vérfiées lors du \"déclenchement\". La logique du \"OU\" s'applique aux déclecheurs. La logique du \"ET\" s'applique aux conditions et aux actions."
+        "tooltip": "Permet de définir une routine. La partie \"déclencheur\" défini les évènements auxquels la routine réagira. Cette routine ne sera exécutée que si elle remplie les \"conditions\" définies (non obligatoire). Enfin, les \"actions\" seront exéctutées si les \"conditions\" sont vérifiées lors du \"déclenchement\". La logique du \"OU\" s'applique aux déclecheurs. La logique du \"ET\" s'applique aux conditions et aux actions."
       },
       "binary_trigger": {
           "message": "Quand le capteur binaire %1 passe à %2",
