@@ -1,4 +1,3 @@
-import { logger } from '../utils';
 import { databaseForwarder } from '../forwarders';
 import { User } from '../types';
 

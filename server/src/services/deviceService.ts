@@ -79,7 +79,8 @@ class DeviceService implements EventObserver {
                 };
                 // TODO: device.automations = populate automations
                 return device;
-            }));
+            }),
+        );
     }
 
     /**
