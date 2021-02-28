@@ -20,7 +20,11 @@
         if (!group.groupId) {
             return;
         }
-        EntityService.toggle(`group.${group.groupId}`);
+        if (checked) {
+            EntityService.turnOn(`group.${group.groupId}`);
+        } else {
+            EntityService.turnOff(`group.${group.groupId}`);
+        }
     }
     function groupUpdatedHandler(data: Group) {
         if (data.groupId && data.groupId === group.groupId) {
