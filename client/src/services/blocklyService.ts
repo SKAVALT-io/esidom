@@ -67,6 +67,10 @@ export default class BlocklyService {
         this.workspace = workspace;
     }
 
+    clear(): void {
+        this.workspace.clear();
+    }
+
     convertToBlock(name: string, description: string, id?: string): Automation {
         const code = esidomGenerator.workspaceToCode(this.workspace);
 
