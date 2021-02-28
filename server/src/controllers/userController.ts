@@ -2,7 +2,8 @@ import { Request, Response } from 'express';
 import userService from '../services/userService';
 import App from '../app';
 import {
-    send, sendf, Success, SuccessOrError,
+    send, sendf,
+    Success, SuccessOrError,
 } from '../utils';
 import { User } from '../types';
 
@@ -11,12 +12,54 @@ class UserController {
 
     /**
      * Get all the users
+     * @return an array of users
      */
     @App.get('')
     async getUsers(req: Request, res: Response): Success<User[]> {
         return userService
             .getUsers()
             .then(sendf(res, 200));
+    }
+
+    /**
+     * Get an user by its id
+     * @pathParam id: id of the user
+     * @return the user matching the given id
+     */
+    @App.get('/:id')
+    async getUserByd(req: Request, res: Response): SuccessOrError<User> {
+        const { id } = req.params;
+        return userService
+            .getUserById(parseInt(id, 10))
+            .then(sendf(res, 200))
+            .catch((err) => send(res, 400, { error: err.message }));
+    }
+
+    /**
+     * Create a new user
+     * @pathParam username: username of the user
+     * @pathParam admin: a boolean indicating if the user is admin or not
+     * @pathParam entities?: an array of string representing entities ID
+     *            associated to this user
+     * @return the created user
+     */
+    @App.post('')
+    async createUser(req: Request, res: Response): SuccessOrError<User> {
+        const { username, admin, entities } = req.body;
+        return userService
+            .createUser(username, admin, entities)
+            .then(sendf(res, 200))
+            .catch((err) => send(res, 400, { error: err.message }));
+    }
+
+    @App.put('/:id')
+    async updateUser(req: Request, res: Response): SuccessOrError<User> {
+        const { id } = req.params;
+        const { username, admin, entities } = req.body;
+        return userService
+            .updateUser(parseInt(id, 10), username, admin, entities)
+            .then(sendf(res, 200))
+            .catch((err) => send(res, 400, { error: err.message }));
     }
 
     @App.post('/lock')

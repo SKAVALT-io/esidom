@@ -1,10 +1,14 @@
 import sqlite3 from 'sqlite3';
 import { Database } from 'sqlite';
 import { logger } from '../utils';
-import { DBGroup, Group, InsideGroup } from '../types';
+import {
+    DBGroup, Group, InsideGroup, User,
+} from '../types';
 
 const GroupTableName = 'HAGroup';
 const InsideGroupTableName = 'InsideGroup';
+type SqlUser = {id: number, username: string, admin:Number};
+type UserEntities = { entityId: string};
 
 class DatabaseForwarder {
 
@@ -19,7 +23,7 @@ class DatabaseForwarder {
     }
 
     async selectAllGroups(): Promise<DBGroup[]> {
-        return this.db?.all<DBGroup[]>(`SELECT * FROM ${GroupTableName}`);
+        return this.db.all<DBGroup[]>(`SELECT * FROM ${GroupTableName}`);
     }
 
     async selectInsideGroupsByEntityId(entityId: string): Promise<InsideGroup[]> {
@@ -83,6 +87,82 @@ class DatabaseForwarder {
         if (!nameChanged) {
             await this.db.run(`UPDATE ${GroupTableName} SET name = '${group.name}' WHERE entityId = '${group.groupId}'`);
         }
+    }
+
+    async getUsers(): Promise<User[]> {
+        const sqlUsers = await this.db
+            .all<SqlUser[]>('SELECT * FROM User');
+
+        return this.getUsersWithEntities(sqlUsers);
+    }
+
+    async createUser(username: string, admin: boolean, entities?: string[]): Promise<User> {
+        try {
+            await this.db.run('BEGIN TRANSACTION');
+            const res = await this.db.run(`INSERT INTO User (username, admin) VALUES ('${username}', ${admin ? 1 : 0})`);
+            if (!res.lastID) {
+                throw new Error('Unable to insert user into database');
+            }
+            const id = res.lastID;
+            if (entities) {
+                this.insertUserEntities(id, entities);
+            }
+            await this.db.run('COMMIT');
+            return this.getUserById(res.lastID);
+        } catch (err) {
+            await this.db.run('ROLLBACK');
+            logger.error(`Unexpected error while inserting user into database : ${err}`);
+            throw err;
+        }
+    }
+
+    async getUserById(id: number): Promise<User> {
+        const sqlUsers = await this.db.all<SqlUser[]>(`SELECT * FROM User WHERE id == ${id}`);
+        const users = await this.getUsersWithEntities(sqlUsers);
+        if (users.length !== 1) {
+            throw new Error('Database is inconsistent (at least two users have the same id)');
+        }
+        return users[0];
+    }
+
+    // TODO: fix this method
+    async updateUser(id: number, username?: string,
+        admin?: boolean, entities?: string[]): Promise<User> {
+        if (username) {
+            await this.updateUserField('username', username);
+        }
+        if (admin) {
+            await this.updateUserField('admin', admin ? 1 : 0);
+        }
+        if (entities) {
+            await this.insertUserEntities(id, entities);
+        }
+        return this.getUserById(id);
+    }
+
+    private async updateUserField(fieldName: string, fieldValue: any): Promise<void> {
+        await this.db.run(`UPDATE User SET ${fieldName} = ${fieldValue}`);
+    }
+
+    private async getUsersWithEntities(users: SqlUser[]): Promise<User[]> {
+        return Promise.all(
+            users.map(async (u): Promise<User> => {
+                const userEntities = await this.db.all<UserEntities[]>(`SELECT entityId FROM AccessEntity as a WHERE a.userId == ${u.id}`);
+                return {
+                    id: `${u.id}`,
+                    username: u.username,
+                    admin: u.admin === 1,
+                    entities: userEntities.map((ue) => ue.entityId),
+                };
+            }),
+        );
+    }
+
+    private async insertUserEntities(userId: number, entities: string[]): Promise<void> {
+        await Promise.all(
+            entities.map(async (entityId) => this.db
+                .run(`INSERT INTO AccessEntity(userId, entityId) VALUES(${userId}, '${entityId}')`)),
+        );
     }
 
 }
