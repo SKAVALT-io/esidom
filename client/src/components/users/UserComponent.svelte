@@ -37,13 +37,13 @@
 
     async function handleEditConfirm(updatedUser: User) {
         isEditModalOpen = false;
-        await UserService.updateUser(
+        user = await UserService.updateUser(
             updatedUser.id,
             updatedUser.username,
             updatedUser.admin,
             updatedUser.entities
         );
-        window.location.reload();
+        // window.location.reload();
     }
 </script>
 
