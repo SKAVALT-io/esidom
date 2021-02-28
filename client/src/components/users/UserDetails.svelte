@@ -51,7 +51,7 @@
                         for="Name"
                     >{tr('user.assignEntities')}</label>
 
-                    <div class="mt-2">
+                    <div class="mt-2 h-60 overflow-y-auto">
                         {#each entities as entity}
                             <div>
                                 <label class="inline-flex items-center">
