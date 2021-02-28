@@ -14,17 +14,36 @@
     let showEditTip = false;
     let showDeleteTip = false;
     let isConfirmDeleteOpen = false;
-    let isModalOpen = false;
+    let isEditModalOpen = false;
+
     function handleEdit(): void {
-        isModalOpen = true;
+        isEditModalOpen = true;
     }
 
     async function handleDelete(): Promise<void> {
         await UserService.deleteUser(user.id);
     }
+
+    async function handleEditConfirm(updatedUser: User) {
+        isEditModalOpen = false;
+        await UserService.updateUser(
+            updatedUser.id,
+            updatedUser.username,
+            updatedUser.admin,
+            updatedUser.entities
+        );
+        window.location.reload();
+    }
 </script>
 
-<UserDetails {entities} {user} bind:isModalOpen />
+<!-- Edit user-->
+<UserDetails
+    {entities}
+    {user}
+    title={tr('user.edit')}
+    handleSubmit={handleEditConfirm}
+    bind:isModalOpen={isEditModalOpen}
+/>
 <div
     id="user"
     class="rounded-lg items-center text-center grid grid-cols-5 px-1 py-4"

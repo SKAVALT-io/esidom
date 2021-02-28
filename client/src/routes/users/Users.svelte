@@ -4,11 +4,19 @@
     import RoundedButton from '../../components/UI/buttons/RoundedButton.svelte';
     import Tooltip from '../../components/UI/utils/Tooltip.svelte';
     import UserComponent from '../../components/users/UserComponent.svelte';
+    import UserDetails from '../../components/users/UserDetails.svelte';
     import EntityService from '../../services/entityService';
     import UserService from '../../services/userService';
     import { tr } from '../../utils/i18nHelper';
 
     let users: User[];
+    let emptyUser: User = {
+        id: '',
+        admin: false,
+        username: '',
+        entities: [],
+    };
+    let isCreateModalOpen = false;
     let entities: { id: string; name: string }[];
     let showCreateTip = false;
     async function getUsers(): Promise<void> {
@@ -17,6 +25,29 @@
             ents.map((e) => ({ id: e.id, name: e.name }))
         );
     }
+
+    async function handleCreateConfirm(user: User) {
+        users = [
+            ...users,
+            await UserService.createUser(
+                user.username,
+                user.admin,
+                user.entities
+            ),
+        ];
+        isCreateModalOpen = false;
+        // TODO: show toast user created
+    }
+
+    function handleCreateCancel() {
+        isCreateModalOpen = false;
+        emptyUser = {
+            id: '',
+            admin: false,
+            username: '',
+            entities: [],
+        };
+    }
 </script>
 
 {#await getUsers()}
@@ -24,6 +55,15 @@
         <LoadingAnimation />
     </div>
 {:then}
+    <!-- Create user -->
+    <UserDetails
+        {entities}
+        user={emptyUser}
+        title={tr('user.create')}
+        handleSubmit={handleCreateConfirm}
+        handleCancel={handleCreateCancel}
+        bind:isModalOpen={isCreateModalOpen}
+    />
     <div
         class="fixed bottom-0 z-10 right-0 h-16 w-16"
         on:touchstart={() => (showCreateTip = true)}
@@ -37,9 +77,7 @@
             show={showCreateTip}
         />
         <RoundedButton
-            on:click={() => {
-                console.log('TODO');
-            }}
+            on:click={() => (isCreateModalOpen = true)}
             iconPath="icons/button/plus.svg"
         />
     </div>
