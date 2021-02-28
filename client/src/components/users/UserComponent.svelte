@@ -43,7 +43,6 @@
             updatedUser.admin,
             updatedUser.entities
         );
-        // window.location.reload();
     }
 </script>
 

@@ -300,6 +300,7 @@
     "logout": "Verrouiller l'application",
     "changeUser": "Changer d'utilisateur",
     "userCreated": "L'utilisateur a bien été créé",
-    "errorWhileCreating": "Une erreur est survenue lors de la création"
+    "errorWhileCreating": "Une erreur est survenue lors de la création",
+    "usernameCannotBeEmpty": "Le nom d'utilisateur ne peut pas être vide"
   }
 }

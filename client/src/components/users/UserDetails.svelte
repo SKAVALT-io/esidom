@@ -5,6 +5,7 @@
     import BorderedButton from '../UI/buttons/BorderedButton.svelte';
     import type { User } from '../../../types/userType';
     import InputBar from '../UI/bar/InputBar.svelte';
+    import toastService from '../../utils/toast';
 
     export let user: User;
     export let entities: { id: string; name: string }[];
@@ -17,8 +18,7 @@
 
     function checkBeforeSubmit() {
         if (user.username === '') {
-            // TODO: use toast
-            console.log('Username must not be empty');
+            toastService.toast(tr('user.usernameCannotBeEmpty'));
             return;
         }
         handleSubmit(user);
