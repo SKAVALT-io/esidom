@@ -42,8 +42,7 @@
             <Clock formatDate="long" />
         </p>
     </div>
-    <!-- TODO: Fix logout button position -->
-    <div class="nav-links grid grid-flow-col grid-cols-2 gap-x-2 items-center">
+    <div class="nav-links grid grid-flow-col grid-cols-1 gap-x-2 items-center">
         <button
             id="logout"
             class="relative w-5 h-5 opacity-80 hover:opacity-100"
