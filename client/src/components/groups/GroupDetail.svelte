@@ -38,7 +38,7 @@
                 for="Name"
             >{tr('groups.groupEntities')}</label>
 
-            <div class="mt-2">
+            <div class="mt-2 h-60 overflow-y-auto">
                 {#await EntityService.getLightAndSwitchEntity()}
                     <div class="loader">
                         <LoadingAnimation />
