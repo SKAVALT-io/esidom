@@ -63,7 +63,7 @@
 
 <div
     id="automation"
-    class="rounded-lg items-center text-center grid grid-cols-9 px-1 py-4"
+    class="rounded-lg border border-gray-400 hover:border-white items-center text-center grid grid-cols-9 px-1 py-4"
 >
     <div class="col-span-1">
         <ToggleButton on:change={handleToggle} bind:checked />
