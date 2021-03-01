@@ -20,6 +20,7 @@
     $: formInvalid =
         currentGroup.name === '' || currentGroup.entities.length === 0;
 
+    console.log(currentGroup, editMode);
     const dispatch = createEventDispatcher();
     function save() {
         currentGroup.groupId !== ''
@@ -71,9 +72,7 @@
                                 <input
                                     type="checkbox"
                                     class="form-checkbox"
-                                    checked={currentGroup.entities.find((e) => {
-                                        return e.id === entity.id;
-                                    })}
+                                    checked={currentGroup.entities.find((e) => e.id === entity.id) !== undefined}
                                     on:click={(val) => handleCheckbox(val, entity)}
                                 />
                                 <span
@@ -100,7 +99,7 @@
                         class="border list-none rounded-sm px-3 py-3 hover:bg-blue-900 cursor-pointer"
                         on:click={() => push(`#/entity/${entity.id}`)}
                     >
-                        {entity.name}
+                        {entity?.name ?? ''}
                     </li>
                 {/each}
             </ul>

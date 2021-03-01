@@ -314,9 +314,10 @@ class GroupService implements EventObserver {
         if (!e.attributes.entity_id) {
             throw new Error('Cant convert entity to group');
         }
-        const entities: Entity[] = await Promise.all(
-            e.attributes.entity_id.map((v: string) => entityService.getEntityById(v)),
-        );
+        const entityIds: string[] = e.attributes.entity_id;
+        const tmp = await Promise.all(entityIds.map((v) => entityService.getEntityById(v)));
+        const entities: Entity[] = tmp.filter((ent) => ent) as Entity[];
+
         const groupId = e.entity_id.split('.')[1];
         let implicit = false;
         let room: Room | undefined;
