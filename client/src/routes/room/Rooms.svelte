@@ -62,7 +62,7 @@
     }
 </script>
 
-<div class=" pb-16">
+<div class="pb-16">
     <div
         class="pt-2 flex justify-between relative right-0 top-0 mt-2 mr-2 ml-2 mx-auto text-white"
     >

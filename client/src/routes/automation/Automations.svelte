@@ -93,65 +93,67 @@
     });
 </script>
 
-<div
-    class="pb-12 pt-2 flex justify-between relative right-0 top-0 mt-2 mr-2 ml-2 mx-auto text-white"
->
-    <h1 class="text-2xl">{tr('automations.myAutomations')}</h1>
+<div class="pb-16">
     <div
-        class="fixed bottom-0 z-10 right-0 h-16 w-16"
-        on:touchstart={() => (showCreateTip = true)}
-        on:touchend={() => (showCreateTip = false)}
-        on:mouseleave={() => (showCreateTip = false)}
-        on:mouseenter={() => (showCreateTip = true)}
+        class="pt-2 flex justify-between relative right-0 top-0 mt-2 mr-2 ml-2 mx-auto text-white"
     >
-        <Tooltip
-            text={tr('automations.buttons.create')}
-            position="left"
-            show={showCreateTip}
-        />
-        <RoundedButton
-            on:click={() => {
-                push('/blockly');
-            }}
-            iconPath="icons/button/plus.svg"
-        />
+        <h1 class="text-2xl">{tr('automations.myAutomations')}</h1>
+        <div
+            class="fixed bottom-0 z-10 right-0 h-16 w-16"
+            on:touchstart={() => (showCreateTip = true)}
+            on:touchend={() => (showCreateTip = false)}
+            on:mouseleave={() => (showCreateTip = false)}
+            on:mouseenter={() => (showCreateTip = true)}
+        >
+            <Tooltip
+                text={tr('automations.buttons.create')}
+                position="left"
+                show={showCreateTip}
+            />
+            <RoundedButton
+                on:click={() => {
+                    push('/blockly');
+                }}
+                iconPath="icons/button/plus.svg"
+            />
+        </div>
+        <div>
+            <DropdownButton
+                dropDownOptions={[tr('automations.sortBy.options.name'), tr('automations.sortBy.options.state')]}
+                title={tr('automations.sortBy.title')}
+                arrowUp={flipSwitch}
+                on:click={(e) => {
+                    if (e.detail === selectedSortOption) {
+                        flipSwitch = !flipSwitch;
+                    }
+                    selectedSortOption = e.detail;
+                }}
+            />
+            <SearchBar
+                debounce={300}
+                on:type={(e) => {
+                    searchValue = e.detail;
+                    filterAutomations(searchValue);
+                }}
+                on:clear={(e) => (searchValue = '')}
+            />
+        </div>
     </div>
-    <div>
-        <DropdownButton
-            dropDownOptions={[tr('automations.sortBy.options.name'), tr('automations.sortBy.options.state')]}
-            title={tr('automations.sortBy.title')}
-            arrowUp={flipSwitch}
-            on:click={(e) => {
-                if (e.detail === selectedSortOption) {
-                    flipSwitch = !flipSwitch;
-                }
-                selectedSortOption = e.detail;
-            }}
-        />
-        <SearchBar
-            debounce={300}
-            on:type={(e) => {
-                searchValue = e.detail;
-                filterAutomations(searchValue);
-            }}
-            on:clear={(e) => (searchValue = '')}
-        />
-    </div>
-</div>
 
-{#await getAutomations()}
-    <div id="loader" class="flex h-4/6 items-center justify-center">
-        <LoadingAnimation />
-    </div>
-{:then}
-    <div
-        id="automations"
-        class="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mr-2 ml-2 mt-2"
-    >
-        {#each [...(isFiltered ? filteredAutomations : automations)].sort(comparator) as automation}
-            <Automation {automation} />
-        {/each}
-    </div>
-{:catch err}
-    <p class="text-red-800">{err.message}</p>
-{/await}
+    {#await getAutomations()}
+        <div id="loader" class="flex h-4/6 items-center justify-center">
+            <LoadingAnimation />
+        </div>
+    {:then}
+        <div
+            id="automations"
+            class="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mr-2 ml-2 mt-2"
+        >
+            {#each [...(isFiltered ? filteredAutomations : automations)].sort(comparator) as automation}
+                <Automation {automation} />
+            {/each}
+        </div>
+    {:catch err}
+        <p class="text-red-800">{err.message}</p>
+    {/await}
+</div>

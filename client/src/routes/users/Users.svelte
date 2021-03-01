@@ -46,10 +46,7 @@
                 toastService.toast(tr('user.userCreated'), 'info');
             })
             .catch((_err) => {
-                toastService.toast(
-                    tr('user.errorWhileCreating'),
-                    'error'
-                );
+                toastService.toast(tr('user.errorWhileCreating'), 'error');
             });
         resetEmptyUser();
         isCreateModalOpen = false;
@@ -61,49 +58,51 @@
     }
 </script>
 
-{#await getUsers()}
-    <div id="loader" class="flex h-4/6 items-center justify-center">
-        <LoadingAnimation />
-    </div>
-{:then}
-    <!-- Create user -->
-    <UserDetails
-        {entities}
-        user={emptyUser}
-        title={tr('user.create')}
-        handleSubmit={handleCreateConfirm}
-        handleCancel={handleCreateCancel}
-        bind:isModalOpen={isCreateModalOpen}
-    />
-    <div
-        class="fixed bottom-0 z-10 right-0 h-16 w-16"
-        on:touchstart={() => (showCreateTip = true)}
-        on:touchend={() => (showCreateTip = false)}
-        on:mouseleave={() => (showCreateTip = false)}
-        on:mouseenter={() => (showCreateTip = true)}
-    >
-        <Tooltip
-            text={tr('user.create')}
-            position="left"
-            show={showCreateTip}
+<div class="pb-16">
+    {#await getUsers()}
+        <div id="loader" class="flex h-4/6 items-center justify-center">
+            <LoadingAnimation />
+        </div>
+    {:then}
+        <!-- Create user -->
+        <UserDetails
+            {entities}
+            user={emptyUser}
+            title={tr('user.create')}
+            handleSubmit={handleCreateConfirm}
+            handleCancel={handleCreateCancel}
+            bind:isModalOpen={isCreateModalOpen}
         />
-        <RoundedButton
-            on:click={() => (isCreateModalOpen = true)}
-            iconPath="icons/button/plus.svg"
-        />
-    </div>
-    <div
-        id="users"
-        class="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mr-2 ml-2 mt-2"
-    >
-        {#each users as user, i}
-            <UserComponent
-                {entities}
-                {user}
-                on:userdeleted={() => (users = users.filter((_u, index) => index !== i))}
+        <div
+            class="fixed bottom-0 z-10 right-0 h-16 w-16"
+            on:touchstart={() => (showCreateTip = true)}
+            on:touchend={() => (showCreateTip = false)}
+            on:mouseleave={() => (showCreateTip = false)}
+            on:mouseenter={() => (showCreateTip = true)}
+        >
+            <Tooltip
+                text={tr('user.create')}
+                position="left"
+                show={showCreateTip}
             />
-        {/each}
-    </div>
-{:catch err}
-    <p class="text-red-800">{err.message}</p>
-{/await}
+            <RoundedButton
+                on:click={() => (isCreateModalOpen = true)}
+                iconPath="icons/button/plus.svg"
+            />
+        </div>
+        <div
+            id="users"
+            class="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mr-2 ml-2 mt-2"
+        >
+            {#each users as user, i}
+                <UserComponent
+                    {entities}
+                    {user}
+                    on:userdeleted={() => (users = users.filter((_u, index) => index !== i))}
+                />
+            {/each}
+        </div>
+    {:catch err}
+        <p class="text-red-800">{err.message}</p>
+    {/await}
+</div>
