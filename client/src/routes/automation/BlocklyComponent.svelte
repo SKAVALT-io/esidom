@@ -53,15 +53,26 @@
                 wheel: true,
                 startScale: 1.1,
                 maxScale: 2,
-                minScale: 0.8,
+                minScale: 0.5,
                 scaleSpeed: 1.2,
             },
         };
+
+        const esidomTheme: Blockly.Theme = new Blockly.Theme(
+            'themeName',
+            {}, // as Blockly.Theme.BlockStyle,
+            {}, // as Blockly.Theme.CategoryStyle,
+            {
+                toolboxForegroundColour: '#000',
+            } as Blockly.Theme.ComponentStyle
+        );
 
         const workspace: Blockly.WorkspaceSvg = Blockly.inject(
             'blocklyDiv',
             options
         );
+
+        workspace.setTheme(esidomTheme);
 
         // Small hack to "fix" the toolbox scrollbar glitch
         // Setup a mutation observer to see if the class changes to detect
