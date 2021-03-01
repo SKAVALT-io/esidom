@@ -105,7 +105,6 @@ export default class UserService {
 
     static async deleteUser(id: string): Promise<{message: string} | {error: string}> {
         return http.delete<{message: string} | {error: string}, undefined>(`/user/${id}`)
-            .then((res) => res)
             .catch(() => {
                 toastService.toast(tr('user.errorWhileDeleting'));
                 return { error: tr('user.errorWhileDeleting') };
