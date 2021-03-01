@@ -4,6 +4,9 @@ import { tr } from '../utils/i18nHelper';
 import toastService from '../utils/toast';
 
 export default class RoomService {
+    /**
+     * Gets the rooms.
+     */
     static async getRooms(): Promise<Room[]> {
         return http.get<Room[]>('/room')
             .catch((err) => {
@@ -12,6 +15,10 @@ export default class RoomService {
             });
     }
 
+    /**
+     * Creates a room.
+     * @param room the new room
+     */
     static async createRoom(room: Room): Promise<Room> {
         return http.post<Room, Room>('/room', room)
             .catch((err) => {
@@ -20,6 +27,10 @@ export default class RoomService {
             });
     }
 
+    /**
+     * Deletes a room.
+     * @param room the room to delete
+     */
     static async deleteRoom(room: Room): Promise<void> {
         return http.delete<void, Room>(`/room/${room.roomId}`)
             .catch((err) => {
@@ -28,6 +39,10 @@ export default class RoomService {
             });
     }
 
+    /**
+     * Updates a room.
+     * @param room the room to be updated
+     */
     static async updateRoom(room: Room): Promise<void> {
         return http.put<void, Room>(`/room/${room.roomId}`, room)
             .catch((err) => {

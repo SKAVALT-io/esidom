@@ -4,7 +4,10 @@ import { tr } from '../utils/i18nHelper';
 import toastService from '../utils/toast';
 
 export default class GroupService {
-    static async getGroup(): Promise<Group[]> {
+    /**
+     * Gets groups.
+     */
+    static async getGroups(): Promise<Group[]> {
         return http.get<Group[]>('/group')
             .then((groups) => groups.map((g) => this.updateGroupNameIfIsImplicit(g)))
             .catch((err) => {
@@ -13,6 +16,10 @@ export default class GroupService {
             });
     }
 
+    /**
+     * Creates a group.
+     * @param group the new group
+     */
     static async createGroup(group: Group): Promise<Group> {
         return http.post<Group, Group>('/group', group)
             .catch((err) => {
@@ -21,6 +28,10 @@ export default class GroupService {
             });
     }
 
+    /**
+     * Deletes a group.
+     * @param group the group to delete
+     */
     static async deleteGroup(group: Group): Promise<Group> {
         return http.delete<Group, Group>(`/group/${group.groupId}`)
             .catch((err) => {
@@ -29,6 +40,10 @@ export default class GroupService {
             });
     }
 
+    /**
+     * Updates a group.
+     * @param group the group to be updated
+     */
     static async updateGroup(group: Group): Promise<Group> {
         return http.put<Group, Group>(`/group/${group.groupId}`, group)
             .catch((err) => {
@@ -37,6 +52,10 @@ export default class GroupService {
             });
     }
 
+    /**
+     * Updates a group name if it's an implicit group
+     * @param group the groupe to be updated
+     */
     static updateGroupNameIfIsImplicit(group: Group): Group {
         const updatedGroup = group;
         if (updatedGroup.implicit) {

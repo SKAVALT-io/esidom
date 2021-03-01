@@ -4,6 +4,9 @@ import { tr } from '../utils/i18nHelper';
 import toastService from '../utils/toast';
 
 export default class AutomationService {
+    /**
+     * Gets the automations.
+     */
     static async getAutomations(): Promise<AutomationPreview[]> {
         return http.get<AutomationPreview[]>('/automation')
             .catch((err) => {
@@ -12,6 +15,11 @@ export default class AutomationService {
             });
     }
 
+    /**
+     * Toggles the state of an automation.
+     * @param id the id of the automation
+     * @param state the new state of the automation
+     */
     static async toggleAutomation(id: string, state: { state: 'on' | 'off' }): Promise<void> {
         return http.patch<void, { state: 'on' | 'off' }>(`/automation/${id}`, state)
             .catch((err) => {
@@ -20,6 +28,10 @@ export default class AutomationService {
             });
     }
 
+    /**
+     * Trigger an automation.
+     * @param id the id of the automation
+     */
     static async triggerAutomation(id: string): Promise<void> {
         return http.post<void, undefined>(`/automation/${id}`)
             .catch((err) => {
@@ -28,6 +40,10 @@ export default class AutomationService {
             });
     }
 
+    /**
+     * Gets an automation by its id.
+     * @param id the id of the automation
+     */
     static async getAutomationById(id: string): Promise<Automation> {
         return http.get<Automation>(`/automation/${id}`)
             .catch((err) => {
@@ -36,6 +52,10 @@ export default class AutomationService {
             });
     }
 
+    /**
+     * Creates a new automation.
+     * @param automation the json automation
+     */
     static async postAutomation(automation: Automation): Promise<void> {
         return http.post<void, Automation>('/automation', automation)
             .catch((err) => {
@@ -44,6 +64,10 @@ export default class AutomationService {
             });
     }
 
+    /**
+     * Deletes an automation.
+     * @param id the id of the automation
+     */
     static async deleteAutomation(id: string): Promise<void> {
         return http.delete<void, undefined>(`/automation/${id}`)
             .catch((err) => {
@@ -52,6 +76,10 @@ export default class AutomationService {
             });
     }
 
+    /**
+     * Updates an automation.
+     * @param automation the new json automation
+     */
     static async patchAutomation(automation: Automation): Promise<void> {
         return http.patch<void, Automation>('/automation', automation)
             .catch((err) => {

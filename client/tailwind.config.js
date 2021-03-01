@@ -13,6 +13,7 @@ module.exports = {
             '2xl': '1536px',
         },
         colors: {
+            esidomLightVariant: '#574e78',
             esidomlight: '#453b69',
             esidom: '#120639',
             transparent: 'transparent',
