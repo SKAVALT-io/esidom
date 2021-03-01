@@ -12,8 +12,8 @@
     import toastService from '../../utils/toast';
 
     export let group: Group;
-    let checked = false;
-    $: checked = group.state === 'on';
+    let checked = group.state === 'on';
+
     let showDeleteTip = false;
     let showEditTip = false;
     let showViewTip = false;
@@ -21,7 +21,6 @@
     export let openViewMode: () => void;
 
     function handleToggle() {
-        console.log(group.groupId);
         if (!group.groupId) {
             return;
         }
@@ -33,9 +32,8 @@
     }
     function groupUpdatedHandler(data: Group) {
         if (data.groupId === group.groupId) {
-            toastService.toast(tr('groups.groupUpdated'));
             group = data;
-            checked = data?.state === 'on';
+            checked = group.state === 'on';
             group = GroupService.updateGroupNameIfIsImplicit(group);
         }
     }
