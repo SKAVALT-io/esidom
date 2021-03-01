@@ -41,6 +41,7 @@ export type BlocksDefinitions = {
     color_temp: BlockFunctions;
     color_brightness_temp: BlockFunctions;
     object_action: BlockFunctions;
+    delay_action: BlockFunctions;
 }
 
 /**
@@ -600,6 +601,45 @@ export type BlocksDefinitions = {
     /**
      * Catégorie Action
      */
+    block.delay_action = {
+        init() {
+            this.jsonInit?.(
+                {
+                    type: 'delay_action',
+                    message0: tr('blockly.blocks.delay_action.message'),
+                    args0: [
+                        {
+                            type: 'field_number',
+                            name: 'Hour',
+                            value: 0,
+                            min: 0,
+                            max: 23,
+                        },
+                        {
+                            type: 'field_number',
+                            name: 'Minute',
+                            value: 0,
+                            min: 0,
+                            max: 59,
+                        },
+                        {
+                            type: 'field_number',
+                            name: 'Second',
+                            value: 0,
+                            min: 0,
+                            max: 59,
+                        },
+                    ],
+                    inputsInline: false,
+                    previousStatement: 'Action',
+                    nextStatement: 'Action',
+                    colour: COLORS.HUE_ORANGE,
+                    tooltip: tr('blockly.blocks.delay_action.tooltip'),
+                    helpUrl: '',
+                },
+            );
+        },
+    };
 
     /**
      * Catégorie Contrôle de lampe

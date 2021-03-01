@@ -32,6 +32,7 @@
             <block type="object_action">
                 <mutation entities_input="" />
             </block>
+            <block type="delay_action" />
         </category>
         <category name="Objets" colour={COLORS.HUE_RED}>
             <block type="binary_sensor" />

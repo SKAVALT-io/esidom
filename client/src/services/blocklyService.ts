@@ -602,7 +602,28 @@ export default class BlocklyService {
             `;
         });
 
-        automation.action?.forEach((action) => {
+        automation.action?.slice().reverse().forEach((action) => {
+            const { delay } = action;
+
+            if (delay) {
+                const time = delay.split(':');
+                const hours = time[0];
+                const minutes = time[1];
+                const seconds = time[2];
+
+                xml += `
+                <value name="Action">
+                    <block type="delay_action">
+                        <field name="Hour">${hours}</field>
+                        <field name="Minute">${minutes}</field>
+                        <field name="Second">${seconds}</field>
+                    </block>
+                    </value>
+                `;
+
+                return;
+            }
+
             const entityId = action.entity_id;
             const { service } = action;
 

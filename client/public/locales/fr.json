@@ -215,6 +215,10 @@
           "switchTurnOn": "prise : turn_on",
           "switchTurnOff": "prise : turn_off",
           "switchToggle": "prise : toggle"
+      },
+      "delay_action": {
+          "message": "Délai %1 h %2 m %3 s",
+          "tooltip": "Définir le délai avant la prochaine action."
       }
     }
   },

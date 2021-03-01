@@ -63,6 +63,7 @@ export interface BlocklyJSON {
     below?: string;
     attribute?: string;
     data?: BlocklyData;
+    delay?: string;
     conditions?: BlocklyJSON[];
 }
 
@@ -89,6 +90,7 @@ export type BlocksGenerator = {
     brightness: (blk: Block) => void;
     color_temp: (blk: Block) => void;
     object_action: (blk: Block) => void;
+    delay_action: (blk: Block) => void;
     scrub_: (blk: Block, code: string, opt_thisOnly: string) => string;
     jsonInit:(a: Block)=> void;
 }
@@ -420,6 +422,20 @@ export type BlocksGenerator = {
         }
 
         json.data = data;
+
+        return JSON.stringify(json);
+    };
+
+    block.delay_action = (blk: Block) => {
+        const number_hour = blk.getFieldValue('Hour');
+        const number_minute = blk.getFieldValue('Minute');
+        const number_second = blk.getFieldValue('Second');
+
+        const json: BlocklyJSON = {};
+
+        const delay = `${number_hour}:${number_minute}:${number_second}`;
+
+        json.delay = delay;
 
         return JSON.stringify(json);
     };
