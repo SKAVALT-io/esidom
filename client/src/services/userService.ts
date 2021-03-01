@@ -23,28 +23,25 @@ export default class UserService {
 
     static async lockFront(password: string): Promise<string> {
         return http.post<string, {password:string}>('/user/lock', { password })
-            .then((b) => b)
-            .catch(() => {
+            .catch((err) => {
                 toastService.toast(tr('user.errorWhileLocking'), 'error');
-                return '';
+                throw err;
             });
     }
 
     static async isLocked(): Promise<boolean> {
         return http.get<boolean>('/user/isLocked')
-            .then((b) => b)
-            .catch(() => {
+            .catch((err) => {
                 toastService.toast(tr('user.errorWhileLocking'), 'error');
-                return false;
+                throw err;
             });
     }
 
     static async unlockFront(password: string): Promise<boolean> {
         return http.post<boolean, {password:string}>('/user/unlock', { password })
-            .then((b) => b)
-            .catch(() => {
+            .catch((err) => {
                 toastService.toast(tr('user.errorWhileUnlocking'), 'error');
-                return false;
+                throw err;
             });
     }
 
@@ -53,18 +50,17 @@ export default class UserService {
             .then((users: User[]) => users
                 .sort((a: User, b: User) => (
                     a.username.toLowerCase() > b.username.toLowerCase() ? 1 : -1)))
-            .catch(() => {
+            .catch((err) => {
                 toastService.toast(tr('user.errorWhileLoading'), 'error');
-                return [];
+                throw err;
             });
     }
 
     static async getUserById(id: string): Promise<User> {
         return http.get<User>(`/user/${id}`)
-            .then((u) => u)
-            .catch(() => {
+            .catch((err) => {
                 toastService.toast(tr('user.errorWhileLoadingUser'), 'error');
-                return {} as User;
+                throw err;
             });
     }
 
@@ -74,10 +70,9 @@ export default class UserService {
             body.entities = entities;
         }
         return http.post<User, UserWithoutId>('/user', body)
-            .then((u) => u)
-            .catch(() => {
+            .catch((err) => {
                 toastService.toast(tr('user.errorWhileCreating'), 'error');
-                return {} as User;
+                throw err;
             });
     }
 
@@ -102,10 +97,9 @@ export default class UserService {
             admin?: boolean;
             entities?: string[];
         }>(`/user/${id}`, body)
-            .then((u) => u)
-            .catch(() => {
+            .catch((err) => {
                 toastService.toast(tr('user.errorWhileUpdating'), 'error');
-                return {} as User;
+                throw err;
             });
     }
 

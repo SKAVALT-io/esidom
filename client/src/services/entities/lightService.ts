@@ -6,8 +6,9 @@ export async function updateLight(id: string, serviceData: {[id: string]: unknow
     return http.put<void, {service: string, serviceData: {[id: string]: unknown}}>(`/entity/${id}`, {
         service: 'light.turn_on',
         serviceData,
-    }).catch(() => {
+    }).catch((err) => {
         toastService.toast(tr('entities.errorWhileToggle'), 'error');
+        throw err;
     });
 }
 
@@ -26,7 +27,8 @@ export async function changeLampRGB(id: string, r: number, g: number, b: number)
 export async function switchLamp(id: string, switchOn: boolean): Promise<unknown> {
     return http.put(`/entity/${id}`, {
         service: (switchOn ? 'light.turn_on' : 'light.turn_off'),
-    }).catch(() => {
+    }).catch((err) => {
         toastService.toast(tr('entities.errorWhileToggle'), 'error');
+        throw err;
     });
 }

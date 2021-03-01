@@ -18,9 +18,9 @@ export default class EntityService {
     static async getActualEntities(): Promise<Array<Entity<unknown>>> {
         return EntityService.getEntities()
             .then((entities) => entities.filter((x) => actualDomains.indexOf(x.id.split('.')[0]) !== -1))
-            .catch(() => {
+            .catch((err) => {
                 toastService.toast(tr('entities.errorWhileLoading'), 'error');
-                return [];
+                throw err;
             });
     }
 
@@ -28,33 +28,31 @@ export default class EntityService {
         const { currentUser } = UserService;
         if (currentUser && !currentUser.admin && !(currentUser.entities.length === 0)) {
             return http.get<Array<Entity<unknown>>>(`/entity?userId=${currentUser.id}${type ? `&type=${type}` : ''}`)
-                .then((entities) => entities)
-                .catch(() => {
+                .catch((err) => {
                     toastService.toast(tr('entities.errorWhileLoading'), 'error');
-                    return [];
+                    throw err;
                 });
         }
         return http.get<Array<Entity<unknown>>>(`/entity${type ? `?type=${type}` : ''}`)
-            .then((entities) => entities)
-            .catch(() => {
+            .catch((err) => {
                 toastService.toast(tr('entities.errorWhileLoading'), 'error');
-                return [];
+                throw err;
             });
     }
 
     static async getServices(): Promise<Service[]> {
         return http.get<Service[]>('/service')
-            .then((services) => services)
-            .catch(() => {
+            .catch((err) => {
                 toastService.toast(tr('entities.errorWhileLoadingServices'), 'error');
-                return [];
+                throw err;
             });
     }
 
     static async patchEntityName(id:string, name: string): Promise<void> {
         return http.patch<void, {name:string}>(`/entity/update/${id}`, { name })
-            .catch(() => {
+            .catch((err) => {
                 toastService.toast(tr('entities.errorWhileUpdating'), 'error');
+                throw err;
             });
     }
 
@@ -67,24 +65,27 @@ export default class EntityService {
     static async turnOn(id: string): Promise<unknown> {
         return http.put(`/entity/${id}`, {
             service: 'homeassistant.turn_on',
-        }).catch(() => {
+        }).catch((err) => {
             toastService.toast(tr('entities.errorWhileToggle'), 'error');
+            throw err;
         });
     }
 
     static async toggle(id: string): Promise<unknown> {
         return http.put(`/entity/${id}`, {
             service: 'homeassistant.toggle',
-        }).catch(() => {
+        }).catch((err) => {
             toastService.toast(tr('entities.errorWhileToggle'), 'error');
+            throw err;
         });
     }
 
     static async turnOff(id: string): Promise<unknown> {
         return http.put(`/entity/${id}`, {
             service: 'homeassistant.turn_off',
-        }).catch(() => {
+        }).catch((err) => {
             toastService.toast(tr('entities.errorWhileToggle'), 'error');
+            throw err;
         });
     }
 }

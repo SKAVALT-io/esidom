@@ -7,19 +7,17 @@ import { tr } from '../utils/i18nHelper';
 export default class DeviceService {
     static async launchPair(): Promise<Protocols> {
         return http.post<Protocols, undefined>('/device')
-            .then((p) => p)
-            .catch(() => {
+            .catch((err) => {
                 toastService.toast(tr('pairing.errorWhileLaunchingPairing'), 'error');
-                return {};
+                throw err;
             });
     }
 
     static async getDevices(): Promise<Device[]> {
         return http.get<Device[]>('/device')
-            .then((d) => d)
-            .catch(() => {
+            .catch((err) => {
                 toastService.toast(tr(tr('devices.errorWhileLoading')), 'error');
-                return [];
+                throw err;
             });
     }
 }

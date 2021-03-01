@@ -6,33 +6,33 @@ import toastService from '../utils/toast';
 export default class RoomService {
     static async getRooms(): Promise<Room[]> {
         return http.get<Room[]>('/room')
-            .then((rooms) => rooms)
-            .catch(() => {
+            .catch((err) => {
                 toastService.toast(tr('rooms.errorWhileLoading'), 'error');
-                return [];
+                throw err;
             });
     }
 
     static async createRoom(room: Room): Promise<Room> {
         return http.post<Room, Room>('/room', room)
-            .then((r) => r)
-            .catch(() => {
+            .catch((err) => {
                 toastService.toast(tr('rooms.errorWhileCreating'), 'error');
-                return room;
+                throw err;
             });
     }
 
     static async deleteRoom(room: Room): Promise<void> {
         return http.delete<void, Room>(`/room/${room.roomId}`)
-            .catch(() => {
+            .catch((err) => {
                 toastService.toast(tr('rooms.errorWhileDeleting'), 'error');
+                throw err;
             });
     }
 
     static async updateRoom(room: Room): Promise<void> {
         return http.put<void, Room>(`/room/${room.roomId}`, room)
-            .catch(() => {
+            .catch((err) => {
                 toastService.toast(tr('rooms.errorWhileUpdating'), 'error');
+                throw err;
             });
     }
 }

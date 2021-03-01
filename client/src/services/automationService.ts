@@ -6,45 +6,57 @@ import toastService from '../utils/toast';
 export default class AutomationService {
     static async getAutomations(): Promise<AutomationPreview[]> {
         return http.get<AutomationPreview[]>('/automation')
-            .then((a) => a)
-            .catch(() => {
+            .catch((err) => {
                 toastService.toast(tr('automations.errorWhileLoading'), 'error');
-                return [];
+                throw err;
             });
     }
 
     static async toggleAutomation(id: string, state: { state: 'on' | 'off' }): Promise<void> {
         return http.patch<void, { state: 'on' | 'off' }>(`/automation/${id}`, state)
-            .catch(() => toastService.toast(tr('automations.errorWhileToggling'), 'error'));
+            .catch((err) => {
+                toastService.toast(tr('automations.errorWhileToggling'), 'error');
+                throw err;
+            });
     }
 
     static async triggerAutomation(id: string): Promise<void> {
         return http.post<void, undefined>(`/automation/${id}`)
-            .catch(() => toastService.toast(tr('automations.errorWhileTriggering'), 'error'));
+            .catch((err) => {
+                toastService.toast(tr('automations.errorWhileTriggering'), 'error');
+                throw err;
+            });
     }
 
     static async getAutomationById(id: string): Promise<Automation> {
         return http.get<Automation>(`/automation/${id}`)
-            .then((a) => a)
-            .catch(() => {
+            .catch((err) => {
                 toastService.toast(tr('automations.errorWhileGettingAutomation'), 'error');
-                return {} as Automation;
+                throw err;
             });
     }
 
     static async postAutomation(automation: Automation): Promise<void> {
         return http.post<void, Automation>('/automation', automation)
-            .then((a) => a)
-            .catch(() => toastService.toast(tr('automations.errorWhileCreating'), 'error'));
+            .catch((err) => {
+                toastService.toast(tr('automations.errorWhileCreating'), 'error');
+                throw err;
+            });
     }
 
     static async deleteAutomation(id: string): Promise<void> {
         return http.delete<void, undefined>(`/automation/${id}`)
-            .catch(() => toastService.toast(tr('automations.errorWhileDeleting'), 'error'));
+            .catch((err) => {
+                toastService.toast(tr('automations.errorWhileDeleting'), 'error');
+                throw err;
+            });
     }
 
     static async patchAutomation(automation: Automation): Promise<void> {
         return http.patch<void, Automation>('/automation', automation)
-            .catch(() => toastService.toast(tr('automations.errorWhileUpdating'), 'error'));
+            .catch((err) => {
+                toastService.toast(tr('automations.errorWhileUpdating'), 'error');
+                throw err;
+            });
     }
 }

@@ -7,36 +7,33 @@ export default class GroupService {
     static async getGroup(): Promise<Group[]> {
         return http.get<Group[]>('/group')
             .then((groups) => groups.map((g) => this.updateGroupNameIfIsImplicit(g)))
-            .catch(() => {
+            .catch((err) => {
                 toastService.toast(tr('groups.errorWhileLoading'), 'error');
-                return [];
+                throw err;
             });
     }
 
     static async createGroup(group: Group): Promise<Group> {
         return http.post<Group, Group>('/group', group)
-            .then((g) => g)
-            .catch(() => {
+            .catch((err) => {
                 toastService.toast(tr('groups.errorWhileCreating'), 'error');
-                return group;
+                throw err;
             });
     }
 
     static async deleteGroup(group: Group): Promise<Group> {
         return http.delete<Group, Group>(`/group/${group.groupId}`)
-            .then((g) => g)
-            .catch(() => {
+            .catch((err) => {
                 toastService.toast(tr('groups.errorWhileDeleting'), 'error');
-                return group;
+                throw err;
             });
     }
 
     static async updateGroup(group: Group): Promise<Group> {
         return http.put<Group, Group>(`/group/${group.groupId}`, group)
-            .then((g) => g)
-            .catch(() => {
+            .catch((err) => {
                 toastService.toast(tr('groups.errorWhileUpdating'), 'error');
-                return group;
+                throw err;
             });
     }
 
