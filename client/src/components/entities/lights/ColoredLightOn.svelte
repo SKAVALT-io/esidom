@@ -1,9 +1,11 @@
 <script>
     export let fillColor: string;
+    export let brightnessPct: number;
 </script>
 
 <svg
     on:click
+    style="filter: brightness({50 + brightnessPct / 2}%)"
     class="cursor-pointer h-inherit max-w-full max-h-full object-contain"
     version="1.1"
     xmlns="http://www.w3.org/2000/svg"
