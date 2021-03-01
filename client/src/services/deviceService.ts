@@ -5,6 +5,9 @@ import toastService from '../utils/toast';
 import { tr } from '../utils/i18nHelper';
 
 export default class DeviceService {
+    /**
+     * Starts pairing process.
+     */
     static async launchPair(): Promise<Protocols> {
         return http.post<Protocols, undefined>('/device')
             .catch((err) => {
@@ -13,6 +16,9 @@ export default class DeviceService {
             });
     }
 
+    /**
+     * Gets the devices.
+     */
     static async getDevices(): Promise<Device[]> {
         return http.get<Device[]>('/device')
             .catch((err) => {

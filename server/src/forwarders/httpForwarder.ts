@@ -1,15 +1,24 @@
 import axios, { AxiosRequestConfig } from 'axios';
+import { logger } from '../utils';
 import config from '../config/config';
 
 class HttpForwarder {
 
+    private interceptorId: number = -1;
+
     setToken(token: string) {
-        axios.interceptors.request.use((conf) => ({
+        this.interceptorId = axios.interceptors.request.use((conf) => ({
             ...conf,
             headers: {
                 Authorization: `Bearer ${token}`,
             },
         }));
+        logger.debug(this.interceptorId);
+    }
+
+    removeToken() {
+        logger.info('Removing existing token');
+        axios.interceptors.request.eject(this.interceptorId);
     }
 
     async get<T>(url: string, conf?: AxiosRequestConfig): Promise<T> {

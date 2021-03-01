@@ -55,11 +55,20 @@ export default class BlocklyService {
         this.workspace = workspace;
     }
 
+    /**
+     * Clears blockly workspace.
+     */
     clear(): void {
         this.workspace.clear();
     }
 
-    convertToBlock(name: string, description: string, id?: string): Automation {
+    /**
+     *  Converts a block into an automation.
+     * @param name the name of the automation
+     * @param description the description of the automation
+     * @param id the id of the automation
+     */
+    convertToAutomation(name: string, description: string, id?: string): Automation {
         const code = esidomGenerator.workspaceToCode(this.workspace);
 
         try {
@@ -92,12 +101,19 @@ export default class BlocklyService {
         }
     }
 
+    /**
+     * Loads an automation into Blockly from xml.
+     * @param xml the xml representation of the automation
+     */
     loadAutomation(xml: string): void {
         Blockly.mainWorkspace.clear();
         const block: Element = Blockly.Xml.textToDom(xml);
         Blockly.Xml.domToWorkspace(block, this.workspace);
     }
 
+    /**
+     * Initializes dynamic blocks.
+     */
     static async initBlockly(): Promise<void> {
         const entities = await EntityService.getEntities();
         const services = await EntityService.getServices();
@@ -118,6 +134,9 @@ export default class BlocklyService {
         this.createIntervalTrigger();
     }
 
+    /**
+     * Creates interval_trigger block.
+     */
     static createIntervalTrigger(): void {
         const block = Blockly.Blocks as unknown as BlocksDefinitions;
         block.interval_trigger = {
@@ -213,6 +232,10 @@ export default class BlocklyService {
         }
     }
 
+    /**
+     * Creates a map of entities with attributes
+     * @param entities the map of entities with attributes
+     */
     static createNumericEntityWithAttributesMap(
         entities: Entity<string[]>[],
     ): Map<string, EntityWithAttributes> {
@@ -229,6 +252,10 @@ export default class BlocklyService {
         return entityWithAttributesMap;
     }
 
+    /**
+     *  Creates dropdown for numeric_state blocks.
+     * @param entityWithAttributesMap the map of entities with attributes
+     */
     static createNumericDropdowns(
         entityWithAttributesMap: Map<string, EntityWithAttributes>,
     ): string[][][] {
@@ -262,6 +289,12 @@ export default class BlocklyService {
         return dropdowns;
     }
 
+    /**
+     * Registers numeric_state block mutator.
+     * @param entityWithAttributesMap the map of entities with attributes
+     * @param mutatorName the mutator name
+     * @param inputName the mutator input name
+     */
     static registerNumericMutator(
         entityWithAttributesMap: Map<string, EntityWithAttributes>,
         mutatorName: string,
@@ -343,6 +376,10 @@ export default class BlocklyService {
         }
     }
 
+    /**
+     * Creates numeric_state_trigger block.
+     * @param entities the list of entities
+     */
     static createNumericStateTrigger(entities: Entity<string[]>[]): void {
         const entityWithAttributesMap = this.createNumericEntityWithAttributesMap(entities);
         const dropdowns = this.createNumericDropdowns(entityWithAttributesMap);
@@ -412,6 +449,10 @@ export default class BlocklyService {
         );
     }
 
+    /**
+     * Creates numeric_state_condition block.
+     * @param entities the list of entities
+     */
     static createNumericStateCondition(entities: Entity<string[]>[]): void {
         const entityWithAttributesMap = this.createNumericEntityWithAttributesMap(entities);
         const dropdowns = this.createNumericDropdowns(entityWithAttributesMap);
@@ -481,6 +522,11 @@ export default class BlocklyService {
         );
     }
 
+    /**
+     * Creates an object_action block.
+     * @param entities the list of entities
+     * @param services the list of services
+     */
     static createObjectAction(entities: Entity<string[]>[], services: Service[]): void {
         const entityWithServicesMap = new Map<string, EntityWithServices>();
 
@@ -593,10 +639,7 @@ export default class BlocklyService {
                 serviceInput.removeField('Services', true);
                 serviceInput.appendField(new Blockly.FieldDropdown(newDropdown), 'Services');
 
-                const entityField = (this as EsidomBlockType).getFieldValue('Entities');
-                const currentType = entityField.split('.')[0];
-
-                if (type === 'light' && currentType !== 'light') {
+                if (type === 'light') {
                     (this as EsidomBlockType).removeInput('Color', true);
                     (this as EsidomBlockType).appendValueInput('Color')
                         .setCheck('Color')
@@ -634,6 +677,10 @@ export default class BlocklyService {
         }
     }
 
+    /**
+     * Creates object blocks.
+     * @param entities the list of entities
+     */
     static createObjects(entities: Entity<unknown>[]): void {
         const block = Blockly.Blocks as unknown as BlocksDefinitions;
         TYPES.forEach((type: Type) => {
@@ -662,6 +709,10 @@ export default class BlocklyService {
         });
     }
 
+    /**
+     * Converts a json automation into xml.
+     * @param automation the json automation
+     */
     static automationToXml(automation: Automation): string {
         let xml = `
             <xml xmlns="https://developers.google.com/blockly/xml">
@@ -737,6 +788,10 @@ export default class BlocklyService {
         return xml;
     }
 
+    /**
+     * Gets the xml representation of an action color_rgb block.
+     * @param rgbColor the list of RGB colors
+     */
     static getActionColorXml(rgbColor: number[]): string {
         return rgbColor
             ? `
@@ -751,7 +806,11 @@ export default class BlocklyService {
             : '';
     }
 
-    static getActionBrightnessXml(brightness: number[]): string {
+    /**
+     * Gets the xml representation of an action brightness block.
+     * @param brightness the brightness
+     */
+    static getActionBrightnessXml(brightness: number): string {
         return brightness
             ? `
                 '<value name="Brightness">
@@ -763,7 +822,11 @@ export default class BlocklyService {
             : '';
     }
 
-    static getActionTemperatureXml(colorTemp: number[]): string {
+    /**
+     * Gets the xml representation of an action color_temp block.
+     * @param colorTemp the color temperature
+     */
+    static getActionTemperatureXml(colorTemp: number): string {
         return colorTemp
             ? `
                 '<value name="Temperature">
