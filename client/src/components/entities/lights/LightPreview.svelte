@@ -79,7 +79,7 @@
         {:else}
             <img
                 on:click={switchLight}
-                class="h-inherit max-w-full max-h-full object-contain"
+                class="cursor-pointer h-inherit max-w-full max-h-full object-contain"
                 src="icons/button/lightOff.svg"
                 alt=""
             />
