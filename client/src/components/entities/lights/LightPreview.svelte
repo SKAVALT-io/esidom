@@ -67,7 +67,12 @@
     };
 
     let fillColor = 'fff';
-    $: fillColor = HEXA === '' ? (isOn ? '#CCCC00' : '#FFF') : HEXA;
+    $: fillColor = HEXA === '' ? (isOn ? '#FFFF00' : '#FFF') : HEXA;
+    let brightnessPct: number;
+    $: brightnessPct = +(
+        ((entity.attributes.brightness ?? 255) / 255) *
+        100
+    ).toFixed(0);
 </script>
 
 <EntityPreview isError={false} {entity}>
@@ -75,7 +80,11 @@
 
     <div slot="img">
         {#if isOn}
-            <ColoredLightOn on:click={switchLight} {fillColor} />
+            <ColoredLightOn
+                {brightnessPct}
+                on:click={switchLight}
+                {fillColor}
+            />
         {:else}
             <img
                 on:click={switchLight}
