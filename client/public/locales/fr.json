@@ -218,12 +218,12 @@
           "color": "Couleur",
           "brightness": "Intensité",
           "temperature": "Température",
-          "lightTurnOn": "lampe : turn_on",
-          "lightTurnOff": "lampe : turn_off",
-          "lightToggle": "lampe : toggle",
-          "switchTurnOn": "prise : turn_on",
-          "switchTurnOff": "prise : turn_off",
-          "switchToggle": "prise : toggle"
+          "lightTurnOn": "lampe : allumer",
+          "lightTurnOff": "lampe : éteindre",
+          "lightToggle": "lampe : basculer",
+          "switchTurnOn": "prise : allumer",
+          "switchTurnOff": "prise : éteindre",
+          "switchToggle": "prise : basculer"
       },
       "delay_action": {
           "message": "Délai %1 h %2 m %3 s",
