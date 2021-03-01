@@ -149,6 +149,13 @@
           "and": "et",
           "of": "de"
       },
+      "interval_trigger": {
+        "message": "Toutes les %1 %2 %3",
+        "tooltip": "Déclenche une routine toutes les x heures, minutes ou secondes.",
+        "hour": "heures",
+        "minute": "minutes",
+        "second": "secondes"
+      },
       "time_condition": {
           "message": "Début : %1 h %2 m %3 s %4 Fin : %5 h %6 m %7 s %8 %9 lundi %10 %11 mardi %12 %13 mercredi %14 %15 jeudi %16 %17 vendredi %18 %19 samedi %20 %21 dimanche",
           "tooltip": "Permet de sélectionner l'heure et le (ou les) jours de déclenchement de la routine"

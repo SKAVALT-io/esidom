@@ -64,6 +64,9 @@ export interface BlocklyJSON {
     attribute?: string;
     data?: BlocklyData;
     delay?: string;
+    hours?: string;
+    minutes?: string;
+    seconds?: string;
     conditions?: BlocklyJSON[];
 }
 
@@ -78,6 +81,7 @@ export type BlocksGenerator = {
     time_trigger: (blk: Block) => void;
     sun_trigger: (blk: Block) => void;
     numeric_state_trigger: (blk: Block) => void;
+    interval_trigger: (blk: Block) => void;
     time_condition: (blk: Block) => void;
     sun_condition: (blk: Block) => void;
     time_condition_hour: (blk: Block) => void;
@@ -242,6 +246,25 @@ export type BlocksGenerator = {
 
         return JSON.stringify(json);
     };
+
+    block.interval_trigger = (blk: Block) => {
+        const number_time = blk.getFieldValue('Time');
+        const number_value = blk.getFieldValue('Time_value');
+
+        const json: BlocklyJSON = {};
+
+        json.platform = 'time_pattern';
+
+        if (number_time === 'hour') {
+            json.hours = `/${number_value}`;
+        } else if (number_time === 'minute') {
+            json.minutes = `/${number_value}`;
+        } else if (number_time === 'second') {
+            json.seconds = `/${number_value}`;
+        }
+        return JSON.stringify(json);
+    };
+
     /**
      * Catégorie Condition
      */

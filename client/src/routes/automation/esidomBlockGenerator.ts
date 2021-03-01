@@ -1,4 +1,3 @@
-import { Block } from 'blockly';
 import type { BlocklyJSON } from './esidomGenerator';
 
 interface BlockGenerator {
@@ -108,6 +107,33 @@ const esidomBlockGenerator: EsidomBlockGenerator = {
                     <field name="Attributes">${attribute ?? 'noAttribute'}</field>
                     <field name="Included">lower</field>
                     <field name="Maximum">${below}</field>
+                    </block>
+                `;
+            }
+
+            return '';
+        },
+        time_pattern(blocklyJSON: BlocklyJSON): string {
+            const { hours, minutes, seconds } = blocklyJSON;
+            if (hours) {
+                return `
+                <block type="interval_trigger">
+                <field name="Time">hour</field>
+                <field name="Time_value">${hours.split('/')[1]}</field>
+                </block>
+                `;
+            } if (minutes) {
+                return `
+                <block type="interval_trigger">
+                <field name="Time">minute</field>
+                <field name="Time_value">${minutes.split('/')[1]}</field>
+                </block>
+                `;
+            } if (seconds) {
+                return `
+                    <block type="interval_trigger">
+                    <field name="Time">second</field>
+                    <field name="Time_value">${seconds.split('/')[1]}</field>
                     </block>
                 `;
             }

@@ -125,6 +125,104 @@ export default class BlocklyService {
 
         // We create the numeric_state_trigger Block
         this.createNumericStateTrigger((entities as Entity<string[]>[]));
+
+        // We create the interval_trigger
+        this.createIntervalTrigger();
+    }
+
+    static createIntervalTrigger(): void {
+        const block = Blockly.Blocks as unknown as BlocksDefinitions;
+        block.interval_trigger = {
+            init() {
+                this.jsonInit?.(
+                    {
+                        type: 'interval_trigger',
+                        message0: tr('blockly.blocks.interval_trigger.message'),
+                        args0: [
+                            {
+                                type: 'field_number',
+                                name: 'Time_value',
+                                value: 1,
+                                min: 1,
+                                max: 23,
+                            },
+                            {
+                                type: 'input_dummy',
+                                name: 'values',
+                            },
+                            {
+                                type: 'field_dropdown',
+                                name: 'Time',
+                                options: [
+                                    [
+                                        tr('blockly.blocks.interval_trigger.hour'),
+                                        'hour',
+                                    ],
+                                    [
+                                        tr('blockly.blocks.interval_trigger.minute'),
+                                        'minute',
+                                    ],
+                                    [
+                                        tr('blockly.blocks.interval_trigger.second'),
+                                        'second',
+                                    ],
+                                ],
+                            },
+                        ],
+                        inputsInline: true,
+                        previousStatement: 'Trigger',
+                        nextStatement: 'Trigger',
+                        colour: COLORS.HUE_GREEN,
+                        tooltip: tr('blockly.blocks.interval_trigger.tooltip'),
+                        helpUrl: '',
+                        mutator: 'interval_trigger_mutator',
+                    },
+                );
+            },
+        };
+
+        const INTERVAL_TRIGGER_MUTATOR_MIXIN = {
+
+            mutationToDom(): HTMLElement {
+                const container = document.createElement('mutation');
+                const entitiesInput: string = (this as EsidomBlockType).getFieldValue('Time');
+                container.setAttribute('interval_trigger_time_input', entitiesInput);
+                return container;
+            },
+
+            domToMutation(xmlElement: HTMLElement): void {
+                const attribute = xmlElement.getAttribute('interval_trigger_time_input');
+                const time = attribute != null ? attribute : '';
+                this.intervalTriggerUpdateShape(time);
+            },
+
+            intervalTriggerUpdateShape(time: string): void {
+                const timeInput = (this as EsidomBlockType).getInput?.('values');
+                if (time === 'hour') {
+                    timeInput.removeField('Time_value');
+                    timeInput.appendField(new Blockly.FieldNumber(1, 1, 23), 'Time_value');
+                } else if (time === 'minute' || time === 'second') {
+                    timeInput.removeField('Time_value');
+                    timeInput.appendField(new Blockly.FieldNumber(1, 1, 59), 'Time_value');
+                }
+            },
+        };
+
+        const INTERVAL_TRIGGER_MUTATOR_EXTENSION = function mutate(this: EsidomBlockType) {
+            this.getField('Time').setValidator((option: string) => {
+                this.intervalTriggerUpdateShape(option);
+            });
+        };
+
+        try {
+            Blockly.Extensions.registerMutator(
+                'interval_trigger_mutator',
+                INTERVAL_TRIGGER_MUTATOR_MIXIN,
+                INTERVAL_TRIGGER_MUTATOR_EXTENSION,
+            );
+        } catch (error) {
+            console.log(error);
+        }
     }
 
     static createNumericEntityWithAttributesMap(
