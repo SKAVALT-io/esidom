@@ -48,9 +48,7 @@
       "create": "Créer une routine"
     },
     "errorWhileLoading": "Erreur lors de la récupération des routines",
-    "": {
-      "errorWhileToggling": "Erreur lors de la mise à jour de l'état de la routine"
-    },
+    "errorWhileToggling": "Erreur lors de la mise à jour de l'état de la routine",
     "errorWhileTriggering": "Erreur lors du déclenchement de la routine",
     "errorWhileGettingAutomation": "Erreur lors de la récupération de la routine",
     "errorWhileCreating": "Erreur lors de la création de la routine",

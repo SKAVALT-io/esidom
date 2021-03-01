@@ -15,7 +15,7 @@ export default class AutomationService {
 
     static async toggleAutomation(id: string, state: { state: 'on' | 'off' }): Promise<void> {
         return http.patch<void, { state: 'on' | 'off' }>(`/automation/${id}`, state)
-            .catch(() => toastService.toast(tr('automations..errorWhileToggling'), 'error'));
+            .catch(() => toastService.toast(tr('automations.errorWhileToggling'), 'error'));
     }
 
     static async triggerAutomation(id: string): Promise<void> {
