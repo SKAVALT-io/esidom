@@ -56,18 +56,15 @@
                 minScale: 0.5,
                 scaleSpeed: 1.2,
             },
-            theme: {},
         };
 
         const esidomTheme: Blockly.Theme = new Blockly.Theme(
             'themeName',
-            {}, //blockStyles
-
-            {}, // categoryStyles
-
+            {}, // as Blockly.Theme.BlockStyle,
+            {}, // as Blockly.Theme.CategoryStyle,
             {
                 toolboxForegroundColour: '#000',
-            } // componentStyles
+            } as Blockly.Theme.ComponentStyle
         );
 
         const workspace: Blockly.WorkspaceSvg = Blockly.inject(
