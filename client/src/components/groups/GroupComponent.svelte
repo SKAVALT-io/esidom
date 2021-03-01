@@ -9,6 +9,7 @@
     import EntityService from '../../services/entityService';
     import Tooltip from '../UI/utils/Tooltip.svelte';
     import { tr } from '../../utils/i18nHelper';
+    import toastService from '../../utils/toast';
 
     export let group: Group;
     let checked = group.state === 'on';
@@ -30,7 +31,8 @@
         }
     }
     function groupUpdatedHandler(data: Group) {
-        if (data.groupId && data.groupId === group.groupId) {
+        if (data.groupId === group.groupId) {
+            toastService.toast(tr('groups.groupUpdated'));
             group = data;
             checked = data?.state === 'on';
             group = GroupService.updateGroupNameIfIsImplicit(group);
@@ -50,6 +52,10 @@
     onDestroy(() => {
         socketManager.removeListener('groupUpdated', groupUpdatedHandler);
     });
+
+    function deleteGroup() {
+        GroupService.deleteGroup(group);
+    }
 </script>
 
 <div
@@ -113,9 +119,7 @@
             />
             <RoundedButton
                 size={8}
-                on:click={() => {
-                    GroupService.deleteGroup(group);
-                }}
+                on:click={deleteGroup}
                 iconPath="icons/button/trash.svg"
             />
         </div>

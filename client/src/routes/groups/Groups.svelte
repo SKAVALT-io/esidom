@@ -12,16 +12,20 @@
     import { onMount, onDestroy } from 'svelte';
     import { socketManager } from '../../managers/socketManager';
     import Tooltip from '../../components/UI/utils/Tooltip.svelte';
+    import EntityService from '../../services/entityService';
+    import type { Entity } from '../../../types/entityType';
+    import toastService from '../../utils/toast';
 
     let isOpen = false;
     let currentGroup: Group;
-    let isLoad = true;
+    let isLoaded = false;
     let groups: Group[];
     let searchPattern: string = '';
     let showCreateTip = false;
     let editMode = false;
     let flipSwitch = false;
     let selectedSortOption = 0;
+    let entities: Entity<unknown>[];
     const comparators = [
         [
             (a: Group, b: Group) =>
@@ -33,20 +37,21 @@
     $: comparator = comparators[selectedSortOption][flipSwitch ? 0 : 1];
 
     function groupDeletedHandler(data: any) {
-        console.log(data);
+        toastService.toast(tr('groups.groupDeleted'));
         const { id } = data;
         groups = groups.filter((g) => id !== `group.${g.groupId}`);
     }
 
     function groupCreatedHandler(data: Group) {
-        console.log(data);
-        const newGroup = data;
-        groups = [...groups, newGroup];
+        toastService.toast(tr('groups.groupCreated'));
+        groups = [...groups, data];
     }
 
     onMount(async () => {
-        groups = await GroupService.getGroup();
-        isLoad = false;
+        groups = await GroupService.getGroups();
+        entities = await EntityService.getLightAndSwitchEntity();
+
+        isLoaded = true;
         socketManager.registerGlobalListener(
             'groupCreated',
             groupCreatedHandler
@@ -95,7 +100,7 @@
         />
     </div>
 </div>
-{#if isLoad}
+{#if !isLoaded}
     <div
         class="fixed top-0 left-0 w-full h-screen flex justify-center items-center"
     >
@@ -128,7 +133,12 @@
 
 <Modal bind:isOpen>
     <div slot="content">
-        <GroupDetail bind:currentGroup {closeFunction} bind:editMode />
+        <GroupDetail
+            bind:currentGroup
+            bind:editMode
+            bind:entities
+            on:close={closeFunction}
+        />
     </div>
 </Modal>
 <div

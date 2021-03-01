@@ -285,7 +285,10 @@
     "errorWhileLoading": "Erreur lors de la récupération des groupes",
     "errorWhileCreating": "Erreur lors de la création du groupe",
     "errorWhileDeleting": "Erreur lors de la suppression du groupe",
-    "errorWhileUpdating": "Erreur lors de la mise à jour du groupe"
+    "errorWhileUpdating": "Erreur lors de la mise à jour du groupe",
+    "groupCreated": "Groupe sauvegardé avec succès",
+    "groupDeleted": "Groupe supprimé avec succès",
+    "groupUpdated": "Groupe mis à jour avec succès"
   },
   "entities": {
     "menu": {
@@ -322,7 +325,14 @@
     "errorWhileLoading": "Erreur lors de la récupération des pièces",
     "errorWhileCreating": "Erreur lors de la création de la pièce",
     "errorWhileDeleting": "Erreur lors de la suppression de la pièce",
-    "errorWhileUpdating": "Erreur lors de la mise à jour de la pièce"
+    "errorWhileUpdating": "Erreur lors de la mise à jour de la pièce",
+    "roomUpdated": "Pièce mise à jour avec succès",
+    "buttons": {
+        "create": "Créer une pièce",
+        "edit": "Editer",
+        "delete": "Supprimer",
+        "view": "Afficher"
+      }
   },
   "sortBy": {
     "title": "Trier par",

@@ -13,15 +13,19 @@
     import RoomService from '../../services/roomService';
     import RoomDetail from '../../components/rooms/RoomDetail.svelte';
     import toastService from '../../utils/toast';
+    import type { Device } from '../../../types/deviceType';
+    import DeviceService from '../../services/deviceService';
 
     let isOpen = false;
     let currentRoom: Room;
     let isLoad = true;
     let rooms: Room[];
+    let devices: Device[];
     let searchPattern: string = '';
 
     let flipSwitch = false;
     let selectedSortOption = 0;
+    let editMode = false;
     const comparators = [
         [
             (a: Room, b: Room) =>
@@ -46,6 +50,7 @@
 
     onMount(async () => {
         rooms = await RoomService.getRooms();
+        devices = await DeviceService.getDevices();
         isLoad = false;
 
         socketManager.registerGlobalListener('roomCreated', roomCreatedHandler);
@@ -113,19 +118,24 @@
             {/each}
         </div>
     {/if}
-
-    <Modal bind:isOpen>
-        <div slot="content">
-            <RoomDetail bind:currentRoom {closeFunction} />
-        </div>
-    </Modal>
-    <div class="fixed bottom-0 right-0 h-16 w-16">
-        <RoundedButton
-            on:click={() => {
-                isOpen = true;
-                currentRoom = { roomId: '', devices: [], automations: [], name: '' };
-            }}
-            iconPath="icons/button/plus.svg"
+</div>
+<Modal bind:isOpen>
+    <div slot="content">
+        <RoomDetail
+            bind:currentRoom
+            bind:devices
+            bind:editMode
+            on:close={closeFunction}
         />
     </div>
+</Modal>
+<div class="fixed bottom-0 right-0 h-16 w-16">
+    <RoundedButton
+        on:click={() => {
+            isOpen = true;
+            currentRoom = { roomId: '', devices: [], automations: [], name: '' };
+            editMode = true;
+        }}
+        iconPath="icons/button/plus.svg"
+    />
 </div>

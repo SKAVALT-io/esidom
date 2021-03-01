@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { onMount } from 'svelte';
+    import { createEventDispatcher } from 'svelte';
     import type { Group } from '../../../types/groupType';
     import SaveButton from '../UI/buttons/SaveButton.svelte';
 
@@ -15,15 +15,30 @@
 
     export let currentGroup: Group;
     export let editMode: boolean = false;
-    export let closeFunction: () => void;
-    let entities: Entity<unknown>[];
-    let groupLoaded = false;
+
+    export let entities: Entity<unknown>[];
     $: formInvalid =
         currentGroup.name === '' || currentGroup.entities.length === 0;
-    onMount(async () => {
-        entities = await EntityService.getLightAndSwitchEntity();
-        groupLoaded = true;
-    });
+
+    const dispatch = createEventDispatcher();
+    function save() {
+        currentGroup.groupId !== ''
+            ? GroupService.updateGroup(currentGroup)
+            : GroupService.createGroup(currentGroup);
+        dispatch('close');
+    }
+
+    function handleCheckbox(val: any, entity: Entity<unknown>) {
+        if (val.target.checked) {
+            currentGroup.entities.push(entity);
+        } else {
+            currentGroup.entities = currentGroup.entities.filter(
+                (e) => e.id !== entity.id
+            );
+        }
+        formInvalid =
+            currentGroup.name === '' || currentGroup.entities.length === 0;
+    }
 </script>
 
 <div>
@@ -50,48 +65,27 @@
                 >{tr('groups.groupEntities')}</label>
 
                 <div class="mt-2">
-                    {#if !groupLoaded}
-                        <div class="loader">
-                            <LoadingAnimation />
+                    {#each entities as entity}
+                        <div>
+                            <label class="inline-flex items-center">
+                                <input
+                                    type="checkbox"
+                                    class="form-checkbox"
+                                    checked={currentGroup.entities.find((e) => {
+                                        return e.id === entity.id;
+                                    })}
+                                    on:click={(val) => handleCheckbox(val, entity)}
+                                />
+                                <span
+                                    class="ml-2"
+                                >{entity.name ? entity.name : entity.id}</span>
+                            </label>
                         </div>
-                    {:else}
-                        {#each entities as entity}
-                            <div>
-                                <label class="inline-flex items-center">
-                                    <input
-                                        type="checkbox"
-                                        class="form-checkbox"
-                                        checked={currentGroup.entities.find(
-                                            (e) => {
-                                                return e.id === entity.id;
-                                            }
-                                        )}
-                                        on:click={(val) => {
-                                            if (val.target.checked) {
-                                                currentGroup.entities.push(entity);
-                                            } else {
-                                                currentGroup.entities = currentGroup.entities.filter((e) => e.id !== entity.id);
-                                            }
-                                            formInvalid = currentGroup.name === '' || currentGroup.entities.length === 0;
-                                        }}
-                                    />
-                                    <span
-                                        class="ml-2"
-                                    >{entity.name ? entity.name : entity.id}</span>
-                                </label>
-                            </div>
-                        {/each}
-                    {/if}
+                    {/each}
                 </div>
             </div>
             <div class="flex flex-col mb-4 pt-6">
-                <SaveButton
-                    bind:isDisabled={formInvalid}
-                    on:click={() => {
-                        currentGroup.groupId !== '' ? GroupService.updateGroup(currentGroup) : GroupService.createGroup(currentGroup);
-                        closeFunction?.();
-                    }}
-                />
+                <SaveButton bind:isDisabled={formInvalid} on:click={save} />
             </div>
         </form>
     {:else}
@@ -114,7 +108,7 @@
             <div class="flex flex-col mb-4 pt-6">
                 <ReturnButton
                     on:click={() => {
-                        closeFunction?.();
+                        dispatch('close');
                     }}
                 />
             </div>
