@@ -117,7 +117,7 @@
         "tooltip": "Permet de définir une routine. La partie \"déclencheur\" défini les évènements auxquels la routine réagira. Cette routine ne sera exécutée que si elle remplie les \"conditions\" définies (non obligatoire). Enfin, les \"actions\" seront exéctutées si les \"conditions\" sont vérifiées lors du \"déclenchement\". La logique du \"OU\" s'applique aux déclecheurs. La logique du \"ET\" s'applique aux conditions et aux actions."
       },
       "binary_trigger": {
-          "message": "Quand le capteur binaire %1 passe à %2",
+          "message": "Quand le capteur binaire %1 passe à %2 %3 depuis %4 h %5 m %6 s",
           "tooltip": "Placer un capteur qui n'a que deux états (interrupteur, déctecteur d'ouverture) et choisissez l'état pour lequel le routine doit se déclencher"
       },
       "time_trigger": {
@@ -181,7 +181,7 @@
           "tooltip": "Applique la condition chaque jour coché, quelle que soit l'heure"
       },
       "binary_condition": {
-          "message": "Si le capteur binaire %1 est à l'état %2",
+          "message": "Si le capteur binaire %1 est à l'état %2 %3 depuis %4 h %5 m %6 s",
           "tooltip": "Placer un capteur qui n'a que deux états (interrupteur, déctecteur d'ouverture) et choisissez l'état pour lequel l'équipement doit être pour continuer la routine"
       },
       "numeric_state_condition": {

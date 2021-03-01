@@ -29,26 +29,34 @@ const esidomBlockGenerator: EsidomBlockGenerator = {
             const minutes = time?.[1];
             const second = time?.[2];
             const xml = `
-            <block type="time_trigger">
-            <field name="Hour">${hours}</field>
-            <field name="Minute">${minutes}</field>
-            <field name="Second">${second}</field>
-            </block>
+                <block type="time_trigger">
+                <field name="Hour">${hours}</field>
+                <field name="Minute">${minutes}</field>
+                <field name="Second">${second}</field>
+                </block>
             `;
             return xml;
         },
         state(blocklyJSON: BlocklyJSON): string {
             const service = blocklyJSON.entity_id;
             const state = blocklyJSON.to;
+            const time = blocklyJSON.for?.split(':');
+            const hours = time?.[0];
+            const minutes = time?.[1];
+            const seconds = time?.[2];
+
             const xml = `
-            <block type="binary_trigger">
-                <value name="Service">    
-                <block type="binary_sensor">
-                    <field name="Object">${service}</field>
+                <block type="binary_trigger">
+                    <value name="Service">    
+                    <block type="binary_sensor">
+                        <field name="Object">${service}</field>
+                    </block>
+                    </value>
+                <field name="State">${state}</field>
+                <field name="Hour">${hours}</field>
+                <field name="Minute">${minutes}</field>
+                <field name="Second">${seconds}</field>
                 </block>
-                </value>
-            <field name="State">${state}</field>
-            </block>
             `;
             return xml;
         },
@@ -207,6 +215,10 @@ const esidomBlockGenerator: EsidomBlockGenerator = {
         state(blocklyJSON: BlocklyJSON): string {
             const service = blocklyJSON.entity_id;
             const { state } = blocklyJSON;
+            const time = blocklyJSON.for?.split(':');
+            const hours = time?.[0];
+            const minutes = time?.[1];
+            const seconds = time?.[2];
 
             return `
                 <block type="binary_condition">
@@ -216,6 +228,9 @@ const esidomBlockGenerator: EsidomBlockGenerator = {
                     </block>
                     </value>
                 <field name="State">${state}</field>
+                <field name="Hour">${hours}</field>
+                <field name="Minute">${minutes}</field>
+                <field name="Second">${seconds}</field>
                 </block>
             `;
         },

@@ -67,6 +67,7 @@ export interface BlocklyJSON {
     hours?: string;
     minutes?: string;
     seconds?: string;
+    for?: string;
     conditions?: BlocklyJSON[];
 }
 
@@ -161,6 +162,10 @@ export type BlocksGenerator = {
         const value_service = esidomGenerator.valueToCode(blk, 'Service', PRECEDENCE);
         const dropdown_state = blk.getFieldValue('State');
 
+        const number_hour = blk.getFieldValue('Hour');
+        const number_minute = blk.getFieldValue('Minute');
+        const number_second = blk.getFieldValue('Second');
+
         const json: BlocklyJSON = {};
 
         json.platform = 'state';
@@ -173,6 +178,8 @@ export type BlocksGenerator = {
             json.from = 'off';
             json.to = 'on';
         }
+
+        json.for = `${number_hour}:${number_minute}:${number_second}`;
 
         return JSON.stringify(json);
     };
@@ -319,12 +326,17 @@ export type BlocksGenerator = {
     block.binary_condition = (blk: Block) => {
         const value_service = esidomGenerator.valueToCode(blk, 'Service', PRECEDENCE);
         const dropdown_state = blk.getFieldValue('State');
+        const number_hour = blk.getFieldValue('Hour');
+        const number_minute = blk.getFieldValue('Minute');
+        const number_second = blk.getFieldValue('Second');
 
         const json: BlocklyJSON = {};
 
         json.condition = 'state';
         json.entity_id = value_service;
         json.state = dropdown_state;
+
+        json.for = `${number_hour}:${number_minute}:${number_second}`;
 
         return JSON.stringify(json);
     };
