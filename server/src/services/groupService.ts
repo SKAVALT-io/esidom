@@ -6,7 +6,7 @@ import {
     Room, Group, DBGroup, InsideGroup, Entity, EventObserver,
     Device, HaDumbType, HaGroupSet, HaStateResponse,
 } from '../types';
-import { logger, normalizeEntityId } from '../utils';
+import { logger } from '../utils';
 
 const GROUP_IMPLICIT_IDENTIFIER = 'imp';
 const ALL_PREFIX = 'all';
@@ -126,8 +126,8 @@ class GroupService implements EventObserver {
      * @returns The newly created group
      */
     async createGroup(name:string, entities: string[]): Promise<Group> {
-        // Normalize the group name
-        const groupEntityId = normalizeEntityId(name);
+        // create GroupId
+        const groupEntityId = Math.random().toString(26).slice(2);
 
         // Test if group exist, and if not, throw an error
         const g = await databaseForwarder.selectGroupsByEntityId(groupEntityId);
