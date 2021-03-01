@@ -45,17 +45,17 @@
 
 <EntityPreview isError={false} {entity}>
     <!-- Image -->
-    <div slot="img" class="grid grid-rows-5">
+    <div slot="img" class="w-full h-full flex items-center justify-center">
         <img
             src={srcImg}
             alt=""
             on:click={switchEntity}
-            class="cursor-pointer h-inherit max-w-full max-h-full object-contain"
+            class="cursor-pointer h-3/4"
             class:row-span-3={isOn}
             class:row-span-5={!isOn}
         />
         {#if isOn}
-            <div class="flex items-center justify-center row-span-2">
+            <div class="h-1/4">
                 <img
                     src="icons/button/trigger.svg"
                     alt="Is on"
