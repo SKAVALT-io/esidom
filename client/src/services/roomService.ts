@@ -32,7 +32,7 @@ export default class RoomService {
     static async updateRoom(room: Room): Promise<void> {
         return http.put<void, Room>(`/room/${room.roomId}`, room)
             .catch(() => {
-                toastService.toast(tr('rooms.errorWhileDeleting'), 'error');
+                toastService.toast(tr('rooms.errorWhileUpdating'), 'error');
             });
     }
 }

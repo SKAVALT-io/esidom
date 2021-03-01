@@ -319,7 +319,8 @@
     "roomDeleted": "Pièce supprimée avec succès",
     "errorWhileLoading": "Erreur lors de la récupération des pièces",
     "errorWhileCreating": "Erreur lors de la création de la pièce",
-    "errorWhileDeleting": "Erreur lors de la suppression de la pièce"
+    "errorWhileDeleting": "Erreur lors de la suppression de la pièce",
+    "errorWhileUpdating": "Erreur lors de la mise à jour de la pièce"
   },
   "sortBy": {
     "title": "Trier par",
