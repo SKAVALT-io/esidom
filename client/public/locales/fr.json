@@ -25,6 +25,10 @@
         "<p>Pour les <i>lampes</i>, il vous est même possible de contrôler directement sa luminosité ou sa couleur !</p>",
         "<h3 class=\"font-bold\">Statut de l'équipement</h3>",
         "<p> Si votre équipement est en <span class=\"text-green-500\">vert</span>, tout va bien ! En revanche, s'il est en <span class=\"text-red-500\">rouge</span>, la connexion n'a pas pu être établie. Essayez de vérifier directement votre équipement, en vous assurant qu'il soit opérationnel.</p>"
+      ],
+      "automations": [
+          "Test 1",
+          "Test 2"
       ]
   },
   "devices": {

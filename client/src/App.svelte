@@ -43,6 +43,13 @@
     let openDisconnectModal = false;
     let openHelpModal = false;
 
+    function hashToPage() {
+        const sub = window.location.hash.substring(2);
+        return sub !== '' ? sub : 'entities';
+    }
+
+    let currentPageSelected = hashToPage();
+
     // Configure and init i18n
     addMessages('fr', fr);
     addMessages('en', en);
@@ -65,7 +72,7 @@
     <DisconnectModal bind:open={openDisconnectModal} />
     <HelpModal
         bind:open={openHelpModal}
-        helpText={trArray(`help.${window.location.hash.substring(2).length !== 0 ? '' : 'entities'}`)}
+        helpText={trArray(`help.${currentPageSelected}`)}
     />
 
     {#await isLocked() then locked}
@@ -79,7 +86,10 @@
                             openSidebar = !openSidebar;
                         }}
                         on:disconnect={() => (openDisconnectModal = true)}
-                        on:help={() => (openHelpModal = true)}
+                        on:help={() => {
+                            currentPageSelected = hashToPage();
+                            openHelpModal = true;
+                        }}
                     />
                 </div>
             </div>
