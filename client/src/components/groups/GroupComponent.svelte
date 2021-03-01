@@ -12,7 +12,8 @@
     import toastService from '../../utils/toast';
 
     export let group: Group;
-    let checked = group.state === 'on';
+    let checked = false;
+    $: checked = group.state === 'on';
     let showDeleteTip = false;
     let showEditTip = false;
     let showViewTip = false;
