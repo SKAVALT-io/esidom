@@ -38,10 +38,10 @@
     <!-- flex items-center px-3 py-8 -->
     <div
         id="data"
-        class="col-span-3 rounded-xl rounded-l-none grid grid-rows-5 items-center text-center h-inherit"
+        class="col-span-3 rounded-xl rounded-l-none grid grid-rows-6 items-center text-center h-inherit"
     >
         <div
-            class="row-span-3 relative"
+            class="row-span-1 row-start-2 relative"
             on:touchstart={() => (show = true)}
             on:touchend={() => (show = false)}
             on:mouseleave={() => (show = false)}
@@ -54,7 +54,7 @@
                 <Tooltip text={entity.name} position="top" {show} />
             {/if}
         </div>
-        <div class="row-span-2 text-white">
+        <div class="row-span-4 text-white">
             {#if !isError}
                 <slot name="sensor">PLACEHOLDER</slot>
             {:else}{tr('devices.dataUnavailable')}{/if}
