@@ -15,11 +15,31 @@
     import RoomService from '../../services/roomService';
     import toastService from '../../utils/toast';
     import InputBar from '../UI/bar/InputBar.svelte';
+    import type { Device } from '../../../types/deviceType';
+    import ReturnButton from '../UI/buttons/ReturnButton.svelte';
 
     export let currentRoom: Room;
-    export let closeFunction: () => void;
+    export let devices: Device[];
+    export let editMode: boolean;
     $: formInvalid = currentRoom.name === '';
     const dispatch = createEventDispatcher();
+
+    function save() {
+        currentRoom.roomId !== ''
+            ? RoomService.updateRoom(currentRoom)
+            : RoomService.createRoom(currentRoom);
+        dispatch('close');
+    }
+
+    function handleCheckbox(val: any, device: Device) {
+        if (val.target.checked) {
+            currentRoom.devices.push(device);
+        } else {
+            currentRoom.devices = currentRoom.devices.filter(
+                (e) => e.id !== device.id
+            );
+        }
+    }
 </script>
 
 <div>
@@ -28,28 +48,24 @@
     >
         {currentRoom.roomId !== '' ? currentRoom.name : tr('rooms.createRoom')}
     </h1>
-    <form class="mb-4" on:submit={() => false}>
-        <div class="flex flex-col mb-4">
-            <InputBar
-                label={tr('rooms.roomName')}
-                bind:input={currentRoom.name}
-                placeholder={tr('rooms.roomName')}
-                required={true}
-                width="56"
-            />
-        </div>
-        <div class="block">
-            <label
-                class="mb-2 font-bold text-lg text-grey-darkest"
-                for="Name"
-            >{tr('rooms.roomDevices')}</label>
+    {#if editMode}
+        <form class="mb-4" on:submit={() => false}>
+            <div class="flex flex-col mb-4">
+                <InputBar
+                    label={tr('rooms.roomName')}
+                    bind:input={currentRoom.name}
+                    placeholder={tr('rooms.roomName')}
+                    required={true}
+                    width="56"
+                />
+            </div>
+            <div class="block">
+                <label
+                    class="mb-2 font-bold text-lg text-grey-darkest"
+                    for="Name"
+                >{tr('rooms.roomDevices')}</label>
 
-            <div class="mt-2 h-60 overflow-y-auto">
-                {#await DeviceService.getDevices()}
-                    <div class="loader">
-                        <LoadingAnimation />
-                    </div>
-                {:then devices}
+                <div class="mt-2">
                     {#each devices as device}
                         <div>
                             <label class="inline-flex items-center">
@@ -59,14 +75,7 @@
                                     checked={currentRoom.devices.find((e) => {
                                         return e.id === device.id;
                                     })}
-                                    on:click={(val) => {
-                                        if (val.target.checked) {
-                                            currentRoom.devices.push(device);
-                                        } else {
-                                            currentRoom.devices = currentRoom.devices.filter((e) => e.id !== device.id);
-                                        }
-                                        // formInvalid = currentRoom.name === '' || currentRoom.devices.length === 0;
-                                    }}
+                                    on:click={(val) => handleCheckbox(val, device)}
                                 />
                                 <span
                                     class="ml-2"
@@ -74,20 +83,35 @@
                             </label>
                         </div>
                     {/each}
-                {/await}
+                </div>
+            </div>
+            <div class="flex flex-col mb-4 bg-pa pt-6">
+                <SaveButton bind:isDisabled={formInvalid} on:click={save} />
+            </div>
+        </form>
+    {:else}
+        <div class="mb-4">
+            <label
+                class="mb-2 font-bold text-lg text-grey-darkest"
+                for="Name"
+            >{tr('groups.groupEntities')}</label>
+            <ul class="pt-4">
+                {#each currentRoom.devices as device}
+                    <li class="border list-none rounded-sm px-3 py-3">
+                        {device.name}
+                    </li>
+                {/each}
+            </ul>
+
+            <div class="flex flex-col mb-4 pt-6">
+                <ReturnButton
+                    on:click={() => {
+                        dispatch('close');
+                    }}
+                />
             </div>
         </div>
-        <div class="flex flex-col mb-4 bg-pa pt-6">
-            <SaveButton
-                bind:isDisabled={formInvalid}
-                on:click={async () => {
-                    await (currentRoom.roomId !== '' ? RoomService.updateRoom(currentRoom) : RoomService.createRoom(currentRoom));
-                    toastService.toast('room updated !');
-                    closeFunction?.();
-                }}
-            />
-        </div>
-    </form>
+    {/if}
 </div>
 
 <style>

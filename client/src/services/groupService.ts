@@ -5,9 +5,10 @@ import toastService from '../utils/toast';
 
 export default class GroupService {
     /**
-     * Gets a group.
+     * Gets groups.
      */
-    static async getGroup(): Promise<Group[]> {
+    static async getGroups(): Promise<Group[]> {
+
         return http.get<Group[]>('/group')
             .then((groups) => groups.map((g) => this.updateGroupNameIfIsImplicit(g)))
             .catch((err) => {

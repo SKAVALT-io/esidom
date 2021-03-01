@@ -639,10 +639,7 @@ export default class BlocklyService {
                 serviceInput.removeField('Services', true);
                 serviceInput.appendField(new Blockly.FieldDropdown(newDropdown), 'Services');
 
-                const entityField = (this as EsidomBlockType).getFieldValue('Entities');
-                const currentType = entityField.split('.')[0];
-
-                if (type === 'light' && currentType !== 'light') {
+                if (type === 'light') {
                     (this as EsidomBlockType).removeInput('Color', true);
                     (this as EsidomBlockType).appendValueInput('Color')
                         .setCheck('Color')
@@ -813,7 +810,7 @@ export default class BlocklyService {
      * Gets the xml representation of an action brightness block.
      * @param brightness the brightness
      */
-    static getActionBrightnessXml(brightness: number[]): string {
+    static getActionBrightnessXml(brightness: number): string {
         return brightness
             ? `
                 '<value name="Brightness">
@@ -829,7 +826,7 @@ export default class BlocklyService {
      * Gets the xml representation of an action color_temp block.
      * @param colorTemp the color temperature
      */
-    static getActionTemperatureXml(colorTemp: number[]): string {
+    static getActionTemperatureXml(colorTemp: number): string {
         return colorTemp
             ? `
                 '<value name="Temperature">
