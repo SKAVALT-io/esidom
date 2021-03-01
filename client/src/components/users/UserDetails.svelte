@@ -18,7 +18,7 @@
 
     function checkBeforeSubmit() {
         if (user.username === '') {
-            toastService.toast(tr('user.usernameCannotBeEmpty'));
+            toastService.toast(tr('user.usernameCannotBeEmpty'), 'error');
             return;
         }
         handleSubmit(user);
