@@ -51,7 +51,7 @@
 
 <div
     id="group"
-    class="rounded-lg items-center text-center grid px-1 py-4"
+    class="rounded-lg border border-gray-400 hover:border-white items-center text-center grid px-1 py-4"
     class:grid-cols-10={!group.implicit}
     class:grid-cols-8={group.implicit}
 >
