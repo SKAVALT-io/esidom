@@ -21,6 +21,7 @@
     let observer: MutationObserver;
     onDestroy(() => {
         observer.disconnect();
+        // Clear blockly workspace.
         blocklyService.clear();
     });
 
@@ -123,7 +124,7 @@
     async function handleSubmit() {
         const creating = automationId === '';
 
-        const automation = blocklyService.convertToBlock(
+        const automation = blocklyService.convertToAutomation(
             automationName,
             automationDesc,
             automationId === '' ? undefined : automationId
