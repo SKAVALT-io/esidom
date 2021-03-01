@@ -1,25 +1,43 @@
 import type { Group } from '../../types/groupType';
-import config from '../config/config';
-import HttpHelper from '../utils/HttpHelper';
+import http from '../utils/HttpHelper';
 import { tr } from '../utils/i18nHelper';
+import toastService from '../utils/toast';
 
 export default class GroupService {
     static async getGroup(): Promise<Group[]> {
-        const groups = await HttpHelper.get<Group[]>('/group');
-
-        return groups.map((g) => this.updateGroupNameIfIsImplicit(g));
+        return http.get<Group[]>('/group')
+            .then((groups) => groups.map((g) => this.updateGroupNameIfIsImplicit(g)))
+            .catch(() => {
+                toastService.toast(tr('groups.errorWhileLoading'), 'error');
+                return [];
+            });
     }
 
     static async createGroup(group: Group): Promise<Group> {
-        return HttpHelper.post('/group', group);
+        return http.post<Group, Group>('/group', group)
+            .then((g) => g)
+            .catch(() => {
+                toastService.toast(tr('groups.errorWhileCreating'), 'error');
+                return group;
+            });
     }
 
     static async deleteGroup(group: Group): Promise<Group> {
-        return HttpHelper.delete(`/group/${group.groupId}`);
+        return http.delete<Group, Group>(`/group/${group.groupId}`)
+            .then((g) => g)
+            .catch(() => {
+                toastService.toast(tr('groups.errorWhileDeleting'), 'error');
+                return group;
+            });
     }
 
     static async updateGroup(group: Group): Promise<Group> {
-        return HttpHelper.put(`/group/${group.groupId}`, group);
+        return http.put<Group, Group>(`/group/${group.groupId}`, group)
+            .then((g) => g)
+            .catch(() => {
+                toastService.toast(tr('groups.errorWhileUpdating'), 'error');
+                return group;
+            });
     }
 
     static updateGroupNameIfIsImplicit(group: Group): Group {

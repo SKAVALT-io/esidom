@@ -27,7 +27,8 @@
     "state": "Etat",
     "loading": "Chargement des équipements...",
     "dataUnavailable": "Informations indisponibles",
-    "colorTemperature": "Température de couleur"
+    "colorTemperature": "Température de couleur",
+    "errorWhileLoading": "Erreur lors de la récupération des objets"
   },
   "automations": {
     "myAutomations": "Mes Routines",
@@ -45,7 +46,16 @@
       "delete": "Supprimer",
       "trigger": "Déclencher",
       "create": "Créer une routine"
-    }
+    },
+    "errorWhileLoading": "Erreur lors de la récupération des routines",
+    "": {
+      "errorWhileToggling": "Erreur lors de la mise à jour de l'état de la routine"
+    },
+    "errorWhileTriggering": "Erreur lors du déclenchement de la routine",
+    "errorWhileGettingAutomation": "Erreur lors de la récupération de la routine",
+    "errorWhileCreating": "Erreur lors de la création de la routine",
+    "errorWhileDeleting": "Erreur lors de la suppression de la routine",
+    "errorWhileUpdating": "Erreur lors de la mise à jour de la routine"
   },
   "pairing": {
     "instructions": {
@@ -77,7 +87,8 @@
     },
     "finish": {
       "congratulation": "Félicitations, les équipements suivants ont bien été rajoutés au sein de votre réseau."
-    }
+    },
+    "errorWhileLaunchingPairing": "Erreur lors du déclenchement de la procédure d'appairage"
   },
   "blockly": {
     "loading": "Chargement de Blockly...",
@@ -270,7 +281,11 @@
       "create": "Créer un groupe",
       "edit": "Editer",
       "delete": "Supprimer"
-    }
+    },
+    "errorWhileLoading": "Erreur lors de la récupération des groupes",
+    "errorWhileCreating": "Erreur lors de la création du groupe",
+    "errorWhileDeleting": "Erreur lors de la suppression du groupe",
+    "errorWhileUpdating": "Erreur lors de la mise à jour du groupe"
   },
   "entities": {
     "menu": {
@@ -290,7 +305,11 @@
       "off": "Off"
     },
     "close": "Fermer",
-    "unlock": "Déverouiller"
+    "unlock": "Déverouiller",
+    "errorWhileLoading": "Erreur lors du chargement des équipements",
+    "errorWhileLoadingServices": "Erreur lors du chargement des services",
+    "errorWhileUpdating": "Erreur lors de la mise à jour de l'équipement",
+    "errorWhileToggle": "Erreur lors du changement d'état"
   },
   "rooms": {
     "myRooms": "Mes pièces",
@@ -299,7 +318,10 @@
     "roomName": "Nom de la pièce",
     "roomDevices": "Equipement dans la pièce",
     "roomCreated": "Pièce sauvegardée avec succès",
-    "roomDeleted": "Pièce supprimée avec succès"
+    "roomDeleted": "Pièce supprimée avec succès",
+    "errorWhileLoading": "Erreur lors de la récupération des pièces",
+    "errorWhileCreating": "Erreur lors de la création de la pièce",
+    "errorWhileDeleting": "Erreur lors de la suppression de la pièce"
   },
   "sortBy": {
     "title": "Trier par",
@@ -319,6 +341,12 @@
     "changeUser": "Changer d'utilisateur",
     "userCreated": "L'utilisateur a bien été créé",
     "errorWhileCreating": "Une erreur est survenue lors de la création",
-    "usernameCannotBeEmpty": "Le nom d'utilisateur ne peut pas être vide"
+    "usernameCannotBeEmpty": "Le nom d'utilisateur ne peut pas être vide",
+    "errorWhileLocking": "Erreur lors du verrouillage de l'application",
+    "errorWhileUnlocking": "Erreur lors du déverrouillage de l'application",
+    "errorWhileLoading": "Erreur lors de la récupération des utilisateurs",
+    "errorWhileLoadingUser": "Erreur lors de la récupération de l'utilisateur",
+    "errorWhileUpdating": "Erreur lors de la mise à jour de l'utilisateur",
+    "errorWhileDeleting": "Erreur lors de la suppression de l'utilisateur"
   }
 }

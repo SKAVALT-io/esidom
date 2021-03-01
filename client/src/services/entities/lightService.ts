@@ -1,9 +1,13 @@
 import http from '../../utils/HttpHelper';
+import { tr } from '../../utils/i18nHelper';
+import toastService from '../../utils/toast';
 
 export async function updateLight(id: string, serviceData: {[id: string]: unknown}): Promise<void> {
-    return http.put(`/entity/${id}`, {
+    return http.put<void, {service: string, serviceData: {[id: string]: unknown}}>(`/entity/${id}`, {
         service: 'light.turn_on',
         serviceData,
+    }).catch(() => {
+        toastService.toast(tr('entities.errorWhileToggle'), 'error');
     });
 }
 
@@ -22,5 +26,7 @@ export async function changeLampRGB(id: string, r: number, g: number, b: number)
 export async function switchLamp(id: string, switchOn: boolean): Promise<unknown> {
     return http.put(`/entity/${id}`, {
         service: (switchOn ? 'light.turn_on' : 'light.turn_off'),
+    }).catch(() => {
+        toastService.toast(tr('entities.errorWhileToggle'), 'error');
     });
 }
