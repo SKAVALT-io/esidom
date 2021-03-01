@@ -21,6 +21,7 @@
     let observer: MutationObserver;
     onDestroy(() => {
         observer.disconnect();
+        blocklyService.clear();
     });
 
     onMount(async () => {

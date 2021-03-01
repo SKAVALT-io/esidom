@@ -22,26 +22,46 @@ export default class UserService {
     static currentUser: User | undefined;
 
     static async lockFront(password: string): Promise<string> {
-        return http.post('/user/lock', { password });
+        return http.post<string, {password:string}>('/user/lock', { password })
+            .catch((err) => {
+                toastService.toast(tr('user.errorWhileLocking'), 'error');
+                throw err;
+            });
     }
 
     static async isLocked(): Promise<boolean> {
-        return http.get('/user/isLocked');
+        return http.get<boolean>('/user/isLocked')
+            .catch((err) => {
+                toastService.toast(tr('user.errorWhileLocking'), 'error');
+                throw err;
+            });
     }
 
     static async unlockFront(password: string): Promise<boolean> {
-        return http.post('/user/unlock', { password });
+        return http.post<boolean, {password:string}>('/user/unlock', { password })
+            .catch((err) => {
+                toastService.toast(tr('user.errorWhileUnlocking'), 'error');
+                throw err;
+            });
     }
 
     static async getUsers(): Promise<User[]> {
         return http.get<User[]>('/user')
             .then((users: User[]) => users
                 .sort((a: User, b: User) => (
-                    a.username.toLowerCase() > b.username.toLowerCase() ? 1 : -1)));
+                    a.username.toLowerCase() > b.username.toLowerCase() ? 1 : -1)))
+            .catch((err) => {
+                toastService.toast(tr('user.errorWhileLoading'), 'error');
+                throw err;
+            });
     }
 
     static async getUserById(id: string): Promise<User> {
-        return http.get(`/user/${id}`);
+        return http.get<User>(`/user/${id}`)
+            .catch((err) => {
+                toastService.toast(tr('user.errorWhileLoadingUser'), 'error');
+                throw err;
+            });
     }
 
     static async createUser(username: string, admin: boolean, entities?: string[]): Promise<User> {
@@ -49,7 +69,11 @@ export default class UserService {
         if (entities) {
             body.entities = entities;
         }
-        return http.post('/user', body);
+        return http.post<User, UserWithoutId>('/user', body)
+            .catch((err) => {
+                toastService.toast(tr('user.errorWhileCreating'), 'error');
+                throw err;
+            });
     }
 
     static async updateUser(id: string, username?: string,
@@ -68,11 +92,23 @@ export default class UserService {
         if (entities) {
             body.entities = entities;
         }
-        return http.put(`/user/${id}`, body);
+        return http.put<User, {
+            username?: string;
+            admin?: boolean;
+            entities?: string[];
+        }>(`/user/${id}`, body)
+            .catch((err) => {
+                toastService.toast(tr('user.errorWhileUpdating'), 'error');
+                throw err;
+            });
     }
 
     static async deleteUser(id: string): Promise<{message: string} | {error: string}> {
-        return http.delete(`/user/${id}`);
+        return http.delete<{message: string} | {error: string}, undefined>(`/user/${id}`)
+            .catch(() => {
+                toastService.toast(tr('user.errorWhileDeleting'));
+                return { error: tr('user.errorWhileDeleting') };
+            });
     }
 }
 

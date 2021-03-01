@@ -12,6 +12,7 @@ import {
 } from '../types';
 import config from '../config/config';
 import { logger } from '../utils';
+import { doAuth } from '../index';
 
 type EventType = 'event_type' | 'type';
 
@@ -48,6 +49,8 @@ class SocketForwarder {
     private io: socketIo.Server;
 
     private observers: EventObserver[];
+
+    private retryConnectId: any = undefined;
 
     constructor() {
         this.socketsMap = new Map();
@@ -115,11 +118,15 @@ class SocketForwarder {
         this.socket
             .on('open', () => {
                 logger.info('Connected to websocket');
+                if (this.retryConnectId) {
+                    clearInterval(this.retryConnectId);
+                    this.retryConnectId = undefined;
+                }
                 setTimeout(() => this.subscribeToEvents(), 1000);
             })
             .on('close', () => {
                 logger.info('Connection to websocket closed');
-                // TODO: try reconnecting to HA
+                this.retryConnectId = setInterval(() => doAuth(), 10000);
             })
             .on('message', (wsData: WebSocket.Data) => {
                 const data = JSON.parse(wsData.toString()) as HaSocket;

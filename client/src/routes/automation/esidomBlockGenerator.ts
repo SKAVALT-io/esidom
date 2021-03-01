@@ -1,4 +1,3 @@
-import { Block } from 'blockly';
 import type { BlocklyJSON } from './esidomGenerator';
 
 interface BlockGenerator {
@@ -30,26 +29,34 @@ const esidomBlockGenerator: EsidomBlockGenerator = {
             const minutes = time?.[1];
             const second = time?.[2];
             const xml = `
-            <block type="time_trigger">
-            <field name="Hour">${hours}</field>
-            <field name="Minute">${minutes}</field>
-            <field name="Second">${second}</field>
-            </block>
+                <block type="time_trigger">
+                <field name="Hour">${hours}</field>
+                <field name="Minute">${minutes}</field>
+                <field name="Second">${second}</field>
+                </block>
             `;
             return xml;
         },
         state(blocklyJSON: BlocklyJSON): string {
             const service = blocklyJSON.entity_id;
             const state = blocklyJSON.to;
+            const time = blocklyJSON.for?.split(':');
+            const hours = time?.[0];
+            const minutes = time?.[1];
+            const seconds = time?.[2];
+
             const xml = `
-            <block type="binary_trigger">
-                <value name="Service">    
-                <block type="binary_sensor">
-                    <field name="Object">${service}</field>
+                <block type="binary_trigger">
+                    <value name="Service">    
+                    <block type="binary_sensor">
+                        <field name="Object">${service}</field>
+                    </block>
+                    </value>
+                <field name="State">${state}</field>
+                <field name="Hour">${hours}</field>
+                <field name="Minute">${minutes}</field>
+                <field name="Second">${seconds}</field>
                 </block>
-                </value>
-            <field name="State">${state}</field>
-            </block>
             `;
             return xml;
         },
@@ -108,6 +115,33 @@ const esidomBlockGenerator: EsidomBlockGenerator = {
                     <field name="Attributes">${attribute ?? 'noAttribute'}</field>
                     <field name="Included">lower</field>
                     <field name="Maximum">${below}</field>
+                    </block>
+                `;
+            }
+
+            return '';
+        },
+        time_pattern(blocklyJSON: BlocklyJSON): string {
+            const { hours, minutes, seconds } = blocklyJSON;
+            if (hours) {
+                return `
+                <block type="interval_trigger">
+                <field name="Time">hour</field>
+                <field name="Time_value">${hours.split('/')[1]}</field>
+                </block>
+                `;
+            } if (minutes) {
+                return `
+                <block type="interval_trigger">
+                <field name="Time">minute</field>
+                <field name="Time_value">${minutes.split('/')[1]}</field>
+                </block>
+                `;
+            } if (seconds) {
+                return `
+                    <block type="interval_trigger">
+                    <field name="Time">second</field>
+                    <field name="Time_value">${seconds.split('/')[1]}</field>
                     </block>
                 `;
             }
@@ -181,6 +215,10 @@ const esidomBlockGenerator: EsidomBlockGenerator = {
         state(blocklyJSON: BlocklyJSON): string {
             const service = blocklyJSON.entity_id;
             const { state } = blocklyJSON;
+            const time = blocklyJSON.for?.split(':');
+            const hours = time?.[0];
+            const minutes = time?.[1];
+            const seconds = time?.[2];
 
             return `
                 <block type="binary_condition">
@@ -190,6 +228,9 @@ const esidomBlockGenerator: EsidomBlockGenerator = {
                     </block>
                     </value>
                 <field name="State">${state}</field>
+                <field name="Hour">${hours}</field>
+                <field name="Minute">${minutes}</field>
+                <field name="Second">${seconds}</field>
                 </block>
             `;
         },

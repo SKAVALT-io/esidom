@@ -145,6 +145,9 @@
             <LoadingAnimation />
         </div>
     {:then}
+        {#if automations.length === 0}
+            <p class="text-white">{tr('automations.noAutomationYet')}</p>
+        {/if}
         <div
             id="automations"
             class="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mr-2 ml-2 mt-2"

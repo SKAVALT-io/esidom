@@ -45,13 +45,25 @@
 
 <EntityPreview isError={false} {entity}>
     <!-- Image -->
-    <img
-        slot="img"
-        src={srcImg}
-        on:click={switchEntity}
-        alt=""
-        class="h-inherit max-w-full max-h-full object-contain"
-    />
+    <div slot="img" class="grid grid-rows-5">
+        <img
+            src={srcImg}
+            alt=""
+            on:click={switchEntity}
+            class="cursor-pointer h-inherit max-w-full max-h-full object-contain"
+            class:row-span-3={isOn}
+            class:row-span-5={!isOn}
+        />
+        {#if isOn}
+            <div class="flex items-center justify-center row-span-2">
+                <img
+                    src="icons/button/trigger.svg"
+                    alt="Is on"
+                    class="h-6 w-6"
+                />
+            </div>
+        {/if}
+    </div>
     <!-- Data -->
     <div slot="sensor">
         {#if entity.attributes.last_run_success === undefined}
