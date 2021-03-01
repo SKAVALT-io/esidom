@@ -10,16 +10,14 @@
     import { hexToRgb, rgbToHex } from '../../../utils/functions';
 
     import EntityPreview from '../EntityPreview.svelte';
+    import ColoredLightOn from './ColoredLightOn.svelte';
     import BrightnessPicker from './things/BrightnessPicker.svelte';
 
     export let entity: LightEntity;
 
     // Is it on or off
     let isOn: boolean;
-    // The src for the icon
-    let srcLamp: string;
     $: isOn = entity.state === 'on';
-    $: srcLamp = isOn ? 'devices/lamp-on.png' : 'devices/lamp-off.png';
 
     function updateLightState(data: LightEntity) {
         console.log('new ws', data);
@@ -36,6 +34,10 @@
     }
 
     function switchLight() {
+        if (isOn) {
+            entity.state = 'off';
+            entity.attributes.rgb_color = undefined;
+        }
         switchLamp(entity.id, !isOn);
     }
 
@@ -54,7 +56,7 @@
     let [r, g, b] = [0, 0, 0];
     $: [r, g, b] = entity.attributes.rgb_color ?? [0, 0, 0];
     let HEXA = '';
-    $: HEXA = rgbToHex(r, g, b);
+    $: HEXA = entity.attributes.rgb_color ? rgbToHex(r, g, b) : '';
 
     const colorCallback = (e: any) => {
         const hex = e.target.value;
@@ -63,17 +65,27 @@
             rgb_color: [r, g, b],
         });
     };
+
+    let fillColor = 'fff';
+    $: fillColor = HEXA === '' ? (isOn ? '#CCCC00' : '#FFF') : HEXA;
 </script>
 
 <EntityPreview isError={false} {entity}>
     <!-- Image -->
-    <img
-        slot="img"
-        src={srcLamp}
-        alt=""
-        on:click={switchLight}
-        class="h-inherit max-w-full max-h-full object-contain"
-    />
+
+    <div slot="img">
+        {#if isOn}
+            <ColoredLightOn on:click={switchLight} {fillColor} />
+        {:else}
+            <img
+                on:click={switchLight}
+                class="h-inherit max-w-full max-h-full object-contain"
+                src="icons/button/lightOff.svg"
+                alt=""
+            />
+        {/if}
+    </div>
+
     <!-- Data -->
     <div slot="sensor" class="px-2">
         {#if isOn}
