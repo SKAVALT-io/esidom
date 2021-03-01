@@ -43,6 +43,9 @@
             updatedUser.admin,
             updatedUser.entities
         );
+        if (user.id === UserService.currentUser?.id) {
+            UserService.user.set(user);
+        }
     }
 </script>
 
