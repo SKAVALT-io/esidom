@@ -45,14 +45,16 @@
 
     function hashToPage() {
         const sub = window.location.hash.substring(2);
+        // handle only two levels of hash page
+        // it is not generic and is really specific to our project
         if (sub.includes('/')) {
             const newSub = sub.replace('/', '.');
-            const subSplitted = newSub.split('.');
-            const knownList = ['light', 'switch'];
+            const split = newSub.split('.');
+            const knownList = ['light', 'switch']; // ex : entity.light
 
-            return knownList.includes(subSplitted[1])
-                ? `${subSplitted[0]}.${subSplitted[1]}`
-                : `${subSplitted[0]}.default`;
+            return knownList.includes(split[1])
+                ? `${split[0]}.${split[1]}`
+                : `${split[0]}.default`;
         }
         return sub !== '' ? sub : 'entities';
     }
