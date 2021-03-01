@@ -3,5 +3,5 @@
     export let value: boolean;
 </script>
 
-Contact :
-{value ? 'oui' : 'non'}
+<div class="col-span-3 row-start-2 text-right">Contact :</div>
+<div class="col-span-9 row-start-2">{value ? 'oui' : 'non'}</div>
