@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { createEventDispatcher, onMount } from 'svelte';
+    import { onMount } from 'svelte';
     import type { Group } from '../../../types/groupType';
     import SaveButton from '../UI/buttons/SaveButton.svelte';
 
@@ -8,12 +8,22 @@
     import { tr } from '../../utils/i18nHelper';
     import GroupService from '../../services/groupService';
     import InputBar from '../UI/bar/InputBar.svelte';
+    import CancelButton from '../UI/buttons/CancelButton.svelte';
+    import ReturnButton from '../UI/buttons/ReturnButton.svelte';
+    import { push } from 'svelte-spa-router';
+    import type { Entity } from '../../../types/entityType';
 
     export let currentGroup: Group;
+    export let editMode: boolean = false;
     export let closeFunction: () => void;
+    let entities: Entity<unknown>[];
+    let groupLoaded = false;
     $: formInvalid =
         currentGroup.name === '' || currentGroup.entities.length === 0;
-    const dispatch = createEventDispatcher();
+    onMount(async () => {
+        entities = await EntityService.getLightAndSwitchEntity();
+        groupLoaded = true;
+    });
 </script>
 
 <div>
@@ -22,76 +32,98 @@
     >
         {currentGroup.groupId !== '' ? currentGroup.name : tr('groups.createGroup')}
     </h1>
-    <form class="mb-4">
-        <div class="flex flex-col mb-4">
-            <InputBar
-                label={tr('groups.groupName')}
-                bind:input={currentGroup.name}
-                placeholder={tr('groups.groupName')}
-                required={true}
-                width="56"
-            />
-        </div>
-        <div class="block">
+    {#if editMode}
+        <form class="mb-4">
+            <div class="flex flex-col mb-4">
+                <InputBar
+                    label={tr('groups.groupName')}
+                    bind:input={currentGroup.name}
+                    placeholder={tr('groups.groupName')}
+                    required={true}
+                    width="56"
+                />
+            </div>
+            <div class="block">
+                <label
+                    class="mb-2 font-bold text-lg text-grey-darkest"
+                    for="Name"
+                >{tr('groups.groupEntities')}</label>
+
+                <div class="mt-2">
+                    {#if !groupLoaded}
+                        <div class="loader">
+                            <LoadingAnimation />
+                        </div>
+                    {:else}
+                        {#each entities as entity}
+                            <div>
+                                <label class="inline-flex items-center">
+                                    <input
+                                        type="checkbox"
+                                        class="form-checkbox"
+                                        checked={currentGroup.entities.find(
+                                            (e) => {
+                                                return e.id === entity.id;
+                                            }
+                                        )}
+                                        on:click={(val) => {
+                                            if (val.target.checked) {
+                                                currentGroup.entities.push(entity);
+                                            } else {
+                                                currentGroup.entities = currentGroup.entities.filter((e) => e.id !== entity.id);
+                                            }
+                                            formInvalid = currentGroup.name === '' || currentGroup.entities.length === 0;
+                                        }}
+                                    />
+                                    <span
+                                        class="ml-2"
+                                    >{entity.name ? entity.name : entity.id}</span>
+                                </label>
+                            </div>
+                        {/each}
+                    {/if}
+                </div>
+            </div>
+            <div class="flex flex-col mb-4 pt-6">
+                <SaveButton
+                    bind:isDisabled={formInvalid}
+                    on:click={() => {
+                        currentGroup.groupId !== '' ? GroupService.updateGroup(currentGroup) : GroupService.createGroup(currentGroup);
+                        closeFunction?.();
+                    }}
+                />
+            </div>
+        </form>
+    {:else}
+        <div class="mb-4">
             <label
                 class="mb-2 font-bold text-lg text-grey-darkest"
                 for="Name"
             >{tr('groups.groupEntities')}</label>
+            <ul class="pt-4">
+                {#each currentGroup.entities as entity}
+                    <li
+                        class="border list-none rounded-sm px-3 py-3 hover:bg-blue-900 cursor-pointer"
+                        on:click={() => push(`#/entity/${entity.id}`)}
+                    >
+                        {entity.name}
+                    </li>
+                {/each}
+            </ul>
 
-            <div class="mt-2 h-60 overflow-y-auto">
-                {#await EntityService.getLightAndSwitchEntity()}
-                    <div class="loader">
-                        <LoadingAnimation />
-                    </div>
-                {:then entities}
-                    {#each entities as entity}
-                        <div>
-                            <label class="inline-flex items-center">
-                                <input
-                                    type="checkbox"
-                                    class="form-checkbox"
-                                    checked={currentGroup.entities
-                                        .map((e) => e.id)
-                                        .includes(entity.id)}
-                                    on:click={(val) => {
-                                        if (val.target.checked) {
-                                            currentGroup.entities.push(entity);
-                                        } else {
-                                            currentGroup.entities = currentGroup.entities.filter((e) => e.id !== entity.id);
-                                        }
-                                        formInvalid = currentGroup.name === '' || currentGroup.entities.length === 0;
-                                    }}
-                                />
-                                <span
-                                    class="ml-2"
-                                >{entity.name ? entity.name : entity.id}</span>
-                            </label>
-                        </div>
-                    {/each}
-                {/await}
+            <div class="flex flex-col mb-4 pt-6">
+                <ReturnButton
+                    on:click={() => {
+                        closeFunction?.();
+                    }}
+                />
             </div>
         </div>
-        <div class="flex flex-col mb-4 pt-6">
-            <SaveButton
-                bind:isDisabled={formInvalid}
-                on:click={() => {
-                    currentGroup.groupId !== '' ? GroupService.updateGroup(currentGroup) : GroupService.createGroup(currentGroup);
-                    closeFunction?.();
-                }}
-            />
-        </div>
-    </form>
+    {/if}
 </div>
 
 <style>
     input {
         background-color: #453b69;
-    }
-
-    .container {
-        grid-template-columns: 100px 50px 100px;
-        grid-template-rows: 80px auto 80px;
-        column-gap: 10px;
-        row-gap: 15px;
     }
 </style>

@@ -254,12 +254,13 @@
     "confirm": "Valider",
     "retry": "Réessayer",
     "close": "Fermer",
-    "unlock": "Déverrouiller"
+    "unlock": "Déverrouiller",
+    "return": "Retour"
   },
   "groups": {
     "myGroups": "Mes groupes",
     "implicitGroup": {
-      "name": "Groupes implicit",
+      "name": "Groupe implicite",
       "cat": {
         "switchlight": "Lampes et prises "
       },
@@ -274,11 +275,12 @@
     },
     "createGroup": "Nouveau groupe",
     "groupName": "Nom du groupe",
-    "groupEntities": "Equipement dans le groupe",
+    "groupEntities": "Equipements dans le groupe",
     "buttons": {
       "create": "Créer un groupe",
       "edit": "Editer",
-      "delete": "Supprimer"
+      "delete": "Supprimer",
+      "view": "Afficher"
     },
     "errorWhileLoading": "Erreur lors de la récupération des groupes",
     "errorWhileCreating": "Erreur lors de la création du groupe",

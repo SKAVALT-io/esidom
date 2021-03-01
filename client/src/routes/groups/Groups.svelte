@@ -19,7 +19,7 @@
     let groups: Group[];
     let searchPattern: string = '';
     let showCreateTip = false;
-
+    let editMode = false;
     let flipSwitch = false;
     let selectedSortOption = 0;
     const comparators = [
@@ -111,9 +111,15 @@
               )).sort(comparator) as group}
             <GroupComponent
                 {group}
-                on:click={() => {
+                openEditMode={() => {
                     currentGroup = group;
                     isOpen = true;
+                    editMode = true;
+                }}
+                openViewMode={() => {
+                    currentGroup = group;
+                    isOpen = true;
+                    editMode = false;
                 }}
             />
         {/each}
@@ -122,7 +128,7 @@
 
 <Modal bind:isOpen>
     <div slot="content">
-        <GroupDetail bind:currentGroup {closeFunction} />
+        <GroupDetail bind:currentGroup {closeFunction} bind:editMode />
     </div>
 </Modal>
 <div
@@ -140,6 +146,7 @@
     <RoundedButton
         on:click={() => {
             isOpen = true;
+            editMode = true;
             currentGroup = { groupId: '', state: '', name: '', entities: [], implicit: false };
         }}
         iconPath="icons/button/plus.svg"
