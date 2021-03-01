@@ -17,6 +17,9 @@
             <block type="numeric_state_trigger">
                 <mutation numeric_state_trigger_entities_input="" />
             </block>
+            <block type="interval_trigger">
+                <mutation interval_trigger_time_input="" />
+            </block>
         </category>
         <category name="Conditions" colour={COLORS.HUE_YELLOW}>
             <block type="binary_condition" />
@@ -32,17 +35,15 @@
             <block type="object_action">
                 <mutation entities_input="" />
             </block>
+            <block type="delay_action" />
         </category>
         <category name="Objets" colour={COLORS.HUE_RED}>
             <block type="binary_sensor" />
-            <block type="person" />
-            <block type="weather" />
-            <block type="zwave" />
             <block type="sensor" />
             <block type="light" />
             <block type="automation" />
             <block type="switch" />
-            <block type="media_player" />
+            <block type="group" />
         </category>
         <category name="Contrôle de lampe" colour={COLORS.HUE_MAUVE}>
             <block type="color_picker" />

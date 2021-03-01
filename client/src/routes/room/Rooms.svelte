@@ -13,15 +13,19 @@
     import RoomService from '../../services/roomService';
     import RoomDetail from '../../components/rooms/RoomDetail.svelte';
     import toastService from '../../utils/toast';
+    import type { Device } from '../../../types/deviceType';
+    import DeviceService from '../../services/deviceService';
 
     let isOpen = false;
     let currentRoom: Room;
     let isLoad = true;
     let rooms: Room[];
+    let devices: Device[];
     let searchPattern: string = '';
 
     let flipSwitch = false;
     let selectedSortOption = 0;
+    let editMode = false;
     const comparators = [
         [
             (a: Room, b: Room) =>
@@ -46,6 +50,7 @@
 
     onMount(async () => {
         rooms = await RoomService.getRooms();
+        devices = await DeviceService.getDevices();
         isLoad = false;
 
         socketManager.registerGlobalListener('roomCreated', roomCreatedHandler);
@@ -62,9 +67,9 @@
     }
 </script>
 
-<div class=" pb-16">
+<div class="pb-16">
     <div
-        class="pt-2 flex justify-between relative right-0 top-0 mt-2 mr-2 ml-2 mx-auto text-white"
+        class="pb-12 flex justify-between relative right-0 top-0 mt-2 mr-2 ml-2 mx-auto text-white"
     >
         <h1 class="text-2xl">{tr('rooms.myRooms')}</h1>
         <div>
@@ -97,6 +102,9 @@
             <LoadingAnimation />
         </div>
     {:else}
+        {#if rooms.length === 0}
+            <p class="text-white">{tr('rooms.noRoomYet')}</p>
+        {/if}
         <div
             class="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mr-2 ml-2 mt-2"
         >
@@ -105,27 +113,38 @@
                   )).sort(comparator) as room}
                 <RoomComponent
                     {room}
-                    on:click={() => {
+                    openEditMode={() => {
                         currentRoom = room;
                         isOpen = true;
+                        editMode = true;
+                    }}
+                    openViewMode={() => {
+                        currentRoom = room;
+                        isOpen = true;
+                        editMode = false;
                     }}
                 />
             {/each}
         </div>
     {/if}
-
-    <Modal bind:isOpen>
-        <div slot="content">
-            <RoomDetail bind:currentRoom {closeFunction} />
-        </div>
-    </Modal>
-    <div class="fixed bottom-0 right-0 h-16 w-16">
-        <RoundedButton
-            on:click={() => {
-                isOpen = true;
-                currentRoom = { roomId: '', devices: [], automations: [], name: '' };
-            }}
-            iconPath="icons/button/plus.svg"
+</div>
+<Modal bind:isOpen>
+    <div slot="content">
+        <RoomDetail
+            bind:currentRoom
+            bind:devices
+            bind:editMode
+            on:close={closeFunction}
         />
     </div>
+</Modal>
+<div class="fixed bottom-0 right-0 h-16 w-16">
+    <RoundedButton
+        on:click={() => {
+            isOpen = true;
+            currentRoom = { roomId: '', devices: [], automations: [], name: '' };
+            editMode = true;
+        }}
+        iconPath="icons/button/plus.svg"
+    />
 </div>

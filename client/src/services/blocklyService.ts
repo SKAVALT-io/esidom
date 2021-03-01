@@ -27,18 +27,6 @@ const TYPES: Type[] = [
         friendlyName: 'blockly.blocks.blocks_by_type.binarySensor',
     },
     {
-        name: 'person',
-        friendlyName: 'blockly.blocks.blocks_by_type.person',
-    },
-    {
-        name: 'weather',
-        friendlyName: 'blockly.blocks.blocks_by_type.weather',
-    },
-    {
-        name: 'zwave',
-        friendlyName: 'blockly.blocks.blocks_by_type.zwave',
-    },
-    {
         name: 'sensor',
         friendlyName: 'blockly.blocks.blocks_by_type.sensor',
     },
@@ -55,8 +43,8 @@ const TYPES: Type[] = [
         friendlyName: 'blockly.blocks.blocks_by_type.switch',
     },
     {
-        name: 'media_player',
-        friendlyName: 'blockly.blocks.blocks_by_type.mediaPlayer',
+        name: 'group',
+        friendlyName: 'blockly.blocks.blocks_by_type.group',
     },
 ];
 
@@ -67,7 +55,20 @@ export default class BlocklyService {
         this.workspace = workspace;
     }
 
-    convertToBlock(name: string, description: string, id?: string): Automation {
+    /**
+     * Clears blockly workspace.
+     */
+    clear(): void {
+        this.workspace.clear();
+    }
+
+    /**
+     *  Converts a block into an automation.
+     * @param name the name of the automation
+     * @param description the description of the automation
+     * @param id the id of the automation
+     */
+    convertToAutomation(name: string, description: string, id?: string): Automation {
         const code = esidomGenerator.workspaceToCode(this.workspace);
 
         try {
@@ -100,12 +101,19 @@ export default class BlocklyService {
         }
     }
 
+    /**
+     * Loads an automation into Blockly from xml.
+     * @param xml the xml representation of the automation
+     */
     loadAutomation(xml: string): void {
         Blockly.mainWorkspace.clear();
         const block: Element = Blockly.Xml.textToDom(xml);
         Blockly.Xml.domToWorkspace(block, this.workspace);
     }
 
+    /**
+     * Initializes dynamic blocks.
+     */
     static async initBlockly(): Promise<void> {
         const entities = await EntityService.getEntities();
         const services = await EntityService.getServices();
@@ -121,8 +129,113 @@ export default class BlocklyService {
 
         // We create the numeric_state_trigger Block
         this.createNumericStateTrigger((entities as Entity<string[]>[]));
+
+        // We create the interval_trigger
+        this.createIntervalTrigger();
     }
 
+    /**
+     * Creates interval_trigger block.
+     */
+    static createIntervalTrigger(): void {
+        const block = Blockly.Blocks as unknown as BlocksDefinitions;
+        block.interval_trigger = {
+            init() {
+                this.jsonInit?.(
+                    {
+                        type: 'interval_trigger',
+                        message0: tr('blockly.blocks.interval_trigger.message'),
+                        args0: [
+                            {
+                                type: 'field_number',
+                                name: 'Time_value',
+                                value: 1,
+                                min: 1,
+                                max: 23,
+                            },
+                            {
+                                type: 'input_dummy',
+                                name: 'values',
+                            },
+                            {
+                                type: 'field_dropdown',
+                                name: 'Time',
+                                options: [
+                                    [
+                                        tr('blockly.blocks.interval_trigger.hour'),
+                                        'hour',
+                                    ],
+                                    [
+                                        tr('blockly.blocks.interval_trigger.minute'),
+                                        'minute',
+                                    ],
+                                    [
+                                        tr('blockly.blocks.interval_trigger.second'),
+                                        'second',
+                                    ],
+                                ],
+                            },
+                        ],
+                        inputsInline: true,
+                        previousStatement: 'Trigger',
+                        nextStatement: 'Trigger',
+                        colour: COLORS.HUE_GREEN,
+                        tooltip: tr('blockly.blocks.interval_trigger.tooltip'),
+                        helpUrl: '',
+                        mutator: 'interval_trigger_mutator',
+                    },
+                );
+            },
+        };
+
+        const INTERVAL_TRIGGER_MUTATOR_MIXIN = {
+
+            mutationToDom(): HTMLElement {
+                const container = document.createElement('mutation');
+                const entitiesInput: string = (this as EsidomBlockType).getFieldValue('Time');
+                container.setAttribute('interval_trigger_time_input', entitiesInput);
+                return container;
+            },
+
+            domToMutation(xmlElement: HTMLElement): void {
+                const attribute = xmlElement.getAttribute('interval_trigger_time_input');
+                const time = attribute != null ? attribute : '';
+                this.intervalTriggerUpdateShape(time);
+            },
+
+            intervalTriggerUpdateShape(time: string): void {
+                const timeInput = (this as EsidomBlockType).getInput?.('values');
+                if (time === 'hour') {
+                    timeInput.removeField('Time_value');
+                    timeInput.appendField(new Blockly.FieldNumber(1, 1, 23), 'Time_value');
+                } else if (time === 'minute' || time === 'second') {
+                    timeInput.removeField('Time_value');
+                    timeInput.appendField(new Blockly.FieldNumber(1, 1, 59), 'Time_value');
+                }
+            },
+        };
+
+        const INTERVAL_TRIGGER_MUTATOR_EXTENSION = function mutate(this: EsidomBlockType) {
+            this.getField('Time').setValidator((option: string) => {
+                this.intervalTriggerUpdateShape(option);
+            });
+        };
+
+        try {
+            Blockly.Extensions.registerMutator(
+                'interval_trigger_mutator',
+                INTERVAL_TRIGGER_MUTATOR_MIXIN,
+                INTERVAL_TRIGGER_MUTATOR_EXTENSION,
+            );
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    /**
+     * Creates a map of entities with attributes
+     * @param entities the map of entities with attributes
+     */
     static createNumericEntityWithAttributesMap(
         entities: Entity<string[]>[],
     ): Map<string, EntityWithAttributes> {
@@ -139,6 +252,10 @@ export default class BlocklyService {
         return entityWithAttributesMap;
     }
 
+    /**
+     *  Creates dropdown for numeric_state blocks.
+     * @param entityWithAttributesMap the map of entities with attributes
+     */
     static createNumericDropdowns(
         entityWithAttributesMap: Map<string, EntityWithAttributes>,
     ): string[][][] {
@@ -172,6 +289,12 @@ export default class BlocklyService {
         return dropdowns;
     }
 
+    /**
+     * Registers numeric_state block mutator.
+     * @param entityWithAttributesMap the map of entities with attributes
+     * @param mutatorName the mutator name
+     * @param inputName the mutator input name
+     */
     static registerNumericMutator(
         entityWithAttributesMap: Map<string, EntityWithAttributes>,
         mutatorName: string,
@@ -253,6 +376,10 @@ export default class BlocklyService {
         }
     }
 
+    /**
+     * Creates numeric_state_trigger block.
+     * @param entities the list of entities
+     */
     static createNumericStateTrigger(entities: Entity<string[]>[]): void {
         const entityWithAttributesMap = this.createNumericEntityWithAttributesMap(entities);
         const dropdowns = this.createNumericDropdowns(entityWithAttributesMap);
@@ -322,6 +449,10 @@ export default class BlocklyService {
         );
     }
 
+    /**
+     * Creates numeric_state_condition block.
+     * @param entities the list of entities
+     */
     static createNumericStateCondition(entities: Entity<string[]>[]): void {
         const entityWithAttributesMap = this.createNumericEntityWithAttributesMap(entities);
         const dropdowns = this.createNumericDropdowns(entityWithAttributesMap);
@@ -391,6 +522,11 @@ export default class BlocklyService {
         );
     }
 
+    /**
+     * Creates an object_action block.
+     * @param entities the list of entities
+     * @param services the list of services
+     */
     static createObjectAction(entities: Entity<string[]>[], services: Service[]): void {
         const entityWithServicesMap = new Map<string, EntityWithServices>();
 
@@ -403,6 +539,7 @@ export default class BlocklyService {
                 entityWithServicesMap.set(entity.id, {
                     id: entity.id,
                     name: entity.name,
+                    type: entity.type,
                     services: tmpServices,
                 });
             }
@@ -481,17 +618,28 @@ export default class BlocklyService {
             objectActionUpdateShape(entityId: string): void {
                 const type = entityId.split('.')[0];
                 const entityServices = entityWithServicesMap.get(entityId)?.services;
-                const newDropdown = entityServices?.map((service: string) => [service.split('.')[1], service])
+
+                let newDropdown;
+
+                if (type === 'group') {
+                    newDropdown = [
+                        [tr('blockly.blocks.object_action.lightTurnOn'), 'light.turn_on'],
+                        [tr('blockly.blocks.object_action.lightTurnOff'), 'light.turn_off'],
+                        [tr('blockly.blocks.object_action.lightToggle'), 'light.toggle'],
+                        [tr('blockly.blocks.object_action.switchTurnOn'), 'switch.turn_on'],
+                        [tr('blockly.blocks.object_action.switchTurnOff'), 'switch.turn_off'],
+                        [tr('blockly.blocks.object_action.switchToggle'), 'switch.toggle'],
+                    ];
+                } else {
+                    newDropdown = entityServices?.map((service: string) => [service.split('.')[1], service])
                     ?? [[tr('blockly.unknownAction'), tr('blockly.unknownAction')]];
+                }
 
                 const serviceInput = (this as EsidomBlockType).getInput?.('services');
                 serviceInput.removeField('Services', true);
                 serviceInput.appendField(new Blockly.FieldDropdown(newDropdown), 'Services');
 
-                const entityField = (this as EsidomBlockType).getFieldValue('Entities');
-                const currentType = entityField.split('.')[0];
-
-                if (type === 'light' && currentType !== 'light') {
+                if (type === 'light') {
                     (this as EsidomBlockType).removeInput('Color', true);
                     (this as EsidomBlockType).appendValueInput('Color')
                         .setCheck('Color')
@@ -529,6 +677,10 @@ export default class BlocklyService {
         }
     }
 
+    /**
+     * Creates object blocks.
+     * @param entities the list of entities
+     */
     static createObjects(entities: Entity<unknown>[]): void {
         const block = Blockly.Blocks as unknown as BlocksDefinitions;
         TYPES.forEach((type: Type) => {
@@ -557,6 +709,10 @@ export default class BlocklyService {
         });
     }
 
+    /**
+     * Converts a json automation into xml.
+     * @param automation the json automation
+     */
     static automationToXml(automation: Automation): string {
         let xml = `
             <xml xmlns="https://developers.google.com/blockly/xml">
@@ -583,7 +739,28 @@ export default class BlocklyService {
             `;
         });
 
-        automation.action?.forEach((action) => {
+        automation.action?.slice().reverse().forEach((action) => {
+            const { delay } = action;
+
+            if (delay) {
+                const time = delay.split(':');
+                const hours = time[0];
+                const minutes = time[1];
+                const seconds = time[2];
+
+                xml += `
+                <value name="Action">
+                    <block type="delay_action">
+                        <field name="Hour">${hours}</field>
+                        <field name="Minute">${minutes}</field>
+                        <field name="Second">${seconds}</field>
+                    </block>
+                    </value>
+                `;
+
+                return;
+            }
+
             const entityId = action.entity_id;
             const { service } = action;
 
@@ -611,6 +788,10 @@ export default class BlocklyService {
         return xml;
     }
 
+    /**
+     * Gets the xml representation of an action color_rgb block.
+     * @param rgbColor the list of RGB colors
+     */
     static getActionColorXml(rgbColor: number[]): string {
         return rgbColor
             ? `
@@ -625,7 +806,11 @@ export default class BlocklyService {
             : '';
     }
 
-    static getActionBrightnessXml(brightness: number[]): string {
+    /**
+     * Gets the xml representation of an action brightness block.
+     * @param brightness the brightness
+     */
+    static getActionBrightnessXml(brightness: number): string {
         return brightness
             ? `
                 '<value name="Brightness">
@@ -637,7 +822,11 @@ export default class BlocklyService {
             : '';
     }
 
-    static getActionTemperatureXml(colorTemp: number[]): string {
+    /**
+     * Gets the xml representation of an action color_temp block.
+     * @param colorTemp the color temperature
+     */
+    static getActionTemperatureXml(colorTemp: number): string {
         return colorTemp
             ? `
                 '<value name="Temperature">

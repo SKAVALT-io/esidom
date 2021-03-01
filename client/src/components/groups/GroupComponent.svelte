@@ -9,14 +9,18 @@
     import EntityService from '../../services/entityService';
     import Tooltip from '../UI/utils/Tooltip.svelte';
     import { tr } from '../../utils/i18nHelper';
+    import toastService from '../../utils/toast';
 
     export let group: Group;
     let checked = group.state === 'on';
+
     let showDeleteTip = false;
     let showEditTip = false;
+    let showViewTip = false;
+    export let openEditMode: () => void;
+    export let openViewMode: () => void;
 
     function handleToggle() {
-        console.log(group.groupId);
         if (!group.groupId) {
             return;
         }
@@ -27,9 +31,9 @@
         }
     }
     function groupUpdatedHandler(data: Group) {
-        if (data.groupId && data.groupId === group.groupId) {
+        if (data.groupId === group.groupId) {
             group = data;
-            checked = data?.state === 'on';
+            checked = group.state === 'on';
             group = GroupService.updateGroupNameIfIsImplicit(group);
         }
     }
@@ -47,18 +51,40 @@
     onDestroy(() => {
         socketManager.removeListener('groupUpdated', groupUpdatedHandler);
     });
+
+    function deleteGroup() {
+        GroupService.deleteGroup(group);
+    }
 </script>
 
 <div
     id="group"
-    class="rounded-lg items-center text-center grid px-1 py-4"
+    class="rounded-lg border border-gray-400 hover:border-white items-center text-center grid px-1 py-4"
     class:grid-cols-10={!group.implicit}
     class:grid-cols-8={group.implicit}
 >
     <div class="col-span-1">
         <ToggleButton on:change={handleToggle} bind:checked />
     </div>
-    <div class="flex justify-center items-center col-span-7">{group.name}</div>
+    <div class="flex justify-center items-center col-span-6">{group.name}</div>
+    <div
+        class="col-span-1 relative"
+        on:touchstart={() => (showViewTip = true)}
+        on:touchend={() => (showViewTip = false)}
+        on:mouseleave={() => (showViewTip = false)}
+        on:mouseenter={() => (showViewTip = true)}
+    >
+        <Tooltip
+            text={tr('groups.buttons.view')}
+            position="top"
+            show={showViewTip}
+        />
+        <RoundedButton
+            size={8}
+            on:click={openViewMode}
+            iconPath="icons/button/visibility.svg"
+        />
+    </div>
     {#if !group.implicit}
         <div
             class="col-span-1 relative"
@@ -72,7 +98,11 @@
                 position="top"
                 show={showEditTip}
             />
-            <RoundedButton size={8} on:click iconPath="icons/button/edit.svg" />
+            <RoundedButton
+                size={8}
+                on:click={openEditMode}
+                iconPath="icons/button/edit.svg"
+            />
         </div>
         <div
             class="col-span-1 relative"
@@ -88,9 +118,7 @@
             />
             <RoundedButton
                 size={8}
-                on:click={() => {
-                    GroupService.deleteGroup(group);
-                }}
+                on:click={deleteGroup}
                 iconPath="icons/button/trash.svg"
             />
         </div>

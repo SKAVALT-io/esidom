@@ -12,16 +12,20 @@
     import { onMount, onDestroy } from 'svelte';
     import { socketManager } from '../../managers/socketManager';
     import Tooltip from '../../components/UI/utils/Tooltip.svelte';
+    import EntityService from '../../services/entityService';
+    import type { Entity } from '../../../types/entityType';
+    import toastService from '../../utils/toast';
 
     let isOpen = false;
     let currentGroup: Group;
-    let isLoad = true;
+    let isLoaded = false;
     let groups: Group[];
     let searchPattern: string = '';
     let showCreateTip = false;
-
+    let editMode = false;
     let flipSwitch = false;
     let selectedSortOption = 0;
+    let entities: Entity<unknown>[];
     const comparators = [
         [
             (a: Group, b: Group) =>
@@ -33,20 +37,21 @@
     $: comparator = comparators[selectedSortOption][flipSwitch ? 0 : 1];
 
     function groupDeletedHandler(data: any) {
-        console.log(data);
+        toastService.toast(tr('groups.groupDeleted'));
         const { id } = data;
         groups = groups.filter((g) => id !== `group.${g.groupId}`);
     }
 
     function groupCreatedHandler(data: Group) {
-        console.log(data);
-        const newGroup = data;
-        groups = [...groups, newGroup];
+        toastService.toast(tr('groups.groupCreated'));
+        groups = [...groups, data];
     }
 
     onMount(async () => {
-        groups = await GroupService.getGroup();
-        isLoad = false;
+        groups = await GroupService.getGroups();
+        entities = await EntityService.getLightAndSwitchEntity();
+
+        isLoaded = true;
         socketManager.registerGlobalListener(
             'groupCreated',
             groupCreatedHandler
@@ -68,61 +73,77 @@
     }
 </script>
 
-<div
-    class="pb-12 pt-2 flex justify-between relative right-0 top-0 mt-2 mr-2 ml-2 mx-auto text-white"
->
-    <h1 class="text-2xl">{tr('groups.myGroups')}</h1>
-    <div>
-        <DropdownButton
-            dropDownOptions={[tr('sortBy.options.name')]}
-            title={tr('sortBy.title')}
-            arrowUp={flipSwitch}
-            on:click={(e) => {
-                if (e.detail === selectedSortOption) {
-                    flipSwitch = !flipSwitch;
-                }
-                selectedSortOption = e.detail;
-            }}
-        />
-        <SearchBar
-            debounce={300}
-            on:type={(e) => {
-                searchPattern = e.detail;
-            }}
-            on:clear={(e) => {
-                searchPattern = '';
-            }}
-        />
-    </div>
-</div>
-{#if isLoad}
+<div class="pb-16">
     <div
-        class="fixed top-0 left-0 w-full h-screen flex justify-center items-center"
+        class="pt-2 flex justify-between relative right-0 top-0 mt-2 mr-2 ml-2 mx-auto text-white"
     >
-        <LoadingAnimation />
-    </div>
-{:else}
-    <div
-        id="group"
-        class="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mr-2 ml-2 mt-2"
-    >
-        {#each (searchPattern === '' ? groups : groups.filter((g) =>
-                  g.name.toLowerCase().includes(searchPattern.toLowerCase())
-              )).sort(comparator) as group}
-            <GroupComponent
-                {group}
-                on:click={() => {
-                    currentGroup = group;
-                    isOpen = true;
+        <h1 class="text-2xl">{tr('groups.myGroups')}</h1>
+        <div>
+            <DropdownButton
+                dropDownOptions={[tr('sortBy.options.name')]}
+                title={tr('sortBy.title')}
+                arrowUp={flipSwitch}
+                on:click={(e) => {
+                    if (e.detail === selectedSortOption) {
+                        flipSwitch = !flipSwitch;
+                    }
+                    selectedSortOption = e.detail;
                 }}
             />
-        {/each}
+            <SearchBar
+                debounce={300}
+                on:type={(e) => {
+                    searchPattern = e.detail;
+                }}
+                on:clear={(e) => {
+                    searchPattern = '';
+                }}
+            />
+        </div>
     </div>
-{/if}
+    {#if !isLoaded}
+        <div
+            class="fixed top-0 left-0 w-full h-screen flex justify-center items-center"
+        >
+            <LoadingAnimation />
+        </div>
+    {:else}
+        {#if groups.length === 0}
+            <p class="text-white">{tr('groups.noGroupYet')}</p>
+        {/if}
+        <div
+            id="group"
+            class="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mr-2 ml-2 mt-2"
+        >
+            {#each (searchPattern === '' ? groups : groups.filter((g) =>
+                      g.name.toLowerCase().includes(searchPattern.toLowerCase())
+                  )).sort(comparator) as group}
+                <GroupComponent
+                    {group}
+                    openEditMode={() => {
+                        currentGroup = group;
+                        isOpen = true;
+                        editMode = true;
+                    }}
+                    openViewMode={() => {
+                        currentGroup = group;
+                        isOpen = true;
+                        editMode = false;
+                    }}
+                />
+            {/each}
+        </div>
+    {/if}
+</div>
 
 <Modal bind:isOpen>
     <div slot="content">
-        <GroupDetail bind:currentGroup {closeFunction} />
+        <GroupDetail
+            bind:currentGroup
+            bind:editMode
+            bind:entities
+            on:close={closeFunction}
+        />
     </div>
 </Modal>
 <div
@@ -140,6 +161,7 @@
     <RoundedButton
         on:click={() => {
             isOpen = true;
+            editMode = true;
             currentGroup = { groupId: '', state: '', name: '', entities: [], implicit: false };
         }}
         iconPath="icons/button/plus.svg"

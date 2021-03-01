@@ -16,6 +16,8 @@
     import { tr } from '../../utils/i18nHelper';
     import LoadingAnimation from '../../components/animations/LoadingAnimation.svelte';
     import Tooltip from '../../components/UI/utils/Tooltip.svelte';
+    import type { User } from '../../../types/userType';
+    import UserService from '../../services/userService';
 
     let isPairDeviceOpen = false;
     let showPairTip = false;
@@ -35,6 +37,11 @@
         [key: string]: Entity<any>[];
     };
 
+    // let user: User | undefined = undefined;
+    // UserService.user.subscribe((newUser) => {
+    //     user = newUser;
+    // });
+
     async function loadEntities() {
         const entities = await EntityService.getActualEntities();
         // Group them by domain
@@ -48,7 +55,7 @@
 </script>
 
 <!-- Div containing all devices -->
-<div id="test" class="pr-6 xl:pr-10 mb-20 pb-12">
+<div id="test" class="pr-6 xl:pr-10 mb-20 pb-16">
     {#await loadEntities()}
         <div id="loader" class="flex items-center justify-center">
             <LoadingAnimation />

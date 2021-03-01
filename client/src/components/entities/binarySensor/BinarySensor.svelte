@@ -66,20 +66,21 @@
                 <div class="col-span-9 row-start-3">{entity.type}</div>
                 <div class="col-span-3 row-start-4 text-right">Etat :</div>
                 <div class="col-span-9 row-start-4">{entity.state}</div>
-            </div>
 
-            <div id="attributes" class=" grid grid-cols-1 gap-4 py-4">
-                {#each Object.entries(entity.attributes) as [key, value] (key)}
-                    {#if sensorPropMap.has(key)}
-                        <div class="text-center">
+                <div
+                    id="attributes"
+                    class="grid grid-cols-12 col-span-full gap-4 py-4"
+                >
+                    {#each Object.entries(entity.attributes) as [key, value] (key)}
+                        {#if sensorPropMap.has(key)}
                             <!-- {key}:{value} -->
                             <svelte:component
                                 this={sensorPropMap.get(key)}
                                 {...{ value }}
                             />
-                        </div>
-                    {/if}
-                {/each}
+                        {/if}
+                    {/each}
+                </div>
             </div>
         </div>
     </div>

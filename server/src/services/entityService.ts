@@ -3,8 +3,14 @@ import { socketService } from '.';
 import {
     EventObserver, Event, Entity, HaEntity, HaStateResponse,
     MAX_RETRIEVE_ATTEMPTS,
+    User,
 } from '../types';
 import { logger } from '../utils';
+
+const UNWANTED_TYPES = ['person', 'zone', 'weather', 'media_player', 'persistent_notification', 'zwave'];
+const UNWANTED_SUFFIXES = ['_power_status', '_update_available',
+    '_linkquality', '_update_state', 'power_management', 'sourcenodeid',
+    '_power_on_behavior', '_alarm_level', '_alarm_type', 'binary_sensor.updater'];
 
 class EntityService implements EventObserver {
 
@@ -53,7 +59,7 @@ class EntityService implements EventObserver {
     /**
      * Get all entities from HA
      */
-    async getEntities(): Promise<Entity[]> {
+    async getEntities(user?: User): Promise<Entity[]> {
         const entities = await socketService.listEntityRegistry();
         const states = await socketService.getStates();
         return this.filterUnwantedEntities(
@@ -70,6 +76,7 @@ class EntityService implements EventObserver {
                 };
                 return entity;
             }),
+            user,
         );
     }
 
@@ -80,7 +87,8 @@ class EntityService implements EventObserver {
      * @param states result of a get_states WS request
      * @returns Array of filtered entities
      */
-    filterEntitiesByDevice(id: string, entities: HaEntity[], states: HaStateResponse[]): Entity[] {
+    async filterEntitiesByDevice(id: string, entities: HaEntity[],
+        states: HaStateResponse[]): Promise<Entity[]> {
         // entities and states are provided to prevent multiple requests on HA
         // when iterating over an array
         const res = entities
@@ -154,7 +162,9 @@ class EntityService implements EventObserver {
     async getTypes(): Promise<string[]> {
         return socketService
             .getStates()
-            .then((states) => states.map((s) => s.entity_id.split('.')[0]));
+            .then((states) => states
+                .map((s) => s.entity_id.split('.')[0])
+                .filter((t) => !UNWANTED_TYPES.some((type) => t === type)));
     }
 
     async updateEntity(id: string, name: string) {
@@ -166,18 +176,16 @@ class EntityService implements EventObserver {
         return this.getEntityById(id);
     }
 
-    filterUnwantedEntities(entities: Entity[]): Entity[] {
-        const UNWANTED_SUFFIXES = ['_power_status', '_update_available',
-            '_linkquality', '_update_state', 'power_management', 'sourcenodeid',
-            '_power_on_behavior', '_alarm_level', '_alarm_type'];
-        return entities.filter((e) => !UNWANTED_SUFFIXES.some((name) => e.id.endsWith(name)));
+    private async filterUnwantedEntities(entities: Entity[], user?: User): Promise<Entity[]> {
+        const result = entities
+            .filter((e) => !UNWANTED_SUFFIXES.some((name) => e.id.endsWith(name))
+                && !UNWANTED_TYPES.some((type) => e.type === type
+                && (user ? user.entities.includes(e.id) : true)));
+        return result;
     }
 
     // TODO Change this
     filterUnwantedEntities2(entities: string[]): string[] {
-        const UNWANTED_SUFFIXES = ['_power_status', '_update_available',
-            '_linkquality', '_update_state', 'power_management', 'sourcenodeid',
-            '_power_on_behavior', '_alarm_level', '_alarm_type'];
         return entities.filter((e) => !UNWANTED_SUFFIXES.some((name) => e.endsWith(name)));
     }
 

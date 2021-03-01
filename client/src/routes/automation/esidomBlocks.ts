@@ -28,6 +28,7 @@ export type BlocksDefinitions = {
     time_trigger: BlockFunctions;
     sun_trigger: BlockFunctions;
     numeric_state_trigger: BlockFunctions;
+    interval_trigger: BlockFunctions;
     time_condition: BlockFunctions;
     sun_condition: BlockFunctions;
     time_condition_hour: BlockFunctions;
@@ -41,6 +42,7 @@ export type BlocksDefinitions = {
     color_temp: BlockFunctions;
     color_brightness_temp: BlockFunctions;
     object_action: BlockFunctions;
+    delay_action: BlockFunctions;
 }
 
 /**
@@ -107,8 +109,33 @@ export type BlocksDefinitions = {
                                 ],
                             ],
                         },
+                        {
+                            type: 'input_dummy',
+                            name: 'services',
+                        },
+                        {
+                            type: 'field_number',
+                            name: 'Hour',
+                            value: 0,
+                            min: 0,
+                            max: 23,
+                        },
+                        {
+                            type: 'field_number',
+                            name: 'Minute',
+                            value: 0,
+                            min: 0,
+                            max: 59,
+                        },
+                        {
+                            type: 'field_number',
+                            name: 'Second',
+                            value: 0,
+                            min: 0,
+                            max: 59,
+                        },
                     ],
-                    inputsInline: true,
+                    inputsInline: false,
                     previousStatement: 'Trigger',
                     nextStatement: 'Trigger',
                     colour: COLORS.HUE_GREEN,
@@ -585,8 +612,33 @@ export type BlocksDefinitions = {
                                 ],
                             ],
                         },
+                        {
+                            type: 'input_dummy',
+                            name: 'services',
+                        },
+                        {
+                            type: 'field_number',
+                            name: 'Hour',
+                            value: 0,
+                            min: 0,
+                            max: 23,
+                        },
+                        {
+                            type: 'field_number',
+                            name: 'Minute',
+                            value: 0,
+                            min: 0,
+                            max: 59,
+                        },
+                        {
+                            type: 'field_number',
+                            name: 'Second',
+                            value: 0,
+                            min: 0,
+                            max: 59,
+                        },
                     ],
-                    inputsInline: true,
+                    inputsInline: false,
                     previousStatement: 'Condition',
                     nextStatement: 'Condition',
                     colour: COLORS.HUE_YELLOW,
@@ -600,6 +652,45 @@ export type BlocksDefinitions = {
     /**
      * Catégorie Action
      */
+    block.delay_action = {
+        init() {
+            this.jsonInit?.(
+                {
+                    type: 'delay_action',
+                    message0: tr('blockly.blocks.delay_action.message'),
+                    args0: [
+                        {
+                            type: 'field_number',
+                            name: 'Hour',
+                            value: 0,
+                            min: 0,
+                            max: 23,
+                        },
+                        {
+                            type: 'field_number',
+                            name: 'Minute',
+                            value: 0,
+                            min: 0,
+                            max: 59,
+                        },
+                        {
+                            type: 'field_number',
+                            name: 'Second',
+                            value: 0,
+                            min: 0,
+                            max: 59,
+                        },
+                    ],
+                    inputsInline: false,
+                    previousStatement: 'Action',
+                    nextStatement: 'Action',
+                    colour: COLORS.HUE_ORANGE,
+                    tooltip: tr('blockly.blocks.delay_action.tooltip'),
+                    helpUrl: '',
+                },
+            );
+        },
+    };
 
     /**
      * Catégorie Contrôle de lampe

@@ -17,12 +17,14 @@
     import Sidebar from './components/UI/bar/Sidebar.svelte';
     import Toast from './Toast.svelte';
     import Groups from './routes/groups/Groups.svelte';
+    import Users from './routes/users/Users.svelte';
     import UserService from './services/userService';
     import LoginPage from './components/login/LoginPage.svelte';
     import DisconnectModal from './components/login/DisconnectModal.svelte';
     import Rooms from './routes/room/Rooms.svelte';
     import HelpModal from './components/help/HelpModal.svelte';
     import { tr, trArray } from './utils/i18nHelper';
+    import LoginModal from './components/login/LoginModal.svelte';
 
     // Configure the app routes
     const routes = {
@@ -33,6 +35,7 @@
         '/automations': Automations,
         '/groups': Groups,
         '/rooms': Rooms,
+        '/users': Users,
         // This is optional, but if present it must be the last
         '*': Entities,
     };
@@ -60,6 +63,7 @@
     }
 
     let currentPageSelected = hashToPage();
+    let openLoginModal = false;
 
     // Configure and init i18n
     addMessages('fr', fr);
@@ -85,6 +89,7 @@
         bind:open={openHelpModal}
         helpText={trArray(`help.${currentPageSelected}`)}
     />
+    <LoginModal bind:open={openLoginModal} />
 
     {#await isLocked() then locked}
         {#if locked}
@@ -101,6 +106,7 @@
                             currentPageSelected = hashToPage();
                             openHelpModal = true;
                         }}
+                        on:login={() => (openLoginModal = true)}
                     />
                 </div>
             </div>

@@ -4,3 +4,9 @@ export interface User {
     admin: boolean;
     entities: string[];
 }
+
+export interface UserWithoutId {
+    username: string;
+    admin: boolean;
+    entities?: string[];
+}

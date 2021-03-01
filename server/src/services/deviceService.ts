@@ -65,20 +65,22 @@ class DeviceService implements EventObserver {
         const devices: HaDevice[] = await socketService.listDeviceRegistry();
         const entities: HaEntity[] = await socketService.listEntityRegistry();
         const states: HaStateResponse[] = await socketService.getStates();
-        return devices.map((d: HaDevice) => {
-            const device: Device = {
-                id: d.id,
-                name: d.name,
-                model: d.model,
-                entities: entityService.filterEntitiesByDevice(d.id, entities, states),
-                automations: [],
-                nameByUser: d.name_by_user ?? '',
-                disabledBy: d.disabled_by ?? '',
-                areaId: d.area_id ?? '',
-            };
-            // TODO: device.automations = populate automations
-            return device;
-        });
+        return Promise.all(
+            devices.map(async (d: HaDevice) => {
+                const device: Device = {
+                    id: d.id,
+                    name: d.name,
+                    model: d.model,
+                    entities: (await entityService.filterEntitiesByDevice(d.id, entities, states)),
+                    automations: [],
+                    nameByUser: d.name_by_user ?? '',
+                    disabledBy: d.disabled_by ?? '',
+                    areaId: d.area_id ?? '',
+                };
+                // TODO: device.automations = populate automations
+                return device;
+            }),
+        );
     }
 
     /**

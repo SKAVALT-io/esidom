@@ -1,8 +1,8 @@
 <script lang="ts">
     export let isOpen = false;
-    function close() {
+    export let close: () => void = () => {
         isOpen = false;
-    }
+    };
 </script>
 
 {#if isOpen}

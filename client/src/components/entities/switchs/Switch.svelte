@@ -3,12 +3,17 @@
     import type { SwitchEntity } from '../../../../types/entities/switchEntity';
 
     import { socketManager } from '../../../managers/socketManager';
+    import SwitchService from '../../../services/entities/switchService';
     import EntityService, { getEntity } from '../../../services/entityService';
     import { tr } from '../../../utils/i18nHelper';
+    import RoundedButton from '../../UI/buttons/RoundedButton.svelte';
+    import ToggleButton from '../../UI/buttons/ToggleButton.svelte';
     import EditableDiv from '../../UI/utils/EditableDiv.svelte';
 
     export let entityId: string;
     let entity: SwitchEntity;
+    let isOn = false;
+    $: isOn = entity?.state === 'on';
 
     async function loadEntity() {
         entity = await getEntity<SwitchEntity>(entityId);
@@ -30,6 +35,14 @@
         if (e.detail) {
             await EntityService.patchEntityName(entityId, entity.name);
         }
+    }
+
+    function switchEntity() {
+        SwitchService.switchSwitch(entity.id, !isOn);
+    }
+
+    function triggerSwitch() {
+        SwitchService.triggerSwitch(entity.id);
     }
 </script>
 
@@ -56,12 +69,37 @@
                     Informations
                 </div>
 
-                <div class="col-span-3 row-start-2 text-right">Nom :</div>
+                <div class="col-span-3 row-start-2 text-right">
+                    {tr('entities.menu.name')}
+                </div>
                 <div class="col-span-9 row-start-2">{entity.name}</div>
-                <div class="col-span-3 row-start-3 text-right">Type :</div>
+                <div class="col-span-3 row-start-3 text-right">
+                    {tr('entities.menu.type')}
+                </div>
                 <div class="col-span-9 row-start-3">{entity.type}</div>
-                <div class="col-span-3 row-start-4 text-right">Etat :</div>
-                <div class="col-span-9 row-start-4">{entity.state}</div>
+
+                {#if entity.attributes.last_run_success !== undefined}
+                    <div class="col-span-3 row-start-4 text-right">
+                        <RoundedButton
+                            bgColor="bg-blue-500"
+                            bgColorHover="bg-blue-500"
+                            on:click={triggerSwitch}
+                            size={9}
+                            iconPath="/icons/button/trigger.svg"
+                        />
+                    </div>
+                {:else}
+                    <div class="col-span-3 row-start-4 text-right">
+                        {tr('entities.menu.state')}
+                    </div>
+                    <div class="col-span-3 row-start-4">{entity.state}</div>
+                    <div class="col-span-3 row-start-4">
+                        <ToggleButton
+                            on:change={switchEntity}
+                            bind:checked={isOn}
+                        />
+                    </div>
+                {/if}
             </div>
         </div>
     </div>
