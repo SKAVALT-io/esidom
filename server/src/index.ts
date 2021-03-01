@@ -15,6 +15,7 @@ import serviceController from './controllers/serviceController';
 import healthController from './controllers/healthController';
 import databaseForwarder from './forwarders/databaseForwarder';
 import { logger } from './utils';
+import { httpForwarder } from './forwarders';
 
 config(); // Dot env config
 
@@ -39,7 +40,10 @@ const initDb = async () => {
 };
 initDb();
 
-const doAuth = async () => {
+// eslint-disable-next-line import/prefer-default-export
+export const doAuth = async () => {
+    // Reset existing tokens
+    httpForwarder.removeToken();
     try {
         await axios.get(`http://localhost:${port}/auth`);
         logger.info('Server authenticated to HA !');

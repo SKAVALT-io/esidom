@@ -53,7 +53,8 @@
     "errorWhileGettingAutomation": "Erreur lors de la récupération de la routine",
     "errorWhileCreating": "Erreur lors de la création de la routine",
     "errorWhileDeleting": "Erreur lors de la suppression de la routine",
-    "errorWhileUpdating": "Erreur lors de la mise à jour de la routine"
+    "errorWhileUpdating": "Erreur lors de la mise à jour de la routine",
+    "noAutomationYet": "Aucune routine trouvée. Créez en une pour la voir s'afficher ici !"
   },
   "pairing": {
     "instructions": {
@@ -128,8 +129,8 @@
         "tooltip": "Permet de définir une routine. La partie \"déclencheur\" défini les évènements auxquels la routine réagira. Cette routine ne sera exécutée que si elle remplie les \"conditions\" définies (non obligatoire). Enfin, les \"actions\" seront exéctutées si les \"conditions\" sont vérifiées lors du \"déclenchement\". La logique du \"OU\" s'applique aux déclecheurs. La logique du \"ET\" s'applique aux conditions et aux actions."
       },
       "binary_trigger": {
-          "message": "Quand le capteur binaire %1 passe à %2 %3 depuis %4 h %5 m %6 s",
-          "tooltip": "Placer un capteur qui n'a que deux états (interrupteur, déctecteur d'ouverture) et choisissez l'état pour lequel le routine doit se déclencher"
+        "message": "Quand le capteur binaire %1 passe à %2 %3 depuis %4 h %5 m %6 s",
+        "tooltip": "Placer un capteur qui n'a que deux états (interrupteur, déctecteur d'ouverture) et choisissez l'état pour lequel le routine doit se déclencher"
       },
       "time_trigger": {
         "message": "%1 h %2 %3 m %4 %5 s",
@@ -222,21 +223,21 @@
         "tooltip": "Permet de définir la température de la lampe. La valeur est comprise entre 153 (blanche) et 500 (jaune)."
       },
       "object_action": {
-          "message": "Objet %1 %2 Action %3 %4",
-          "tooltip": "Sélectionne un objet, puis contrôle les actions possibles sur celui-ci. Attention : la couleur et la température d'une lampe ne sont pas compatibles.",
-          "color": "Couleur",
-          "brightness": "Intensité",
-          "temperature": "Température",
-          "lightTurnOn": "lampe : allumer",
-          "lightTurnOff": "lampe : éteindre",
-          "lightToggle": "lampe : basculer",
-          "switchTurnOn": "prise : allumer",
-          "switchTurnOff": "prise : éteindre",
-          "switchToggle": "prise : basculer"
+        "message": "Objet %1 %2 Action %3 %4",
+        "tooltip": "Sélectionne un objet, puis contrôle les actions possibles sur celui-ci. Attention : la couleur et la température d'une lampe ne sont pas compatibles.",
+        "color": "Couleur",
+        "brightness": "Intensité",
+        "temperature": "Température",
+        "lightTurnOn": "lampe : allumer",
+        "lightTurnOff": "lampe : éteindre",
+        "lightToggle": "lampe : basculer",
+        "switchTurnOn": "prise : allumer",
+        "switchTurnOff": "prise : éteindre",
+        "switchToggle": "prise : basculer"
       },
       "delay_action": {
-          "message": "Délai %1 h %2 m %3 s",
-          "tooltip": "Définir le délai avant la prochaine action."
+        "message": "Délai %1 h %2 m %3 s",
+        "tooltip": "Définir le délai avant la prochaine action."
       }
     }
   },
@@ -283,7 +284,8 @@
     "errorWhileLoading": "Erreur lors de la récupération des groupes",
     "errorWhileCreating": "Erreur lors de la création du groupe",
     "errorWhileDeleting": "Erreur lors de la suppression du groupe",
-    "errorWhileUpdating": "Erreur lors de la mise à jour du groupe"
+    "errorWhileUpdating": "Erreur lors de la mise à jour du groupe",
+    "noGroupYet": "Aucun groupe trouvé. Créez en un pour le voir s'afficher ici !" 
   },
   "entities": {
     "menu": {
@@ -320,7 +322,8 @@
     "errorWhileLoading": "Erreur lors de la récupération des pièces",
     "errorWhileCreating": "Erreur lors de la création de la pièce",
     "errorWhileDeleting": "Erreur lors de la suppression de la pièce",
-    "errorWhileUpdating": "Erreur lors de la mise à jour de la pièce"
+    "errorWhileUpdating": "Erreur lors de la mise à jour de la pièce",
+    "noRoomYet": "Aucune pièce trouvée. Créez en une pour la voir s'afficher ici !" 
   },
   "sortBy": {
     "title": "Trier par",
