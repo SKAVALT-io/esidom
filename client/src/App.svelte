@@ -21,6 +21,8 @@
     import LoginPage from './components/login/LoginPage.svelte';
     import DisconnectModal from './components/login/DisconnectModal.svelte';
     import Rooms from './routes/room/Rooms.svelte';
+    import HelpModal from './components/help/HelpModal.svelte';
+    import { tr, trArray } from './utils/i18nHelper';
 
     // Configure the app routes
     const routes = {
@@ -39,6 +41,7 @@
     let openSidebar = false;
 
     let openDisconnectModal = false;
+    let openHelpModal = false;
 
     // Configure and init i18n
     addMessages('fr', fr);
@@ -60,6 +63,10 @@
 <main>
     <Toast />
     <DisconnectModal bind:open={openDisconnectModal} />
+    <HelpModal
+        bind:open={openHelpModal}
+        helpText={trArray(`help.${window.location.hash.substring(2).length !== 0 ? '' : 'entities'}`)}
+    />
 
     {#await isLocked() then locked}
         {#if locked}
@@ -72,6 +79,7 @@
                             openSidebar = !openSidebar;
                         }}
                         on:disconnect={() => (openDisconnectModal = true)}
+                        on:help={() => (openHelpModal = true)}
                     />
                 </div>
             </div>

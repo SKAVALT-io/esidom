@@ -15,6 +15,18 @@
     "groups": "groupes",
     "rooms": "pièces"
   },
+  "help": {
+      "entities": [
+        "<h3 class=\"font-bold\">A quoi ça sert ?</h3>",
+        "<p>Sur cette page vous trouverez l'ensemble des <i>entités</i> de vos équipements.</p>",
+        "<h3 class=\"font-bold\">Entité</h3>",
+        "<p> Une <i>entité</i> est une fonctionnalité de votre équipement : un capteur peut par exemple vous indiquer la température <bold>et</bold> un capteur de mouvement. Dans l'interface, vous verrez alors <bold>2</bold> blocs : un par <i>entité</i>. Quoi qu'il en soit, vous pouvez consulter rapidement les informations sur l'équipement depuis cette page.</p>",
+        "<h3 class=\"font-bold\">Contrôle rapide</h3>",
+        "<p>Pour les <i>lampes</i>, il vous est même possible de contrôler directement sa luminosité ou sa couleur !</p>",
+        "<h3 class=\"font-bold\">Statut de l'équipement</h3>",
+        "<p> Si votre équipement est en <span class=\"text-green-500\">vert</span>, tout va bien ! En revanche, s'il est en <span class=\"text-red-500\">rouge</span>, la connexion n'a pas pu être établie. Essayez de vérifier directement votre équipement, en vous assurant qu'il soit opérationnel.</p>"
+      ]
+  },
   "devices": {
     "lights": "lampes",
     "sensors": "capteurs",

@@ -35,8 +35,9 @@
     "i18n-ally.sourceLanguage": "fr",
     "javascript.preferences.quoteStyle": "single",
     "i18n-ally.regex.usageMatch": [
-        "(?:\\$[_t]|tr)\\([\\'\"`]({key})[\\'\"`]"
+        "(?:\\$[_t]|tr(?:Array)?)\\([\\'\"`]({key})[\\'\"`]"
     ],
     "i18n-ally.keystyle": "nested",
     "typescript.preferences.quoteStyle": "single",
+    "cmake.configureOnOpen": false,
 }

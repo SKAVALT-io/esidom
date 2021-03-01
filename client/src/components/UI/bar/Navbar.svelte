@@ -34,7 +34,14 @@
             <Clock formatDate="long" />
         </p>
     </div>
-    <div class="nav-links grid grid-flow-col grid-cols-2 gap-x-2 items-center">
+    <div class="nav-links grid grid-flow-col grid-cols-2 gap-x-3 items-center">
+        <button id="help" on:click={() => dispatch('help')}>
+            <img
+                class="link-svg w-5 h-5 opacity-80 hover:opacity-100"
+                src="icons/button/help.svg"
+                alt="help"
+            />
+        </button>
         <button id="logout" on:click={() => dispatch('disconnect')}>
             <img
                 class="link-svg w-5 h-5 opacity-80 hover:opacity-100"
