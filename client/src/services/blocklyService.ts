@@ -593,10 +593,7 @@ export default class BlocklyService {
                 serviceInput.removeField('Services', true);
                 serviceInput.appendField(new Blockly.FieldDropdown(newDropdown), 'Services');
 
-                const entityField = (this as EsidomBlockType).getFieldValue('Entities');
-                const currentType = entityField.split('.')[0];
-
-                if (type === 'light' && currentType !== 'light') {
+                if (type === 'light') {
                     (this as EsidomBlockType).removeInput('Color', true);
                     (this as EsidomBlockType).appendValueInput('Color')
                         .setCheck('Color')
@@ -751,7 +748,7 @@ export default class BlocklyService {
             : '';
     }
 
-    static getActionBrightnessXml(brightness: number[]): string {
+    static getActionBrightnessXml(brightness: number): string {
         return brightness
             ? `
                 '<value name="Brightness">
@@ -763,7 +760,7 @@ export default class BlocklyService {
             : '';
     }
 
-    static getActionTemperatureXml(colorTemp: number[]): string {
+    static getActionTemperatureXml(colorTemp: number): string {
         return colorTemp
             ? `
                 '<value name="Temperature">
