@@ -32,7 +32,10 @@ class SocketManager {
     private socket: any;
 
     connect() {
-        this.socket = io(config.BASE_URL);
+    this.socket = io(config.BASE_URL, {
+    	path: config.WS_PATH
+    });
+        console.log(this.socket);
         console.log('Connected to WS');
     }
 

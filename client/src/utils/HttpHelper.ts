@@ -3,7 +3,7 @@ import config from '../config/config';
 
 class Http {
     private http = axios.create({
-        baseURL: config.BASE_URL,
+        baseURL: config.API_URL,
         headers: {
             'Content-Type': 'application/json',
         },
