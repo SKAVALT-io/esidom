@@ -73,64 +73,65 @@
     }
 </script>
 
-<div
-    class="pb-12 pt-2 flex justify-between relative right-0 top-0 mt-2 mr-2 ml-2 mx-auto text-white"
->
-    <h1 class="text-2xl">{tr('groups.myGroups')}</h1>
-    <div>
-        <DropdownButton
-            dropDownOptions={[tr('sortBy.options.name')]}
-            title={tr('sortBy.title')}
-            arrowUp={flipSwitch}
-            on:click={(e) => {
-                if (e.detail === selectedSortOption) {
-                    flipSwitch = !flipSwitch;
-                }
-                selectedSortOption = e.detail;
-            }}
-        />
-        <SearchBar
-            debounce={300}
-            on:type={(e) => {
-                searchPattern = e.detail;
-            }}
-            on:clear={(e) => {
-                searchPattern = '';
-            }}
-        />
-    </div>
-</div>
-{#if !isLoaded}
+<div class=" pb-16">
     <div
-        class="fixed top-0 left-0 w-full h-screen flex justify-center items-center"
+        class="pb-12 pt-2 flex justify-between relative right-0 top-0 mt-2 mr-2 ml-2 mx-auto text-white"
     >
-        <LoadingAnimation />
-    </div>
-{:else}
-    <div
-        id="group"
-        class="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mr-2 ml-2 mt-2"
-    >
-        {#each (searchPattern === '' ? groups : groups.filter((g) =>
-                  g.name.toLowerCase().includes(searchPattern.toLowerCase())
-              )).sort(comparator) as group}
-            <GroupComponent
-                {group}
-                openEditMode={() => {
-                    currentGroup = group;
-                    isOpen = true;
-                    editMode = true;
-                }}
-                openViewMode={() => {
-                    currentGroup = group;
-                    isOpen = true;
-                    editMode = false;
+        <h1 class="text-2xl">{tr('groups.myGroups')}</h1>
+        <div>
+            <DropdownButton
+                dropDownOptions={[tr('sortBy.options.name')]}
+                title={tr('sortBy.title')}
+                arrowUp={flipSwitch}
+                on:click={(e) => {
+                    if (e.detail === selectedSortOption) {
+                        flipSwitch = !flipSwitch;
+                    }
+                    selectedSortOption = e.detail;
                 }}
             />
-        {/each}
+            <SearchBar
+                debounce={300}
+                on:type={(e) => {
+                    searchPattern = e.detail;
+                }}
+                on:clear={(e) => {
+                    searchPattern = '';
+                }}
+            />
+        </div>
     </div>
-{/if}
-
+    {#if !isLoaded}
+        <div
+            class="fixed top-0 left-0 w-full h-screen flex justify-center items-center"
+        >
+            <LoadingAnimation />
+        </div>
+    {:else}
+        <div
+            id="group"
+            class="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mr-2 ml-2 mt-2"
+        >
+            {#each (searchPattern === '' ? groups : groups.filter((g) =>
+                      g.name.toLowerCase().includes(searchPattern.toLowerCase())
+                  )).sort(comparator) as group}
+                <GroupComponent
+                    {group}
+                    openEditMode={() => {
+                        currentGroup = group;
+                        isOpen = true;
+                        editMode = true;
+                    }}
+                    openViewMode={() => {
+                        currentGroup = group;
+                        isOpen = true;
+                        editMode = false;
+                    }}
+                />
+            {/each}
+        </div>
+    {/if}
+</div>
 <Modal bind:isOpen>
     <div slot="content">
         <GroupDetail

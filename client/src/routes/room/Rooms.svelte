@@ -69,7 +69,7 @@
 
 <div class=" pb-16">
     <div
-        class="pt-2 flex justify-between relative right-0 top-0 mt-2 mr-2 ml-2 mx-auto text-white"
+        class="pb-12 flex justify-between relative right-0 top-0 mt-2 mr-2 ml-2 mx-auto text-white"
     >
         <h1 class="text-2xl">{tr('rooms.myRooms')}</h1>
         <div>
@@ -110,9 +110,15 @@
                   )).sort(comparator) as room}
                 <RoomComponent
                     {room}
-                    on:click={() => {
+                    openEditMode={() => {
                         currentRoom = room;
                         isOpen = true;
+                        editMode = true;
+                    }}
+                    openViewMode={() => {
+                        currentRoom = room;
+                        isOpen = true;
+                        editMode = false;
                     }}
                 />
             {/each}
