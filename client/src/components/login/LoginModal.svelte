@@ -10,6 +10,10 @@
     import { getCurrentPage } from '../../utils/functions';
 
     export let open = false;
+    // Listen to changes on "open" so that when it is opened, refresh the list of users
+    $: hack = open
+        ? UserService.getUsers().then((x) => (users = x))
+        : undefined;
     let selectedUser: User;
 
     function closeModal() {
