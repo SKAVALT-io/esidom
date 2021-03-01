@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import App from '../app';
-import { entityService } from '../services';
-import { Entity } from '../types';
+import { entityService, userService } from '../services';
+import { Entity, User } from '../types';
 import {
     send, sendf, Success, SuccessOrError, sendNoSuchId,
 } from '../utils';
@@ -15,9 +15,17 @@ class EntityController {
      */
     @App.get('')
     async getEntities(req: Request, res: Response): Success<Entity[]> {
-        const { type } = req.query;
+        const { type, userId } = req.query as {type: string, userId: string};
+        let user: User | undefined;
+        if (userId) {
+            try {
+                user = await userService.getUserById(parseInt(userId, 10));
+            } catch (err) {
+                return send(res, 404, err.message);
+            }
+        }
         return entityService
-            .getEntities()
+            .getEntities(user)
             .then((entities) => {
                 const data = type === undefined
                     ? entities

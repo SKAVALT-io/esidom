@@ -1,3 +1,4 @@
+import { databaseForwarder } from '../forwarders';
 import { User } from '../types';
 
 class UserService {
@@ -8,12 +9,34 @@ class UserService {
      * Get all the users
      */
     async getUsers(): Promise<User[]> {
-        return new Promise(() => {});
+        return databaseForwarder
+            .getUsers();
+    }
+
+    async createUser(username: string, admin: boolean, entities?: string[]): Promise<User> {
+        return databaseForwarder
+            .createUser(username, admin, entities);
+    }
+
+    async getUserById(id: number): Promise<User> {
+        return databaseForwarder
+            .getUserById(id);
+    }
+
+    async updateUser(id: number, username?: string,
+        admin?: boolean, entities?: string[]): Promise<User> {
+        return databaseForwarder
+            .updateUser(id, username, admin, entities);
+    }
+
+    async deleteUser(id: number): Promise<void> {
+        return databaseForwarder
+            .deleteUser(id);
     }
 
     async lockFront(password: string): Promise<string> {
         if (this.frontPassword) {
-            throw new Error('Un mot de pass est déjà définit.');
+            throw new Error('Un mot de passe est déjà définit.');
         }
 
         this.frontPassword = password;

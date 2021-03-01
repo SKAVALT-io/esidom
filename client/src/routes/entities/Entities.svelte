@@ -16,6 +16,8 @@
     import { tr } from '../../utils/i18nHelper';
     import LoadingAnimation from '../../components/animations/LoadingAnimation.svelte';
     import Tooltip from '../../components/UI/utils/Tooltip.svelte';
+    import type { User } from '../../../types/userType';
+    import UserService from '../../services/userService';
 
     let isPairDeviceOpen = false;
     let showPairTip = false;
@@ -34,6 +36,11 @@
     type EntityByDomain = {
         [key: string]: Entity<any>[];
     };
+
+    // let user: User | undefined = undefined;
+    // UserService.user.subscribe((newUser) => {
+    //     user = newUser;
+    // });
 
     async function loadEntities() {
         const entities = await EntityService.getActualEntities();

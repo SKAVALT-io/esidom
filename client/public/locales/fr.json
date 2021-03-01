@@ -13,7 +13,8 @@
     "blockly": "blockly",
     "pairing": "appairage",
     "groups": "groupes",
-    "rooms": "pièces"
+    "rooms": "pièces",
+    "users": "utilisateurs"
   },
   "devices": {
     "lights": "lampes",
@@ -109,6 +110,7 @@
         "light": "lampe",
         "automation": "routine",
         "switch": "interrupteur",
+        "group": "groupe",
         "mediaPlayer": "Lecteur multimédia",
         "tooltip": "Liste tous les objets (entités) de type : "
       },
@@ -121,33 +123,33 @@
           "tooltip": "Placer un capteur qui n'a que deux états (interrupteur, déctecteur d'ouverture) et choisissez l'état pour lequel le routine doit se déclencher"
       },
       "time_trigger": {
-          "message": "%1 h %2 %3 m %4 %5 s",
-          "tooltip": "Indique l'heure à laquelle la routine doit se déclencher (hh:mm:ss)"
+        "message": "%1 h %2 %3 m %4 %5 s",
+        "tooltip": "Indique l'heure à laquelle la routine doit se déclencher (hh:mm:ss)"
       },
       "sun_trigger": {
-          "message": "%1 h %2 m %3 s %4 le %5 du soleil",
-          "tooltip": "Déclenche la routine hh:mm:ss [avant, après] le [lever, coucher] du soleil",
-          "before_after": {
-              "before": "avant",
-              "after": "après"
-          },
-          "sun": {
-              "sunrise": "lever",
-              "sunset": "coucher"
-          }
+        "message": "%1 h %2 m %3 s %4 le %5 du soleil",
+        "tooltip": "Déclenche la routine hh:mm:ss [avant, après] le [lever, coucher] du soleil",
+        "before_after": {
+          "before": "avant",
+          "after": "après"
+        },
+        "sun": {
+          "sunrise": "lever",
+          "sunset": "coucher"
+        }
       },
       "numeric_state_trigger": {
-          "message": "Si %1 et son attribut %2 %3 a une valeur %4 %5 entre %6 et %7 %8",
-          "tooltip": "Après avoir fourni un capteur numérique, sélectionnez la (les) valeur(s) pour laquelle (lesquelles) la condition doit s'appliquer parmi les intervalles [compris, non compris, supérieur, inférieur]",
-          "dropdown3": {
-              "included": "comprise",
-              "notIncluded":"non comprise",
-              "greater": "au dessus",
-              "lower": "en dessous"
-          },
-          "between": "entre",
-          "and": "et",
-          "of": "de"
+        "message": "Si %1 et son attribut %2 %3 a une valeur %4 %5 entre %6 et %7 %8",
+        "tooltip": "Après avoir fourni un capteur numérique, sélectionnez la (les) valeur(s) pour laquelle (lesquelles) la condition doit s'appliquer parmi les intervalles [compris, non compris, supérieur, inférieur]",
+        "dropdown3": {
+          "included": "comprise",
+          "notIncluded": "non comprise",
+          "greater": "au dessus",
+          "lower": "en dessous"
+        },
+        "between": "entre",
+        "and": "et",
+        "of": "de"
       },
       "interval_trigger": {
         "message": "Toutes les %1 %2 %3",
@@ -157,58 +159,58 @@
         "second": "secondes"
       },
       "time_condition": {
-          "message": "Début : %1 h %2 m %3 s %4 Fin : %5 h %6 m %7 s %8 %9 lundi %10 %11 mardi %12 %13 mercredi %14 %15 jeudi %16 %17 vendredi %18 %19 samedi %20 %21 dimanche",
-          "tooltip": "Permet de sélectionner l'heure et le (ou les) jours de déclenchement de la routine"
+        "message": "Début : %1 h %2 m %3 s %4 Fin : %5 h %6 m %7 s %8 %9 lundi %10 %11 mardi %12 %13 mercredi %14 %15 jeudi %16 %17 vendredi %18 %19 samedi %20 %21 dimanche",
+        "tooltip": "Permet de sélectionner l'heure et le (ou les) jours de déclenchement de la routine"
       },
       "sun_condition": {
-          "message": "%1 h %2 m %3 s %4 le %5 du soleil",
-          "tooltip": "Ne déclenche la routine que si l'heure actuelle est hh:mm:ss [avant, après] le [lever, coucher] du soleil",
-          "before_after": {
-              "before": "avant",
-              "after": "après"
-          },
-          "sun": {
-              "sunrise": "lever",
-              "sunset": "coucher"
-          }
+        "message": "%1 h %2 m %3 s %4 le %5 du soleil",
+        "tooltip": "Ne déclenche la routine que si l'heure actuelle est hh:mm:ss [avant, après] le [lever, coucher] du soleil",
+        "before_after": {
+          "before": "avant",
+          "after": "après"
+        },
+        "sun": {
+          "sunrise": "lever",
+          "sunset": "coucher"
+        }
       },
       "time_condition_hour": {
-          "message": "Début %1 h %2 m %3 s %4 Fin %5 h %6 m %7 s",
-          "tooltip": "Applique la condition hh:mm:ss tous les jours"
+        "message": "Début %1 h %2 m %3 s %4 Fin %5 h %6 m %7 s",
+        "tooltip": "Applique la condition hh:mm:ss tous les jours"
       },
       "time_condition_week": {
-          "message": "%1 lundi %2 %3 mardi %4 %5 mercredi %6 %7 jeudi %8 %9 vendredi %10 %11 samedi %12 %13 dimanche",
-          "tooltip": "Applique la condition chaque jour coché, quelle que soit l'heure"
+        "message": "%1 lundi %2 %3 mardi %4 %5 mercredi %6 %7 jeudi %8 %9 vendredi %10 %11 samedi %12 %13 dimanche",
+        "tooltip": "Applique la condition chaque jour coché, quelle que soit l'heure"
       },
       "binary_condition": {
-          "message": "Si le capteur binaire %1 est à l'état %2 %3 depuis %4 h %5 m %6 s",
-          "tooltip": "Placer un capteur qui n'a que deux états (interrupteur, déctecteur d'ouverture) et choisissez l'état pour lequel l'équipement doit être pour continuer la routine"
+        "message": "Si le capteur binaire %1 est à l'état %2 %3 depuis %4 h %5 m %6 s",
+        "tooltip": "Placer un capteur qui n'a que deux états (interrupteur, déctecteur d'ouverture) et choisissez l'état pour lequel l'équipement doit être pour continuer la routine"
       },
       "numeric_state_condition": {
-          "message": "Si %1 et son attribut %2 %3 a une valeur %4 %5 entre %6 et %7 %8",
-          "tooltip": "Après avoir fourni un capteur numérique, sélectionnez la (les) valeur(s) pour laquelle (lesquelles) la condition doit s'appliquer parmi les intervalles [compris, non compris, supérieur, inférieur]",
-          "dropdown3": {
-              "included": "comprise",
-              "notIncluded":"non comprise",
-              "greater": "au dessus",
-              "lower": "en dessous"
-          }
+        "message": "Si %1 et son attribut %2 %3 a une valeur %4 %5 entre %6 et %7 %8",
+        "tooltip": "Après avoir fourni un capteur numérique, sélectionnez la (les) valeur(s) pour laquelle (lesquelles) la condition doit s'appliquer parmi les intervalles [compris, non compris, supérieur, inférieur]",
+        "dropdown3": {
+          "included": "comprise",
+          "notIncluded": "non comprise",
+          "greater": "au dessus",
+          "lower": "en dessous"
+        }
       },
       "color_picker": {
-          "message": "Couleur %1",
-          "tooltip": "Sélectionne une couleur parmi celles proposées."
+        "message": "Couleur %1",
+        "tooltip": "Sélectionne une couleur parmi celles proposées."
       },
       "color_rgb": {
-          "message": "Couleur personnalisée : %1 rouge : %2 vert : %3 bleu %4",
-          "tooltip": "Permet de définir la couleur avec les paramètres Rouge, vert et bleu. Chaque valeur étant comprise entre 0 (absence de couleur) et 255 (couleur maximale)"
+        "message": "Couleur personnalisée : %1 rouge : %2 vert : %3 bleu %4",
+        "tooltip": "Permet de définir la couleur avec les paramètres Rouge, vert et bleu. Chaque valeur étant comprise entre 0 (absence de couleur) et 255 (couleur maximale)"
       },
       "brightness": {
-          "message": "Intensité %1",
-          "tooltip": "Permet de définir l'intensité de la lampe. La valeur est comprise entre 0 et 255."
+        "message": "Intensité %1",
+        "tooltip": "Permet de définir l'intensité de la lampe. La valeur est comprise entre 0 et 255."
       },
       "color_temp": {
-          "message": "Température %1",
-          "tooltip": "Permet de définir la température de la lampe. La valeur est comprise entre 153 (blanche) et 500 (jaune)."
+        "message": "Température %1",
+        "tooltip": "Permet de définir la température de la lampe. La valeur est comprise entre 153 (blanche) et 500 (jaune)."
       },
       "object_action": {
           "message": "Objet %1 %2 Action %3 %4",
@@ -235,7 +237,8 @@
     "confirmation": "Confirmer le mot de passe"
   },
   "modal": {
-    "registerPassword": "Verrouillez l'application avec un mot de passe"
+    "registerPassword": "Verrouillez l'application avec un mot de passe",
+    "login": "Choisissez un utilisateur"
   },
   "buttons": {
     "cancel": "Annuler",
@@ -288,7 +291,7 @@
     },
     "close": "Fermer",
     "unlock": "Déverouiller"
-    },
+  },
   "rooms": {
     "myRooms": "Mes pièces",
     "search": "Rechercher ...",
@@ -303,5 +306,19 @@
     "options": {
       "name": "Noms"
     }
+  },
+  "user": {
+    "confirmDelete": "Voulez-vous vraiment supprimer cet utilisateur ?",
+    "name": "Nom d'utilisateur",
+    "create": "Créer un utilisateur",
+    "edit": "Editer l'utilisateur",
+    "assignEntities": "Assigner des entités à l'utilisateur",
+    "connectedAs": "Connecté en tant que {0}",
+    "notConnected": "Non connecté",
+    "logout": "Verrouiller l'application",
+    "changeUser": "Changer d'utilisateur",
+    "userCreated": "L'utilisateur a bien été créé",
+    "errorWhileCreating": "Une erreur est survenue lors de la création",
+    "usernameCannotBeEmpty": "Le nom d'utilisateur ne peut pas être vide"
   }
 }

@@ -10,7 +10,6 @@ import {
     sendMissingParam,
     sendNoSuchId,
     Success,
-    SuccessMessage,
     SuccessMessageOrError,
     SuccessOrError,
 } from '../utils';

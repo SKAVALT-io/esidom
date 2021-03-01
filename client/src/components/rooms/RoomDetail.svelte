@@ -44,7 +44,7 @@
                 for="Name"
             >{tr('rooms.roomDevices')}</label>
 
-            <div class="mt-2">
+            <div class="mt-2 h-60 overflow-y-auto">
                 {#await DeviceService.getDevices()}
                     <div class="loader">
                         <LoadingAnimation />

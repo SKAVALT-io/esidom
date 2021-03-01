@@ -27,18 +27,6 @@ const TYPES: Type[] = [
         friendlyName: 'blockly.blocks.blocks_by_type.binarySensor',
     },
     {
-        name: 'person',
-        friendlyName: 'blockly.blocks.blocks_by_type.person',
-    },
-    {
-        name: 'weather',
-        friendlyName: 'blockly.blocks.blocks_by_type.weather',
-    },
-    {
-        name: 'zwave',
-        friendlyName: 'blockly.blocks.blocks_by_type.zwave',
-    },
-    {
         name: 'sensor',
         friendlyName: 'blockly.blocks.blocks_by_type.sensor',
     },
@@ -55,8 +43,8 @@ const TYPES: Type[] = [
         friendlyName: 'blockly.blocks.blocks_by_type.switch',
     },
     {
-        name: 'media_player',
-        friendlyName: 'blockly.blocks.blocks_by_type.mediaPlayer',
+        name: 'group',
+        friendlyName: 'blockly.blocks.blocks_by_type.group',
     },
 ];
 

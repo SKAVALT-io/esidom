@@ -1,17 +1,14 @@
 <script lang="ts">
     import * as SPA from 'svelte-spa-router';
     import { tr } from '../../../utils/i18nHelper';
-    import { clickOutside } from '../../../utils/functions';
+    import { clickOutside, getCurrentPage } from '../../../utils/functions';
+    import UserService from '../../../services/userService';
+    import type { User } from '../../../../types/userType';
     export let open = false;
 
-    function hashToPage() {
-        const sub = window.location.hash.substring(2);
-        return sub !== '' ? sub : 'entities';
-    }
-
-    let currentPageSelected = hashToPage();
+    let currentPageSelected = getCurrentPage();
     window.onhashchange = () => {
-        currentPageSelected = hashToPage();
+        currentPageSelected = getCurrentPage();
     };
 
     const pageLinkClicked = (currentPage: string) => {
@@ -26,6 +23,11 @@
             open = false;
         }
     }
+
+    let user: User | undefined = undefined;
+    UserService.user.subscribe((newUser) => {
+        user = newUser;
+    });
 </script>
 
 <nav
@@ -109,6 +111,24 @@
                 <span class="link-text">{tr('menu.rooms')}</span>
             </a>
         </li>
+        <li class="nav_item" class:invisible={!user?.admin}>
+            <a
+                href="/users"
+                class="nav-link"
+                use:SPA.link
+                on:click={() => {
+                    pageLinkClicked('users');
+                }}
+                class:selected={currentPageSelected === 'users'}
+            >
+                <img
+                    class="link-svg"
+                    src="icons/button/user.svg"
+                    alt={tr('menu.users')}
+                />
+                <span class="link-text">{tr('menu.users')}</span>
+            </a>
+        </li>
     </ul>
 </nav>
 
@@ -150,7 +170,7 @@
 
     /* span */
     .link-text {
-        @apply ml-4 text-sm opacity-0 cursor-default;
+        @apply ml-4 text-sm opacity-0 cursor-default pointer-events-none;
     }
 
     .open .link-text {
@@ -177,7 +197,7 @@
 
         .navbar:hover .link-text,
         .open .link-text {
-            @apply pointer-events-none opacity-100 transition-opacity delay-150 mr-4;
+            @apply opacity-100 transition-opacity delay-150 mr-4;
         }
     }
 </style>

@@ -3,10 +3,18 @@
 
     import Clock from '../../others/Clock.svelte';
     import { tr } from '../../../utils/i18nHelper';
-    import AccountSvg from '../../svg_icons/AccountSVG.svelte';
-    import RoundedButton from '../buttons/RoundedButton.svelte';
+    import UserService from '../../../services/userService';
+    import type { User } from '../../../../types/userType';
+    import Tooltip from '../utils/Tooltip.svelte';
 
     const dispatch = createEventDispatcher();
+
+    let showLogoutTip = false;
+    let showChangeUserTip = false;
+    let user: User | undefined = undefined;
+    UserService.user.subscribe((newUser) => {
+        user = newUser;
+    });
 </script>
 
 <nav
@@ -23,7 +31,7 @@
 
         <a href="/#/" class="contents">
             <img src="logo-esidom.png" alt="ESIDOM" class="logo h-auto w-12" />
-            <p>{tr('app.name')}</p>
+            <p class="hidden sm:flex">{tr('app.name')}</p>
         </a>
     </div>
     <div class="text-lg">
@@ -34,20 +42,56 @@
             <Clock formatDate="long" />
         </p>
     </div>
-    <div class="nav-links grid grid-flow-col grid-cols-2 gap-x-2 items-center">
-        <button id="logout" on:click={() => dispatch('disconnect')}>
+    <div class="nav-links grid grid-flow-col grid-cols-1 gap-x-2 items-center">
+        <button
+            id="logout"
+            class="relative w-5 h-5 opacity-80 hover:opacity-100"
+            on:click={() => dispatch('disconnect')}
+            on:touchstart={() => (showLogoutTip = true)}
+            on:touchend={() => (showLogoutTip = false)}
+            on:mouseleave={() => (showLogoutTip = false)}
+            on:mouseenter={() => (showLogoutTip = true)}
+        >
             <img
                 class="link-svg w-5 h-5 opacity-80 hover:opacity-100"
                 src="icons/navbar/logout.svg"
                 alt="logout"
             />
+            <Tooltip
+                position="bottom"
+                show={showLogoutTip}
+                text={tr('user.logout')}
+            />
         </button>
-        <a
+
+        <button
+            id="login"
+            on:click={() => dispatch('login')}
             href="/#/"
-            class="lg:inline-flex lg:w-auto w-full py-2 rounded text-gray-400 items-center justify-center hover:bg-gray-900 hover:text-white"
+            class="relative lg:inline-flex lg:w-auto w-full py-2 rounded text-gray-400 items-center space-x-4 hover:bg-gray-900 hover:text-white"
+            on:touchstart={() => (showChangeUserTip = true)}
+            on:touchend={() => (showChangeUserTip = false)}
+            on:mouseleave={() => (showChangeUserTip = false)}
+            on:mouseenter={() => (showChangeUserTip = true)}
         >
-            <AccountSvg />
-        </a>
+            <div>
+                {#if user}
+                    <i class="capitalize">{user.username}</i>
+                {:else}
+                    <p>{tr('user.notConnected')}</p>
+                {/if}
+            </div>
+            <img
+                class="link-svg w-5 h-5 opacity-80 hover:opacity-100"
+                src="icons/button/user.svg"
+                alt="changeUser"
+            />
+            <Tooltip
+                position="left"
+                show={showChangeUserTip}
+                text={tr('user.changeUser')}
+            />
+        </button>
     </div>
 </nav>
 

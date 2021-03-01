@@ -17,10 +17,12 @@
     import Sidebar from './components/UI/bar/Sidebar.svelte';
     import Toast from './Toast.svelte';
     import Groups from './routes/groups/Groups.svelte';
+    import Users from './routes/users/Users.svelte';
     import UserService from './services/userService';
     import LoginPage from './components/login/LoginPage.svelte';
     import DisconnectModal from './components/login/DisconnectModal.svelte';
     import Rooms from './routes/room/Rooms.svelte';
+    import LoginModal from './components/login/LoginModal.svelte';
 
     // Configure the app routes
     const routes = {
@@ -31,6 +33,7 @@
         '/automations': Automations,
         '/groups': Groups,
         '/rooms': Rooms,
+        '/users': Users,
         // This is optional, but if present it must be the last
         '*': Entities,
     };
@@ -39,6 +42,7 @@
     let openSidebar = false;
 
     let openDisconnectModal = false;
+    let openLoginModal = false;
 
     // Configure and init i18n
     addMessages('fr', fr);
@@ -60,6 +64,7 @@
 <main>
     <Toast />
     <DisconnectModal bind:open={openDisconnectModal} />
+    <LoginModal bind:open={openLoginModal} />
 
     {#await isLocked() then locked}
         {#if locked}
@@ -72,6 +77,7 @@
                             openSidebar = !openSidebar;
                         }}
                         on:disconnect={() => (openDisconnectModal = true)}
+                        on:login={() => (openLoginModal = true)}
                     />
                 </div>
             </div>

@@ -1,6 +1,7 @@
 import type { Entity } from '../../types/entityType';
 import type { Service } from '../../types/serviceType';
 import http from '../utils/HttpHelper';
+import UserService from './userService';
 
 export async function getEntity<T extends Entity<unknown>>(id: string): Promise<T> {
     return http.get<T>(`/entity/${id}`);
@@ -13,11 +14,15 @@ export default class EntityService {
      * @returns entities with domain in `actualDomains`
      */
     static async getActualEntities(): Promise<Array<Entity<unknown>>> {
-        return http.get<Array<Entity<unknown>>>('/entity')
+        return EntityService.getEntities()
             .then((entities) => entities.filter((x) => actualDomains.indexOf(x.id.split('.')[0]) !== -1));
     }
 
     static async getEntities(type = ''): Promise<Array<Entity<unknown>>> {
+        const { currentUser } = UserService;
+        if (currentUser && !currentUser.admin && !(currentUser.entities.length === 0)) {
+            return http.get(`/entity?userId=${currentUser.id}${type ? `&type=${type}` : ''}`);
+        }
         return http.get(`/entity${type ? `?type=${type}` : ''}`);
     }
 

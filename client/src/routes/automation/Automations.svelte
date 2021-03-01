@@ -94,7 +94,7 @@
 </script>
 
 <div
-    class="pt-2 flex justify-between relative right-0 top-0 mt-2 mr-2 ml-2 mx-auto text-white"
+    class="pb-12 pt-2 flex justify-between relative right-0 top-0 mt-2 mr-2 ml-2 mx-auto text-white"
 >
     <h1 class="text-2xl">{tr('automations.myAutomations')}</h1>
     <div
@@ -145,7 +145,7 @@
     </div>
 {:then}
     <div
-        id="automation"
+        id="automations"
         class="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mr-2 ml-2 mt-2"
     >
         {#each [...(isFiltered ? filteredAutomations : automations)].sort(comparator) as automation}
