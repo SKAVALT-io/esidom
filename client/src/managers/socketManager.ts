@@ -25,7 +25,7 @@ function isSocketError(data: any): data is SocketError {
 
 // Need to fix the debounce function generic types...
 const toastError: (name: string|SocketError, data: string|SocketError) => void = debounce(
-    (name: string|SocketError, data: string|SocketError) => toastService.toast(`Error on event ${name}: ${JSON.stringify(data)}`),
+    (name: string|SocketError, data: string|SocketError) => toastService.toast(`Error on event ${name}: ${JSON.stringify(data)}`, 'error'),
 );
 
 class SocketManager {

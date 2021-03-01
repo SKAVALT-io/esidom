@@ -1,15 +1,19 @@
 import type { Group } from '../../types/groupType';
-import HttpHelper from '../utils/HttpHelper';
+import http from '../utils/HttpHelper';
 import { tr } from '../utils/i18nHelper';
+import toastService from '../utils/toast';
 
 export default class GroupService {
     /**
      * Gets a group.
      */
     static async getGroup(): Promise<Group[]> {
-        const groups = await HttpHelper.get<Group[]>('/group');
-
-        return groups.map((g) => this.updateGroupNameIfIsImplicit(g));
+        return http.get<Group[]>('/group')
+            .then((groups) => groups.map((g) => this.updateGroupNameIfIsImplicit(g)))
+            .catch((err) => {
+                toastService.toast(tr('groups.errorWhileLoading'), 'error');
+                throw err;
+            });
     }
 
     /**
@@ -17,7 +21,11 @@ export default class GroupService {
      * @param group the new group
      */
     static async createGroup(group: Group): Promise<Group> {
-        return HttpHelper.post('/group', group);
+        return http.post<Group, Group>('/group', group)
+            .catch((err) => {
+                toastService.toast(tr('groups.errorWhileCreating'), 'error');
+                throw err;
+            });
     }
 
     /**
@@ -25,7 +33,11 @@ export default class GroupService {
      * @param group the group to delete
      */
     static async deleteGroup(group: Group): Promise<Group> {
-        return HttpHelper.delete(`/group/${group.groupId}`);
+        return http.delete<Group, Group>(`/group/${group.groupId}`)
+            .catch((err) => {
+                toastService.toast(tr('groups.errorWhileDeleting'), 'error');
+                throw err;
+            });
     }
 
     /**
@@ -33,7 +45,11 @@ export default class GroupService {
      * @param group the group to be updated
      */
     static async updateGroup(group: Group): Promise<Group> {
-        return HttpHelper.put(`/group/${group.groupId}`, group);
+        return http.put<Group, Group>(`/group/${group.groupId}`, group)
+            .catch((err) => {
+                toastService.toast(tr('groups.errorWhileUpdating'), 'error');
+                throw err;
+            });
     }
 
     /**
