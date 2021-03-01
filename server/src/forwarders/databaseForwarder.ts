@@ -182,12 +182,23 @@ class DatabaseForwarder {
     async deleteUser(userId: number): Promise<void> {
         try {
             await this.db.run('BEGIN TRANSACTION');
-            await this.db.run('DELETE FROM User as u WHERE u.id = ?', userId, (err: any) => {
+            // const sql = 'DELETE FROM User as u WHERE u.id = ($userId)';
+            // const st = await this.db.prepare(sql);
+            // st.run(userId, (err: any) => {
+            //     if (err) {
+            //         logger.error(err.message);
+            //         throw new Error(err.message);
+            //     }
+            // });
+            let res = await this.db.run(`DELETE FROM User as u WHERE u.id = ${userId}`, (err: any) => {
                 if (err) {
                     logger.error(err.message);
                     throw new Error(err.message);
                 }
             });
+            if (res?.changes === 0) {
+                throw new Error('No user with such id');
+            }
             await this.db.run(`DELETE FROM AccessEntity as a WHERE a.userId = ${userId}`);
             await this.db.run('COMMIT');
             return;
