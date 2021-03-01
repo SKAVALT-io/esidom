@@ -35,14 +35,11 @@
         </category>
         <category name="Objets" colour={COLORS.HUE_RED}>
             <block type="binary_sensor" />
-            <block type="person" />
-            <block type="weather" />
-            <block type="zwave" />
             <block type="sensor" />
             <block type="light" />
             <block type="automation" />
             <block type="switch" />
-            <block type="media_player" />
+            <block type="group" />
         </category>
         <category name="Contrôle de lampe" colour={COLORS.HUE_MAUVE}>
             <block type="color_picker" />

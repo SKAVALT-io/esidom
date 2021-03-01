@@ -110,6 +110,7 @@
         "light": "lampe",
         "automation": "routine",
         "switch": "interrupteur",
+        "group": "groupe",
         "mediaPlayer": "Lecteur multimédia",
         "tooltip": "Liste tous les objets (entités) de type : "
       },

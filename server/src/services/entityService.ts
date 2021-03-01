@@ -176,8 +176,8 @@ class EntityService implements EventObserver {
         const UNWANTED_TYPES = ['person', 'zone', 'weather', 'media_player', 'persistent_notification', 'zwave'];
         const result = entities
             .filter((e) => !UNWANTED_SUFFIXES.some((name) => e.id.endsWith(name))
-                || !UNWANTED_TYPES.some((type) => e.type === type
-                || (user ? user.entities.includes(e.id) : true)));
+                && !UNWANTED_TYPES.some((type) => e.type === type
+                && (user ? user.entities.includes(e.id) : true)));
         return result;
     }
 

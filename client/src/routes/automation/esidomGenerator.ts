@@ -66,8 +66,8 @@ export interface BlocklyJSON {
     conditions?: BlocklyJSON[];
 }
 
-export type EntityTypeEnum = 'binary_sensor' | 'person' | 'weather' | 'zwave' | 'sensor' | 'light' | 'automation' | 'switch' | 'media_player';
-const types: EntityTypeEnum[] = ['binary_sensor', 'person', 'weather', 'zwave', 'sensor', 'light', 'automation', 'switch', 'media_player'];
+export type EntityTypeEnum = 'binary_sensor' | 'sensor' | 'light' | 'automation' | 'switch' | 'group';
+const types: EntityTypeEnum[] = ['binary_sensor', 'sensor', 'light', 'automation', 'switch', 'group'];
 
 export type BlocksGenerator = {
     [key in EntityTypeEnum]: (a: Block, code: string, opt_thisOnly: string) => void;
