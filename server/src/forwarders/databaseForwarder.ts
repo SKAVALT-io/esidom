@@ -190,7 +190,7 @@ class DatabaseForwarder {
             //         throw new Error(err.message);
             //     }
             // });
-            let res = await this.db.run(`DELETE FROM User as u WHERE u.id = ${userId}`, (err: any) => {
+            const res = await this.db.run(`DELETE FROM User as u WHERE u.id = ${userId}`, (err: any) => {
                 if (err) {
                     logger.error(err.message);
                     throw new Error(err.message);
