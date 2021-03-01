@@ -4,7 +4,7 @@ import { tr } from '../utils/i18nHelper';
 import toastService from '../utils/toast';
 
 export default class GroupService {
-    static async getGroup(): Promise<Group[]> {
+    static async getGroups(): Promise<Group[]> {
         return http.get<Group[]>('/group')
             .then((groups) => groups.map((g) => this.updateGroupNameIfIsImplicit(g)))
             .catch((err) => {
