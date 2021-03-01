@@ -10,8 +10,8 @@ const mock: Entity = expect.objectContaining({
     attributes: expect.any(Object),
 } as Entity);
 
-const entitiesTypes: string[] = ['person', 'sun', 'group', 'zone', 'binary_sensor', 'switch', 'sensor', 'automation', 'weather', 'media_player', 'light', 'persistent_notification', 'zwave'];
-const HaWeatherEntityId: string = 'weather.maison_hourly';
+const entitiesTypes: string[] = ['sun', 'group', 'binary_sensor', 'switch', 'sensor', 'automation', 'light'];
+const HaEntityMock: string = 'light.zipato_bulb_2_level';
 
 describe('Entity controller tests', () => {
     test('it should get entities', async () => {
@@ -26,7 +26,7 @@ describe('Entity controller tests', () => {
 
     test('it should get an entity by its id', async () => {
         const res: AxiosResponse<any> = await axios
-            .get(`${config.baseUrl}/entity/${HaWeatherEntityId}`);
+            .get(`${config.baseUrl}/entity/${HaEntityMock}`);
         expect(res.status).toBe(200);
         expect(res.data).toBeDefined();
         expect(res.data).toMatchObject(mock);
@@ -57,7 +57,7 @@ describe('Entity controller tests', () => {
     });
 
     test('it should enable/disable an entity', async () => {
-        const res = await axios.patch(`${config.baseUrl}/entity/${HaWeatherEntityId}`, { enable: true });
+        const res = await axios.patch(`${config.baseUrl}/entity/${HaEntityMock}`, { enable: true });
         expect(res.status).toBe(200);
         expect(res.data).toMatchObject(mock);
     });

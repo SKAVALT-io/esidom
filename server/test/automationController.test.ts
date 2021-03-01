@@ -21,7 +21,7 @@ const automation: Automation = {
     trigger: expect.any(Array),
 };
 
-const automationId = 'automation.allumer_lampe_zigbee';
+const automationId = 'automation.bleu_blanc_rouge';
 
 describe('Automation controller test', () => {
     test('it should get automations', async () => {
