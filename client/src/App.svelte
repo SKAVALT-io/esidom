@@ -45,6 +45,15 @@
 
     function hashToPage() {
         const sub = window.location.hash.substring(2);
+        if (sub.includes('/')) {
+            const newSub = sub.replace('/', '.');
+            const subSplitted = newSub.split('.');
+            const knownList = ['light', 'switch'];
+
+            return knownList.includes(subSplitted[1])
+                ? `${subSplitted[0]}.${subSplitted[1]}`
+                : `${subSplitted[0]}.default`;
+        }
         return sub !== '' ? sub : 'entities';
     }
 
