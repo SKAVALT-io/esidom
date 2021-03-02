@@ -22,6 +22,8 @@
     import LoginPage from './components/login/LoginPage.svelte';
     import DisconnectModal from './components/login/DisconnectModal.svelte';
     import Rooms from './routes/room/Rooms.svelte';
+    import HelpModal from './components/help/HelpModal.svelte';
+    import { tr, trArray } from './utils/i18nHelper';
     import LoginModal from './components/login/LoginModal.svelte';
 
     // Configure the app routes
@@ -42,6 +44,29 @@
     let openSidebar = false;
 
     let openDisconnectModal = false;
+    let openHelpModal = false;
+
+    function hashToPage() {
+        const sub = window.location.hash.substring(2);
+        // handle only two levels of hash page
+        // it is not generic and is really specific to our project
+        if (sub.includes('/')) {
+            const [page, other] = sub.replace('/', '.').split('.');
+
+            if (page === 'entity') {
+                const knownList = ['light', 'switch']; // ex : entity.light
+
+                return knownList.includes(other)
+                    ? `${page}.${other}`
+                    : `${page}.default`;
+            } else {
+                return page;
+            }
+        }
+        return sub !== '' ? sub : 'entities';
+    }
+
+    let currentPageSelected = hashToPage();
     let openLoginModal = false;
 
     // Configure and init i18n
@@ -64,6 +89,10 @@
 <main>
     <Toast />
     <DisconnectModal bind:open={openDisconnectModal} />
+    <HelpModal
+        bind:open={openHelpModal}
+        helpText={trArray(`help.${currentPageSelected}`)}
+    />
     <LoginModal bind:open={openLoginModal} />
 
     {#await isLocked() then locked}
@@ -77,6 +106,10 @@
                             openSidebar = !openSidebar;
                         }}
                         on:disconnect={() => (openDisconnectModal = true)}
+                        on:help={() => {
+                            currentPageSelected = hashToPage();
+                            openHelpModal = true;
+                        }}
                         on:login={() => (openLoginModal = true)}
                     />
                 </div>

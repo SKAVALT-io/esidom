@@ -1,3 +1,4 @@
+import Blockly from 'blockly';
 import type { ObjectBlock } from '../../../types/objectsBlockType';
 
 export default class BlocklyObjects {

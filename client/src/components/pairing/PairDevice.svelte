@@ -37,7 +37,7 @@
 
 <div
     id="page"
-    class="flex absolute top-0 left-0 w-screen h-screen bg-white bg-opacity-30 justify-center items-center z-100"
+    class="flex absolute top-0 left-0 w-screen h-screen bg-white bg-opacity-30 justify-center items-center z-120"
 >
     <div class="pairDevice ml-5 mr-5 py-3 w-full h-auto bg-esidom">
         <h1 class="uppercase mb-2 text-xl font-semibold text-center">

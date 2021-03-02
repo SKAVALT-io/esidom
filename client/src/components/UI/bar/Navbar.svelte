@@ -9,6 +9,7 @@
 
     const dispatch = createEventDispatcher();
 
+    let showHelpTip = false;
     let showLogoutTip = false;
     let showChangeUserTip = false;
     let user: User | undefined = undefined;
@@ -42,7 +43,27 @@
             <Clock formatDate="long" />
         </p>
     </div>
-    <div class="nav-links grid grid-flow-col grid-cols-1 gap-x-2 items-center">
+    <div class="nav-links grid grid-flow-col grid-cols-1 gap-x-3 items-center">
+        <button
+            id="help"
+            class="relative w-5 h-5 opacity-80 hover:opacity-100"
+            on:click={() => dispatch('help')}
+            on:touchstart={() => (showHelpTip = true)}
+            on:touchend={() => (showHelpTip = false)}
+            on:mouseleave={() => (showHelpTip = false)}
+            on:mouseenter={() => (showHelpTip = true)}
+        >
+            <img
+                class="link-svg relative w-5 h-5 opacity-80 hover:opacity-100"
+                src="icons/button/help.svg"
+                alt="help"
+            />
+            <Tooltip
+                position="bottom"
+                show={showHelpTip}
+                text={tr('help.needHelp')}
+            />
+        </button>
         <button
             id="logout"
             class="relative w-5 h-5 opacity-80 hover:opacity-100"
