@@ -1,13 +1,42 @@
-import { Device } from '../types/device';
-import socketForwarder from '../forwarders/socketForwarder';
-import { Room } from '../types/room';
-import { HaRoom, HaRoomDetail } from '../types/haTypes';
-import deviceService from './deviceService';
+import { socketForwarder } from '../forwarders';
+import { socketService, deviceService } from '.';
+import {
+    Device, Room, HaRoom, HaRoomDetail, EventObserver,
+} from '../types';
 
-class RoomService {
+class RoomService implements EventObserver {
 
+    // Connect this services to the web socket flow
+    constructor() {
+        socketForwarder.registerObserver(this);
+    }
+
+    async onRoomCreated(roomId: string) {
+        const room: Room | undefined = await this.getRoomById(roomId);
+        if (!room) {
+            return;
+        }
+        socketForwarder.emitSocket('roomCreated', room);
+    }
+
+    async onRoomUpdated(roomId: string) {
+        const room: Room | undefined = await this.getRoomById(roomId);
+        if (!room) {
+            return;
+        }
+        socketForwarder.emitSocket('roomUpdated', room);
+    }
+
+    onRoomRemoved(roomId: string) {
+        socketForwarder.emitSocket('roomRemoved', { id: roomId });
+    }
+
+    /**
+     * Get all the rooms
+     * @returns All the rooms
+     */
     async getRooms(): Promise<Room[]> {
-        const haRooms: HaRoom[] = await socketForwarder.forward({ type: 'config/area_registry/list' });
+        const haRooms: HaRoom[] = await socketService.getRooms();
         return Promise.all(haRooms.map((r: HaRoom) => {
             const room: Room = {
                 roomId: r.area_id,
@@ -19,45 +48,95 @@ class RoomService {
         }));
     }
 
-    async createRoom(name: string): Promise<Room> {
-        const haRoom = await socketForwarder.forward<HaRoom>({ type: 'config/area_registry/create', name: `${name}` });
+    async createRoom(name: string, devices?: Device[]): Promise<Room> {
+        const haRoom: HaRoom = await socketService.createRoom(name);
+
+        if (devices) {
+            await Promise.all(
+                devices.map((device) => socketService.addRoomToDevice(device.id, haRoom.area_id)),
+            );
+        }
         const room : Room = {
             roomId: haRoom.area_id,
             name: haRoom.name,
-            devices: [],
+            devices: devices || [],
             automations: [],
         };
         return room;
     }
 
     private async injectAutomationsDevicesIntoRoomObject(room: Room): Promise<Room> {
-        const haRoom: HaRoomDetail = await socketForwarder.forward({ type: 'search/related', item_type: 'area', item_id: room.roomId });
-        if (haRoom.device !== undefined) {
-            const devices = (await Promise.all(
+        const haRoom: HaRoomDetail = await socketService.searchRoomById(room.roomId);
+        if (haRoom.device) {
+            const devices: Device[] = await Promise.all(
                 haRoom.device.map(async (id: string) => deviceService.getDeviceById(id)),
-            ));
-            room.devices.push(...devices.filter((x) => x !== undefined) as Device[]);
+            ).then((x) => x.filter((y): y is Device => y !== undefined));
+
+            room.devices.push(...devices);
         }
+
         // TODO inject automation
         return room;
     }
 
-    deleteRoom(roomId: string) {
-        return socketForwarder.forward({ type: 'config/area_registry/delete', area_id: roomId });
+    async deleteRoom(roomId: string): Promise<void> {
+        return socketService.deleteRoom(roomId);
     }
 
-    async getRoomById(roomId: string): Promise<Room> {
+    /**
+     * Retrieve room by id
+     * @param roomId
+     */
+    async getRoomById(roomId: string): Promise<Room | undefined> {
         const rooms: Room[] = await this.getRooms();
-        console.log(roomId);
-        const room = rooms.find((r: Room) => r.roomId === roomId);
-        if (!room) {
-            throw new Error(`There are no rooms with this id : ${roomId}`);
-        }
-        return room;
+        return rooms.find((r: Room) => r.roomId === roomId);
     }
 
-    private async updateRoomDevice(deviceId: string, areaId: string): Promise<any> {
-        return socketForwarder.forward({ type: 'config/device_registry/update', device_id: deviceId, area_id: areaId });
+    /**
+     * Add equipment assignment for a room
+     * @param groupId Id of the equipment to add room assignment
+     * @param areaId Id of the room for assignment
+     */
+    private async addRoomToDevice(deviceId: string, areaId: string): Promise<any> {
+        return socketService.addRoomToDevice(deviceId, areaId);
+    }
+
+    /**
+     * Delete equipment assignment for a room
+     * @param groupId Id of the equipment to delete room assignment
+     */
+    private async deleteRoomToDevice(deviceId: string): Promise<any> {
+        return socketService.deleteRoomToDevice(deviceId);
+    }
+
+    /**
+     * Update room in HA
+     * @param room room with update information
+     */
+    async updateRoom(room: Room): Promise<boolean> {
+        const oldRoom = await this.getRoomById(room.roomId);
+        if (!oldRoom) {
+            return false;
+        }
+        const oldDevicesString = oldRoom.devices.map((d) => d.id);
+        const devicesString = room.devices.map((d) => d.id);
+
+        if (oldRoom.name !== room.name) {
+            await socketService.updateRoomName(room.roomId, room.name);
+        }
+        await Promise.all(oldDevicesString.map((deviceId) => (
+            !devicesString.includes(deviceId)
+                ? this.deleteRoomToDevice(deviceId)
+                : Promise.resolve()
+        )));
+
+        await Promise.all(devicesString.map((deviceId) => (
+            !oldDevicesString.includes(deviceId)
+                ? this.addRoomToDevice(deviceId, room.roomId)
+                : Promise.resolve()
+        )));
+
+        return true;
     }
 
 }

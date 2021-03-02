@@ -1,81 +1,113 @@
 import { Request, Response } from 'express';
-import entityService from '../services/entityService';
 import App from '../app';
-import { Entity } from '../types/entity';
+import { entityService, userService } from '../services';
+import { Entity, User } from '../types';
+import {
+    send, sendf, Success, SuccessOrError, sendNoSuchId,
+} from '../utils';
 
 @App.rest('/entity')
 class EntityController {
 
+    /**
+     * Get all entities
+     * @queryParam `type` The type of entity
+     */
     @App.get('')
-    async getEntities(req: Request, res: Response): Promise<void> {
-        try {
-            const { type } = req.query;
-            const entities: Entity[] = await entityService.getEntities();
-            const result = type === undefined
-                ? entities
-                : entities.filter((e: Entity) => e.type === type);
-            const code = result ? 200 : 404;
-            const data = result ?? { message: 'No entities yet' };
-            res.status(code).send(data);
-        } catch (err) {
-            res.status(404).send({ message: err.message });
+    async getEntities(req: Request, res: Response): Success<Entity[]> {
+        const { type, userId } = req.query as {type: string, userId: string};
+        let user: User | undefined;
+        if (userId) {
+            try {
+                user = await userService.getUserById(parseInt(userId, 10));
+            } catch (err) {
+                return send(res, 404, err.message);
+            }
         }
+        return entityService
+            .getEntities(user)
+            .then((entities) => {
+                const data = type === undefined
+                    ? entities
+                    : entities.filter((e) => e.type === type);
+                return send(res, 200, data);
+            });
     }
 
+    /**
+     * Get all the entity types
+     */
     @App.get('/types')
-    async getEntitiesType(req: Request, res: Response): Promise<void> {
-        try {
-            const result = await entityService.getTypes();
-            // TODO: filter unwanted types ? (like 'person' or 'automation' etc)
-            const code = result ? 200 : 404;
-            const data = result ?? { message: 'No entities yet' };
-            res.status(code).send(data);
-        } catch (err) {
-            res.status(404).send({ message: err.message });
-        }
+    async getEntitiesType(_req: Request, res: Response): Success<string[]> {
+        return entityService
+            .getTypes()
+            .then(sendf(res, 200));
     }
 
+    /**
+     * Get an entity by its id
+     * @pathParam `id` id of the entity
+     * @returns The entity, or an error
+     */
     @App.get('/:id')
-    async getEntityById(req: Request, res: Response): Promise<void> {
-        try {
-            const { id } = req.params;
-            const result: Entity | undefined = await entityService.getEntityById(id);
-            const code: number = result ? 200 : 404;
-            const data: Entity | any = result || { message: 'No entity with such id' };
-            res.status(code).send(data);
-        } catch (err) {
-            res.status(404).send({ message: err.message });
-        }
+    async getEntityById(req: Request, res: Response): SuccessOrError<Entity> {
+        const { id } = req.params;
+        return entityService
+            .getEntityById(id)
+            .then((entity) => (entity
+                ? send(res, 200, entity)
+                : sendNoSuchId(res, id)));
     }
 
+    /**
+     * Update an entity
+     * @pathParam `id` id of the entity
+     * @bodyParam `service` the service on which the change will be applied
+     * @bodyParam `serviceData` a collection of attributes to change
+     * @returns The updated entity, or an error
+     */
     @App.put('/:id')
-    async updateEntityState(req: Request, res: Response): Promise<void> {
-        try {
-            const { id } = req.params;
-            const { service, serviceData } = req.body;
-            console.log(`${id} ${service} ${serviceData}`);
-            const result: Entity | undefined = await entityService
-                .updateEntityState(id, service, serviceData);
-            const code = result ? 200 : 404;
-            const data = result ?? { message: 'No entities with such id' };
-            res.status(code).send(data);
-        } catch (err) {
-            res.status(404).send(err.message);
-        }
+    async updateEntityState(req: Request, res: Response): SuccessOrError<Entity> {
+        const { id } = req.params;
+        const { service, serviceData } = req.body;
+        return entityService
+            .updateEntityState(id, service, serviceData)
+            .then((entity) => (entity
+                ? send(res, 200, entity)
+                : sendNoSuchId(res, id)));
     }
 
+    /**
+     * Update entity name by its id
+     * @pathParam `id` id of the entity
+     * @bodyParam `name` string to define the new name of the entity
+     * @returns The updated entity, or an error
+     */
+    @App.patch('/update/:id')
+    async updateEntity(req: Request, res: Response): SuccessOrError<Entity> {
+        const { id } = req.params;
+        const { name } = req.body;
+        return entityService.updateEntity(id, name)
+            .then((entity) => (entity
+                ? send(res, 200, entity)
+                : sendNoSuchId(res, id)));
+    }
+
+    /**
+     * Toggle an entity by its id
+     * @pathParam `id` id of the entity
+     * @bodyParam `enable` boolean to define it the entity should be enabled or disabled
+     * @returns The toggled entity, or an error
+     */
     @App.patch('/:id')
-    async toggleEntity(req: Request, res: Response): Promise<void> {
-        try {
-            const { id } = req.params;
-            const { enable } = req.body;
-            const result = await entityService.toggleEntity(id, enable);
-            const code = result ? 200 : 404;
-            const data = result ?? { message: 'No entity with such id' };
-            res.status(code).send(data);
-        } catch (err) {
-            res.status(404).send({ message: err.message });
-        }
+    async toggleEntity(req: Request, res: Response): SuccessOrError<Entity> {
+        const { id } = req.params;
+        const { enable } = req.body;
+        return entityService
+            .toggleEntity(id, enable)
+            .then((entity) => (entity
+                ? send(res, 200, entity)
+                : sendNoSuchId(res, id)));
     }
 
 }

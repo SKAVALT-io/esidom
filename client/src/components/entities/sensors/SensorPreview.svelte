@@ -3,6 +3,7 @@
     import type { SensorEntity } from '../../../../types/entities/sensorEntity';
 
     import { socketManager } from '../../../managers/socketManager';
+    import { tr } from '../../../utils/i18nHelper';
 
     import EntityPreview from '../EntityPreview.svelte';
 
@@ -11,34 +12,40 @@
     // Is it on or off
     let isOn: boolean;
     // The src for the icon
-    let srcImg: string;
+    let srcImg = 'devices/sensor.png';
     $: isOn = entity.state === 'on';
     // $: srcImg = isOn ? 'door-open.png' : 'door-close.png';
 
-    function updateState(data: BinarySensorEntity) {
+    function updateState(data: SensorEntity) {
         console.log('new ws', data);
         entity = data;
     }
 
     onMount(() => {
-        socketManager.registerListener(
-            'entity_updated',
+        socketManager.registerListenerById(
+            'entityUpdated',
             entity.id,
             updateState
         );
     });
 
     onDestroy(() => {
-        socketManager.removeListener('entity_updated', updateState);
+        socketManager.removeListener('entityUpdated', updateState);
     });
 </script>
 
 <EntityPreview isError={false} {entity}>
     <!-- Image -->
-    <img slot="img" src={srcImg} alt="" />
+    <img
+        slot="img"
+        src={srcImg}
+        alt=""
+        class="h-inherit max-w-full max-h-full object-contain"
+    />
     <!-- Data -->
     <div slot="sensor">
-        Etat:
+        {tr('devices.state')}
+        :
         {entity.state + (entity.attributes.unit_of_measurement ?? '')}
     </div>
 </EntityPreview>

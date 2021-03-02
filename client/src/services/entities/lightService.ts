@@ -1,80 +1,56 @@
-import config from '../../config/config';
-import type { LightEntity } from '../../../types/entities/lightEntity';
+import http from '../../utils/HttpHelper';
+import { tr } from '../../utils/i18nHelper';
+import toastService from '../../utils/toast';
 
-export function componentToHex(c: number): string {
-    const hex = c.toString(16);
-    return hex.length === 1 ? `0${hex}` : hex;
-}
-
-export function rgbToHex(r: number, g: number, b: number): string {
-    return `#${componentToHex(r)}${componentToHex(g)}${componentToHex(b)}`;
-}
-
-export async function updateLight(id: string, serviceData: {[id: string]: string}): Promise<void> {
-    const body = JSON.stringify({
+/**
+ * Updates a light.
+ * @param id the entity id of the light
+ * @param serviceData the data to update the light
+ */
+export async function updateLight(id: string, serviceData: {[id: string]: unknown}): Promise<void> {
+    return http.put<void, {service: string, serviceData: {[id: string]: unknown}}>(`/entity/${id}`, {
         service: 'light.turn_on',
         serviceData,
-    });
-
-    const headers = new Headers();
-    headers.set('Content-Type', 'application/json');
-    fetch(`${config.BASE_URL}/entity/${id}`, {
-        headers,
-        method: 'PUT',
-        body,
+    }).catch((err) => {
+        toastService.toast(tr('entities.errorWhileToggle'), 'error');
+        throw err;
     });
 }
 
+/**
+ * Changes the brightness of a light.
+ * @param id the entity id of the light
+ * @param brightnessPct the new brightness
+ */
 export async function changeBrightness(id: string, brightnessPct: number): Promise<void> {
-    const body = JSON.stringify({
-        service: 'light.turn_on',
-        serviceData: {
-            brightness_pct: brightnessPct,
-        },
-    });
-
-    const headers = new Headers();
-    headers.set('Content-Type', 'application/json');
-    fetch(`${config.BASE_URL}/entity/${id}`, {
-        headers,
-        method: 'PUT',
-        body,
+    return updateLight(id, {
+        brightness_pct: brightnessPct,
     });
 }
 
-export async function switchLamp(id: string, switchOn: boolean): Promise<unknown> {
-    const body = JSON.stringify(
-        switchOn
-            ? {
-                service: 'light.turn_on',
-            } : {
-                service: 'light.turn_off',
-            },
-    );
-    console.log(body);
-    const headers = new Headers();
-    headers.set('Content-Type', 'application/json');
-
-    return fetch(`${config.BASE_URL}/entity/${id}`, {
-        headers,
-        method: 'PUT',
-        body,
-    });
-}
-
+/**
+ * Changes the color of a light.
+ * @param id the entity id of the light
+ * @param r the red color beetween 0 and 255
+ * @param g the green color beetween 0 and 255
+ * @param b the blue color beetween 0 and 255
+ */
 export async function changeLampRGB(id: string, r: number, g: number, b: number): Promise<void> {
-    const body = JSON.stringify({
-        service: 'light.turn_on',
-        serviceData: {
-            rgb_color: [r, g, b],
-        },
+    return updateLight(id, {
+        rgb_color: [r, g, b],
     });
+}
 
-    const headers = new Headers();
-    headers.set('Content-Type', 'application/json');
-    fetch(`${config.BASE_URL}/entity/${id}`, {
-        headers,
-        method: 'PUT',
-        body,
+/**
+ * Switch the light states.
+ * @param id the entity id of the light
+ * @param switchOn do we switch on the light?
+ */
+export async function switchLamp(id: string, switchOn: boolean): Promise<unknown> {
+    return http.put(`/entity/${id}`, {
+        service: (switchOn ? 'light.turn_on' : 'light.turn_off'),
+    }).catch((err) => {
+        toastService.toast(tr('entities.errorWhileToggle'), 'error');
+        throw err;
     });
 }

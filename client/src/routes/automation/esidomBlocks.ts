@@ -3,6 +3,7 @@
 import Blockly from 'blockly';
 import COLORS from './esidomConst';
 import type { EntityTypeEnum } from './esidomGenerator';
+import { tr } from '../../utils/i18nHelper';
 
 type BlockFunctions = {
     init: ()=> void;
@@ -25,15 +26,23 @@ export type BlocksDefinitions = {
     esidom_automation: BlockFunctions;
     binary_trigger: BlockFunctions;
     time_trigger: BlockFunctions;
+    sun_trigger: BlockFunctions;
+    numeric_state_trigger: BlockFunctions;
+    interval_trigger: BlockFunctions;
     time_condition: BlockFunctions;
     sun_condition: BlockFunctions;
     time_condition_hour: BlockFunctions;
     time_condition_week: BlockFunctions;
     binary_condition: BlockFunctions;
+    numeric_state_condition: BlockFunctions;
     action: BlockFunctions;
     color_picker: BlockFunctions;
     color_rgb: BlockFunctions;
+    brightness: BlockFunctions;
+    color_temp: BlockFunctions;
+    color_brightness_temp: BlockFunctions;
     object_action: BlockFunctions;
+    delay_action: BlockFunctions;
 }
 
 /**
@@ -45,7 +54,7 @@ export type BlocksDefinitions = {
             this.jsonInit?.(
                 {
                     type: 'esidom_automation',
-                    message0: 'Quels sont les déclencheurs ? %1 Sous quelles conditions ? %2 Que faire ? %3', // 'Avec quel mode ? %4',
+                    message0: tr('blockly.blocks.esidom_automation.message'),
                     args0: [
                         {
                             type: 'input_statement',
@@ -64,7 +73,7 @@ export type BlocksDefinitions = {
                         },
                     ],
                     colour: COLORS.HUE_DARK_BLUE,
-                    tooltip: '',
+                    tooltip: tr('blockly.blocks.esidom_automation.tooltip'),
                     helpUrl: '',
                 },
             );
@@ -72,14 +81,14 @@ export type BlocksDefinitions = {
     };
 
     /**
- * Catégorie Déclencheur
- */
+     * Catégorie Déclencheur
+     */
     block.binary_trigger = {
         init() {
             this.jsonInit?.(
                 {
-                    type: 'block_type',
-                    message0: 'Quand le capteur %1 passe à %2',
+                    type: 'binary_trigger',
+                    message0: tr('blockly.blocks.binary_trigger.message'),
                     args0: [
                         {
                             type: 'input_value',
@@ -100,12 +109,37 @@ export type BlocksDefinitions = {
                                 ],
                             ],
                         },
+                        {
+                            type: 'input_dummy',
+                            name: 'services',
+                        },
+                        {
+                            type: 'field_number',
+                            name: 'Hour',
+                            value: 0,
+                            min: 0,
+                            max: 23,
+                        },
+                        {
+                            type: 'field_number',
+                            name: 'Minute',
+                            value: 0,
+                            min: 0,
+                            max: 59,
+                        },
+                        {
+                            type: 'field_number',
+                            name: 'Second',
+                            value: 0,
+                            min: 0,
+                            max: 59,
+                        },
                     ],
-                    inputsInline: true,
+                    inputsInline: false,
                     previousStatement: 'Trigger',
                     nextStatement: 'Trigger',
                     colour: COLORS.HUE_GREEN,
-                    tooltip: '',
+                    tooltip: tr('blockly.blocks.binary_trigger.tooltip'),
                     helpUrl: '',
                 },
             );
@@ -116,8 +150,8 @@ export type BlocksDefinitions = {
         init() {
             this.jsonInit?.(
                 {
-                    type: 'time',
-                    message0: '%1 h %2 %3 m %4 %5 s',
+                    type: 'time_trigger',
+                    message0: tr('blockly.blocks.time_trigger.message'),
                     args0: [
                         {
                             type: 'field_number',
@@ -151,7 +185,74 @@ export type BlocksDefinitions = {
                     previousStatement: 'Trigger',
                     nextStatement: 'Trigger',
                     colour: COLORS.HUE_GREEN,
-                    tooltip: '',
+                    tooltip: tr('blockly.blocks.time_trigger.tooltip'),
+                    helpUrl: '',
+                },
+            );
+        },
+    };
+
+    block.sun_trigger = {
+        init() {
+            this.jsonInit?.(
+                {
+                    type: 'sun_trigger',
+                    message0: tr('blockly.blocks.sun_trigger.message'),
+                    args0: [
+                        {
+                            type: 'field_number',
+                            name: 'Hour',
+                            value: 0,
+                            min: 0,
+                            max: 23,
+                        },
+                        {
+                            type: 'field_number',
+                            name: 'Minute',
+                            value: 0,
+                            min: 0,
+                            max: 59,
+                        },
+                        {
+                            type: 'field_number',
+                            name: 'Second',
+                            value: 0,
+                            min: 0,
+                            max: 59,
+                        },
+                        {
+                            type: 'field_dropdown',
+                            name: 'Before_after',
+                            options: [
+                                [
+                                    tr('blockly.blocks.sun_trigger.before_after.before'),
+                                    '-',
+                                ],
+                                [
+                                    tr('blockly.blocks.sun_trigger.before_after.after'),
+                                    '+',
+                                ],
+                            ],
+                        },
+                        {
+                            type: 'field_dropdown',
+                            name: 'Sun',
+                            options: [
+                                [
+                                    tr('blockly.blocks.sun_trigger.sun.sunrise'),
+                                    'sunrise',
+                                ],
+                                [
+                                    tr('blockly.blocks.sun_trigger.sun.sunset'),
+                                    'sunset',
+                                ],
+                            ],
+                        },
+                    ],
+                    previousStatement: 'Trigger',
+                    nextStatement: 'Trigger',
+                    colour: COLORS.HUE_GREEN,
+                    tooltip: tr('blockly.blocks.sun_trigger.tooltip'),
                     helpUrl: '',
                 },
             );
@@ -159,14 +260,14 @@ export type BlocksDefinitions = {
     };
 
     /**
- * Catégorie Condition
- */
+     * Catégorie Condition
+     */
     block.time_condition = {
         init() {
             this.jsonInit?.(
                 {
                     type: 'time_condition',
-                    message0: 'Début : %1 h %2 m %3 s %4 Fin : %5 h %6 m %7 s %8 %9 lundi %10 %11 mardi %12 %13 mercredi %14 %15 jeudi %16 %17 vendredi %18 %19 samedi %20 %21 dimanche',
+                    message0: tr('blockly.blocks.time_condition.message'),
                     args0: [
                         {
                             type: 'field_number',
@@ -276,7 +377,7 @@ export type BlocksDefinitions = {
                     previousStatement: 'Condition',
                     nextStatement: 'Condition',
                     colour: COLORS.HUE_YELLOW,
-                    tooltip: '',
+                    tooltip: tr('blockly.blocks.time_condition.tooltip'),
                     helpUrl: '',
                 },
             );
@@ -287,20 +388,55 @@ export type BlocksDefinitions = {
         init() {
             this.jsonInit?.(
                 {
-                    type: 'sun_state',
-                    message0: 'Lorsque le soleil se %1',
+                    type: 'sun_condition',
+                    message0: tr('blockly.blocks.sun_condition.message'),
                     args0: [
                         {
+                            type: 'field_number',
+                            name: 'Hour',
+                            value: 0,
+                            min: 0,
+                            max: 23,
+                        },
+                        {
+                            type: 'field_number',
+                            name: 'Minute',
+                            value: 0,
+                            min: 0,
+                            max: 59,
+                        },
+                        {
+                            type: 'field_number',
+                            name: 'Second',
+                            value: 0,
+                            min: 0,
+                            max: 59,
+                        },
+                        {
                             type: 'field_dropdown',
-                            name: 'Sun.sun',
+                            name: 'Before_after',
                             options: [
                                 [
-                                    'lève',
-                                    'above_horizon',
+                                    tr('blockly.blocks.sun_condition.before_after.before'),
+                                    '-',
                                 ],
                                 [
-                                    'couche',
-                                    'below_horizon',
+                                    tr('blockly.blocks.sun_condition.before_after.after'),
+                                    '+',
+                                ],
+                            ],
+                        },
+                        {
+                            type: 'field_dropdown',
+                            name: 'Sun',
+                            options: [
+                                [
+                                    tr('blockly.blocks.sun_condition.sun.sunrise'),
+                                    'sunrise',
+                                ],
+                                [
+                                    tr('blockly.blocks.sun_condition.sun.sunset'),
+                                    'sunset',
                                 ],
                             ],
                         },
@@ -308,7 +444,7 @@ export type BlocksDefinitions = {
                     previousStatement: 'Condition',
                     nextStatement: 'Condition',
                     colour: COLORS.HUE_YELLOW,
-                    tooltip: '',
+                    tooltip: tr('blockly.blocks.sun_condition.tooltip'),
                     helpUrl: '',
                 },
             );
@@ -318,9 +454,9 @@ export type BlocksDefinitions = {
     block.time_condition_hour = {
         init() {
             this.jsonInit?.({
-                type: 'time_condition_2',
+                type: 'time_condition_hour',
                 lastDummyAlign0: 'RIGHT',
-                message0: 'Début : %1 h %2 m %3 s %4 Fin : %5 h %6 m %7 s',
+                message0: tr('blockly.blocks.time_condition_hour.message'),
                 args0: [
                     {
                         type: 'field_number',
@@ -372,7 +508,7 @@ export type BlocksDefinitions = {
                 previousStatement: 'Condition',
                 nextStatement: 'Condition',
                 colour: COLORS.HUE_YELLOW,
-                tooltip: "Si laissé seul, la condition s'appliquera tous les jours",
+                tooltip: tr('blockly.blocks.time_condition_hour.tooltip'),
                 helpUrl: '',
             });
         },
@@ -382,8 +518,8 @@ export type BlocksDefinitions = {
         init() {
             this.jsonInit?.(
                 {
-                    type: 'week_condition',
-                    message0: '%1 lundi %2 %3 mardi %4 %5 mercredi %6 %7 jeudi %8 %9 vendredi %10 %11 samedi %12 %13 dimanche',
+                    type: 'time_condition_week',
+                    message0: tr('blockly.blocks.time_condition_week.message'),
                     args0: [
                         {
                             type: 'field_checkbox',
@@ -443,7 +579,7 @@ export type BlocksDefinitions = {
                     previousStatement: 'Condition',
                     nextStatement: 'Condition',
                     colour: COLORS.HUE_YELLOW,
-                    tooltip: "Si laissé seul, la condition s'appliquera à n'importe quel moment de la journée",
+                    tooltip: tr('blockly.blocks.time_condition_week.tooltip'),
                     helpUrl: '',
                 },
             );
@@ -454,8 +590,8 @@ export type BlocksDefinitions = {
         init() {
             this.jsonInit?.(
                 {
-                    type: 'block_type',
-                    message0: 'Si le capteur %1 est à %2',
+                    type: 'binary_condition',
+                    message0: tr('blockly.blocks.binary_condition.message'),
                     args0: [
                         {
                             type: 'input_value',
@@ -476,12 +612,37 @@ export type BlocksDefinitions = {
                                 ],
                             ],
                         },
+                        {
+                            type: 'input_dummy',
+                            name: 'services',
+                        },
+                        {
+                            type: 'field_number',
+                            name: 'Hour',
+                            value: 0,
+                            min: 0,
+                            max: 23,
+                        },
+                        {
+                            type: 'field_number',
+                            name: 'Minute',
+                            value: 0,
+                            min: 0,
+                            max: 59,
+                        },
+                        {
+                            type: 'field_number',
+                            name: 'Second',
+                            value: 0,
+                            min: 0,
+                            max: 59,
+                        },
                     ],
-                    inputsInline: true,
+                    inputsInline: false,
                     previousStatement: 'Condition',
                     nextStatement: 'Condition',
                     colour: COLORS.HUE_YELLOW,
-                    tooltip: '',
+                    tooltip: tr('blockly.blocks.binary_condition.tooltip'),
                     helpUrl: '',
                 },
             );
@@ -489,18 +650,57 @@ export type BlocksDefinitions = {
     };
 
     /**
- * Catégorie Action
- */
+     * Catégorie Action
+     */
+    block.delay_action = {
+        init() {
+            this.jsonInit?.(
+                {
+                    type: 'delay_action',
+                    message0: tr('blockly.blocks.delay_action.message'),
+                    args0: [
+                        {
+                            type: 'field_number',
+                            name: 'Hour',
+                            value: 0,
+                            min: 0,
+                            max: 23,
+                        },
+                        {
+                            type: 'field_number',
+                            name: 'Minute',
+                            value: 0,
+                            min: 0,
+                            max: 59,
+                        },
+                        {
+                            type: 'field_number',
+                            name: 'Second',
+                            value: 0,
+                            min: 0,
+                            max: 59,
+                        },
+                    ],
+                    inputsInline: false,
+                    previousStatement: 'Action',
+                    nextStatement: 'Action',
+                    colour: COLORS.HUE_ORANGE,
+                    tooltip: tr('blockly.blocks.delay_action.tooltip'),
+                    helpUrl: '',
+                },
+            );
+        },
+    };
 
     /**
- * Catégorie Couleur
- */
+     * Catégorie Contrôle de lampe
+     */
     block.color_picker = {
         init() {
             this.jsonInit?.(
                 {
-                    type: 'attribut_color',
-                    message0: 'Couleur : %1',
+                    type: 'color_picker',
+                    message0: tr('blockly.blocks.color_picker.message'),
                     args0: [
                         {
                             type: 'field_colour',
@@ -510,7 +710,7 @@ export type BlocksDefinitions = {
                     ],
                     output: 'Color',
                     colour: COLORS.HUE_MAUVE,
-                    tooltip: '',
+                    tooltip: tr('blockly.blocks.color_picker.tooltip'),
                     helpUrl: '',
                 },
             );
@@ -521,7 +721,7 @@ export type BlocksDefinitions = {
         init() {
             this.jsonInit?.({
                 type: 'color_rgb',
-                message0: 'Couleur personnalisée : %1 rouge : %2 vert : %3 bleu %4',
+                message0: tr('blockly.blocks.color_rgb.message'),
                 args0: [
                     {
                         type: 'input_dummy',
@@ -550,7 +750,51 @@ export type BlocksDefinitions = {
                 ],
                 output: 'Color',
                 colour: COLORS.HUE_MAUVE,
-                tooltip: 'Les valeurs doivent être comprise entre 0 et 255',
+                tooltip: tr('blockly.blocks.color_rgb.tooltip'),
+                helpUrl: '',
+            });
+        },
+    };
+
+    block.brightness = {
+        init() {
+            this.jsonInit?.({
+                type: 'brightness',
+                message0: tr('blockly.blocks.brightness.message'),
+                args0: [
+                    {
+                        type: 'field_number',
+                        name: 'Brightness',
+                        value: 0,
+                        min: 0,
+                        max: 255,
+                    },
+                ],
+                output: 'Brightness',
+                colour: COLORS.HUE_MAUVE,
+                tooltip: tr('blockly.blocks.brightness.tooltip'),
+                helpUrl: '',
+            });
+        },
+    };
+
+    block.color_temp = {
+        init() {
+            this.jsonInit?.({
+                type: 'color_temp',
+                message0: tr('blockly.blocks.color_temp.message'),
+                args0: [
+                    {
+                        type: 'field_number',
+                        name: 'Temperature',
+                        value: 153,
+                        min: 153,
+                        max: 500,
+                    },
+                ],
+                output: 'ColorTemperature',
+                colour: COLORS.HUE_MAUVE,
+                tooltip: tr('blockly.blocks.color_temp.tooltip'),
                 helpUrl: '',
             });
         },

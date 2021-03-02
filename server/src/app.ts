@@ -1,7 +1,32 @@
+/* eslint-disable no-unused-vars */
 import express from 'express';
 import { createServer } from 'http';
+import { logger } from './utils';
+
+type HttpVerb = 'get' | 'post' | 'put' | 'patch' | 'delete';
 
 export default class App {
+
+    private static createDecorator(verb: HttpVerb): (path: string) => MethodDecorator {
+        return (path: string) => (targetClass: Object,
+            _name: string | symbol, descriptor: PropertyDescriptor) => {
+            const className = targetClass.constructor.name;
+            const arr = App.restPathMap.get(className) ?? [];
+            arr.push((base: string) => {
+                logger.info(`Registered route ${verb.toUpperCase()}: ${base + path}`);
+                App.app[verb](base + path, (req, res) => {
+                    logger.info(`Received request ${verb} on route ${base + path} from ${req.headers.host}`);
+                    descriptor.value.call(targetClass, req, res)
+                        .catch((err: any) => {
+                            logger.trace(err);
+                            res.status(500).send({ error: err.message });
+                        });
+                });
+            });
+            App.restPathMap.set(className, arr);
+            return descriptor;
+        };
+    }
 
     private static isInit = false;
 
@@ -12,7 +37,7 @@ export default class App {
     static init() {
         App.app.use(express.json());
         App.app.use(express.urlencoded({ extended: true }));
-        App.app.use((req, res, next) => {
+        App.app.use((_req, res, next) => {
             // Website you wish to allow to connect
             res.setHeader('Access-Control-Allow-Origin', '*');
             // Request methods you wish to allow
@@ -24,11 +49,9 @@ export default class App {
         });
     }
 
-    // eslint-disable-next-line no-unused-vars
     private static restPathMap = new Map<string, Array<(name: string) => void>>();
 
     // Create rest annotation
-    // eslint-disable-next-line no-unused-vars
     static rest: (name: string) => ClassDecorator = (name) => (target: Function) => {
         if (!App.isInit) {
             App.init();
@@ -39,89 +62,15 @@ export default class App {
         });
     }
 
-    // Create get annotation
-    // eslint-disable-next-line no-unused-vars
-    static get: (path: string) => MethodDecorator =
-    (path: string) => (targetClass: Object,
-        name: string | symbol, descriptor: PropertyDescriptor) => {
-        const className = targetClass.constructor.name;
-        const arr = App.restPathMap.get(className) ?? [];
-        arr.push((base: string) => {
-            console.log(`GET: ${base + path}`);
-            App.app.get(base + path, (req, res) => {
-                descriptor.value(req, res);
-            });
-        });
-        App.restPathMap.set(className, arr);
-        return descriptor;
-    }
+    // Create the annotations
+    static get = App.createDecorator('get');
 
-    // Create post annotation
-    // eslint-disable-next-line no-unused-vars
-    static post: (path: string) => MethodDecorator =
-    (path: string) => (targetClass: Object,
-        name: string | symbol, descriptor: PropertyDescriptor) => {
-        const className = targetClass.constructor.name;
-        const arr = App.restPathMap.get(className) ?? [];
-        arr.push((base: string) => {
-            console.log(`POST: ${base + path}`);
-            App.app.post(base + path, (req, res) => {
-                descriptor.value(req, res);
-            });
-        });
-        App.restPathMap.set(className, arr);
-        return descriptor;
-    }
+    static post = App.createDecorator('post');
 
-    // Create put annotation
-    // eslint-disable-next-line no-unused-vars
-    static put: (path: string) => MethodDecorator =
-    (path: string) => (targetClass: Object,
-        name: string | symbol, descriptor: PropertyDescriptor) => {
-        const className = targetClass.constructor.name;
-        const arr = App.restPathMap.get(className) ?? [];
-        arr.push((base: string) => {
-            console.log(`PUT: ${base + path}`);
-            App.app.put(base + path, (req, res) => {
-                descriptor.value(req, res);
-            });
-        });
-        App.restPathMap.set(className, arr);
-        return descriptor;
-    }
+    static put = App.createDecorator('put');
 
-    // Create patch annotation
-    // eslint-disable-next-line no-unused-vars
-    static patch: (path: string) => MethodDecorator =
-    (path: string) => (targetClass: Object,
-        name: string | symbol, descriptor: PropertyDescriptor) => {
-        const className = targetClass.constructor.name;
-        const arr = App.restPathMap.get(className) ?? [];
-        arr.push((base: string) => {
-            console.log(`PATCH: ${base + path}`);
-            App.app.patch(base + path, (req, res) => {
-                descriptor.value(req, res);
-            });
-        });
-        App.restPathMap.set(className, arr);
-        return descriptor;
-    }
+    static patch = App.createDecorator('patch');
 
-    // Create delete annotation
-    // eslint-disable-next-line no-unused-vars
-    static delete: (path: string) => MethodDecorator =
-    (path: string) => (targetClass: Object,
-        name: string | symbol, descriptor: PropertyDescriptor) => {
-        const className = targetClass.constructor.name;
-        const arr = App.restPathMap.get(className) ?? [];
-        arr.push((base: string) => {
-            console.log(`DELETE: ${base + path}`);
-            App.app.delete(base + path, (req, res) => {
-                descriptor.value(req, res);
-            });
-        });
-        App.restPathMap.set(className, arr);
-        return descriptor;
-    }
+    static delete = App.createDecorator('delete');
 
 }

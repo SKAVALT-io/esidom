@@ -1,7 +1,7 @@
 <script lang="ts">
     // Execute blocks definition
     import './esidomBlocks';
-    import { onMount } from 'svelte';
+    import { onDestroy, onMount } from 'svelte';
     import Blockly from 'blockly';
     import type { BlocklyOptions } from 'blockly';
     import BlocklyService from '../../services/blocklyService';
@@ -11,11 +11,20 @@
     import AutomationService from '../../services/automationService';
     import { push } from 'svelte-spa-router';
     import LoadingAnimation from '../../components/animations/LoadingAnimation.svelte';
+    import BlocklyObjects from './blocklyObject';
 
     export let automationId: string;
 
     let blocklyService: BlocklyService;
     let entityPromise: Promise<void>;
+
+    // Used for the scroll bar bug
+    let observer: MutationObserver;
+    onDestroy(() => {
+        observer.disconnect();
+        // Clear blockly workspace.
+        blocklyService.clear();
+    });
 
     onMount(async () => {
         const toolbox: HTMLElement | undefined =
@@ -45,15 +54,49 @@
                 wheel: true,
                 startScale: 1.1,
                 maxScale: 2,
-                minScale: 0.8,
+                minScale: 0.5,
                 scaleSpeed: 1.2,
             },
         };
 
-        const workspace: Blockly.WorkspaceSvg = Blockly.inject(
-            'blocklyDiv',
-            options
+        const workspace = Blockly.inject('blocklyDiv', options);
+
+        // Don't set the theme again if set, ir else it makes everything bug
+        workspace.setTheme(BlocklyService.esidomTheme);
+        // console.log(workspace);
+
+        // Small hack to "fix" the toolbox scrollbar glitch
+        // Setup a mutation observer to see if the class changes to detect
+        // that it has been opened/close and act accordingly
+
+        const bar = (workspace as any).toolbox_.flyout_.scrollbar
+            .svgHandle_ as SVGElement;
+        const displayBackup = bar.style.display;
+
+        // Callback function to execute when mutations are observed
+        const callback: MutationCallback = function (mutationsList) {
+            mutationsList.forEach((mut) => {
+                if (mut.type === 'attributes') {
+                    if (mut.attributeName === 'aria-selected') {
+                        const selected =
+                            (mut.target as any).ariaSelected === 'true';
+                        bar.style.display = selected ? displayBackup : 'none';
+                    }
+                }
+            });
+        };
+
+        // Create an observer instance linked to the callback function
+        observer = new MutationObserver(callback);
+        // Config
+        const mutConfig = { attributes: true };
+        // Start observing the target node for configured mutations
+        (workspace as any).toolbox_.contents_.forEach(
+            (c: { htmlDiv_: HTMLElement }) =>
+                observer.observe(c.htmlDiv_, mutConfig)
         );
+
+        // toolbox bar hack end
 
         const rootBlock: string =
             '<xml><block type="esidom_automation" deletable="false" movable="false"></block></xml>';
@@ -81,13 +124,19 @@
     }
 
     async function handleSubmit() {
-        const automation = blocklyService.convertToBlock(
+        const creating = automationId === '';
+
+        const automation = blocklyService.convertToAutomation(
             automationName,
             automationDesc,
             automationId === '' ? undefined : automationId
         );
+        if (creating) {
+            await AutomationService.postAutomation(automation);
+        } else {
+            await AutomationService.patchAutomation(automation);
+        }
 
-        await AutomationService.postAutomation(automation);
         // Don't go if request fail.
         push('/automations');
     }
@@ -99,11 +148,14 @@
 <div class="pr-4">
     {#await entityPromise}
         <p>{tr('blockly.loading')}</p>
-        <LoadingAnimation />
         <div
             id="blocklyDivHideAwait"
             class="absolute bg-esidom z-100 w-full h-vh-80"
-        />
+        >
+            <div id="loader" class="flex items-center justify-center">
+                <LoadingAnimation />
+            </div>
+        </div>
     {:then}
         <form on:submit|preventDefault={handleSubmit}>
             <input

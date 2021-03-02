@@ -12,7 +12,11 @@
     import ColorTemperaturePicker from './things/ColorTemperaturePicker.svelte';
     import { socketManager } from '../../../managers/socketManager';
     import type { LightEntity } from '../../../../types/entities/lightEntity';
-    import { getEntity } from '../../../services/entityService';
+    import EntityService, { getEntity } from '../../../services/entityService';
+    import { tr } from '../../../utils/i18nHelper';
+
+    import ToggleButton from '../../UI/buttons/ToggleButton.svelte';
+    import EditableDiv from '../../UI/utils/EditableDiv.svelte';
 
     export let entityId: string;
 
@@ -31,8 +35,8 @@
     lightPropMap.set('color_temp', ColorTemperaturePicker);
 
     onMount(() => {
-        socketManager.registerListener(
-            'entity_updated',
+        socketManager.registerListenerById(
+            'entityUpdated',
             entityId,
             updateLightState
         );
@@ -49,43 +53,65 @@
     }
 
     onDestroy(() => {
-        socketManager.removeListener('entity_updated', updateLightState);
+        socketManager.removeListener('entityUpdated', updateLightState);
     });
 
-    const undetected: string[] = [];
+    async function changeName(e: CustomEvent<boolean>): Promise<void> {
+        if (e.detail) {
+            await EntityService.patchEntityName(entityId, light.name);
+        }
+    }
 </script>
 
 {#await loadLight()}
-    Loading data...
+    {tr('entities.menu.loading')}
 {:then}
-    <div>
-        <h1>{light.name}</h1>
-
+    <div id="title">
+        <h1 class="text-4xl text-center py-6">
+            <EditableDiv
+                bind:value={light.name}
+                placeholder={tr('entities.menu.enterEntityName')}
+                on:edition={changeName}
+            />
+        </h1>
+    </div>
+    <div id="content" class="flex flex-col md:flex-row justify-center">
         <div
             id="info"
-            class="left-1/4 relative w-1/2 grid grid-cols-12 gap-4 p-4 uppercase"
+            class="relative grid grid-cols-12 gap-4 p-4 uppercase bg-esidomlight w-full md:w-1/2 md:max-w-xl md:order-last"
         >
-            <div class="col-span-full text-center">Informations</div>
-
-            <div
-                class="col-span-6 row-start-2 text-center"
-                on:click={() => switchLamp(entityId, !isOn)}
-            >
-                {isOn ? 'Éteindre' : 'Allumer'}
+            <div class="col-span-full text-center font-semibold text-xl">
+                Informations
             </div>
-            <div class="col-span-3 row-start-3">Nom:</div>
-            <div class="col-span-3 row-start-3">{light.name}</div>
-            <div class="col-span-3 row-start-4">Type:</div>
-            <div class="col-span-3 row-start-4">{light.type}</div>
-            <div class="col-span-3 row-start-5">Etat:</div>
-            <div class="col-span-3 row-start-5">{light.state}</div>
+
+            <div class="col-span-3 row-start-2 text-right">
+                {tr('entities.menu.name')}
+            </div>
+            <div class="col-span-9 row-start-2">{light.name}</div>
+            <div class="col-span-3 row-start-3 text-right">
+                {tr('entities.menu.type')}
+            </div>
+            <div class="col-span-9 row-start-3">{light.type}</div>
+            <div class="col-span-3 row-start-4 text-right">
+                {tr('entities.menu.state')}
+            </div>
+            <div class="col-span-3 row-start-4">{light.state}</div>
+            <div class="col-span-3 row-start-4">
+                <ToggleButton
+                    on:change={() => switchLamp(entityId, !isOn)}
+                    bind:checked={isOn}
+                />
+            </div>
         </div>
 
-        <div id="attributes" class=" grid grid-cols-1 gap-4 p-4 m-4">
+        <div
+            id="attributes"
+            class="relative grid grid-cols-1 gap-4 pt-4 w-full md:pr-4 md:w-1/2 md:max-w-xl"
+        >
             {#if isOn}
                 {#each Object.entries(light.attributes) as [key, value] (key)}
                     {#if lightPropMap.has(key)}
-                        <div class="text-center">
+                        <div class="text-center w-full">
                             <!-- {key}:{value} -->
                             <svelte:component
                                 this={lightPropMap.get(key)}
@@ -95,19 +121,10 @@
                         </div>
                     {/if}
                 {/each}
-            {:else}Allumez l'appareil :){/if}
+            {:else}{tr('entities.light.turnTheLightOn')}{/if}
         </div>
     </div>
 {:catch error}
     Error:
     {error}
 {/await}
-
-<style lang="scss">
-    #info {
-        border: 1px solid yellow;
-        div:not(:first-child) {
-            border: 1px solid yellow;
-        }
-    }
-</style>

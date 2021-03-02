@@ -11,11 +11,185 @@
     "home": "accueil",
     "automations": "routines",
     "blockly": "blockly",
-    "pairing": "appairage"
+    "pairing": "appairage",
+    "groups": "groupes",
+    "rooms": "pièces",
+    "users": "utilisateurs"
+  },
+  "help": {
+      "needHelp":"Besoin d'aide ?",
+      "entities": [
+        "<h3 class=\"font-bold\">A quoi ça sert ?</h3>",
+        "<p>Sur cette page vous trouverez l'ensemble des <i>entités</i> de vos équipements.</p>",
+        "<h3 class=\"font-bold\">Entité</h3>",
+        "<p> Une <i>entité</i> est une fonctionnalité de votre équipement : un capteur peut par exemple vous indiquer la température <bold>et</bold> un capteur de mouvement détecté. Dans l'interface, vous verrez alors <bold>2</bold> blocs : un par <i>entité</i>. Quoi qu'il en soit, vous pouvez consulter rapidement les informations sur l'équipement depuis cette page.</p>",
+        "<h3 class=\"font-bold\">Contrôle rapide</h3>",
+        "<p>Pour les <i>lampes</i>, il vous est même possible de contrôler directement sa luminosité ou sa couleur !</p>",
+        "<h3 class=\"font-bold\">Statut de l'équipement</h3>",
+        "<p> Si votre équipement est en <span class=\"text-green-500\">vert</span>, tout va bien ! En revanche, s'il est en <span class=\"text-red-500\">rouge</span>, la connexion n'a pas pu être établie. Essayez de vérifier directement votre équipement, en vous assurant qu'il soit opérationnel.</p>"
+      ],
+      "entity": {
+          "light":  [
+            "<h3 id=\"a-quoi-a-sert-\">A quoi ça sert ?</h3>",
+            "<p>Vous trouverez ici toutes les informations sur votre <em>lampe</em>.</p>",
+            "<h3 id=\"que-peut-on-voir-\">Que peut-on voir ?</h3>",
+            "<ul style=\"list-style: disc;`\">",
+            "<li>Nom de l'équipement</li>",
+            "<li>Type de l'équipement : une lampe !</li>",
+            "<li>Etat : Si votre lampe est allumée ou non. vous pouvez d'ailleurs allumer/éteindre la lampe en cliquant sur",
+            "le bouton associé</li>",
+            "</ul>",
+            "<h3 id=\"que-peut-on-faire-\">Que peut-on faire ?</h3>",
+            "<ul style=\"list-style: disc;\">",
+            "<li>Allumer ou éteindre la lampe</li>",
+            "<li>Renommer l'équipement</li>",
+            "<li><em>Lorsque la lampe est allumée</em>",
+            "<ul style=\"list-style: disc;\">",
+            "<li>Changer sa luminosité</li>",
+            "<li>Changer la température du blanc (<em>Lampes compatibles uniquement</em>)</li>",
+            "<li>Changer la couleur de la lampe (<em>Lampes compatibles uniquement</em>)</li>",
+            "</ul>",
+            "</li>",
+            "</ul>"],
+          "switch": [
+            "<h3 id=\"a-quoi-a-sert-\">A quoi ça sert ?</h3>",
+            "<p>Vous trouverez ici toutes les informations sur votre <em>prise</em>.</p>",
+            "<h3 id=\"que-peut-on-voir-\">Que peut-on voir ?</h3>",
+            "<ul style=\"list-style: disc;\">",
+            "<li>Nom de l'équipement</li>",
+            "<li>Type de l'équipement</li>",
+            "<li>Etat : Si votre prise est allumée ou non. vous pouvez d'ailleurs allumer/éteindre la prise en cliquant sur le bouton associé</li>",
+            "</ul>",
+            "<h3 id=\"que-peut-on-faire-\">Que peut-on faire ?</h3>",
+            "<ul style=\"list-style: disc;\">",
+            "<li>Allumer ou éteindre la prise</li>",
+            "</ul>"],
+          "default": [
+            "<h3 id=\"a-quoi-a-sert-\">A quoi ça sert ?</h3>",
+            "<p>Vous trouverez ici toutes les informations sur votre <em>entité</em>.</p>",
+            "<h3 id=\"que-peut-on-voir-\">Que peut-on voir ?</h3>",
+            "<ul style=\"list-style: disc;\">",
+            "<li>Nom de l'équipement</li>",
+            "<li>Type de l'équipement</li>",
+            "<li>Etat : Indique la valeur de votre <em>entité</em></li>",
+            "</ul>"
+        ]
+      },
+      "automations":[
+        "<h3 class=\"font-bold\">A quoi ça sert ?</h3>",
+        "<p>Vous trouverez ici l'ensemble des routines que vous avez définies.</p>",
+        "<h3 class=\"font-bold\">Créer une routine</h3>",
+        "<p class=\"inline-block align-middle\">Utilisez le <img class= \"w-10 h-auto\" src= \"icons/help/plus.png\" alt=\"+\"/> en bas à droite de la page pour pouvoir créer une nouvelle routine !</p>",
+        "<h3 class=\"font-bold\">Gestion des routines</h3>",
+
+        "<ul style=\"list-style: disc;\"",
+        "   <li>Permet d'activer ou de désactiver la routine. Si elle est désactivée, elle ne réagira plus aux déclencheurs. En revanche, il est toujours possible de l'exécuter manuellement.</li>",
+        "   <li><img class= \"w-10 h-auto\" src= \"icons/help/execute.png\" alt=\"execute\"/> Permet d'exécuter &quot;manuellement&quot; le contenu de la routine (force le déclenchement)</li>",
+        "   <li><img class= \"w-10 h-auto\" src= \"icons/help/edit.png\" alt=\"modify\"/> Permet d'afficher et de modifier la routine</li>",
+        "   <li><img class= \"w-10 h-auto\" src= \"icons/help/delete.png\" alt=\"delete\"/> Permet de supprimer la routine</li>",
+        "</ul>",
+
+        "<h3 class=\"font-bold\">Recherche et Tri</h3>",
+        "<p>Vous pouvez rechercher votre routine par son nom en utilisant la barre de recherche en haut à droite :",
+        "<img class= \"w-64 h-auto\" src= \"icons/help/search.png\" alt=\"search\"/></p>",
+        "<p>Vous pouvez également trier vos routines par <strong>nom</strong> ou par routines <strong>actives</strong> en cliquant sur <em>Trier par</em>.</p>"
+      ],
+      "blockly": [
+        "<h3 class=\"font-bold\">A quoi ça sert ?</h3>",
+        "<p>Vous pouvez ici créer des routines avec vos équipements.</p>",
+        "<h3 class=\"font-bold\">Comment faire ?</h3>",
+        "<p>Il suffit de répondre aux questions du bloc déjà présent avec des blocs que vous pouvez aller chercher dans le menu latéral des blocs !",
+        "<img class= \"w-64 h-auto\" src= \"icons/help/block.png\" alt=\"blocks_menu\"/></p>",
+        "<p>Vous devez répondre aux 3 &quot;questions&quot; pour valider la routine :</p>",
+
+        "<ul style=\"list-style: disc;\"",
+        "   <li><em>Quels sont les déclencheurs</em>           : Placez ici les évènements qui lanceront la routine. <strong>Un</strong> seul déclencheur <strong>suffit</strong> à déclencher la routine</li>",
+        "   <li><em>Sous quelles conditions ?</em> [Optionnel] : Placez ici les restrictions d'exécution, une fois la routine déclenchée. Si <strong>une</strong> des condition n'est <strong>pas</strong> respectée, l'action ne sera pas exécutée</li>",
+        "   <li><em>Que faire ?</em>                           : Placez ici les actions à effectuer lorsque que la routine a été <em>déclenchée</em> et que les <em>conditions</em> ont été respectées</li>",
+        "</ul>",
+
+        "<p>Vous pouvez empiler autant de blocs que vous le souhaitez pour chaque question !",
+        "Si un bloc n'est pas adapté à l'emplacement dans lequel vous souhaitez le placer, il ne sera pas accepté. Essayez d'en trouver un plus adapté !</p>",
+        "<p>Vous trouverez 5 catégories de blocs :",
+        "<!-- Add corresponding color for each name ?--></p>",
+
+        "<ul style=\"list-style: disc;\"",
+        "   <li><span class=\"text-green-500\">Déclencheurs</span>         : Ces blocs sont utilisables pour déclencher les routines</li>",
+        "   <li><span class=\"text-green-200\">Conditions</span>           : Ces blocs sont utilisables appliquer des conditions à l'exécution de la routine, une fois que le déclencheur a été activé</li>",
+        "   <li><span class=\"text-yellow-700\">Actions</span>             : Ces blocs permettent d'exécuter une action sur un objet ou d'attendre un certain temps entre deux actions</li>",
+        "   <li><span class=\"text-pink-500\">Objets</span>                : Ces blocs listent en différentes catégories tous les objets disponibles</li>",
+        "   <li><span class=\"text-purple-500\">Contrôles de lampes</span> : Ces blocs sont spécifiques aux lampes. Ils permettent d'exploiter différents paramètres : luminosité, couleur, température si la lampe est capable de supporter ces paramètres</li>",
+        "</ul>"
+      ],
+      "groups":[
+        "<h3 id=\"a-quoi-a-sert-\">A quoi ça sert ?</h3>",
+        "<p>Vous trouverez ici l'ensemble des groupes que vous avez définis ainsi que les groupes implicites.</p>",
+        "<p>Les groupes implicites regroupent des objets dont les fonctionnalités sont identiques, comme des lampes et des",
+        "prises.</p>",
+        "<h3 id=\"cr-er-un-groupe\">Créer un groupe</h3>",
+        "<p>Utilisez le <img class= \"w-10 h-auto\" src= \"icons/help/plus.png\" alt=\"+\"/> en bas à droite de la page pour pouvoir créer un groupe !</p>",
+        "<h3 id=\"gestion-des-groupes\">Gestion des groupes</h3>",
+        "<ul style=\"list-style: disc;\">",
+        "<li><img class= \"w-10 h-auto\" src= \"icons/help/toggle.png\" alt=\"toggle\" /> Permet de changer l'état du groupe. Autrement dit, si toutes les lampes du groupe sont",
+        "allumées, cliquer sur ce bouton les éteindra</li>",
+        "<li><img class= \"w-10 h-auto\" src= \"icons/help/edit.png\" alt=\"modify\" /> Permet d'afficher les équipements (<em>entités</em>) du groupe et les modifier. Vous",
+        "pourrez également en modifier le nom</li>",
+        "<li><img class= \"w-10 h-auto\" src= \"icons/help/delete.png\" alt=\"delete\" /> Permet de supprimer le groupe</li>",
+        "</ul>",
+        "<h3 id=\"recherche-et-tri\">Recherche et Tri</h3>",
+        "<p>Vous pouvez rechercher votre groupe par son nom en utilisant la barre de recherche en haut à droite :",
+        "<img class= \"w-64 h-auto\" src=\"icons/help/search.png\" alt=\"search\" />",
+        "</p>",
+        "<p>Vous pouvez également trier vos groupes par <strong>nom</strong>.</p>" 
+      ],
+      "rooms": [
+        "<h3 id=\"a-quoi-a-sert-\">A quoi ça sert ?</h3>",
+        "<p>Vous trouverez ici l'ensemble des pièces que vous avez définies.</p>",
+        "<p>Les pièces permettent de regrouper les équipements situés dans la même pièce de votre habitation.</p>",
+        "<h3 id=\"cr-er-une-pi-ce\">Créer une pièce</h3>",
+        "<p>Utilisez le <img class= \"w-10 h-auto\" src= \"icons/help/plus.png\" alt=\"+\"/> en bas à droite de la page pour pouvoir créer une pièce !</p>",
+        "<h3 id=\"gestion-des-pi-ces\">Gestion des pièces</h3>",
+        "<ul style=\"list-style: disc;\">",
+        "<li><img class=\"w-10 h-auto\" src= \"icons/help/edit.png\" alt=\"modify\" /> Permet d'afficher les équipements (<em>entités</em>) de la pièce et les modifier. Vous",
+        "pourrez également en modifier le nom</li>",
+        "<li><img class=\"w-10 h-auto\" src= \"icons/help/delete.png\" alt=\"delete\" /> Permet de supprimer la pièce</li>",
+        "</ul>",
+        "<h3 id=\"recherche-et-tri\">Recherche et Tri</h3>",
+        "<p>Vous pouvez rechercher votre groupe par son nom en utilisant la barre de recherche en haut à droite :",
+        "<img class=\"w-64 h-auto\" src=\"icons/help/search.png\" alt=\"search\" />",
+        "</p>",
+        "<p>Vous pouvez également trier vos groupes par <strong>nom</strong>.</p>"
+      ],
+      "users": [
+        "<h3 id=\"a-quoi-a-sert-\">A quoi ça sert ?</h3>",
+        "<p>Vous trouverez ici tous les utilisateurs de votre solution. Vous pourrez leur attribuer des équipements",
+        "(<em>entités</em>) auxquels ils pourront accèder (mais pas aux autres).</p>",
+        "<h3 id=\"cr-er-un-utilisateur\">Créer un utilisateur</h3>",
+        "<p>Utilisez le <img class= \"w-10 h-auto\" src= \"icons/help/plus.png\" alt=\"+\"/> en bas à droite de la page pour pouvoir créer un utilisateur !</p>",
+        "<h3 id=\"gestion-des-utilisateurs\">Gestion des utilisateurs</h3>",
+        "<ul style=\"list-style: disc;\">",
+        "<li><img class= \"w-10 h-auto\" src= \"icons/help/edit.png\" alt=\"modify\" /> Permet d'afficher les équipements (<em>entités</em>) auxquels l'utilisateur a accès",
+        "et permet de les modifier. Vous pourrez également en modifier le nom</li>",
+        "<li><img class=\"w-10 h-auto\" src= \"icons/help/delete.png\" alt=\"delete\" /> Permet de supprimer l'utilisateur. <strong>Il est impossible de supprimer",
+        "l'admin</strong></li>",
+        "</ul>",
+        "<h3 id=\"changer-d-utlilisateur\">Changer d'utlilisateur</h3>",
+        "<p>Vous pouvez changer d'utilisateur en cliquant en haut à droit de l'écran !</p>"
+      ]
   },
   "devices": {
     "lights": "lampes",
-    "sensors": "capteurs"
+    "sensors": "capteurs",
+    "binary_sensor": "Capteurs on/off",
+    "light": "Lampes",
+    "sensor": "Capteurs",
+    "switch": "Prises",
+    "brightness": "Luminosité",
+    "state": "Etat",
+    "loading": "Chargement des équipements...",
+    "dataUnavailable": "Informations indisponibles",
+    "colorTemperature": "Température de couleur",
+    "errorWhileLoading": "Erreur lors de la récupération des objets"
   },
   "automations": {
     "myAutomations": "Mes Routines",
@@ -26,26 +200,328 @@
         "name": "Noms",
         "state": "Actives"
       }
-    }
-},
+    },
+    "confirmDelete": "Voulez-vous vraiment supprimer cette routine ?",
+    "buttons": {
+      "edit": "Éditer",
+      "delete": "Supprimer",
+      "trigger": "Déclencher",
+      "create": "Créer une routine"
+    },
+    "errorWhileLoading": "Erreur lors de la récupération des routines",
+    "errorWhileToggling": "Erreur lors de la mise à jour de l'état de la routine",
+    "errorWhileTriggering": "Erreur lors du déclenchement de la routine",
+    "errorWhileGettingAutomation": "Erreur lors de la récupération de la routine",
+    "errorWhileCreating": "Erreur lors de la création de la routine",
+    "errorWhileDeleting": "Erreur lors de la suppression de la routine",
+    "errorWhileUpdating": "Erreur lors de la mise à jour de la routine",
+    "noAutomationYet": "Aucune routine trouvée. Créez en une pour la voir s'afficher ici !"
+  },
   "pairing": {
-      "instructions": {
-          "welcome": "Bienvenue, dans le mode d'appairage de ESIDOM.",
-          "advice" : "Suivez les étapes préparatoires suivantes pour appairer vos appareils connectés au sein de votre réseau :",
-          "advice1": "Préparez l'appareil que vous souhaitez ajouter au sein de votre réseau.",
-          "advice2": "Veuillez lire la notice de votre appareil pour connaitre la manipulation à réaliser durant la procédure d'appairage pour ajouter votre objet.",
-          "ready": "Une fois prêt, cliquez sur le bouton",
-          "validate":"valider",
-          "start": "pour lancer la procédure d'appairage."
-      }
+    "instructions": {
+      "welcome": "Bienvenue, dans le mode d'appairage de ESIDOM.",
+      "advice": "Suivez les étapes préparatoires suivantes pour appairer vos appareils connectés au sein de votre réseau :",
+      "advice1": "Préparez l'appareil que vous souhaitez ajouter au sein de votre réseau.",
+      "advice2": "Veuillez lire la notice de votre appareil pour connaitre la manipulation à réaliser durant la procédure d'appairage pour ajouter votre objet.",
+      "validate": "valider",
+      "start": "pour lancer la procédure d'appairage.",
+      "ready": "Une fois prêt, cliquez sur le bouton {0} pour lancer la procédure d'appairage."
+    },
+    "start": {
+      "information": "Veuillez appairer votre objet"
+    },
+    "success": {
+      "deviceFound": "🎉 Félicitations ! Nous  avons trouvé l'équipement suivant : {0}",
+      "entitiesAttached": "Cet objet possède {0} entités associées, représentant chacune une possibilité d'interaction avec \nl'équipement (action sur l'objet, lecture d'une valeur, etc)",
+      "deviceName": "Une entité est quelque chose avec lequel où il peut être possible d'intéragir.\nLes noms des entités générés ne sont pas très parlant, nous vous conseillons de les renommer pour mieux vous y retrouver:",
+      "instructions": "Nous vous conseillons de les renommer pour vous aider !",
+      "prefix": "Préfixe (Obligatoire)",
+      "prefixPlaceholder": "Préfixe de l'équipement",
+      "entity": "Entité {0} (Facultatif)"
+    },
+    "failure": {
+      "deviceNotFound": "Nous n'avons pas trouvé votre équipement 😟",
+      "followInstructions": "Assurez-vous d'avoir bien suivi les étapes d'appairage de votre équipement.",
+      "retryPairingProcedure": "Pour relancer la procédure d'appairage, cliquez sur le bouton",
+      "retry": "Réessayer"
+    },
+    "finish": {
+      "congratulation": "Félicitations, les équipements suivants ont bien été rajoutés au sein de votre réseau."
+    },
+    "errorWhileLaunchingPairing": "Erreur lors du déclenchement de la procédure d'appairage"
   },
   "blockly": {
     "loading": "Chargement de Blockly...",
     "loadingError": "Erreur : Blockly n'a pas pu charger à cause d'un problème avec le serveur.",
     "convertBlock": "Enregistrer la routine !",
     "unknownAction": "Action inconnue",
+    "unknownAttribute": "Attribut inconnu",
     "unknownName": "Nom inconnu",
     "automationName": "Nom",
-    "automationDesc": "Description"
+    "automationDesc": "Description",
+    "noAttribute": "pas d'attribut",
+    "type": {
+      "binarySensor": "capteur binaire",
+      "person": "personne",
+      "weather": "météo",
+      "zwave": "zwave",
+      "sensor": "capteur",
+      "light": "lampe",
+      "automation": "routine",
+      "switch": "interrupteur",
+      "mediaPlayer": "Lecteur multimédia"
+    },
+    "blocks": {
+      "blocks_by_type": {
+        "binarySensor": "capteur binaire",
+        "person": "personne",
+        "weather": "météo",
+        "zwave": "zwave",
+        "sensor": "capteur",
+        "light": "lampe",
+        "automation": "routine",
+        "switch": "interrupteur",
+        "group": "groupe",
+        "mediaPlayer": "Lecteur multimédia",
+        "tooltip": "Liste tous les objets (entités) de type : "
+      },
+      "esidom_automation": {
+        "message": "Quels sont les déclencheurs ? %1 Sous quelles conditions ? %2 Que faire ? %3",
+        "tooltip": "Permet de définir une routine. La partie \"déclencheur\" défini les évènements auxquels la routine réagira. Cette routine ne sera exécutée que si elle remplie les \"conditions\" définies (non obligatoire). Enfin, les \"actions\" seront exéctutées si les \"conditions\" sont vérifiées lors du \"déclenchement\". La logique du \"OU\" s'applique aux déclecheurs. La logique du \"ET\" s'applique aux conditions et aux actions."
+      },
+      "binary_trigger": {
+        "message": "Quand le capteur binaire %1 passe à %2 %3 depuis %4 h %5 m %6 s",
+        "tooltip": "Placer un capteur qui n'a que deux états (interrupteur, déctecteur d'ouverture) et choisissez l'état pour lequel le routine doit se déclencher"
+      },
+      "time_trigger": {
+        "message": "%1 h %2 %3 m %4 %5 s",
+        "tooltip": "Indique l'heure à laquelle la routine doit se déclencher (hh:mm:ss)"
+      },
+      "sun_trigger": {
+        "message": "%1 h %2 m %3 s %4 le %5 du soleil",
+        "tooltip": "Déclenche la routine hh:mm:ss [avant, après] le [lever, coucher] du soleil",
+        "before_after": {
+          "before": "avant",
+          "after": "après"
+        },
+        "sun": {
+          "sunrise": "lever",
+          "sunset": "coucher"
+        }
+      },
+      "numeric_state_trigger": {
+        "message": "Si %1 et son attribut %2 %3 a une valeur %4 %5 entre %6 et %7 %8",
+        "tooltip": "Après avoir fourni un capteur numérique, sélectionnez la (les) valeur(s) pour laquelle (lesquelles) la condition doit s'appliquer parmi les intervalles [compris, non compris, supérieur, inférieur]",
+        "dropdown3": {
+          "included": "comprise",
+          "notIncluded": "non comprise",
+          "greater": "au dessus",
+          "lower": "en dessous"
+        },
+        "between": "entre",
+        "and": "et",
+        "of": "de"
+      },
+      "interval_trigger": {
+        "message": "Toutes les %1 %2 %3",
+        "tooltip": "Déclenche une routine toutes les x heures, minutes ou secondes.",
+        "hour": "heures",
+        "minute": "minutes",
+        "second": "secondes"
+      },
+      "time_condition": {
+        "message": "Début : %1 h %2 m %3 s %4 Fin : %5 h %6 m %7 s %8 %9 lundi %10 %11 mardi %12 %13 mercredi %14 %15 jeudi %16 %17 vendredi %18 %19 samedi %20 %21 dimanche",
+        "tooltip": "Permet de sélectionner l'heure et le (ou les) jours de déclenchement de la routine"
+      },
+      "sun_condition": {
+        "message": "%1 h %2 m %3 s %4 le %5 du soleil",
+        "tooltip": "Ne déclenche la routine que si l'heure actuelle est hh:mm:ss [avant, après] le [lever, coucher] du soleil",
+        "before_after": {
+          "before": "avant",
+          "after": "après"
+        },
+        "sun": {
+          "sunrise": "lever",
+          "sunset": "coucher"
+        }
+      },
+      "time_condition_hour": {
+        "message": "Début %1 h %2 m %3 s %4 Fin %5 h %6 m %7 s",
+        "tooltip": "Applique la condition hh:mm:ss tous les jours"
+      },
+      "time_condition_week": {
+        "message": "%1 lundi %2 %3 mardi %4 %5 mercredi %6 %7 jeudi %8 %9 vendredi %10 %11 samedi %12 %13 dimanche",
+        "tooltip": "Applique la condition chaque jour coché, quelle que soit l'heure"
+      },
+      "binary_condition": {
+        "message": "Si le capteur binaire %1 est à l'état %2 %3 depuis %4 h %5 m %6 s",
+        "tooltip": "Placer un capteur qui n'a que deux états (interrupteur, déctecteur d'ouverture) et choisissez l'état pour lequel l'équipement doit être pour continuer la routine"
+      },
+      "numeric_state_condition": {
+        "message": "Si %1 et son attribut %2 %3 a une valeur %4 %5 entre %6 et %7 %8",
+        "tooltip": "Après avoir fourni un capteur numérique, sélectionnez la (les) valeur(s) pour laquelle (lesquelles) la condition doit s'appliquer parmi les intervalles [compris, non compris, supérieur, inférieur]",
+        "dropdown3": {
+          "included": "comprise",
+          "notIncluded": "non comprise",
+          "greater": "au dessus",
+          "lower": "en dessous"
+        }
+      },
+      "color_picker": {
+        "message": "Couleur %1",
+        "tooltip": "Sélectionne une couleur parmi celles proposées."
+      },
+      "color_rgb": {
+        "message": "Couleur personnalisée : %1 rouge : %2 vert : %3 bleu %4",
+        "tooltip": "Permet de définir la couleur avec les paramètres Rouge, vert et bleu. Chaque valeur étant comprise entre 0 (absence de couleur) et 255 (couleur maximale)"
+      },
+      "brightness": {
+        "message": "Intensité %1",
+        "tooltip": "Permet de définir l'intensité de la lampe. La valeur est comprise entre 0 et 255."
+      },
+      "color_temp": {
+        "message": "Température %1",
+        "tooltip": "Permet de définir la température de la lampe. La valeur est comprise entre 153 (blanche) et 500 (jaune)."
+      },
+      "object_action": {
+        "message": "Objet %1 %2 Action %3 %4",
+        "tooltip": "Sélectionne un objet, puis contrôle les actions possibles sur celui-ci. Attention : la couleur et la température d'une lampe ne sont pas compatibles.",
+        "color": "Couleur",
+        "brightness": "Intensité",
+        "temperature": "Température",
+        "lightTurnOn": "lampe : allumer",
+        "lightTurnOff": "lampe : éteindre",
+        "lightToggle": "lampe : basculer",
+        "switchTurnOn": "prise : allumer",
+        "switchTurnOff": "prise : éteindre",
+        "switchToggle": "prise : basculer"
+      },
+      "delay_action": {
+        "message": "Délai %1 h %2 m %3 s",
+        "tooltip": "Définir le délai avant la prochaine action."
+      }
+    }
+  },
+  "placeholder": {
+    "password": "Mot de passe",
+    "newPassword": "Nouveau mot de passe",
+    "confirmation": "Confirmer le mot de passe"
+  },
+  "modal": {
+    "registerPassword": "Verrouillez l'application avec un mot de passe",
+    "login": "Choisissez un utilisateur"
+  },
+  "buttons": {
+    "cancel": "Annuler",
+    "confirm": "Valider",
+    "retry": "Réessayer",
+    "close": "Fermer",
+    "unlock": "Déverrouiller",
+    "return": "Retour"
+  },
+  "groups": {
+    "myGroups": "Mes groupes",
+    "implicitGroup": {
+      "name": "Groupe implicite",
+      "cat": {
+        "switchlight": "Lampes et prises "
+      },
+      "of": "de la pièce"
+    },
+    "search": "Rechercher ...",
+    "sortBy": {
+      "title": "Trier par",
+      "options": {
+        "name": "Noms"
+      }
+    },
+    "createGroup": "Nouveau groupe",
+    "groupName": "Nom du groupe",
+    "groupEntities": "Equipements dans le groupe",
+    "buttons": {
+      "create": "Créer un groupe",
+      "edit": "Editer",
+      "delete": "Supprimer",
+      "view": "Afficher"
+    },
+    "errorWhileLoading": "Erreur lors de la récupération des groupes",
+    "errorWhileCreating": "Erreur lors de la création du groupe",
+    "errorWhileDeleting": "Erreur lors de la suppression du groupe",
+    "errorWhileUpdating": "Erreur lors de la mise à jour du groupe",
+    "groupCreated": "Groupe sauvegardé avec succès",
+    "groupDeleted": "Groupe supprimé avec succès",
+    "groupUpdated": "Groupe mis à jour avec succès",
+    "noGroupYet": "Aucun groupe trouvé. Créez en un pour le voir s'afficher ici !" 
+  },
+  "entities": {
+    "menu": {
+      "name": "Nom :",
+      "type": "Type :",
+      "state": "Etat :",
+      "informations": "Informations",
+      "pair": "Appairer un équipement",
+      "enterEntityName": "Entrer un nom à cet équipement",
+      "loading": "Chargement de l'équipement..."
+    },
+    "light": {
+      "turnTheLightOn": "Allumez l'appareil si vous souhaitez configurer la lampe."
+    },
+    "binarySensor": {
+      "on": "On",
+      "off": "Off"
+    },
+    "close": "Fermer",
+    "unlock": "Déverouiller",
+    "errorWhileLoading": "Erreur lors du chargement des équipements",
+    "errorWhileLoadingServices": "Erreur lors du chargement des services",
+    "errorWhileUpdating": "Erreur lors de la mise à jour de l'équipement",
+    "errorWhileToggle": "Erreur lors du changement d'état"
+  },
+  "rooms": {
+    "myRooms": "Mes pièces",
+    "search": "Rechercher ...",
+    "createRoom": "Nouvelle pièce",
+    "roomName": "Nom de la pièce",
+    "roomDevices": "Equipement dans la pièce",
+    "roomCreated": "Pièce sauvegardée avec succès",
+    "roomDeleted": "Pièce supprimée avec succès",
+    "errorWhileLoading": "Erreur lors de la récupération des pièces",
+    "errorWhileCreating": "Erreur lors de la création de la pièce",
+    "errorWhileDeleting": "Erreur lors de la suppression de la pièce",
+    "errorWhileUpdating": "Erreur lors de la mise à jour de la pièce",
+    "roomUpdated": "Pièce mise à jour avec succès",
+    "buttons": {
+        "create": "Créer une pièce",
+        "edit": "Editer",
+        "delete": "Supprimer",
+        "view": "Afficher"
+      },
+    "noRoomYet": "Aucune pièce trouvée. Créez en une pour la voir s'afficher ici !" 
+  },
+  "sortBy": {
+    "title": "Trier par",
+    "options": {
+      "name": "Noms"
+    }
+  },
+  "user": {
+    "confirmDelete": "Voulez-vous vraiment supprimer cet utilisateur ?",
+    "name": "Nom d'utilisateur",
+    "create": "Créer un utilisateur",
+    "edit": "Editer l'utilisateur",
+    "assignEntities": "Assigner des entités à l'utilisateur",
+    "connectedAs": "Connecté en tant que {0}",
+    "notConnected": "Non connecté",
+    "logout": "Verrouiller l'application",
+    "changeUser": "Changer d'utilisateur",
+    "userCreated": "L'utilisateur a bien été créé",
+    "errorWhileCreating": "Une erreur est survenue lors de la création",
+    "usernameCannotBeEmpty": "Le nom d'utilisateur ne peut pas être vide",
+    "errorWhileLocking": "Erreur lors du verrouillage de l'application",
+    "errorWhileUnlocking": "Erreur lors du déverrouillage de l'application",
+    "errorWhileLoading": "Erreur lors de la récupération des utilisateurs",
+    "errorWhileLoadingUser": "Erreur lors de la récupération de l'utilisateur",
+    "errorWhileUpdating": "Erreur lors de la mise à jour de l'utilisateur",
+    "errorWhileDeleting": "Erreur lors de la suppression de l'utilisateur"
   }
 }

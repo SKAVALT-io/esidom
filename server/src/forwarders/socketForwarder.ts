@@ -1,21 +1,38 @@
+/* eslint-disable camelcase */
 import socketIo from 'socket.io';
 import WebSocket from 'ws';
-import { HaEntityUpdated } from '../types/haTypes';
 import App from '../app';
+import {
+    EventObserver,
+    Event,
+    HaEntityStateChanged,
+    HaSocketResult,
+    HaSocketError,
+    HaEntityUpdated,
+} from '../types';
 import config from '../config/config';
-import { EventObserver, Event } from '../types/observer';
+import { logger } from '../utils';
+import { doAuth } from '../index';
+
+type EventType = 'event_type' | 'type';
+
+type HaSocketEvent = {
+    // eslint-disable-next-line no-unused-vars
+    [x in EventType]: string;
+} & {
+    data: any;
+};
 
 type HaSocket = {
     type: string,
     id: number,
-    result?: any,
-    event?: any,
+    result?: HaSocketResult,
+    event?: HaSocketEvent,
     success?: boolean;
-    error?: {
-        code: string;
-        message: string;
-    }
+    error?: HaSocketError
 }
+
+const SOCKET_TIMEOUT = 10_000;
 
 class SocketForwarder {
 
@@ -32,6 +49,8 @@ class SocketForwarder {
     private io: socketIo.Server;
 
     private observers: EventObserver[];
+
+    private retryConnectId: any = undefined;
 
     constructor() {
         this.socketsMap = new Map();
@@ -52,41 +71,44 @@ class SocketForwarder {
 
     notifyObservers(event: Event, data?: string) {
         this.observers.forEach((observer: EventObserver) => {
-            switch (event) {
-            case 'authOk':
+            if (event === 'authOk') {
                 observer.onAuthOk?.();
-                break;
-            case 'entityUpdated':
-                if (data) {
+            } else if (data) {
+                if (event === 'entityUpdated') {
                     observer.onEntityUpdated?.(data);
-                }
-                break;
-            case 'automationUpdated':
-                if (data) {
+                } else if (event === 'entityCreated') {
+                    observer.onEntityCreated?.(data);
+                } else if (event === 'entityRemoved') {
+                    observer.onEntityRemoved?.(data);
+
+                } else if (event === 'deviceUpdated') {
+                    observer.onDeviceUpdated?.(data);
+                } else if (event === 'deviceRemoved') {
+                    observer.onDeviceRemoved?.(data);
+                } else if (event === 'deviceCreated') {
+                    observer.onDeviceCreated?.(data);
+
+                } else if (event === 'automationUpdated') {
                     observer.onAutomationUpdated?.(data);
+                } else if (event === 'automationRemoved') {
+                    observer.onAutomationRemoved?.(data);
+                } else if (event === 'automationCreated') {
+                    observer.onAutomationCreated?.(data);
+                } else if (event === 'roomCreated') {
+                    observer.onRoomCreated?.(data);
+                } else if (event === 'roomUpdated') {
+                    observer.onRoomUpdated?.(data);
+                } else if (event === 'roomRemoved') {
+                    observer.onRoomRemoved?.(data);
+                } else if (event === 'groupCreated') {
+                    observer.onGroupCreated?.(data);
+                } else if (event === 'groupUpdated') {
+                    observer.onGroupUpdated?.(data);
+                } else if (event === 'groupRemoved') {
+                    observer.onGroupRemoved?.(data);
+                } else {
+                    logger.error(`No such event ${event}`);
                 }
-                break;
-            case 'deviceRegistryUpdated':
-                if (data) {
-                    observer.onDeviceRegistryUpdated?.(data);
-                }
-                break;
-            case 'entityRegistryUpdated':
-                observer.onEntityRegistryUpdated?.();
-                break;
-            case 'areaUpdated':
-                if (data) {
-                    observer.onAreaUpdated?.(data);
-                }
-                break;
-            case 'areaRemoved':
-                if (data) {
-                    observer.onAreaRemoved?.(data);
-                }
-                break;
-            default:
-                console.log(`No such event ${event}`);
-                break;
             }
         });
     }
@@ -95,11 +117,16 @@ class SocketForwarder {
         this.socket = new WebSocket(`ws://${config.baseUrl}/api/websocket`);
         this.socket
             .on('open', () => {
-                console.log('connected to websocket');
+                logger.info('Connected to websocket');
+                if (this.retryConnectId) {
+                    clearInterval(this.retryConnectId);
+                    this.retryConnectId = undefined;
+                }
                 setTimeout(() => this.subscribeToEvents(), 1000);
             })
             .on('close', () => {
-                console.log('connection to websocket closed');
+                logger.info('Connection to websocket closed');
+                this.retryConnectId = setInterval(() => doAuth(), 10000);
             })
             .on('message', (wsData: WebSocket.Data) => {
                 const data = JSON.parse(wsData.toString()) as HaSocket;
@@ -110,7 +137,7 @@ class SocketForwarder {
                     );
                     break;
                 case 'auth_ok':
-                    console.log('Authorized');
+                    logger.info('Authenticated to websocket');
                     this.notifyObservers('authOk');
                     break;
                 case 'event':
@@ -148,77 +175,127 @@ class SocketForwarder {
 
     handleSocketResult(data: HaSocket): void {
         const { id } = data;
-        console.log(`received result for ws ${id}`);
+        logger.silly(`Received result for ws ${id}`);
         if (data.success === true) {
-            // console.log(data.result);
-            (this.socketsMap.get(id) || console.log)(data.result);
+            logger.silly('Data: ', data.result);
+            (this.socketsMap.get(id) || logger.error)(data.result);
         } else if (data.success === false) {
-            console.log(`${data.error?.code} ${data.error?.message}`);
-            (this.errorsMap.get(id) || console.log)(data.error);
+            logger.error(`${data.error?.code} ${data.error?.message}`);
+            (this.errorsMap.get(id) || logger.error)(data.error);
         }
         this.socketsMap.delete(id);
         this.errorsMap.delete(id);
     }
 
     async handleSocketEvent(data: HaSocket): Promise<void> {
-        const { id } = data;
-        console.log(`received event for ws : ${id}`);
-        // console.log(data);
-        const eventType: string = data?.event?.event_type;
+        const eventType: string | undefined = data?.event?.event_type ?? data?.event?.type;
+        if (!eventType) {
+            return;
+        }
+        logger.debug(`Received WS event : ${eventType}`);
+        const eventData: any = data?.event?.data;
+        logger.silly('Data: ', eventData);
         if (eventType === 'device_registry_updated') {
-            console.log(data.event.data);
-            switch (data?.event?.data?.action) {
-            case 'create':
-                (this.socketsMap.get(id) || console.log)(data.event.data);
-                this.socketsMap.delete(id);
-                this.notifyObservers('deviceRegistryUpdated', data.event.data.device_id);
-                return;
-            case 'remove':
-                this.io.emit('device_removed', data.event.data);
-                return;
-            case 'update':
-                this.notifyObservers('deviceRegistryUpdated');
-                return;
-            default:
-                console.log(`Unknown event ${data.event.event_type}`);
-                return;
-            }
+            this.handleDeviceRegistryUpdated(eventData, eventType);
         }
         if (eventType === 'state_changed') {
-            const ent: HaEntityUpdated = data?.event?.data;
-            if (ent.entity_id.startsWith('automation')) {
-                this.notifyObservers('automationUpdated', ent.entity_id);
-            } else {
-                this.notifyObservers('entityUpdated', ent.entity_id);
-            }
+            this.handleStateChanged(eventData);
         }
         if (eventType === 'area_registry_updated') {
-            if (data?.event?.data?.action === 'remove') {
-                this.notifyObservers('areaRemoved', data.event?.data?.area_id);
-            } else if (data?.event?.data?.action === 'update') {
-                this.notifyObservers('areaUpdated', data.event?.data?.area_id);
-            }
+            this.handleAreaRegistryUpdated(eventData);
+        }
+        if (eventType === 'entity_registry_updated') {
+            this.handleEntityRegistryUpdated(eventData);
         }
     }
 
-    async getSocketResponse(req: HaSocket): Promise<any> {
+    async getSocketResponse<T>(req: HaSocket): Promise<T> {
         const { id } = req;
-        const result = await new Promise((res, rej) => {
-            this.socketsMap.set(id, res);
-            this.errorsMap.set(id, rej);
-            this.socket?.send(JSON.stringify(req));
-        });
-        return result;
+        return Promise.race([
+            new Promise<T>((res, rej) => {
+                this.socketsMap.set(id, res);
+                this.errorsMap.set(id, rej);
+                this.socket?.send(JSON.stringify(req));
+            }),
+            new Promise<T>((_resolve, reject) => {
+                setTimeout(() => {
+                    reject(new Error('Timed out.'));
+                }, SOCKET_TIMEOUT);
+            }),
+        ]);
     }
 
     async forward<T>(body: any): Promise<T> {
         const data: HaSocket = { id: this.uid++, ...body };
-        const res: any = await this.getSocketResponse(data);
-        return res;
+        return this.getSocketResponse<T>(data);
     }
 
-    emitSocket<T>(event: string, data: T): void {
+    emitSocket<T>(event: Event, data: T): void {
+        logger.debug(`Emit ${event} socket with data:`, data);
         this.io.emit(event, data);
+    }
+
+    private handleDeviceRegistryUpdated(eventData: any, eventType: string) {
+        switch (eventData?.action) {
+        case 'create':
+            this.notifyObservers('deviceCreated', eventData.device_id);
+            return;
+        case 'remove':
+            this.notifyObservers('deviceRemoved', eventData);
+            return;
+        case 'update':
+            this.notifyObservers('deviceUpdated', eventData.device_id);
+            return;
+        default:
+            logger.error(`Unknown event ${eventType}`);
+        }
+    }
+
+    private handleStateChanged(eventData: any) {
+        const ent: HaEntityStateChanged = eventData;
+        if (ent.entity_id.startsWith('automation')) {
+            this.notifyObservers('automationUpdated', ent.entity_id);
+        } else if (ent.entity_id.startsWith('group')) {
+            let event: Event;
+            if (ent.old_state !== null && ent.new_state !== null) {
+                event = 'groupUpdated';
+            } else if (ent.old_state === null && ent.new_state !== null) {
+                event = 'groupCreated';
+            } else {
+                event = 'groupRemoved';
+            }
+            console.log(event);
+            this.notifyObservers(event, ent.entity_id);
+        } else {
+            this.notifyObservers('entityUpdated', ent.entity_id);
+        }
+    }
+
+    private handleAreaRegistryUpdated(eventData: any) {
+        if (eventData?.action === 'remove') {
+            this.notifyObservers('roomRemoved', eventData?.area_id);
+        } else if (eventData?.action === 'update') {
+            this.notifyObservers('roomUpdated', eventData?.area_id);
+        } else if (eventData?.action === 'create') {
+            this.notifyObservers('roomCreated', eventData?.area_id);
+        }
+    }
+
+    private handleEntityRegistryUpdated(eventData: any) {
+        const updated: HaEntityUpdated = eventData;
+        if (updated.action === 'remove') {
+            if (updated.entity_id.startsWith('automation')) {
+                this.notifyObservers('automationRemoved', updated.entity_id);
+            } else {
+                this.notifyObservers('entityRemoved', updated.entity_id);
+            }
+        } else if (updated.action === 'create') {
+            if (updated.entity_id.startsWith('automation')) {
+                this.notifyObservers('automationCreated', updated.entity_id);
+            } else {
+                this.notifyObservers('entityCreated', updated.entity_id);
+            }
+        }
     }
 
 }

@@ -12,24 +12,62 @@
     import Automations from './routes/automation/Automations.svelte';
     import Entity from './routes/entities/Entity.svelte';
 
-    import Navbar from './components/others/Navbar.svelte';
+    import Navbar from './components/UI/bar/Navbar.svelte';
     import { socketManager } from './managers/socketManager';
-    import Sidebar from './components/others/Sidebar.svelte';
+    import Sidebar from './components/UI/bar/Sidebar.svelte';
+    import Toast from './Toast.svelte';
+    import Groups from './routes/groups/Groups.svelte';
+    import Users from './routes/users/Users.svelte';
+    import UserService from './services/userService';
+    import LoginPage from './components/login/LoginPage.svelte';
+    import DisconnectModal from './components/login/DisconnectModal.svelte';
+    import Rooms from './routes/room/Rooms.svelte';
+    import HelpModal from './components/help/HelpModal.svelte';
+    import { tr, trArray } from './utils/i18nHelper';
+    import LoginModal from './components/login/LoginModal.svelte';
 
     // Configure the app routes
     const routes = {
         '/entities/': Entities,
         '/entity/:id': Entity,
-        '/home/': Home,
         '/blockly': Blockly,
         '/blockly/:id': Blockly,
         '/automations': Automations,
+        '/groups': Groups,
+        '/rooms': Rooms,
+        '/users': Users,
         // This is optional, but if present it must be the last
         '*': Entities,
     };
 
     /* Open/Close sidebar from navbar */
-    let open = false;
+    let openSidebar = false;
+
+    let openDisconnectModal = false;
+    let openHelpModal = false;
+
+    function hashToPage() {
+        const sub = window.location.hash.substring(2);
+        // handle only two levels of hash page
+        // it is not generic and is really specific to our project
+        if (sub.includes('/')) {
+            const [page, other] = sub.replace('/', '.').split('.');
+
+            if (page === 'entity') {
+                const knownList = ['light', 'switch']; // ex : entity.light
+
+                return knownList.includes(other)
+                    ? `${page}.${other}`
+                    : `${page}.default`;
+            } else {
+                return page;
+            }
+        }
+        return sub !== '' ? sub : 'entities';
+    }
+
+    let currentPageSelected = hashToPage();
+    let openLoginModal = false;
 
     // Configure and init i18n
     addMessages('fr', fr);
@@ -42,29 +80,53 @@
 
     // Initiate the socket
     socketManager.connect();
+
+    async function isLocked(): Promise<boolean> {
+        return UserService.isLocked();
+    }
 </script>
 
 <main>
-    <div id="row1">
-        <div class="header">
-            <Navbar
-                on:press={() => {
-                    open = !open;
-                }}
-            />
-        </div>
-    </div>
-    <div
-        id="row2"
-        class="flex flex-row space-x-4 sm:space-x-20 overflow-y-auto h-screen"
-    >
-        <div class="sidenav fixed z-20">
-            <Sidebar bind:open />
-        </div>
-        <div class="main-content w-full mt-6">
-            <Router {routes} />
-        </div>
-    </div>
+    <Toast />
+    <DisconnectModal bind:open={openDisconnectModal} />
+    <HelpModal
+        bind:open={openHelpModal}
+        helpText={trArray(`help.${currentPageSelected}`)}
+    />
+    <LoginModal bind:open={openLoginModal} />
+
+    {#await isLocked() then locked}
+        {#if locked}
+            <LoginPage />
+        {:else}
+            <div id="row1">
+                <div class="header">
+                    <Navbar
+                        on:press={() => {
+                            openSidebar = !openSidebar;
+                        }}
+                        on:disconnect={() => (openDisconnectModal = true)}
+                        on:help={() => {
+                            currentPageSelected = hashToPage();
+                            openHelpModal = true;
+                        }}
+                        on:login={() => (openLoginModal = true)}
+                    />
+                </div>
+            </div>
+            <div
+                id="row2"
+                class="flex flex-row space-x-4 sm:space-x-20 overflow-y-auto h-screen"
+            >
+                <div class="sidenav fixed z-110">
+                    <Sidebar bind:open={openSidebar} />
+                </div>
+                <div class="main-content w-full mt-6">
+                    <Router {routes} />
+                </div>
+            </div>
+        {/if}
+    {/await}
 </main>
 
 <style lang="scss">

@@ -2,6 +2,7 @@
 /* eslint-disable camelcase */
 import Blockly from 'blockly';
 import type { Block } from 'blockly';
+import { hexToRgb, rgbToHex } from '../../utils/functions';
 
 const esidomGenerator: Blockly.Generator = new Blockly.Generator('ESIDOM');
 
@@ -33,6 +34,12 @@ function getDropdownChoice(blk: Block): string {
     return dropdownChoice;
 }
 
+interface BlocklyData{
+    rgb_color?: number[];
+    brightness?: string;
+    color_temp?: string;
+}
+
 export interface BlocklyJSON {
     trigger?: string;
     condition?: string;
@@ -48,12 +55,24 @@ export interface BlocklyJSON {
     from?: string;
     to?: string;
     state?: string;
-    rgb_color?: string;
     alias?: string;
+    after_offset?: string;
+    offset?: string;
+    event?: string;
+    above?: string;
+    below?: string;
+    attribute?: string;
+    data?: BlocklyData;
+    delay?: string;
+    hours?: string;
+    minutes?: string;
+    seconds?: string;
+    for?: string;
+    conditions?: BlocklyJSON[];
 }
 
-export type EntityTypeEnum = 'binary_sensor' | 'person' | 'weather' | 'zwave' | 'sensor' | 'light' | 'automation' | 'switch' | 'media_player';
-const types: EntityTypeEnum[] = ['binary_sensor', 'person', 'weather', 'zwave', 'sensor', 'light', 'automation', 'switch', 'media_player'];
+export type EntityTypeEnum = 'binary_sensor' | 'sensor' | 'light' | 'automation' | 'switch' | 'group';
+const types: EntityTypeEnum[] = ['binary_sensor', 'sensor', 'light', 'automation', 'switch', 'group'];
 
 export type BlocksGenerator = {
     [key in EntityTypeEnum]: (a: Block, code: string, opt_thisOnly: string) => void;
@@ -61,15 +80,22 @@ export type BlocksGenerator = {
     esidom_automation: (blk: Block) => void;
     binary_trigger: (blk: Block) => void;
     time_trigger: (blk: Block) => void;
+    sun_trigger: (blk: Block) => void;
+    numeric_state_trigger: (blk: Block) => void;
+    interval_trigger: (blk: Block) => void;
     time_condition: (blk: Block) => void;
     sun_condition: (blk: Block) => void;
     time_condition_hour: (blk: Block) => void;
     time_condition_week: (blk: Block) => void;
     binary_condition: (blk: Block) => void;
+    numeric_state_condition: (blk: Block) => void;
     action: (blk: Block) => void;
     color_picker: (blk: Block) => void;
     color_rgb: (blk: Block) => void;
+    brightness: (blk: Block) => void;
+    color_temp: (blk: Block) => void;
     object_action: (blk: Block) => void;
+    delay_action: (blk: Block) => void;
     scrub_: (blk: Block, code: string, opt_thisOnly: string) => string;
     jsonInit:(a: Block)=> void;
 }
@@ -78,6 +104,10 @@ export type BlocksGenerator = {
     types.forEach((t: EntityTypeEnum) => {
         block[t] = (blk: Block) => [getDropdownChoice(blk), PRECEDENCE];
     });
+
+    /**
+     * Bloc ESIDOM
+     */
 
     block.esidom_automation = (blk: Block) => {
         const statements_trigger: string = esidomGenerator.statementToCode(blk, 'Trigger');
@@ -111,6 +141,10 @@ export type BlocksGenerator = {
         return JSON.stringify(json);
     };
 
+    /**
+     * Catégorie Déclencheur
+     */
+
     block.time_trigger = (blk: Block) => {
         const number_hour = blk.getFieldValue('Hour');
         const number_minute = blk.getFieldValue('Minute');
@@ -123,6 +157,124 @@ export type BlocksGenerator = {
 
         return JSON.stringify(json);
     };
+
+    block.binary_trigger = (blk: Block) => {
+        const value_service = esidomGenerator.valueToCode(blk, 'Service', PRECEDENCE);
+        const dropdown_state = blk.getFieldValue('State');
+
+        const number_hour = blk.getFieldValue('Hour');
+        const number_minute = blk.getFieldValue('Minute');
+        const number_second = blk.getFieldValue('Second');
+
+        const json: BlocklyJSON = {};
+
+        json.platform = 'state';
+        json.entity_id = value_service;
+
+        if (dropdown_state === 'off') {
+            json.from = 'on';
+            json.to = 'off';
+        } else if (dropdown_state === 'on') {
+            json.from = 'off';
+            json.to = 'on';
+        }
+
+        json.for = `${number_hour}:${number_minute}:${number_second}`;
+
+        return JSON.stringify(json);
+    };
+
+    block.sun_trigger = (blk: Block) => {
+        const number_hour = blk.getFieldValue('Hour');
+        const number_minute = blk.getFieldValue('Minute');
+        const number_second = blk.getFieldValue('Second');
+
+        const dropdown_before_after = blk.getFieldValue('Before_after');
+
+        const dropdown_sun = blk.getFieldValue('Sun');
+
+        const json: BlocklyJSON = {};
+
+        json.platform = 'sun';
+        json.event = dropdown_sun;
+        json.offset = `${dropdown_before_after}${number_hour}:${number_minute}:${number_second}`;
+
+        return JSON.stringify(json);
+    };
+
+    block.numeric_state_trigger = (blk: Block) => {
+        const dropdown_entities = blk.getFieldValue('Entities');
+        const dropdown_attributes = blk.getFieldValue('Attributes');
+        const dropdown_included = blk.getFieldValue('Included');
+
+        const number_min = blk.getFieldValue('Minimum');
+        const number_max = blk.getFieldValue('Maximum');
+
+        const json: BlocklyJSON = {};
+
+        if (dropdown_included === 'included') {
+            json.platform = 'numeric_state';
+            json.entity_id = dropdown_entities;
+            json.above = number_min;
+            json.below = number_max;
+            if (dropdown_attributes !== 'noAttribute') {
+                json.attribute = dropdown_attributes;
+            }
+        } else if (dropdown_included === 'notIncluded') {
+            return `
+                {
+                    "platform": "numeric_state",
+                    "entity_id": "${dropdown_entities}",
+                    ${dropdown_attributes !== 'noAttribute' ? `"attribute": "${dropdown_attributes}",` : ''}
+                    "below": ${number_min}
+                },
+                {
+                    "platform": "numeric_state",
+                    "entity_id": "${dropdown_entities}",
+                    ${dropdown_attributes !== 'noAttribute' ? `"attribute": "${dropdown_attributes}",` : ''}
+                    "above": ${number_max}
+                }
+            `;
+        } else if (dropdown_included === 'greater') {
+            json.platform = 'numeric_state';
+            json.entity_id = dropdown_entities;
+            json.above = number_min;
+            if (dropdown_attributes !== 'noAttribute') {
+                json.attribute = dropdown_attributes;
+            }
+        } else if (dropdown_included === 'lower') {
+            json.platform = 'numeric_state';
+            json.entity_id = dropdown_entities;
+            json.below = number_max;
+            if (dropdown_attributes !== 'noAttribute') {
+                json.attribute = dropdown_attributes;
+            }
+        }
+
+        return JSON.stringify(json);
+    };
+
+    block.interval_trigger = (blk: Block) => {
+        const number_time = blk.getFieldValue('Time');
+        const number_value = blk.getFieldValue('Time_value');
+
+        const json: BlocklyJSON = {};
+
+        json.platform = 'time_pattern';
+
+        if (number_time === 'hour') {
+            json.hours = `/${number_value}`;
+        } else if (number_time === 'minute') {
+            json.minutes = `/${number_value}`;
+        } else if (number_time === 'second') {
+            json.seconds = `/${number_value}`;
+        }
+        return JSON.stringify(json);
+    };
+
+    /**
+     * Catégorie Condition
+     */
 
     block.time_condition = (blk: Block) => {
         const number_hour_debut = blk.getFieldValue('Hour_start');
@@ -140,72 +292,6 @@ export type BlocksGenerator = {
         json.after = `${number_hour_debut}:${number_minute_debut}:${number_second_debut}`;
         json.before = `${number_hour_end}:${number_minute_end}:${number_second_end}`;
         json.weekday = weekday;
-
-        return JSON.stringify(json);
-    };
-
-    block.binary_trigger = (blk: Block) => {
-        const value_service = esidomGenerator.valueToCode(blk, 'Service', PRECEDENCE);
-        const dropdown_state = blk.getFieldValue('State');
-
-        const json: BlocklyJSON = {};
-
-        json.platform = 'state';
-        json.entity_id = value_service;
-
-        if (dropdown_state === 'off') {
-            json.from = 'on';
-            json.to = 'off';
-        } else if (dropdown_state === 'on') {
-            json.from = 'off';
-            json.to = 'on';
-        }
-
-        return JSON.stringify(json);
-    };
-
-    block.sun_condition = (blk: Block) => {
-        const dropdown_sun_sun = blk.getFieldValue('Sun.sun');
-
-        const json: BlocklyJSON = {};
-        json.condition = 'state';
-        json.entity_id = 'sun.sun';
-        json.state = dropdown_sun_sun;
-
-        return JSON.stringify(json);
-    };
-
-    block.binary_condition = (blk: Block) => {
-        const value_service = esidomGenerator.valueToCode(blk, 'Service', PRECEDENCE);
-        const dropdown_state = blk.getFieldValue('State');
-
-        const json: BlocklyJSON = {};
-
-        json.condition = 'state';
-        json.entity_id = value_service;
-        json.state = dropdown_state;
-
-        return JSON.stringify(json);
-    };
-
-    block.color_picker = (blk: Block) => {
-        const color_value = blk.getFieldValue('Color');
-
-        const json: BlocklyJSON = {};
-
-        json.rgb_color = color_value;
-
-        return JSON.stringify(json);
-    };
-
-    block.color_rgb = (blk: Block) => {
-        const number_red = blk.getFieldValue('Red');
-        const number_green = blk.getFieldValue('Green');
-        const number_blue = blk.getFieldValue('Blue');
-        const color_value = `#${number_red.toString(16).padStart(2, '0')}${number_green.toString(16).padStart(2, '0')}${number_blue.toString(16).padStart(2, '0')}`;
-        const json: BlocklyJSON = {};
-
-        json.rgb_color = color_value;
 
         return JSON.stringify(json);
     };
@@ -237,18 +323,188 @@ export type BlocksGenerator = {
         return JSON.stringify(json);
     };
 
-    block.object_action = (blk: Block) => {
-        const dropdown_entities = blk.getFieldValue('Entities');
-        const dropdown_services = blk.getFieldValue('Services');
+    block.binary_condition = (blk: Block) => {
+        const value_service = esidomGenerator.valueToCode(blk, 'Service', PRECEDENCE);
+        const dropdown_state = blk.getFieldValue('State');
+        const number_hour = blk.getFieldValue('Hour');
+        const number_minute = blk.getFieldValue('Minute');
+        const number_second = blk.getFieldValue('Second');
 
         const json: BlocklyJSON = {};
 
-        const entity_id = dropdown_entities.split(':')[1];
+        json.condition = 'state';
+        json.entity_id = value_service;
+        json.state = dropdown_state;
 
-        json.alias = dropdown_entities;
-        json.entity_id = entity_id;
-        json.service = dropdown_services;
+        json.for = `${number_hour}:${number_minute}:${number_second}`;
+
         return JSON.stringify(json);
+    };
+
+    block.sun_condition = (blk: Block) => {
+        const number_hour = blk.getFieldValue('Hour');
+        const number_minute = blk.getFieldValue('Minute');
+        const number_second = blk.getFieldValue('Second');
+
+        const dropdown_before_after = blk.getFieldValue('Before_after');
+
+        const dropdown_sun = blk.getFieldValue('Sun');
+
+        const json: BlocklyJSON = {};
+
+        if (dropdown_sun === 'sunrise') {
+            json.condition = 'sun';
+            json.after = dropdown_sun;
+            json.before = 'sunset';
+            json.after_offset = `${dropdown_before_after}${number_hour}:${number_minute}:${number_second}`;
+        } else if (dropdown_sun === 'sunset') {
+            json.condition = 'or';
+            json.conditions = [
+                {
+                    condition: 'sun',
+                    after: dropdown_sun,
+                    after_offset: `${dropdown_before_after}${number_hour}:${number_minute}:${number_second}`,
+                },
+                {
+                    condition: 'sun',
+                    before: 'sunrise',
+                },
+            ];
+        }
+        return JSON.stringify(json);
+    };
+
+    block.numeric_state_condition = (blk: Block) => {
+        const dropdown_entities = blk.getFieldValue('Entities');
+        const dropdown_attributes = blk.getFieldValue('Attributes');
+        const dropdown_included = blk.getFieldValue('Included');
+
+        const number_min = blk.getFieldValue('Minimum');
+        const number_max = blk.getFieldValue('Maximum');
+
+        const json: BlocklyJSON = {};
+
+        if (dropdown_included === 'included') {
+            json.condition = 'numeric_state';
+            json.entity_id = dropdown_entities;
+            json.above = number_min;
+            json.below = number_max;
+            if (dropdown_attributes !== 'noAttribute') {
+                json.attribute = dropdown_attributes;
+            }
+        } else if (dropdown_included === 'notIncluded') {
+            json.condition = 'or';
+            json.conditions = [
+                {
+                    condition: 'numeric_state',
+                    entity_id: dropdown_entities,
+                    below: number_min,
+                    attribute: dropdown_attributes !== 'noAttribute' ? dropdown_attributes : '',
+                },
+                {
+                    condition: 'numeric_state',
+                    entity_id: dropdown_entities,
+                    above: number_max,
+                    attribute: dropdown_attributes !== 'noAttribute' ? dropdown_attributes : '',
+                },
+            ];
+        } else if (dropdown_included === 'greater') {
+            json.condition = 'numeric_state';
+            json.entity_id = dropdown_entities;
+            json.above = number_min;
+            if (dropdown_attributes !== 'noAttribute') {
+                json.attribute = dropdown_attributes;
+            }
+        } else if (dropdown_included === 'lower') {
+            json.condition = 'numeric_state';
+            json.entity_id = dropdown_entities;
+            json.below = number_max;
+            if (dropdown_attributes !== 'noAttribute') {
+                json.attribute = dropdown_attributes;
+            }
+        }
+
+        return JSON.stringify(json);
+    };
+
+    /**
+     * Catégorie Action
+     */
+
+    block.object_action = (blk: Block) => {
+        const dropdown_entities = blk.getFieldValue('Entities');
+        const dropdown_services = blk.getFieldValue('Services');
+        const value_color = esidomGenerator.valueToCode(blk, 'Color', PRECEDENCE);
+        const value_brightness = esidomGenerator.valueToCode(blk, 'Brightness', PRECEDENCE);
+        const value_temp = esidomGenerator.valueToCode(blk, 'Temperature', PRECEDENCE);
+
+        const json: BlocklyJSON = {};
+        const data: BlocklyData = {};
+
+        json.entity_id = dropdown_entities;
+        json.service = dropdown_services;
+
+        if (value_color !== '') {
+            data.rgb_color = hexToRgb(value_color);
+        }
+
+        if (value_brightness !== '') {
+            data.brightness = value_brightness;
+        }
+
+        if (value_temp !== '') {
+            data.color_temp = value_temp;
+        }
+
+        json.data = data;
+
+        return JSON.stringify(json);
+    };
+
+    block.delay_action = (blk: Block) => {
+        const number_hour = blk.getFieldValue('Hour');
+        const number_minute = blk.getFieldValue('Minute');
+        const number_second = blk.getFieldValue('Second');
+
+        const json: BlocklyJSON = {};
+
+        const delay = `${number_hour}:${number_minute}:${number_second}`;
+
+        json.delay = delay;
+
+        return JSON.stringify(json);
+    };
+
+    /**
+     * Catégorie Contrôle de lampe
+     */
+
+    block.color_picker = (blk: Block) => {
+        const color_value = blk.getFieldValue('Color');
+
+        return [color_value, PRECEDENCE];
+    };
+
+    block.color_rgb = (blk: Block) => {
+        const number_red = blk.getFieldValue('Red');
+        const number_green = blk.getFieldValue('Green');
+        const number_blue = blk.getFieldValue('Blue');
+
+        const hex = rgbToHex(number_red, number_green, number_blue);
+
+        return [hex, PRECEDENCE];
+    };
+
+    block.brightness = (blk: Block) => {
+        const brightness_value = blk.getFieldValue('Brightness');
+
+        return [brightness_value, PRECEDENCE];
+    };
+
+    block.color_temp = (blk: Block) => {
+        const temperature_value = blk.getFieldValue('Temperature');
+
+        return [temperature_value, PRECEDENCE];
     };
 
     // Scrub for combining two same blks

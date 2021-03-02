@@ -16,9 +16,11 @@ CREATE TABLE HAGroup(
 -- Table: AcessEntity
 ------------------------------------------------------------
 CREATE TABLE AccessEntity(
-	userId      TEXT NOT NULL ,
+	userId      INTEGER NOT NULL ,
 	entityId    TEXT NOT NULL,
-	CONSTRAINT PK_AcessEntity PRIMARY KEY (userId,entityId)
+	CONSTRAINT PK_AccessEntity PRIMARY KEY (userId,entityId),
+	CONSTRAINT FK_AccessEntity0 FOREIGN KEY (userId) REFERENCES User(id),
+	CONSTRAINT FK_AccessEntity1 FOREIGN KEY (entityId) REFERENCES Entity(id)
 );
 
 
@@ -32,4 +34,20 @@ CREATE TABLE InsideGroup(
 	,CONSTRAINT FK_InsideGroup_HAGroup0 FOREIGN KEY (groupEntityId) REFERENCES HAGroup(entityId)
 );
 
+------------------------------------------------------------
+-- Table: User
+------------------------------------------------------------
+CREATE TABLE User (
+	id	INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+	username	TEXT NOT NULL UNIQUE,
+	admin	INTEGER NOT NULL
+);
+
+------------------------------------------------------------
+-- Table: Entity
+------------------------------------------------------------
+CREATE TABLE Entity (
+	id TEXT NOT NULL,
+	PRIMARY KEY(id)
+);
 
