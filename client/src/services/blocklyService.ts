@@ -238,7 +238,7 @@ export default class BlocklyService {
                 INTERVAL_TRIGGER_MUTATOR_EXTENSION,
             );
         } catch (error) {
-            console.log(error);
+            // console.log(error);
         }
     }
 
@@ -382,7 +382,7 @@ export default class BlocklyService {
                 NUMERIC_STATE_MUTATOR_EXTENSION,
             );
         } catch (error) {
-            console.log(error);
+            // console.log(error);
         }
     }
 
@@ -683,7 +683,7 @@ export default class BlocklyService {
                 OBJECT_ACTION_MUTATOR_EXTENSION,
             );
         } catch (error) {
-            console.log(error);
+            // console.log(error);
         }
     }
 
