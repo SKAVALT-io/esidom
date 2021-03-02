@@ -1,6 +1,14 @@
 import axios, { AxiosRequestConfig } from 'axios';
 import { logger } from '../utils';
 import config from '../config/config';
+import { doAuth } from '..';
+
+axios.interceptors.response.use((_) => _, (err) => {
+    if (err.response?.status === 401) {
+        logger.info('RELOADING HA TOKEN');
+        doAuth();
+    }
+});
 
 class HttpForwarder {
 
