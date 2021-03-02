@@ -9,7 +9,7 @@
     import EntityService from '../../services/entityService';
     import Tooltip from '../UI/utils/Tooltip.svelte';
     import { tr } from '../../utils/i18nHelper';
-    import toastService from '../../utils/toast';
+    import ConfirmationModal from '../UI/modal/ConfirmationModal.svelte';
 
     export let group: Group;
     let checked = group.state === 'on';
@@ -19,6 +19,12 @@
     let showViewTip = false;
     export let openEditMode: () => void;
     export let openViewMode: () => void;
+
+    let isConfirmDeleteOpen = false;
+    async function handleDelete(): Promise<void> {
+        isConfirmDeleteOpen = false;
+        GroupService.deleteGroup(group).catch(console.log);
+    }
 
     function handleToggle() {
         if (!group.groupId) {
@@ -51,11 +57,14 @@
     onDestroy(() => {
         socketManager.removeListener('groupUpdated', groupUpdatedHandler);
     });
-
-    function deleteGroup() {
-        GroupService.deleteGroup(group);
-    }
 </script>
+
+<!-- Delete confirmation modal -->
+<ConfirmationModal
+    bind:isOpen={isConfirmDeleteOpen}
+    on:confirm={handleDelete}
+    text={tr('groups.confirmDelete')}
+/>
 
 <div
     id="group"
@@ -118,7 +127,7 @@
             />
             <RoundedButton
                 size={8}
-                on:click={deleteGroup}
+                on:click={() => (isConfirmDeleteOpen = true)}
                 iconPath="icons/button/trash.svg"
             />
         </div>

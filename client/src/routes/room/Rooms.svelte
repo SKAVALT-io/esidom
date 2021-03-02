@@ -128,6 +128,8 @@
         </div>
     {/if}
 </div>
+
+<!-- Detail modal -->
 <Modal bind:isOpen>
     <div slot="content">
         <RoomDetail
@@ -138,6 +140,8 @@
         />
     </div>
 </Modal>
+
+<!-- Add button -->
 <div class="fixed bottom-0 right-0 h-16 w-16">
     <RoundedButton
         on:click={() => {

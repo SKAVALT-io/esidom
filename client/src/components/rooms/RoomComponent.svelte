@@ -7,7 +7,7 @@
     import type { Room } from '../../../types/roomType';
     import RoomService from '../../services/roomService';
     import Tooltip from '../UI/utils/Tooltip.svelte';
-    import toastService from '../../utils/toast';
+    import ConfirmationModal from '../UI/modal/ConfirmationModal.svelte';
 
     export let room: Room;
 
@@ -17,6 +17,12 @@
     let showDeleteTip = false;
     let showEditTip = false;
     let showViewTip = false;
+
+    let isConfirmDeleteOpen = false;
+    async function handleDelete(): Promise<void> {
+        isConfirmDeleteOpen = false;
+        RoomService.deleteRoom(room).catch(console.log);
+    }
 
     function roomUpdatedHandler(data: Room) {
         if (data.roomId === room.roomId) {
@@ -32,6 +38,13 @@
         socketManager.removeListener('roomUpdated', roomUpdatedHandler);
     });
 </script>
+
+<!-- Delete confirmation modal -->
+<ConfirmationModal
+    bind:isOpen={isConfirmDeleteOpen}
+    on:confirm={handleDelete}
+    text={tr('rooms.confirmDelete')}
+/>
 
 <div
     id="room"
@@ -90,9 +103,7 @@
         />
         <RoundedButton
             size={8}
-            on:click={() => {
-                RoomService.deleteRoom(room);
-            }}
+            on:click={() => (isConfirmDeleteOpen = true)}
             iconPath="icons/button/trash.svg"
         />
     </div>

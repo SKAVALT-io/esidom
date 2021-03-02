@@ -1,4 +1,6 @@
 <script>
+    /* Stolen from https://github.com/fouita/svelte-tw-tooltip/blob/master/src/Tooltip.svelte */
+    // TODO: make a better one
     /* eslint-disable camelcase */
     import { fade } from 'svelte/transition';
 
@@ -24,35 +26,41 @@
     let current_node: any = null;
 
     function mposition(node: any) {
-        current_node = node;
-        let m = 0;
-        if (position == 'top' || position == 'bottom') {
-            if (pointer == 'middle') {
-                m = node.parentNode.clientWidth / 2 - node.clientWidth / 2;
-                node.style.marginLeft = `${m}px`;
-                cursor_class = 'w-full';
-            } else if (pointer == 'start') {
-                pointer_class = 'left-0';
-                cursor_class = 'ml-2';
-            } else if (pointer == 'end') {
-                pointer_class = 'right-0';
-                cursor_class = 'mr-2';
+        try {
+            current_node = node;
+            let m = 0;
+            if (position == 'top' || position == 'bottom') {
+                if (pointer == 'middle') {
+                    m = node.parentNode.clientWidth / 2 - node.clientWidth / 2;
+                    node.style.marginLeft = `${m}px`;
+                    cursor_class = 'w-full';
+                } else if (pointer == 'start') {
+                    pointer_class = 'left-0';
+                    cursor_class = 'ml-2';
+                } else if (pointer == 'end') {
+                    pointer_class = 'right-0';
+                    cursor_class = 'mr-2';
+                }
+                elm_class = position == 'top' ? 'mb-2' : 'mt-2';
+            } else {
+                if (pointer == 'middle') {
+                    m =
+                        node.parentNode.clientHeight / 2 -
+                        node.clientHeight / 2;
+                    node.style.marginTop = `${m}px`;
+                    cursor_class = 'h-full w-2';
+                    pointer_class = 'top-0';
+                } else if (pointer == 'start') {
+                    pointer_class = 'top-0';
+                    cursor_class = 'mt-2';
+                } else if (pointer == 'end') {
+                    cursor_class = 'mb-2';
+                    pointer_class = 'bottom-0';
+                }
+                elm_class = position == 'left' ? 'mr-2' : 'ml-2';
             }
-            elm_class = position == 'top' ? 'mb-2' : 'mt-2';
-        } else {
-            if (pointer == 'middle') {
-                m = node.parentNode.clientHeight / 2 - node.clientHeight / 2;
-                node.style.marginTop = `${m}px`;
-                cursor_class = 'h-full w-2';
-                pointer_class = 'top-0';
-            } else if (pointer == 'start') {
-                pointer_class = 'top-0';
-                cursor_class = 'mt-2';
-            } else if (pointer == 'end') {
-                cursor_class = 'mb-2';
-                pointer_class = 'bottom-0';
-            }
-            elm_class = position == 'left' ? 'mr-2' : 'ml-2';
+        } catch (_) {
+            // do nothing
         }
         lhidden = 'opacity-100';
     }
