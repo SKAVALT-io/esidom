@@ -14,15 +14,6 @@ export default class BlocklyObjects {
 
     private toolTip: string;
 
-    static esidomTheme: Blockly.Theme = new Blockly.Theme(
-        'themeName',
-        {}, // as Blockly.Theme.BlockStyle,
-        {}, // as Blockly.Theme.CategoryStyle,
-        {
-            toolboxForegroundColour: '#000',
-        } as Blockly.Theme.ComponentStyle,
-    );
-
     constructor(name: string, type: string, prefix: string, colour: number, toolTip: string) {
         this.name = name;
         this.type = type;

@@ -62,7 +62,7 @@
         const workspace = Blockly.inject('blocklyDiv', options);
 
         // Don't set the theme again if set, ir else it makes everything bug
-        workspace.setTheme(BlocklyObjects.esidomTheme);
+        workspace.setTheme(BlocklyService.esidomTheme);
         // console.log(workspace);
 
         // Small hack to "fix" the toolbox scrollbar glitch

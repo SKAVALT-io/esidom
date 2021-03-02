@@ -55,6 +55,16 @@ export default class BlocklyService {
         this.workspace = workspace;
     }
 
+    /* blockly theme */
+    static esidomTheme: Blockly.Theme = new Blockly.Theme(
+        'themeName',
+        {}, // as Blockly.Theme.BlockStyle,
+        {}, // as Blockly.Theme.CategoryStyle,
+        {
+            toolboxForegroundColour: '#000',
+        } as Blockly.Theme.ComponentStyle,
+    );
+
     /**
      * Clears blockly workspace.
      */
