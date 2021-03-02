@@ -51,13 +51,17 @@
         // handle only two levels of hash page
         // it is not generic and is really specific to our project
         if (sub.includes('/')) {
-            const newSub = sub.replace('/', '.');
-            const split = newSub.split('.');
-            const knownList = ['light', 'switch']; // ex : entity.light
+            const [page, other] = sub.replace('/', '.').split('.');
 
-            return knownList.includes(split[1])
-                ? `${split[0]}.${split[1]}`
-                : `${split[0]}.default`;
+            if (page === 'entity') {
+                const knownList = ['light', 'switch']; // ex : entity.light
+
+                return knownList.includes(other)
+                    ? `${page}.${other}`
+                    : `${page}.default`;
+            } else {
+                return page;
+            }
         }
         return sub !== '' ? sub : 'entities';
     }

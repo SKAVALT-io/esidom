@@ -11,6 +11,7 @@
     import AutomationService from '../../services/automationService';
     import { push } from 'svelte-spa-router';
     import LoadingAnimation from '../../components/animations/LoadingAnimation.svelte';
+    import BlocklyObjects from './blocklyObject';
 
     export let automationId: string;
 
@@ -58,21 +59,11 @@
             },
         };
 
-        const esidomTheme: Blockly.Theme = new Blockly.Theme(
-            'themeName',
-            {}, // as Blockly.Theme.BlockStyle,
-            {}, // as Blockly.Theme.CategoryStyle,
-            {
-                toolboxForegroundColour: '#000',
-            } as Blockly.Theme.ComponentStyle
-        );
+        const workspace = Blockly.inject('blocklyDiv', options);
 
-        const workspace: Blockly.WorkspaceSvg = Blockly.inject(
-            'blocklyDiv',
-            options
-        );
-
-        workspace.setTheme(esidomTheme);
+        // Don't set the theme again if set, ir else it makes everything bug
+        workspace.setTheme(BlocklyObjects.esidomTheme);
+        // console.log(workspace);
 
         // Small hack to "fix" the toolbox scrollbar glitch
         // Setup a mutation observer to see if the class changes to detect
