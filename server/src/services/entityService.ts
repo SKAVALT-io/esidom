@@ -181,10 +181,6 @@ class EntityService implements EventObserver {
             .filter((e) => !UNWANTED_SUFFIXES.some((name) => e.id.endsWith(name))
                 && !UNWANTED_TYPES.some((type) => e.type === type)
                 && (user ? user.entities.includes(e.id) : true));
-        if (user) {
-            logger.debug(user.entities);
-            logger.debug(entities);
-        }
         return result;
     }
 
