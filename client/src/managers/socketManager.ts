@@ -35,7 +35,6 @@ class SocketManager {
     this.socket = io(config.BASE_URL, {
     	path: config.WS_PATH
     });
-        console.log(this.socket);
         console.log('Connected to WS');
     }
 
