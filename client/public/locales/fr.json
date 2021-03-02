@@ -438,6 +438,7 @@
     "createGroup": "Nouveau groupe",
     "groupName": "Nom du groupe",
     "groupEntities": "Equipements dans le groupe",
+    "confirmDelete": "Voulez-vous vraiment supprimer ce groupe ?",
     "buttons": {
       "create": "Créer un groupe",
       "edit": "Editer",
@@ -485,6 +486,7 @@
     "roomDevices": "Equipement dans la pièce",
     "roomCreated": "Pièce sauvegardée avec succès",
     "roomDeleted": "Pièce supprimée avec succès",
+    "confirmDelete": "Voulez-vous vraiment supprimer cette pièce ?",
     "errorWhileLoading": "Erreur lors de la récupération des pièces",
     "errorWhileCreating": "Erreur lors de la création de la pièce",
     "errorWhileDeleting": "Erreur lors de la suppression de la pièce",
@@ -515,6 +517,7 @@
     "logout": "Verrouiller l'application",
     "changeUser": "Changer d'utilisateur",
     "userCreated": "L'utilisateur a bien été créé",
+    "userDeleted": "L'utilisateur a bien été supprimé",
     "errorWhileCreating": "Une erreur est survenue lors de la création",
     "usernameCannotBeEmpty": "Le nom d'utilisateur ne peut pas être vide",
     "errorWhileLocking": "Erreur lors du verrouillage de l'application",

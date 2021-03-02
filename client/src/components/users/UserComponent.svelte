@@ -10,6 +10,7 @@
     import UserService from '../../services/userService';
     import toastService from '../../utils/toast';
     import { createEventDispatcher } from 'svelte';
+    import ConfirmationModal from '../UI/modal/ConfirmationModal.svelte';
 
     export let user: User;
     export let entities: { id: string; name: string }[];
@@ -27,12 +28,10 @@
         isConfirmDeleteOpen = false;
         UserService.deleteUser(user.id)
             .then(() => {
-                toastService.toast(`L'utilisateur a bien été supprimé`);
+                toastService.toast(tr('user.userDeleted'));
                 dispatch('userdeleted');
             })
-            .catch((err) => {
-                console.log(err);
-            });
+            .catch(console.log);
     }
 
     async function handleEditConfirm(updatedUser: User) {
@@ -49,7 +48,7 @@
     }
 </script>
 
-<!-- Edit user-->
+<!-- Edit user modal -->
 <UserDetails
     {entities}
     {user}
@@ -57,6 +56,14 @@
     handleSubmit={handleEditConfirm}
     bind:isModalOpen={isEditModalOpen}
 />
+
+<!-- Delete confirmation modal -->
+<ConfirmationModal
+    bind:isOpen={isConfirmDeleteOpen}
+    on:confirm={handleDelete}
+    text={tr('user.confirmDelete')}
+/>
+
 <div
     id="user"
     class="rounded-lg items-center text-center grid grid-cols-5 px-1 py-4"
@@ -106,25 +113,6 @@
                 iconPath="icons/button/trash.svg"
             />
         </div>
-        {#if isConfirmDeleteOpen}
-            <div id="confirm_modal" class="z-10">
-                <Modal bind:isOpen={isConfirmDeleteOpen}>
-                    <div slot="content">
-                        <p>{tr('user.confirmDelete')}</p>
-                        <br />
-                        <div id="confirm_cancel">
-                            <CancelButton
-                                on:click={() => (isConfirmDeleteOpen = false)}
-                            />
-                            <BorderedButton
-                                text={tr('buttons.confirm')}
-                                on:click={handleDelete}
-                            />
-                        </div>
-                    </div>
-                </Modal>
-            </div>
-        {/if}
     {/if}
 </div>
 

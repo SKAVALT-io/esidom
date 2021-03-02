@@ -94,11 +94,11 @@
             id="users"
             class="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mr-2 ml-2 mt-2"
         >
-            {#each users as user, i}
+            {#each users as user}
                 <UserComponent
                     {entities}
                     {user}
-                    on:userdeleted={() => (users = users.filter((_u, index) => index !== i))}
+                    on:userdeleted={() => (users = users.filter((u) => u.id !== user.id))}
                 />
             {/each}
         </div>
