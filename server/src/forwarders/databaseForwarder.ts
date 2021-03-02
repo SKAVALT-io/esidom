@@ -105,7 +105,7 @@ class DatabaseForwarder {
             }
             const id = res.lastID;
             if (entities) {
-                this.insertUserEntities(id, entities);
+                this.insertUserEntities(id, entities, false);
             }
             await this.db.run('COMMIT');
             return this.getUserById(res.lastID);
@@ -162,18 +162,25 @@ class DatabaseForwarder {
         );
     }
 
-    private async insertUserEntities(userId: number, entities: string[]): Promise<void> {
+    private async insertUserEntities(userId: number, entities: string[],
+        transaction: boolean = true) : Promise<void> {
         try {
-            await this.db.run('BEGIN TRANSACTION');
+            if (transaction) {
+                await this.db.run('BEGIN TRANSACTION');
+            }
             await this.db.run(`DELETE FROM AccessEntity as a WHERE a.userId = ${userId}`);
             await Promise.all(
                 entities.map(async (entityId) => this.db
                     .run(`INSERT INTO AccessEntity(userId, entityId) VALUES(${userId}, '${entityId}')`)),
             );
-            await this.db.run('COMMIT');
+            if (transaction) {
+                await this.db.run('COMMIT');
+            }
             return;
         } catch (err) {
-            await this.db.run('ROLLBACK');
+            if (transaction) {
+                await this.db.run('ROLLBACK');
+            }
             logger.error(`Unexpected error while deleting user from database : ${err}`);
             throw err;
         }
