@@ -22,7 +22,7 @@
         "<h3 class=\"font-bold\">A quoi ça sert ?</h3>",
         "<p>Sur cette page vous trouverez l'ensemble des <i>entités</i> de vos équipements.</p>",
         "<h3 class=\"font-bold\">Entité</h3>",
-        "<p> Une <i>entité</i> est une fonctionnalité de votre équipement : un capteur peut par exemple vous indiquer la température <bold>et</bold> un capteur de mouvement. Dans l'interface, vous verrez alors <bold>2</bold> blocs : un par <i>entité</i>. Quoi qu'il en soit, vous pouvez consulter rapidement les informations sur l'équipement depuis cette page.</p>",
+        "<p> Une <i>entité</i> est une fonctionnalité de votre équipement : un capteur peut par exemple vous indiquer la température <bold>et</bold> un capteur de mouvement détecté. Dans l'interface, vous verrez alors <bold>2</bold> blocs : un par <i>entité</i>. Quoi qu'il en soit, vous pouvez consulter rapidement les informations sur l'équipement depuis cette page.</p>",
         "<h3 class=\"font-bold\">Contrôle rapide</h3>",
         "<p>Pour les <i>lampes</i>, il vous est même possible de contrôler directement sa luminosité ou sa couleur !</p>",
         "<h3 class=\"font-bold\">Statut de l'équipement</h3>",
@@ -77,7 +77,7 @@
       },
       "automations":[
         "<h3 class=\"font-bold\">A quoi ça sert ?</h3>",
-        "<p>Vous trouverez ici l'ensemble des des routines que vous avez définies.</p>",
+        "<p>Vous trouverez ici l'ensemble des routines que vous avez définies.</p>",
         "<h3 class=\"font-bold\">Créer une routine</h3>",
         "<p class=\"inline-block align-middle\">Utilisez le <img class= \"w-10 h-auto\" src= \"icons/help/plus.png\" alt=\"+\"/> en bas à droite de la page pour pouvoir créer une nouvelle routine !</p>",
         "<h3 class=\"font-bold\">Gestion des routines</h3>",
@@ -145,7 +145,7 @@
       "rooms": [
         "<h3 id=\"a-quoi-a-sert-\">A quoi ça sert ?</h3>",
         "<p>Vous trouverez ici l'ensemble des pièces que vous avez définies.</p>",
-        "<p>Les pièces permettent de regrouper les objets situés dans la même pièce de votre habitation.</p>",
+        "<p>Les pièces permettent de regrouper les équipements situés dans la même pièce de votre habitation.</p>",
         "<h3 id=\"cr-er-une-pi-ce\">Créer une pièce</h3>",
         "<p>Utilisez le <img class= \"w-10 h-auto\" src= \"icons/help/plus.png\" alt=\"+\"/> en bas à droite de la page pour pouvoir créer une pièce !</p>",
         "<h3 id=\"gestion-des-pi-ces\">Gestion des pièces</h3>",
