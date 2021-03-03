@@ -5,7 +5,7 @@ on:
   #  branches: [ develop ]
   #  types: [ closed ]
   push:
-    branches: [ feature/https_deploy ]
+    branches: [ master ]
 
 jobs:
   buildServer:
