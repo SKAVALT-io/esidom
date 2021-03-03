@@ -1,4 +1,6 @@
 <script lang="ts">
+    import RoundedButton from '../buttons/RoundedButton.svelte';
+
     export let isOpen = false;
     export let close: () => void = () => {
         isOpen = false;
@@ -10,8 +12,17 @@
         class="modal rounded shadow-lg fixed top-0 left-0 w-full h-screen flex justify-center items-center z-120"
     >
         <div class="backdrop" on:click={close} />
-        <div class="content-wrapper">
-            <div class="content max-h-screen  md:max-h-screen">
+        <div class="content-wrapper relative">
+            <div class="absolute top-0 right-0 mt-1 mr-1">
+                <RoundedButton
+                    size={8}
+                    iconPath="icons/button/cross.svg"
+                    bgColor="transparent"
+                    bgColorHover="bg-esidom"
+                    on:click={close}
+                />
+            </div>
+            <div class="content max-h-screen md:max-h-screen mt-2">
                 <slot name="content" />
             </div>
         </div>
